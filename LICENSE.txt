@@ -1,0 +1,34 @@
+Lexicora Extension License (Custom License)
+Version 1.0 — 2025
+
+Copyright © 2025 Lexicora
+
+Permission is hereby granted to any individual or organization to use, copy, modify, merge, publish, and redistribute this software and its source code, provided that all such use is strictly non-commercial and that appropriate attribution is given to Lexicora.
+
+1. Non-Commercial Use
+You may use, copy, modify, or redistribute this software and its source code for personal, educational, or research purposes, or within non-commercial projects. Commercial use is not permitted under this license. Any use of this software or its derivatives for commercial purposes — including, but not limited to, selling the software, integrating it into a commercial product or service, or using it in a revenue-generating system — requires express written permission from Lexicora.
+
+To request permission for commercial use, contact:
+Email: TBD (Create Issue on this repository for now)
+
+2. Attribution
+Any redistribution or modification of this software must include clear and visible attribution to Lexicora. At minimum, the following notice must remain in all copies or substantial portions of the software:
+
+This software is based on the Lexicora Extension.
+Copyright © 2025 Lexicora.
+Used under the Lexicora Extension License.
+
+3. Share-Alike
+If you modify or create derivative works of this software, you must license your modifications under the same terms as this license.
+
+4. No Warranty
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+5. Trademarks
+The names Lexicora, Lexicora Extension, and associated branding are trademarks of Lexicora. You may not use these names or branding for commercial purposes without permission.
+
+6. Scope
+This license applies only to the code explicitly contained within the Lexicora Extension repository. Other Lexicora products, such as the backend, web application, or mobile clients, may use different licensing terms.
+
+7. Termination
+Any violation of the terms of this license automatically terminates your rights to use the software.
