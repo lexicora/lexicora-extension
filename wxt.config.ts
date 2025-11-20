@@ -4,4 +4,12 @@ import { defineConfig } from "wxt";
 export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   srcDir: "src",
+  manifest: ({ browser, manifestVersion, mode, command }) => {
+    return {
+      name: "Lexicora Extension",
+      description:
+        "A browser extension for the Lexicora platform and services.",
+      version: "0.1.0",
+    };
+  },
 });
