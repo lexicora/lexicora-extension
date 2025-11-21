@@ -10,6 +10,8 @@ export default defineConfig({
       description:
         "A browser extension for the Lexicora platform and services.",
       version: "0.1.0",
+      permissions: ["storage", "tabs", "activeTab", "scripting"],
+      host_permissions: ["<all_urls>"],
     };
   },
 });
