@@ -1,7 +1,9 @@
 export default defineContentScript({
   //matches: ['*://*.google.com/*'],
   matches: ['<all_urls>'],
-  excludeMatches: [], // Todo: add browser pages or specific URLs to exclude here
+  excludeMatches: import.meta.env.FIREFOX 
+    ? ["about:*"]
+    : [],
   main() {
     console.log('Hello content.');
   },
