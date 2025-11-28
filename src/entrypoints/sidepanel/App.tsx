@@ -4,29 +4,13 @@ import wxtLogo from "/wxt.svg";
 import "./App.css";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
-import { ArrowUpRight } from "lucide-react";
 
 function App() {
   const [count, setCount] = useState(0);
 
-  const openSidePanel = async () => {
-    if (import.meta.env.FIREFOX) {
-      // @ts-ignore: sidebarAction is a Firefox-specific API
-      await browser.sidebarAction.toggle();
-    } else {
-      const [tab] = await browser.tabs.query({
-        active: true,
-        currentWindow: true,
-      });
-      if (!tab?.id) return;
-      await browser.sidePanel.open({ tabId: tab.id });
-    }
-    window.close();
-  };
-
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <div className="w-[400px]">
+      <div className="min-w-[328px]">
         <div>
           <a href="https://wxt.dev" target="_blank">
             <img src={wxtLogo} className="logo" alt="WXT logo" />
@@ -47,9 +31,6 @@ function App() {
           >
             <Button onClick={() => setCount((count) => count + 1)}>
               count is {count}
-            </Button>
-            <Button onClick={openSidePanel}>
-              Open Side Panel <ArrowUpRight />
             </Button>
             <ModeToggle />
           </div>
