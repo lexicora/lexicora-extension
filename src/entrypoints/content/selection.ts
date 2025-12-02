@@ -1,4 +1,4 @@
-import { pageSelectionData } from "@/types/pageSelectionData";
+import { pageSelectionData } from "@/types/page-selection-data.types";
 
 export async function getSelectionPageData(): Promise<pageSelectionData> {
   const selection = window.getSelection();
