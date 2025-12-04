@@ -15,6 +15,6 @@ export default defineContentScript({
     console.log("Hello content.");
   
     // Background script requests
-    onMessage(MSG.GET_PAGE_SELECTION_DATA_AS_IS, getSelectionPageData);
+    onMessage(MSG.GET_PAGE_SELECTION_DATA, getSelectionPageData);
   },
 });

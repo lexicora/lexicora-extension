@@ -5,7 +5,8 @@ export const MSG = {
   SAVE_PAGE_TO_MARKDOWN: 'background/SAVE_PAGE_TO_MARKDOWN',
 
   // From background to content script
-  GET_PAGE_SELECTION_DATA_AS_IS: 'content/GET_PAGE_SELECTION_DATA_AS_IS',
+  GET_PAGE_SELECTION_DATA: 'content/GET_PAGE_SELECTION_DATA',
+  GET_PAGE_SELECTION_DATA_AS_IS: 'content/GET_PAGE_SELECTION_DATA_AS_IS', //? maybe unnecessary
   GET_PAGE_SELECTION_DATA_AI_ASSISTED: 'content/GET_PAGE_SELECTION_DATA_AI_ASSISTED', //? maybe unnecessary
   GET_PAGE_HTML: 'content/GET_PAGE_HTML',
 } as const;
@@ -17,6 +18,7 @@ export type Message =
   | { type: typeof MSG.SAVE_PAGE_TO_MARKDOWN }
   
   // Message from background to content script to request data
+  | { type: typeof MSG.GET_PAGE_SELECTION_DATA }
   | { type: typeof MSG.GET_PAGE_SELECTION_DATA_AS_IS }
   | { type: typeof MSG.GET_PAGE_SELECTION_DATA_AI_ASSISTED }
   | { type: typeof MSG.GET_PAGE_HTML };
