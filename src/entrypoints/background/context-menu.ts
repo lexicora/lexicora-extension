@@ -2,6 +2,8 @@ import { onMessage, sendMessage } from "webext-bridge/background";
 import { type Message, MSG } from "@/types/messaging";
 import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/types/context-menu-items";
 import { pageSelectionData } from "@/types/page-selection-data.types";
+import { Readability } from "@mozilla/readability";
+import { Article } from "@/types/mozilla-article.types";
 
 /**
  * Handles context menu item clicks and actions.
@@ -9,33 +11,45 @@ import { pageSelectionData } from "@/types/page-selection-data.types";
 export function contextMenuHandler() {
     browser.contextMenus.onClicked.addListener(async (info, tab) => {
     switch (info.menuItemId) {
-      case CMI_ID.OPEN_LEXICORA:
+      case CMI_ID.OPEN_LEXICORA: {
         browser.tabs.create({ url: "https://lexicora.com" });
         break;
-      case CMI_ID.SAVE_SELECTION_AI_ASSISTED:
-        const pageSelectionDataAssisted = await sendMessage<pageSelectionData>(MSG.GET_PAGE_SELECTION_DATA, {}, "content-script@" + tab?.id);
+      }
+      case CMI_ID.SAVE_SELECTION_AI_ASSISTED: {
+        const pageSelectionArticle = await sendMessage<Article>(MSG.GET_PAGE_SELECTION_ARTICLE, {}, "content-script@" + tab?.id);
         // Todo: Future implementation for AI-assisted saving
-        //* pageSelectionData.pageHTML -> mozillia readabilty -> markdown -> Backend(self to AI to self) -> markdown -> 
+        //* pageSelectionData.pageHTML -> mozilla readability -> markdown -> Backend(self to AI to self) -> markdown -> 
+        if (!pageSelectionArticle) break;
+        
         if (import.meta.env.DEV) {
-          console.log("TEST: \nURL:", pageSelectionDataAssisted.pageBaseUri, "\nSelected HTML:", pageSelectionDataAssisted.pageHTML);
+          console.log("TEST: \nURL:", pageSelectionArticle.siteName, "\nSelected HTML:", pageSelectionArticle.content);
+          console.log("Readability article:", pageSelectionArticle);
         }
         //console.log("AI-Assisted save not implemented yet.");
         break;
-      case CMI_ID.SAVE_SELECTION_AS_IS:
+      }
+      case CMI_ID.SAVE_SELECTION_AS_IS: {
         //let st = info.selectionText || "";
-        const pageSelectionData = await sendMessage<pageSelectionData>(MSG.GET_PAGE_SELECTION_DATA, {}, "content-script@" + tab?.id);
+        //const pageSelectionArticle = await sendMessage<Article>(MSG.GET_PAGE_SELECTION_ARTICLE, {}, "content-script@" + tab?.id);
+        const pageSelectionData = await sendMessage<pageSelectionData | null>(MSG.GET_PAGE_SELECTION_DATA, {}, "content-script@" + tab?.id);
         // Todo: Save selectedHtml to markdown
-        //* pageSelectionData.pageHTML -> mozillia readabilty -> markdown 
+        //* pageSelectionData.pageHTML -> mozilla readability(leave out) -> markdown 
+        if (!pageSelectionData) break;
+
         if (import.meta.env.DEV) {
           console.log("TEST: \nURL:", pageSelectionData.pageBaseUri, "\nSelected HTML:", pageSelectionData.pageHTML);
+          //console.log("Readability article:", pageSelectionData);
         }
         break;
-      case CMI_ID.SAVE_FROM_CLIPBOARD:
+      }
+      case CMI_ID.SAVE_FROM_CLIPBOARD: {
         // Todo: Implement saving from clipboard
         console.log("Save from Clipboard not implemented yet.");
         break;
-      default:
+      }
+      default: {
         console.warn("Unknown context menu item clicked:", info.menuItemId);
+      }
     }
   });
 };

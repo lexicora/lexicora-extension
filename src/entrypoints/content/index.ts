@@ -1,6 +1,6 @@
 import { onMessage } from "webext-bridge/content-script";
 import { MSG } from "@/types/messaging";
-import { getSelectionPageData as getSelectionPageData } from "./selection";
+import { getSelectionPageArticle as getSelectionPageArticle, getSelectionPageData } from "./selection";
 
 export default defineContentScript({
   //matches: ['*://*.google.com/*'],
@@ -14,7 +14,9 @@ export default defineContentScript({
   main() {
     console.log("Hello content.");
   
-    // Background script requests
+    //* Background script requests
+    onMessage(MSG.GET_PAGE_SELECTION_ARTICLE, getSelectionPageArticle);
+
     onMessage(MSG.GET_PAGE_SELECTION_DATA, getSelectionPageData);
   },
 });

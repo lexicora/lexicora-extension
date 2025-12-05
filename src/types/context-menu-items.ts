@@ -2,6 +2,9 @@ export type ContextMenuCreateProps = Parameters<
   typeof browser.contextMenus.create
 >[0];
 
+/**
+ * Context Menu Item Identifiers
+ */
 export const CMI_ID = {
   OPEN_LEXICORA: "open-lexicora",
   SAVE_SELECTION_AI_ASSISTED: "save-selection-ai-assisted",
