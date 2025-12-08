@@ -4,6 +4,7 @@ import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/types/context-menu-items";
 import { pageSelectionData } from "@/types/page-selection-data.types";
 import { Readability } from "@mozilla/readability";
 import { Article } from "@/types/mozilla-article.types";
+import turndownService from "@/lib/turndown";
 
 /**
  * Handles context menu item clicks and actions.
@@ -17,13 +18,13 @@ export function contextMenuHandler() {
       }
       case CMI_ID.SAVE_SELECTION_AI_ASSISTED: {
         const pageSelectionArticle = await sendMessage<Article>(MSG.GET_PAGE_SELECTION_ARTICLE, {}, "content-script@" + tab?.id);
+        if (!pageSelectionArticle) break;
         // Todo: Future implementation for AI-assisted saving
         //* pageSelectionData.pageHTML -> mozilla readability -> markdown -> Backend(self to AI to self) -> markdown -> 
-        if (!pageSelectionArticle) break;
         
         if (import.meta.env.DEV) {
           console.log("TEST: \nURL:", pageSelectionArticle.siteName, "\nSelected HTML:", pageSelectionArticle.content);
-          console.log("Readability article:", pageSelectionArticle);
+          //console.log("Readability article:", pageSelectionArticle);
         }
         //console.log("AI-Assisted save not implemented yet.");
         break;
@@ -32,9 +33,10 @@ export function contextMenuHandler() {
         //let st = info.selectionText || "";
         //const pageSelectionArticle = await sendMessage<Article>(MSG.GET_PAGE_SELECTION_ARTICLE, {}, "content-script@" + tab?.id);
         const pageSelectionData = await sendMessage<pageSelectionData | null>(MSG.GET_PAGE_SELECTION_DATA, {}, "content-script@" + tab?.id);
+        if (!pageSelectionData) break;
         // Todo: Save selectedHtml to markdown
         //* pageSelectionData.pageHTML -> mozilla readability(leave out) -> markdown 
-        if (!pageSelectionData) break;
+        const markdown = turndownService.turndown(pageSelectionData.pageHTML);
 
         if (import.meta.env.DEV) {
           console.log("TEST: \nURL:", pageSelectionData.pageBaseUri, "\nSelected HTML:", pageSelectionData.pageHTML);
