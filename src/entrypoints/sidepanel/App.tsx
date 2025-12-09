@@ -1,47 +1,27 @@
-import { useState } from "react";
-import reactLogo from "@/assets/logos/react.svg";
-import wxtLogo from "/wxt.svg";
 import "./App.css";
-import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/mode-toggle";
+import { HashRouter, Route, Routes } from "react-router-dom";
+import { ThemeProvider } from "@/components/theme-provider";
+import HomePage from "./pages/HomePage";
+
+// Entries Pages
+import EntriesPage from "./pages/Entries";
+import NewEntryPage from "./pages/Entries/new";
+import EntryDetailPage from "./pages/Entries/[id]";
+import EntryEditPage from "./pages/Entries/edit/[id]";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <div className="min-w-[328px]">
-        <div>
-          <a href="https://wxt.dev" target="_blank">
-            <img src={wxtLogo} className="logo" alt="WXT logo" />
-          </a>
-          <a href="https://react.dev" target="_blank">
-            <img src={reactLogo} className="logo react" alt="React logo" />
-          </a>
-        </div>
-        <h1 className="test-app text-3xl">WXT + React</h1>
-        <div className="card">
-          <div
-            style={{
-              display: "flex",
-              gap: "10px",
-              justifyContent: "center",
-              marginBottom: "10px",
-            }}
-          >
-            <Button onClick={() => setCount((count) => count + 1)}>
-              count is {count}
-            </Button>
-            <ModeToggle />
-          </div>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test HMR
-          </p>
-        </div>
-        <p className="read-the-docs">
-          Click on the WXT and React logos to learn more
-        </p>
-      </div>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          {/*Entries */}
+          <Route path="/entries" element={<EntriesPage />} />
+          <Route path="/entries/new" element={<NewEntryPage />} />
+          <Route path="/entries/:id" element={<EntryDetailPage />} />
+          <Route path="/entries/:id/edit" element={<EntryEditPage />} />
+        </Routes>
+      </HashRouter>
     </ThemeProvider>
   );
 }
