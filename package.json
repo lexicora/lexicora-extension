@@ -16,6 +16,9 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
+    "@blocknote/core": "^0.44.0",
+    "@blocknote/react": "^0.44.0",
+    "@blocknote/shadcn": "^0.44.0",
     "@fontsource/inter": "^5.2.8",
     "@mozilla/readability": "^0.6.0",
     "@radix-ui/react-dropdown-menu": "^2.1.16",

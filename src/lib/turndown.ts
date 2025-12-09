@@ -16,4 +16,6 @@ const turndownService = new TurndownService({
     //linkReferenceStyle: "full",
 });
 
+// Change to optimal, for example what AI models prefer
+
 export default turndownService;
