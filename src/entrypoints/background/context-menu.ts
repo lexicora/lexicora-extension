@@ -36,7 +36,7 @@ export function contextMenuHandler() {
         if (!pageSelectionData) break;
         // Todo: Save selectedHtml to markdown
         //* pageSelectionData.pageHTML -> mozilla readability(leave out) -> markdown 
-        const markdown = turndownService.turndown(pageSelectionData.pageHTML);
+        //const markdown = turndownService.turndown(pageSelectionData.pageHTML);
 
         if (import.meta.env.DEV) {
           console.log("TEST: \nURL:", pageSelectionData.pageBaseUri, "\nSelected HTML:", pageSelectionData.pageHTML);
