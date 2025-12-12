@@ -13,7 +13,7 @@ function HomePage() {
   //const createBtn = "bg-green-600 hover:bg-green-700 text-white hover:text-gray-100";
 
   return (
-    <div className="min-w-[328px]">
+    <div>
       <div>
         <a href="https://wxt.dev" target="_blank">
           <img src={wxtLogo} className="logo" alt="WXT logo" />
