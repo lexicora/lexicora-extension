@@ -1,7 +1,7 @@
 import { onMessage, sendMessage } from "webext-bridge/background";
 import { type Message, MSG } from "@/types/messaging";
 import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/types/context-menu-items";
-import { pageSelectionData } from "@/types/page-selection-data.types";
+import { pageData } from "@/types/page-selection-data.types";
 import { Readability } from "@mozilla/readability";
 import { Article } from "@/types/mozilla-article.types";
 import turndownService from "@/lib/turndown";
@@ -32,14 +32,16 @@ export function contextMenuHandler() {
       case CMI_ID.SAVE_SELECTION_AS_IS: {
         //let st = info.selectionText || "";
         //const pageSelectionArticle = await sendMessage<Article>(MSG.GET_PAGE_SELECTION_ARTICLE, {}, "content-script@" + tab?.id);
-        const pageSelectionData = await sendMessage<pageSelectionData | null>(MSG.GET_PAGE_SELECTION_DATA, {}, "content-script@" + tab?.id);
+        const pageSelectionData = await sendMessage<pageData | null>(MSG.GET_PAGE_SELECTION_DATA, {}, "content-script@" + tab?.id);
         if (!pageSelectionData) break;
         // Todo: Save selectedHtml to markdown
         //* pageSelectionData.pageHTML -> mozilla readability(leave out) -> markdown 
         //const markdown = turndownService.turndown(pageSelectionData.pageHTML);
 
         if (import.meta.env.DEV) {
-          console.log("TEST: \nURL:", pageSelectionData.pageBaseUri, "\nSelected HTML:", pageSelectionData.pageHTML);
+          console.log("TEST: \nURL:", pageSelectionData.baseUri, "\nSelected HTML:", pageSelectionData.HTML);
+          // Updated console log to new pageData structure
+          console.log("Selected Page Data:", pageSelectionData);
           //console.log("Readability article:", pageSelectionData);
         }
         break;
