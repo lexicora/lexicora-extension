@@ -17,12 +17,6 @@ importers:
       '@blocknote/shadcn':
         specifier: ^0.44.2
         version: 0.44.2(@floating-ui/dom@1.7.4)(@tiptap/extensions@3.13.0(@tiptap/core@3.13.0(@tiptap/pm@3.13.0))(@tiptap/pm@3.13.0))(@types/hast@3.0.4)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(postcss@8.5.6)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(tailwindcss@4.1.18)
-      '@fontsource/figtree':
-        specifier: ^5.2.10
-        version: 5.2.10
-      '@fontsource/inter':
-        specifier: ^5.2.8
-        version: 5.2.8
       '@fontsource/wix-madefor-text':
         specifier: ^5.2.8
         version: 5.2.8
@@ -419,12 +413,6 @@ packages:
 
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
-
-  '@fontsource/figtree@5.2.10':
-    resolution: {integrity: sha512-nlO06N1qad88ySqzi/a2xwDBkamfZ4MFilP8la5dDyRY36ED0UYTs2hhtwJf8fM52+Nn7dQO2r27reKaXOyOIg==}
-
-  '@fontsource/inter@5.2.8':
-    resolution: {integrity: sha512-P6r5WnJoKiNVV+zvW2xM13gNdFhAEpQ9dQJHt3naLvfg+LkF2ldgSLiF4T41lf1SQCM9QmkqPTn4TH568IRagg==}
 
   '@fontsource/wix-madefor-text@5.2.8':
     resolution: {integrity: sha512-ZuYqSbRo7ZlUL2ZAT+NKF2YAhsxUxGVwBDypKhD2UuK3qahZjE2+0/X1SmDZXggjuPBQLkiQA66smGoE7tXePA==}
@@ -3692,10 +3680,6 @@ snapshots:
       tabbable: 6.3.0
 
   '@floating-ui/utils@0.2.10': {}
-
-  '@fontsource/figtree@5.2.10': {}
-
-  '@fontsource/inter@5.2.8': {}
 
   '@fontsource/wix-madefor-text@5.2.8': {}
 

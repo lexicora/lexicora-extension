@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
-//import "@fontsource/inter/index.css";
-//import '@fontsource/figtree/index.css';
 import '@fontsource/wix-madefor-text/400.css'
 import '@fontsource/wix-madefor-text/400-italic.css'
 import '@fontsource/wix-madefor-text/500.css'
