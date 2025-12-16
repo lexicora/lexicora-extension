@@ -35,7 +35,7 @@ function App() {
             <img src={reactLogo} className="logo react" alt="React logo" />
           </a>
         </div>
-        <h1 className="test-app text-3xl font-bold">WXT + React</h1>
+        <h1 className="test-app text-3xl font-bold" style={{letterSpacing: "1px"}}>WXT + React</h1>
         <div className="card">
           <div
             style={{
