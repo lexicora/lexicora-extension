@@ -1,8 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
-// import "@fontsource/inter/index.css";
-import '@fontsource/figtree/index.css';
+//import "@fontsource/inter/index.css";
+//import '@fontsource/figtree/index.css';
+import '@fontsource/wix-madefor-text/400.css'
+import '@fontsource/wix-madefor-text/400-italic.css'
+import '@fontsource/wix-madefor-text/500.css'
+import '@fontsource/wix-madefor-text/500-italic.css'
+import '@fontsource/wix-madefor-text/600.css'
+import '@fontsource/wix-madefor-text/600-italic.css'
+import '@fontsource/wix-madefor-text/700.css'
+import '@fontsource/wix-madefor-text/700-italic.css'
+//import '@fontsource/wix-madefor-text/800.css'
+//import '@fontsource/wix-madefor-text/800-italic.css'
 import '../../assets/styles/global.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

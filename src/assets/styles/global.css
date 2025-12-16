@@ -124,14 +124,20 @@
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+  button,
+  [role="button"] {
+    font-weight: 600 !important;
+  }
 }
 
 body {
-  /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
-  font-family: Figtree, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Figtree, system-ui, Avenir, Helvetica, Arial, sans-serif; */
+  font-family: 'Wix Madefor Text', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  font-size: 80%; /* With Figtree font to be the same size as Inter (default: 75%) */
+  font-size: 78%;
+  /* font-size: 80%; With Figtree font to be the same size as Inter (default: 75%) */
 }
 
 /* :root {
