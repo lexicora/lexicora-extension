@@ -26,7 +26,7 @@ function App() {
 
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <div className="w-[400px]">
+      <div className="w-100">
         <div>
           <a href="https://wxt.dev" target="_blank">
             <img src={wxtLogo} className="logo" alt="WXT logo" />

@@ -16,7 +16,8 @@ function NewEntryPage() {
     const unsubscribe = onMessage<pageData>(
       MSG.SEND_PAGE_SELECTION_DATA,
       (msg) => {
-        console.log("HTML Data: \n" + msg.data.HTML);
+        if (import.meta.env.DEV)
+          console.log("NewEntryPage: \nHTML Data: \n" + msg.data.HTML);
         if (msg.data.HTML) {
           if (import.meta.env.DEV)
             console.log("NewEntryPage: Received HTML content.");

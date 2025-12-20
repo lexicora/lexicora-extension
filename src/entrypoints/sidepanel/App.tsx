@@ -1,7 +1,7 @@
 import "./App.css";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/home";
 
 // Entries Pages
 import EntriesPage from "./pages/entries";
