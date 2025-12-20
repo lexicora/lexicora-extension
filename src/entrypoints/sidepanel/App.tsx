@@ -4,10 +4,10 @@ import { ThemeProvider } from "@/components/theme-provider";
 import HomePage from "./pages/HomePage";
 
 // Entries Pages
-import EntriesPage from "./pages/Entries";
-import NewEntryPage from "./pages/Entries/new";
-import EntryDetailPage from "./pages/Entries/[id]";
-import EntryEditPage from "./pages/Entries/edit/[id]";
+import EntriesPage from "./pages/entries";
+import NewEntryPage from "./pages/entries/new";
+import EntryDetailPage from "./pages/entries/[id]";
+import EntryEditPage from "./pages/entries/edit/[id]";
 import { RouterListener } from "./components/RouterListener";
 
 function App() {
