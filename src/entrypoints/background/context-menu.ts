@@ -48,7 +48,7 @@ export function contextMenuHandler() {
             panel: browser.runtime.getURL("/sidepanel.html#/entries/new"),
           });
           // @ts-ignore: sidebarAction is a Firefox-specific API
-          browser.sidebarAction.toggle();
+          browser.sidebarAction.open();
         } else {
           browser.sidePanel.setOptions({
             tabId: tab.id,
@@ -84,7 +84,9 @@ export function contextMenuHandler() {
             { path: "/entries/new" },
             "popup",
           );
-        }, 50); //MAYBE: Adjust delay if needed. (lower is better)
+        }, 50); //TODO MAYBE: Adjust delay if needed. (lower is better)
+
+        const timeoutDuration = import.meta.env.FIREFOX ? 150 : 100; //NOTE: Firefox seems to need a bit more time.
 
         setTimeout(() => {
           if (selectionDataExists) {
@@ -94,7 +96,7 @@ export function contextMenuHandler() {
               "popup",
             );
           }
-        }, 100); //MAYBE: Adjust delay if needed. (lower is better)
+        }, timeoutDuration); //TODO MAYBE: Adjust delay if needed. (lower is better)
 
         //INFO: This executes before the above, due to js async nature.
         // Reset side panel to main entries page after a delay
