@@ -8,11 +8,13 @@ import EntriesPage from "./pages/Entries";
 import NewEntryPage from "./pages/Entries/new";
 import EntryDetailPage from "./pages/Entries/[id]";
 import EntryEditPage from "./pages/Entries/edit/[id]";
+import { RouterListener } from "./components/RouterListener";
 
 function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <HashRouter>
+        <RouterListener />
         <Routes>
           <Route path="/" element={<HomePage />} />
           {/*Entries */}

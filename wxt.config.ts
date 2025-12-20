@@ -19,6 +19,7 @@ export default defineConfig({
         "clipboardRead",
         "alarms",
         "notifications",
+        "sidePanel",
       ],
       host_permissions: ["<all_urls>"],
     };

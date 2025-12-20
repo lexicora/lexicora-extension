@@ -29,9 +29,10 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
     title: "Save Selection as is",
     contexts: ["selection"],
   },
-  {    
+  {
     id: CMI_ID.SAVE_FROM_CLIPBOARD,
     title: "Save from Clipboard",
     contexts: ["all"],
-  },    
+  },
+  //TODO MAYBE: Add option to save without opening side panel and only show notification of success/failure
 ];
