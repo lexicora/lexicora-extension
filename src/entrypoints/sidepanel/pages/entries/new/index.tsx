@@ -7,9 +7,14 @@ import { useEffect, useState } from "react";
 import { pageData } from "@/types/page-selection-data.types";
 import { MSG } from "@/types/messaging";
 
+// App BlockNote.js imports
+import { AppBlockNoteView } from "@/editor/AppBlockNoteView";
+import { useCreateBlockNote } from "@blocknote/react";
+
 function NewEntryPage() {
   const navigate = useNavigate();
   const [contentHtml, setContentHtml] = useState<string | null>(null);
+  const editor = useCreateBlockNote();
 
   useEffect(() => {
     // Listen only for the data message
@@ -22,6 +27,8 @@ function NewEntryPage() {
           if (import.meta.env.DEV)
             console.log("NewEntryPage: Received HTML content.");
           setContentHtml(msg.data.HTML);
+          const blocks = editor.tryParseHTMLToBlocks(msg.data.HTML);
+          editor.replaceBlocks(editor.document, blocks);
         }
       },
     );
@@ -30,6 +37,17 @@ function NewEntryPage() {
       unsubscribe();
     };
   }, []);
+
+  // useEffect(() => {
+  //   if (!contentHtml) return;
+  //   const setBlockNoteContent = () => {
+  //     const blocks = editor.tryParseHTMLToBlocks(contentHtml);
+  //     editor.replaceBlocks(editor.document, blocks);
+  //   };
+  //   return () => {
+  //     setBlockNoteContent();
+  //   };
+  // }, [contentHtml]);
 
   return (
     <div className="p-4">
@@ -55,8 +73,11 @@ function NewEntryPage() {
         ) : (
           <p className="text-gray-500">Waiting for selected content...</p>
         )}*/}
-        <div className="p-1 dark:bg-white/10 bg-black/10 rounded-sm min-h-20 wrap-break-word">
+        {/*<div className="p-1 dark:bg-white/10 bg-black/10 rounded-sm min-h-20 wrap-break-word">
           {contentHtml}
+        </div>*/}
+        <div className="text-start">
+          <AppBlockNoteView editor={editor} className="min-h-64" />
         </div>
       </main>
     </div>

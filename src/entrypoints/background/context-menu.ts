@@ -77,6 +77,9 @@ export function contextMenuHandler() {
           console.warn("No page selection data received.");
         }
 
+        //const timeoutDurationInitialTest = import.meta.env.FIREFOX ? 50 : 50;
+        const timeoutDurationInitial = import.meta.env.FIREFOX ? 100 : 75; //NOTE: Firefox seems to need a bit more time.
+
         // 3. Send two separate, decoupled messages.
         setTimeout(() => {
           sendMessage(
@@ -84,9 +87,11 @@ export function contextMenuHandler() {
             { path: "/entries/new" },
             "popup",
           );
-        }, 50); //TODO MAYBE: Adjust delay if needed. (lower is better)
+        }, timeoutDurationInitial); //TODO MAYBE: Adjust delay if needed. (lower is better)
 
-        const timeoutDuration = import.meta.env.FIREFOX ? 150 : 100; //NOTE: Firefox seems to need a bit more time.
+        //const timeoutDurationTest = import.meta.env.FIREFOX ? 150 : 100;
+        // Fastest working was 125ms in Chrome, 200ms in Firefox
+        const timeoutDuration = import.meta.env.FIREFOX ? 225 : 150; //NOTE: Firefox seems to need a bit more time.
 
         setTimeout(() => {
           if (selectionDataExists) {
