@@ -12,7 +12,7 @@ import { RouterListener } from "./components/RouterListener";
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="system" storageKey="lexicora-ui-theme">
       <HashRouter>
         <RouterListener />
         <Routes>
