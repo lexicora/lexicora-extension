@@ -6,6 +6,7 @@ import { onMessage } from "webext-bridge/popup"; //* NOTE: popup is temporary bu
 import { useEffect, useState } from "react";
 import { pageData } from "@/types/page-selection-data.types";
 import { MSG } from "@/types/messaging";
+import { defaultBlockNoteConfig } from "@/types/block-note.types";
 
 // App BlockNote.js imports
 import { AppBlockNoteView } from "@/editor/AppBlockNoteView";
@@ -14,7 +15,7 @@ import { useCreateBlockNote } from "@blocknote/react";
 function NewEntryPage() {
   const navigate = useNavigate();
   const [contentHtml, setContentHtml] = useState<string | null>(null);
-  const editor = useCreateBlockNote();
+  const editor = useCreateBlockNote(defaultBlockNoteConfig);
 
   useEffect(() => {
     // Listen only for the data message
@@ -77,7 +78,11 @@ function NewEntryPage() {
           {contentHtml}
         </div>*/}
         <div className="text-start">
-          <AppBlockNoteView editor={editor} className="min-h-64" />
+          <AppBlockNoteView
+            editor={editor}
+            className=""
+            //editable={false}
+          />
         </div>
       </main>
     </div>

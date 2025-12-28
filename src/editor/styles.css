@@ -1,0 +1,62 @@
+/* Base theme */
+.bn-container[data-color-scheme] {
+    --bn-font-family:
+        "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;
+    color-scheme: normal;
+    scrollbar-color: light-dark(#8b8b8b, #9f9f9f) transparent;
+}
+
+/* Changes for dark mode */
+.bn-container[data-color-scheme="dark"] {
+    color-scheme: dark;
+}
+
+.bn-default-styles {
+    --bn-font-family:
+        "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: var(--bn-font-family);
+}
+
+.bn-editor {
+    padding-top: 8px;
+    padding-inline-start: 50px;
+    padding-inline-end: 8px !important;
+    min-height: 100px;
+    border-color: var(--color-border);
+    border-width: 1px;
+    border-style: solid;
+}
+
+.bn-editor[contenteditable="false"] {
+    padding-inline: 8px !important;
+    padding-top: 0px;
+}
+
+.bn-shadcn .bn-toolbar {
+    max-width: 97vw;
+}
+
+/* Hide toolbars anywhere when a disabled bm-content exists */
+/*.bn-editor[contenteditable="false"] [data-floating-ui-focusable],
+.bn-editor[contenteditable="false"] .bn-toolbar {
+    display: none !important;
+}*/
+
+.bn-container:has(.bn-editor[contenteditable="false"]) .bn-toolbar {
+    display: none !important;
+}
+
+/*.bn-container:has(.bn-editor[contenteditable="false"])
+    [data-floating-ui-focusable] {
+    display: none !important;
+}*/
+
+/* * NOTE: Custom Styles for BlockNote*/
+.bn-code-bg code {
+    background-color: light-dark(#00000014, #ffffff12);
+    border-radius: 2px;
+}
+
+.bn-table-header th {
+    background-color: light-dark(#00000008, #ffffff10);
+}

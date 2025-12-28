@@ -1,49 +1,130 @@
-import * as Badge from "@/components/ui/badge";
+//import * as Badge from "@/components/ui/badge";
 import * as Button from "@/components/ui/button";
-import * as Card from "@/components/ui/card";
-import * as DropdownMenu from "./dropdown-menu";
-import * as Form from "@/components/ui/form";
-import * as Input from "@/components/ui/input";
-import * as Label from "@/components/ui/label";
-import * as Popover from "./popover";
-import * as Select from "./select";
-import * as Tabs from "@/components/ui/tabs";
-import * as Toggle from "@/components/ui/toggle";
-import * as Tooltip from "@/components/ui/tooltip";
+//import * as Card from "@/components/ui/card";
+import * as DropdownMenu from "./components/dropdown-menu";
+// import * as Form from "@/components/ui/form";
+// import * as Input from "@/components/ui/input";
+// import * as Label from "@/components/ui/label";
+// import * as Popover from "./popover";
+// import * as Select from "./select";
+// import * as Tabs from "@/components/ui/tabs";
+// import * as Toggle from "@/components/ui/toggle";
+// import * as Tooltip from "@/components/ui/tooltip";
 
-import "@blocknote/core/fonts/inter.css";
-import { useCreateBlockNote } from "@blocknote/react";
+//import "@blocknote/core/fonts/inter.css";
+import { filterSuggestionItems } from "@blocknote/core/extensions";
+import {
+  BasicTextStyleButton,
+  BlockTypeSelect,
+  ColorStyleButton,
+  CreateLinkButton,
+  FileCaptionButton,
+  FileReplaceButton,
+  FormattingToolbar,
+  FormattingToolbarController,
+  NestBlockButton,
+  TextAlignButton,
+  UnnestBlockButton,
+  SuggestionMenuController,
+  useCreateBlockNote,
+} from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/shadcn";
 import "@blocknote/shadcn/style.css";
+import "./styles.css";
+
+import { getAppTheme } from "./theme-config";
+//import { getCustomSlashMenuItems } from "./config";
 
 export function AppBlockNoteView({
   editor,
   className,
   style,
+  editable = true,
 }: {
   editor: ReturnType<typeof useCreateBlockNote>;
   className?: string;
   style?: React.CSSProperties;
+  editable?: boolean;
 }) {
   return (
     <BlockNoteView
       editor={editor}
-      shadCNComponents={{
-        Badge,
-        Button,
-        Card,
-        DropdownMenu,
-        Form,
-        Input,
-        Label,
-        Popover,
-        Select,
-        Tabs,
-        Toggle,
-        Tooltip,
-      }}
       className={className}
       style={style}
-    />
+      editable={editable}
+      theme={getAppTheme()}
+      shadCNComponents={{
+        //Badge,
+        Button,
+        // Card,
+        DropdownMenu,
+        // Form,
+        // Input,
+        // Label,
+        // Popover,
+        // Select,
+        // Tabs,
+        // Toggle,
+        // Tooltip,
+      }}
+      formattingToolbar={false}
+      //slashMenu={false}
+    >
+      <FormattingToolbarController
+        formattingToolbar={() => (
+          <FormattingToolbar>
+            <BlockTypeSelect key={"blockTypeSelect"} />
+            {/* Extra button to toggle blue text & background */}
+            {/*<BlueButton key={"customButton"} />*/}
+            <FileCaptionButton key={"fileCaptionButton"} />
+            <FileReplaceButton key={"replaceFileButton"} />
+            <BasicTextStyleButton
+              basicTextStyle={"bold"}
+              key={"boldStyleButton"}
+            />
+            <BasicTextStyleButton
+              basicTextStyle={"italic"}
+              key={"italicStyleButton"}
+            />
+            <BasicTextStyleButton
+              basicTextStyle={"underline"}
+              key={"underlineStyleButton"}
+            />
+            <BasicTextStyleButton
+              basicTextStyle={"strike"}
+              key={"strikeStyleButton"}
+            />
+            {/* Extra button to toggle code styles */}
+            <BasicTextStyleButton
+              key={"codeStyleButton"}
+              basicTextStyle={"code"}
+            />
+            <TextAlignButton
+              textAlignment={"left"}
+              key={"textAlignLeftButton"}
+            />
+            <TextAlignButton
+              textAlignment={"center"}
+              key={"textAlignCenterButton"}
+            />
+            <TextAlignButton
+              textAlignment={"right"}
+              key={"textAlignRightButton"}
+            />
+            <ColorStyleButton key={"colorStyleButton"} />
+            <NestBlockButton key={"nestBlockButton"} />
+            <UnnestBlockButton key={"unnestBlockButton"} />
+            <CreateLinkButton key={"createLinkButton"} />
+          </FormattingToolbar>
+        )}
+      />
+      {/*<SuggestionMenuController
+        triggerCharacter={"/"}
+        // Replaces the default Slash Menu items with our custom ones.
+        getItems={async (query) =>
+          filterSuggestionItems(getCustomSlashMenuItems(editor), query)
+        }
+      />*/}
+    </BlockNoteView>
   );
 }

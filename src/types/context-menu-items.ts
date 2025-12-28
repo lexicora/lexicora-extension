@@ -21,17 +21,17 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   },
   {
     id: CMI_ID.SAVE_SELECTION_AI_ASSISTED,
-    title: "Save Selection AI-Assisted",
+    title: "Save Selection AI-Assisted", //MAYBE TODO: Rename to "Capture (selection) with AI" later
     contexts: ["selection"],
   },
   {
     id: CMI_ID.SAVE_SELECTION_AS_IS,
-    title: "Save Selection as is",
+    title: "Save Selection as is", //MAYBE TODO: Rename to "Save Selection Plain" or "Select as is" later
     contexts: ["selection"],
   },
   {
     id: CMI_ID.SAVE_FROM_CLIPBOARD,
-    title: "Save from Clipboard",
+    title: "Save from Clipboard", //MAYBE TODO: Rename to "Capture from Clipboard" later
     contexts: ["all"],
   },
   //TODO MAYBE: Add option to save without opening side panel and only show notification of success/failure

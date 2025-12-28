@@ -135,9 +135,20 @@
 body {
     font-family:
         "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;
+    --webkit-font-smoothing: antialiased;
     line-height: 1.5;
     font-weight: 400;
     font-size: 78%; /* With Wix Madefor Text font to be the same size as Inter (default: 75%) */
+}
+
+html.light {
+    scrollbar-width: thin;
+    scrollbar-color: #8b8b8b #00000012;
+}
+
+html.dark {
+    scrollbar-width: thin;
+    scrollbar-color: #9f9f9f #ffffff08;
 }
 
 /* :root {
