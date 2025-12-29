@@ -44,7 +44,10 @@
     --lc-font-monospace:
         "JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco",
         "Consolas", "Liberation Mono", "Courier New", monospace;
-    --lc-text-color-monospace: oklch(65.34% 0.183 23.68);
+    --lc-text-color-monospace: light-dark(
+        oklch(54.19% 0.152 23.67),
+        oklch(65.34% 0.183 23.68)
+    );
 }
 
 .dark {

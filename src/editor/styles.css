@@ -57,24 +57,50 @@
     display: none !important;
 }*/
 
+.bn-container .bn-table-handle:is(button) {
+    padding-inline: 0;
+    background-color: light-dark(#eeeeee, #333333);
+}
+
+.bn-container .bn-table-handle:is(button):hover {
+    background-color: light-dark(#aaaaaa, #111111);
+}
+
+.bn-container .bn-button:is(button)[aria-label="Open block menu"] {
+    cursor: grab;
+}
+
+.bn-container .bn-button:is(button):hover {
+    background-color: light-dark(#eeeeee, #333333);
+}
+/*.bn-container .bn-button:is(button)[aria-label="Open block menu"]:active {
+    cursor: grabbing;
+}
+.bn-container .bn-button:is(button)[aria-label="Open block menu"]:active:hover {
+    cursor: grabbing;
+}*/
+
 /* * NOTE: Custom Styles for BlockNote*/
-.bn-code-content [data-content-type="paragraph"] code {
-    background-color: light-dark(#00000016, #ffffff14);
+.bn-code-content :not([data-content-type="codeBlock"]) :not(pre) code {
+    background-color: light-dark(#00000012, #ffffff12);
     font-variant-ligatures: none; /*Maybe add ligatures later*/
     color: var(--lc-text-color-monospace);
     border-radius: 3px;
-    padding-top: 2px;
+    padding-top: 3px;
     padding-bottom: 2px;
     padding-left: 3px;
     padding-right: 3px;
     font-family: var(--lc-font-monospace);
-    font-size: 14px; /*MAYBE: Adjust later*/
+    font-size: calc(1em - 2px); /*MAYBE: Adjust later*/
+    font-weight: 300;
 }
 
 .bn-code-content [data-content-type="codeBlock"] pre code {
     font-family: var(--lc-font-monospace);
     font-variant-ligatures: none; /*Maybe add ligatures later*/
     font-size: 14px; /*MAYBE: Adjust later*/
+    font-weight: 300;
+    /*line-height: 1.2;*/
 }
 
 .bn-table-header [data-content-type="table"] th {
