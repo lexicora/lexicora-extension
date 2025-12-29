@@ -16,6 +16,7 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
+    "@blocknote/code-block": "^0.45.0",
     "@blocknote/core": "^0.45.0",
     "@blocknote/react": "^0.45.0",
     "@blocknote/shadcn": "^0.45.0",

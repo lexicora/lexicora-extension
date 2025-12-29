@@ -9,8 +9,8 @@ import "@fontsource/wix-madefor-text/600.css";
 import "@fontsource/wix-madefor-text/600-italic.css";
 import "@fontsource/wix-madefor-text/700.css";
 import "@fontsource/wix-madefor-text/700-italic.css";
-//import '@fontsource/wix-madefor-text/800.css'
-//import '@fontsource/wix-madefor-text/800-italic.css'
+import "@fontsource/wix-madefor-text/800.css";
+import "@fontsource/wix-madefor-text/800-italic.css";
 //import "@fontsource/jetbrains-mono/200.css";
 import "@fontsource/jetbrains-mono/300.css";
 import "@fontsource/jetbrains-mono/400.css";

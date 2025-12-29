@@ -28,6 +28,8 @@ function NewEntryPage() {
           if (import.meta.env.DEV)
             console.log("NewEntryPage: Received HTML content.");
           setContentHtml(msg.data.HTML);
+
+          // Parse and set content in BlockNote.js editor
           const blocks = editor.tryParseHTMLToBlocks(msg.data.HTML);
           editor.replaceBlocks(editor.document, blocks);
         }

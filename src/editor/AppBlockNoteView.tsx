@@ -26,6 +26,7 @@ import {
   TextAlignButton,
   UnnestBlockButton,
   SuggestionMenuController,
+  GridSuggestionMenuController,
   useCreateBlockNote,
 } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/shadcn";
@@ -68,6 +69,7 @@ export function AppBlockNoteView({
         // Tooltip,
       }}
       formattingToolbar={false}
+      emojiPicker={false}
       //slashMenu={false}
     >
       <FormattingToolbarController
@@ -117,6 +119,12 @@ export function AppBlockNoteView({
             <CreateLinkButton key={"createLinkButton"} />
           </FormattingToolbar>
         )}
+      />
+      <GridSuggestionMenuController
+        triggerCharacter={":"}
+        // Changes the Emoji Picker to only have 5 columns.
+        columns={8}
+        minQueryLength={2}
       />
       {/*<SuggestionMenuController
         triggerCharacter={"/"}

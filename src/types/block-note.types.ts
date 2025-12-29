@@ -1,4 +1,12 @@
+import { BlockNoteSchema, createCodeBlockSpec } from "@blocknote/core";
+import { codeBlockOptions } from "@blocknote/code-block";
+
 export const defaultBlockNoteConfig = {
+  schema: BlockNoteSchema.create().extend({
+    blockSpecs: {
+      codeBlock: createCodeBlockSpec(codeBlockOptions),
+    },
+  }),
   tables: {
     headers: true, // MAYBE TODO: Add more customization options for tables later
   },

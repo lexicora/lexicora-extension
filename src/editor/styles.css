@@ -80,6 +80,13 @@
     cursor: grabbing;
 }*/
 
+.bn-container .bn-panel {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--color-border);
+    max-width: 85vw;
+}
+
 /* * NOTE: Custom Styles for BlockNote*/
 .bn-code-content :not([data-content-type="codeBlock"]) :not(pre) code {
     background-color: light-dark(#00000012, #ffffff12);
