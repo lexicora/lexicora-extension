@@ -9,7 +9,7 @@ import { MSG } from "@/types/messaging";
 import { defaultBlockNoteConfig } from "@/types/block-note.types";
 
 // App BlockNote.js imports
-import { AppBlockNoteView } from "@/editor/AppBlockNoteView";
+import { BlockNoteView } from "@/editor/BlockNoteView";
 import { useCreateBlockNote } from "@blocknote/react";
 
 function NewEntryPage() {
@@ -80,7 +80,7 @@ function NewEntryPage() {
           {contentHtml}
         </div>*/}
         <div className="text-start">
-          <AppBlockNoteView
+          <BlockNoteView
             editor={editor}
             className=""
             //editable={false}

@@ -29,14 +29,14 @@ import {
   GridSuggestionMenuController,
   useCreateBlockNote,
 } from "@blocknote/react";
-import { BlockNoteView } from "@blocknote/shadcn";
+import { BlockNoteView as BaseBlockNoteView } from "@blocknote/shadcn";
 import "@blocknote/shadcn/style.css";
 import "./styles.css";
 
 import { getAppTheme } from "./theme-config";
 //import { getCustomSlashMenuItems } from "./config";
 
-export function AppBlockNoteView({
+export function BlockNoteView({
   editor,
   className,
   style,
@@ -49,7 +49,7 @@ export function AppBlockNoteView({
 }) {
   //TODO: Implement no spellcheck in code blocks
   return (
-    <BlockNoteView
+    <BaseBlockNoteView
       editor={editor}
       className={className}
       style={style}
@@ -135,6 +135,6 @@ export function AppBlockNoteView({
           filterSuggestionItems(getCustomSlashMenuItems(editor), query)
         }
       />*/}
-    </BlockNoteView>
+    </BaseBlockNoteView>
   );
 }
