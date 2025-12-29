@@ -66,13 +66,15 @@
     background-color: light-dark(#aaaaaa, #111111);
 }
 
+/*Same as: .bn-container button.bn-button:hover */
+.bn-container .bn-button:is(button):hover {
+    background-color: light-dark(#eeeeee, #333333);
+}
+
 .bn-container .bn-button:is(button)[aria-label="Open block menu"] {
     cursor: grab;
 }
 
-.bn-container .bn-button:is(button):hover {
-    background-color: light-dark(#eeeeee, #333333);
-}
 /*.bn-container .bn-button:is(button)[aria-label="Open block menu"]:active {
     cursor: grabbing;
 }
@@ -87,8 +89,19 @@
     max-width: 85vw;
 }
 
+.bn-container .bn-extend-button-add-remove-columns {
+    padding-inline: 6px;
+}
+
+/*.bn-container .bn-extend-button-add-remove-rows {
+
+}*/
+
 /* * NOTE: Custom Styles for BlockNote*/
-.bn-code-content :not([data-content-type="codeBlock"]) :not(pre) code {
+.bn-code-content
+    .bn-block-content:not([data-content-type="codeBlock"])
+    :not(pre)
+    code {
     background-color: light-dark(#00000012, #ffffff12);
     font-variant-ligatures: none; /*Maybe add ligatures later*/
     color: var(--lc-text-color-monospace);
@@ -102,7 +115,7 @@
     font-weight: 300;
 }
 
-.bn-code-content [data-content-type="codeBlock"] pre code {
+.bn-code-content .bn-block-content[data-content-type="codeBlock"] pre code {
     font-family: var(--lc-font-monospace);
     font-variant-ligatures: none; /*Maybe add ligatures later*/
     font-size: 14px; /*MAYBE: Adjust later*/
@@ -110,7 +123,7 @@
     /*line-height: 1.2;*/
 }
 
-.bn-table-header [data-content-type="table"] th {
+.bn-table-header .bn-block-content[data-content-type="table"] th {
     background-color: light-dark(#00000009, #ffffff11);
 }
 

@@ -47,6 +47,7 @@ export function AppBlockNoteView({
   style?: React.CSSProperties;
   editable?: boolean;
 }) {
+  //TODO: Implement no spellcheck in code blocks
   return (
     <BlockNoteView
       editor={editor}
@@ -71,6 +72,7 @@ export function AppBlockNoteView({
       formattingToolbar={false}
       emojiPicker={false}
       //slashMenu={false}
+      //spellCheck={false}
     >
       <FormattingToolbarController
         formattingToolbar={() => (
