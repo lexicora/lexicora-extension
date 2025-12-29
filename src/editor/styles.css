@@ -11,6 +11,12 @@
     color-scheme: dark;
 }
 
+.bn-container[data-color-scheme] .bn-editor {
+    --bn-font-family:
+        "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: var(--bn-font-family);
+}
+
 .bn-default-styles {
     --bn-font-family:
         "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -52,11 +58,29 @@
 }*/
 
 /* * NOTE: Custom Styles for BlockNote*/
-.bn-code-bg code {
-    background-color: light-dark(#00000014, #ffffff12);
-    border-radius: 2px;
+.bn-code-content [data-content-type="paragraph"] code {
+    background-color: light-dark(#00000016, #ffffff14);
+    font-variant-ligatures: none; /*Maybe add ligatures later*/
+    color: var(--lc-text-color-monospace);
+    border-radius: 3px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+    font-family: var(--lc-font-monospace);
+    font-size: 14px; /*MAYBE: Adjust later*/
 }
 
-.bn-table-header th {
-    background-color: light-dark(#00000008, #ffffff10);
+.bn-code-content [data-content-type="codeBlock"] pre code {
+    font-family: var(--lc-font-monospace);
+    font-variant-ligatures: none; /*Maybe add ligatures later*/
+    font-size: 14px; /*MAYBE: Adjust later*/
 }
+
+.bn-table-header [data-content-type="table"] th {
+    background-color: light-dark(#00000009, #ffffff11);
+}
+
+/*.bn-table-border table th td {
+    border-color: var(--color-border);
+}*/

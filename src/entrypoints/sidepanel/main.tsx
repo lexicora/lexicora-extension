@@ -1,19 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App.tsx';
-import '@fontsource/wix-madefor-text/400.css'
-import '@fontsource/wix-madefor-text/400-italic.css'
-import '@fontsource/wix-madefor-text/500.css'
-import '@fontsource/wix-madefor-text/500-italic.css'
-import '@fontsource/wix-madefor-text/600.css'
-import '@fontsource/wix-madefor-text/600-italic.css'
-import '@fontsource/wix-madefor-text/700.css'
-import '@fontsource/wix-madefor-text/700-italic.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.tsx";
+import "@fontsource/wix-madefor-text/400.css";
+import "@fontsource/wix-madefor-text/400-italic.css";
+import "@fontsource/wix-madefor-text/500.css";
+import "@fontsource/wix-madefor-text/500-italic.css";
+import "@fontsource/wix-madefor-text/600.css";
+import "@fontsource/wix-madefor-text/600-italic.css";
+import "@fontsource/wix-madefor-text/700.css";
+import "@fontsource/wix-madefor-text/700-italic.css";
 //import '@fontsource/wix-madefor-text/800.css'
 //import '@fontsource/wix-madefor-text/800-italic.css'
-import '../../assets/styles/global.css';
+import "@fontsource/jetbrains-mono";
+import "../../assets/styles/global.css";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
