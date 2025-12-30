@@ -40,7 +40,9 @@
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
 
-    /*Custom*/
+    /*Lexicora styles*/
+    --lc-font-sans-serif:
+        "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;
     --lc-font-monospace:
         "JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco",
         "Consolas", "Liberation Mono", "Courier New", monospace;
@@ -83,6 +85,8 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(0.269 0 0);
     --sidebar-ring: oklch(0.439 0 0);
+
+    /*Lexicora styles*/
 }
 
 @theme inline {
@@ -142,8 +146,9 @@
 }
 
 body {
-    font-family:
-        "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;
+    /*font-family:
+        "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;*/
+    font-family: var(--lc-font-sans-serif);
     --webkit-font-smoothing: antialiased;
     line-height: 1.5;
     font-weight: 400;

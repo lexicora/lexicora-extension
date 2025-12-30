@@ -1,7 +1,6 @@
 /* Base theme */
 .bn-container[data-color-scheme] {
-    --bn-font-family:
-        "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;
+    --bn-font-family: var(--lc-font-sans-serif);
     color-scheme: normal;
     scrollbar-color: light-dark(#8b8b8b, #9f9f9f) transparent;
 }
@@ -12,15 +11,13 @@
 }
 
 .bn-container[data-color-scheme] .bn-editor {
-    --bn-font-family:
-        "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;
-    font-family: var(--bn-font-family);
+    /*--bn-font-family: var(--lc-font-sans-serif);*/
+    font-family: var(--lc-font-sans-serif);
 }
 
 .bn-default-styles {
-    --bn-font-family:
-        "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;
-    font-family: var(--bn-font-family);
+    /*--bn-font-family: var(--lc-font-sans-serif);*/
+    font-family: var(--lc-font-sans-serif);
 }
 
 .bn-editor {
