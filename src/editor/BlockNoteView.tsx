@@ -41,7 +41,7 @@ export function BlockNoteView({
   className,
   style,
   editable = true,
-  lang = "en", // Pass the language that was from the website or user preference
+  lang = navigator.language || "en", // Pass the language that was from the website or user preference
   //MAYBE: If no language is passed, disable spellcheck?
   spellCheck = true,
 }: {

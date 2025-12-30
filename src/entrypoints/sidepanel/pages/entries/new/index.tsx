@@ -16,7 +16,7 @@ import { useCreateBlockNote } from "@blocknote/react";
 function NewEntryPage() {
   const navigate = useNavigate();
   const [contentHtml, setContentHtml] = useState<string | null>(null);
-  const [language, setLanguage] = useState<string>("");
+  const [language, setLanguage] = useState<string>(navigator.language || "en");
   const editor = useCreateBlockNote(defaultBlockNoteConfig);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ function NewEntryPage() {
           if (import.meta.env.DEV)
             console.log("NewEntryPage: Received HTML content.");
           setContentHtml(msg.data.HTML);
-          setLanguage(msg.data.language || "en");
+          setLanguage(msg.data.language || navigator.language || "en");
 
           // Parse and set content in BlockNote.js editor
           const blocks = editor.tryParseHTMLToBlocks(msg.data.HTML);
