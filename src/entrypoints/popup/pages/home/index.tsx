@@ -5,31 +5,17 @@ import lexicoraLightThemeLogo from "@/assets/logos/Lexicora_alt1.svg";
 import lexicoraDarkThemeLogo from "@/assets/logos/Lexicora_alt2.svg";
 import { getAppTheme } from "@/lib/theme-helper";
 import "./HomePage.css";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
 import { ArrowUpRight, PanelRight, PanelRightOpen } from "lucide-react";
+import { useTheme } from "@/components/theme-provider";
 
 function HomePage() {
   const [count, setCount] = useState(0);
+  //const { theme } = useTheme()
+  //const [localTheme, setLocalTheme] = useState(theme);
   //const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
-  const [theme, setTheme] = useState(getAppTheme());
-
-  useEffect(() => {
-    const handleStorageChange = (changes: {
-      [key: string]: Browser.storage.StorageChange;
-    }) => {
-      if (changes["lexicora-ui-theme"]) {
-        //@ts-ignore: Theme is always light | dark or undefined
-        setTheme(changes["lexicora-ui-theme"].newValue);
-      }
-    };
-
-    browser.storage.onChanged.addListener(handleStorageChange);
-
-    return () => {
-      browser.storage.onChanged.removeListener(handleStorageChange);
-    };
-  }, []);
 
   const openSidePanel = async () => {
     if (import.meta.env.FIREFOX) {
@@ -46,18 +32,13 @@ function HomePage() {
     window.close();
   };
 
-  // eventlistener for when theme changes to re-render the component
-
   return (
-    <div className="w-85 overflow-auto h-full pt-20 pb-32 px-6">
+    <div className="w-85 overflow-auto h-full pt-20 pb-20 px-6">
       <div>
         <section
-          className="fixed top-0 left-0 w-full border-b border-solid p-3"
-          style={{
-            backgroundColor: "var(--color-background)",
-            borderColor: "var(--color-border)",
-            zIndex: 10,
-          }}
+          className="fixed top-0 left-0 w-full p-3 z-10
+          border-b border-solid border-(--color-border)
+          bg-background/80 backdrop-blur-lg"
         >
           <div
             style={{
@@ -69,28 +50,34 @@ function HomePage() {
             }}
           >
             <div className="flex justify-start flex-1 gap-1">
-              <Button
+              {/*<Button
                 onClick={() => setCount((count) => count + 1)}
                 variant="secondary"
               >
                 count is {count}
-              </Button>
-              <ModeToggle />
+              </Button>*/}
+              {/*<ModeToggle />*/}
+              <Avatar className="size-8 border">
+                <AvatarImage
+                  src="https://github.com/tgrant06.png"
+                  alt="@tgrant06"
+                />
+                <AvatarFallback>TM</AvatarFallback>
+              </Avatar>
             </div>
             <div className="shrink-0">
-              {theme === "light" ? (
-                <img
-                  src={lexicoraLightThemeLogo}
-                  className="h-9"
-                  alt="Lexicora logo"
-                />
-              ) : (
-                <img
-                  src={lexicoraDarkThemeLogo}
-                  className="h-9"
-                  alt="Lexicora logo"
-                />
-              )}
+              <img
+                src={lexicoraLightThemeLogo}
+                className="h-9 lc-light-theme-logo"
+                alt="Lexicora logo"
+                draggable="false"
+              />
+              <img
+                src={lexicoraDarkThemeLogo}
+                className="h-9 lc-dark-theme-logo"
+                alt="Lexicora logo"
+                draggable="false"
+              />
             </div>
             <div className="flex justify-end flex-1">
               <Button
@@ -105,18 +92,26 @@ function HomePage() {
           </div>
         </section>
       </div>
-
       <div>
         <section>
-          {/*<div>
-          <a href="https://wxt.dev" target="_blank">
-            <img src={wxtLogo} className="logo" alt="WXT logo" />
-          </a>
-          <a href="https://react.dev" target="_blank">
-            <img src={reactLogo} className="logo react" alt="React logo" />
-          </a>
-        </div>*/}
-          <h1 className="test-app text-3xl font-bold">WXT + React</h1>
+          <span className="inline-flex gap-3 items-baseline">
+            <img
+              src={lexicoraLightThemeLogo}
+              className="h-6.5 lc-light-theme-logo"
+              alt="Lexicora logo"
+              draggable="false"
+            />
+            <img
+              src={lexicoraDarkThemeLogo}
+              className="h-6.5 lc-dark-theme-logo"
+              alt="Lexicora logo"
+              draggable="false"
+            />
+            <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-(--foreground)">
+              Lexicora
+            </h1>
+          </span>
+          <h2 className="test-app text-2xl font-bold">WXT + React</h2>
           <div className="card">
             <div
               style={{
@@ -167,12 +162,35 @@ function HomePage() {
       </div>
       <div>
         <section
-          className="fixed bottom-0 left-0 h-28 w-full border-t border-solid"
-          style={{
-            backgroundColor: "var(--color-background)",
-            borderColor: "var(--color-border)",
-          }}
-        ></section>
+          className="fixed bottom-0 left-0 h-15.25 w-full p-3 z-10
+          border-t border-solid border-(--color-border)
+          bg-background/80 backdrop-blur-lg"
+        >
+          <div
+            style={{
+              display: "flex",
+              gap: "12px",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            <div className="flex justify-start flex-1">
+              <Button
+                variant="secondary"
+                title="Capture page content"
+                className="w-full"
+              >
+                Capture
+              </Button>
+            </div>
+            <div className="flex justify-end flex-1">
+              <Button title="Capture page content with AI" className="w-full">
+                Capture with AI
+              </Button>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

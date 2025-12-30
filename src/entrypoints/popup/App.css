@@ -7,10 +7,7 @@
 
 html {
     max-width: calc(var(--spacing) * 85);
-}
-
-body[data-scroll-locked] {
-    --removed-body-scroll-bar-size: 0 !important;
+    /*scrollbar-width: none !important;*/
 }
 
 .logo {
