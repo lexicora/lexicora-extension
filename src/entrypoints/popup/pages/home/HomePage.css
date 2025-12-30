@@ -1,7 +1,9 @@
 .lc-top-bar {
     position: fixed;
     top: 0;
+    left: 0;
     height: 56px;
     width: 100%;
-    background-color: light-dark();
+    background-color: var(--color-gray-500);
+    border-color: var(--color-border);
 }
