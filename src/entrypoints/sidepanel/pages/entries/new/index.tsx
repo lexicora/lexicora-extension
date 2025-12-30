@@ -9,12 +9,14 @@ import { MSG } from "@/types/messaging";
 import { defaultBlockNoteConfig } from "@/types/block-note.types";
 
 // App BlockNote.js imports
+// INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { BlockNoteView } from "@/editor/BlockNoteView";
 import { useCreateBlockNote } from "@blocknote/react";
 
 function NewEntryPage() {
   const navigate = useNavigate();
   const [contentHtml, setContentHtml] = useState<string | null>(null);
+  const [language, setLanguage] = useState<string>("");
   const editor = useCreateBlockNote(defaultBlockNoteConfig);
 
   useEffect(() => {
@@ -28,6 +30,7 @@ function NewEntryPage() {
           if (import.meta.env.DEV)
             console.log("NewEntryPage: Received HTML content.");
           setContentHtml(msg.data.HTML);
+          setLanguage(msg.data.language || "en");
 
           // Parse and set content in BlockNote.js editor
           const blocks = editor.tryParseHTMLToBlocks(msg.data.HTML);
@@ -83,6 +86,7 @@ function NewEntryPage() {
           <BlockNoteView
             editor={editor}
             className=""
+            lang={language}
             //editable={false}
           />
         </div>

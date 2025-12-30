@@ -11,8 +11,6 @@ import * as DropdownMenu from "./components/dropdown-menu";
 // import * as Toggle from "@/components/ui/toggle";
 // import * as Tooltip from "@/components/ui/tooltip";
 
-//import "@blocknote/core/fonts/inter.css";
-import { filterSuggestionItems } from "@blocknote/core/extensions";
 import {
   BasicTextStyleButton,
   BlockTypeSelect,
@@ -29,8 +27,10 @@ import {
   GridSuggestionMenuController,
   useCreateBlockNote,
 } from "@blocknote/react";
+import { filterSuggestionItems } from "@blocknote/core/extensions";
 import { BlockNoteView as BaseBlockNoteView } from "@blocknote/shadcn";
 import "@blocknote/shadcn/style.css";
+//import "@blocknote/core/fonts/inter.css";
 import "./styles.css";
 
 import { getAppTheme } from "./theme-config";
@@ -41,11 +41,16 @@ export function BlockNoteView({
   className,
   style,
   editable = true,
+  lang = "en", // Pass the language that was from the website or user preference
+  //MAYBE: If no language is passed, disable spellcheck?
+  spellCheck = true,
 }: {
   editor: ReturnType<typeof useCreateBlockNote>;
   className?: string;
   style?: React.CSSProperties;
   editable?: boolean;
+  lang?: string;
+  spellCheck?: boolean;
 }) {
   //TODO: Implement no spellcheck in code blocks
   return (
@@ -55,6 +60,8 @@ export function BlockNoteView({
       style={style}
       editable={editable}
       theme={getAppTheme()}
+      lang={lang}
+      spellCheck={spellCheck}
       shadCNComponents={{
         //Badge,
         Button,

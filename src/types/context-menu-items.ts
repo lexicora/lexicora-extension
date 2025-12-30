@@ -26,7 +26,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   },
   {
     id: CMI_ID.SAVE_SELECTION_AS_IS,
-    title: "Save Selection as is", //MAYBE TODO: Rename to "Save Selection Plain" or "Select as is" later
+    title: "Save Selection as is", //MAYBE TODO: Rename to "Save Selection Plain", "Capture Selection (as is)" or "Select as is" later
     contexts: ["selection"],
   },
   {

@@ -1,5 +1,16 @@
-import { BlockNoteSchema, createCodeBlockSpec } from "@blocknote/core";
+import {
+  BlockNoteSchema,
+  createCodeBlockSpec,
+  defaultBlockSpecs,
+} from "@blocknote/core";
 import { codeBlockOptions } from "@blocknote/code-block";
+
+codeBlockOptions.defaultLanguage = "text";
+// const codeBlockConfig = {
+//   ...codeBlockOptions,
+//   // MAYBE: Make default language configurable from outside
+//   indentLineWithTab: true,
+// };
 
 export const defaultBlockNoteConfig = {
   schema: BlockNoteSchema.create().extend({

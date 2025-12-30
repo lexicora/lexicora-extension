@@ -97,6 +97,14 @@
 
 }*/
 
+.bn-editor code::spelling-error,
+.bn-editor pre::spelling-error,
+.bn-editor code::grammar-error,
+.bn-editor pre::grammar-error {
+    text-decoration: none;
+    text-decoration-line: none;
+}
+
 /* * NOTE: Custom Styles for BlockNote*/
 .bn-code-content
     .bn-block-content:not([data-content-type="codeBlock"])
@@ -112,7 +120,14 @@
     padding-right: 3px;
     font-family: var(--lc-font-monospace);
     font-size: calc(1em - 2px); /*MAYBE: Adjust later*/
-    font-weight: 300;
+    font-weight: 400; /*Hevier font for better readability, due to different display in light mode*/
+}
+
+.bn-container[data-color-scheme="dark"]
+    .bn-block-content:not([data-content-type="codeBlock"])
+    :not(pre)
+    code {
+    font-weight: 300 !important;
 }
 
 .bn-code-content .bn-block-content[data-content-type="codeBlock"] pre code {
