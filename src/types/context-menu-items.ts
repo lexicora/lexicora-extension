@@ -7,9 +7,9 @@ export type ContextMenuCreateProps = Parameters<
  */
 export const CMI_ID = {
   OPEN_LEXICORA: "open-lexicora",
-  SAVE_SELECTION_AI_ASSISTED: "save-selection-ai-assisted",
-  SAVE_SELECTION_AS_IS: "save-selection-as-is",
-  SAVE_FROM_CLIPBOARD: "save-from-clipboard",
+  CAPTURE_SELECTION_AI_ASSISTED: "save-selection-ai-assisted",
+  CAPTURE_SELECTION_AS_IS: "save-selection-as-is",
+  CAPTURE_FROM_CLIPBOARD: "save-from-clipboard",
 } as const;
 
 // Todo: localize titles later and change order for better UX
@@ -20,18 +20,18 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
     contexts: ["all"],
   },
   {
-    id: CMI_ID.SAVE_SELECTION_AI_ASSISTED,
-    title: "Save Selection AI-Assisted", //MAYBE TODO: Rename to "Capture (selection) with AI" later
+    id: CMI_ID.CAPTURE_SELECTION_AI_ASSISTED,
+    title: "Capture Selection with AI",
     contexts: ["selection"],
   },
   {
-    id: CMI_ID.SAVE_SELECTION_AS_IS,
-    title: "Save Selection as is", //MAYBE TODO: Rename to "Save Selection Plain", "Capture Selection (as is)" or "Select as is" later
+    id: CMI_ID.CAPTURE_SELECTION_AS_IS,
+    title: "Capture Selection",
     contexts: ["selection"],
   },
   {
-    id: CMI_ID.SAVE_FROM_CLIPBOARD,
-    title: "Save from Clipboard", //MAYBE TODO: Rename to "Capture from Clipboard" later
+    id: CMI_ID.CAPTURE_FROM_CLIPBOARD,
+    title: "Capture from Clipboard",
     contexts: ["all"],
   },
   //TODO MAYBE: Add option to save without opening side panel and only show notification of success/failure

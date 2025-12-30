@@ -66,6 +66,7 @@ function HomePage() {
               </Avatar>
             </div>
             <div className="shrink-0">
+              {/*Maybe remove later and keep it blank*/}
               <img
                 src={lexicoraLightThemeLogo}
                 className="h-9 lc-light-theme-logo"
@@ -107,7 +108,7 @@ function HomePage() {
               alt="Lexicora logo"
               draggable="false"
             />
-            <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-(--foreground)">
+            <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground">
               Lexicora
             </h1>
           </span>
@@ -178,14 +179,14 @@ function HomePage() {
             <div className="flex justify-start flex-1">
               <Button
                 variant="secondary"
-                title="Capture page content"
+                title="Capture page"
                 className="w-full"
               >
                 Capture
               </Button>
             </div>
             <div className="flex justify-end flex-1">
-              <Button title="Capture page content with AI" className="w-full">
+              <Button title="Capture page with AI" className="w-full">
                 Capture with AI
               </Button>
             </div>

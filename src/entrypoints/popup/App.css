@@ -6,7 +6,7 @@
 }
 
 html {
-    max-width: calc(var(--spacing) * 85);
+    max-width: calc(var(--spacing) * 86);
     /*scrollbar-width: none !important;*/
 }
 

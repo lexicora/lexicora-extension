@@ -7,6 +7,8 @@ import { Article } from "@/types/mozilla-article.types";
 import turndownService from "@/lib/turndown";
 import { Braces } from "lucide-react";
 
+//TODO: Rewrite messaging to include pulling instead of pushing from the side panel, to avoid timing issues. (Create git branch for this)
+
 /**
  * Handles context menu item clicks and actions.
  */
@@ -17,7 +19,7 @@ export function contextMenuHandler() {
         browser.tabs.create({ url: "https://lexicora.com" });
         break;
       }
-      case CMI_ID.SAVE_SELECTION_AI_ASSISTED: {
+      case CMI_ID.CAPTURE_SELECTION_AI_ASSISTED: {
         const pageSelectionArticle = await sendMessage<Article>(
           MSG.GET_PAGE_SELECTION_ARTICLE,
           {},
@@ -39,19 +41,19 @@ export function contextMenuHandler() {
         //console.log("AI-Assisted save not implemented yet.");
         break;
       }
-      case CMI_ID.SAVE_SELECTION_AS_IS: {
+      case CMI_ID.CAPTURE_SELECTION_AS_IS: {
         if (!tab) break;
         if (import.meta.env.FIREFOX) {
           // @ts-ignore: sidebarAction is a Firefox-specific API
           browser.sidebarAction.setPanel({
-            tabId: tab.id,
+            tabId: tab.id, // NOTE: For some reason necessary for Firefox
             panel: browser.runtime.getURL("/sidepanel.html#/entries/new"),
           });
           // @ts-ignore: sidebarAction is a Firefox-specific API
           browser.sidebarAction.open();
         } else {
           browser.sidePanel.setOptions({
-            tabId: tab.id,
+            // NOTE: {tabId: tab.id} For some reason unnecessary for Chrome
             path: "sidepanel.html#/entries/new",
             enabled: true,
           });
@@ -108,12 +110,12 @@ export function contextMenuHandler() {
         if (import.meta.env.FIREFOX) {
           // @ts-ignore: sidebarAction is a Firefox-specific API
           browser.sidebarAction.setPanel({
-            tabId: tab.id,
+            tabId: tab.id, // NOTE: For some reason necessary for Firefox
             panel: browser.runtime.getURL("/sidepanel.html"),
           });
         } else {
           browser.sidePanel.setOptions({
-            tabId: tab.id,
+            // NOTE: {tabId: tab.id} For some reason unnecessary for Chrome
             path: "sidepanel.html",
             enabled: true,
           });
@@ -136,7 +138,7 @@ export function contextMenuHandler() {
         }
         break;
       }
-      case CMI_ID.SAVE_FROM_CLIPBOARD: {
+      case CMI_ID.CAPTURE_FROM_CLIPBOARD: {
         // Todo: Implement saving from clipboard
         console.log("Save from Clipboard not implemented yet.");
         break;

@@ -14,6 +14,19 @@ export default defineBackground(() => {
     for (const contextMenuItem of CONTEXT_MENU_ITEMS) {
       browser.contextMenus.create(contextMenuItem);
     }
+
+    // NOTE: This should be the default, but setting explicitly might be unnecessary
+    if (import.meta.env.FIREFOX) {
+      // @ts-ignore: sidebarAction is a Firefox-specific API
+      browser.sidebarAction.setPanel({
+        panel: browser.runtime.getURL("/sidepanel.html"),
+      });
+    } else {
+      browser.sidePanel.setOptions({
+        path: "sidepanel.html",
+        enabled: true,
+      });
+    }
   });
 
   // Context menu click handler
