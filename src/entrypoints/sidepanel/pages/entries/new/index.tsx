@@ -50,6 +50,19 @@ function NewEntryPage() {
   }, [editor]);
 
   // useEffect(() => {
+  //   const unsubscribe = onMessage<pageData>(
+  //     MSG.GET_PAGE_SELECTION_DATA,
+  //     (msg) => {
+  //       if (msg.data) {
+  //         updateEditorContent(msg.data);
+  //       }
+  //     },
+  //   );
+
+  //   return () => unsubscribe();
+  // }, []);
+
+  // useEffect(() => {
   //   // Listen only for the data message
   //   const unsubscribe = onMessage<pageData>(
   //     MSG.SEND_PAGE_SELECTION_DATA,

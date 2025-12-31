@@ -4,10 +4,15 @@ import { pageData } from "@/types/page-selection-data.types";
 
 // This stays private to this module (encapsulation)
 let pendingScrape: pageData | null = null;
+let pendingNavigation: string | null = null;
 
 // Export the setter so context-menu.ts can call it
 export const setPendingScrape = (data: pageData | null) => {
   pendingScrape = data;
+};
+
+export const setPendingNavigation = (path: string | null) => {
+  pendingNavigation = path;
 };
 
 export function setupMessagingHandlers() {
@@ -15,5 +20,11 @@ export function setupMessagingHandlers() {
     const data = pendingScrape;
     pendingScrape = null; // Clear after delivery to prevent stale data
     return data;
+  });
+
+  onMessage(MSG.REQUEST_PENDING_NAVIGATION, () => {
+    const path = pendingNavigation;
+    pendingNavigation = null; // Clear after delivery to prevent stale navigation
+    return path;
   });
 }

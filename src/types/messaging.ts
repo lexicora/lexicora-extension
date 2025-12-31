@@ -16,6 +16,7 @@ export const MSG = {
   SEND_PAGE_SELECTION_DATA: "sidepanel/SEND_PAGE_SELECTION_DATA",
   NAVIGATE_IN_SIDEPANEL: "sidepanel/NAVIGATE_IN_SIDEPANEL",
   REQUEST_PENDING_DATA: "sidepanel/REQUEST_PENDING_DATA",
+  REQUEST_PENDING_NAVIGATION: "sidepanel/REQUEST_PENDING_NAVIGATION",
 } as const;
 
 // Types for the messages and their payloads
@@ -34,6 +35,7 @@ export type Message =
   | { type: typeof MSG.GET_PAGE_SELECTION_DATA_AI_ASSISTED }
   | { type: typeof MSG.GET_PAGE_HTML }
   | { type: typeof MSG.REQUEST_PENDING_DATA }
+  | { type: typeof MSG.REQUEST_PENDING_NAVIGATION }
 
   // Message from background to sidepanel with the requested data
   | {

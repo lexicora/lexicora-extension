@@ -6,7 +6,7 @@ import { Readability } from "@mozilla/readability";
 import { Article } from "@/types/mozilla-article.types";
 import turndownService from "@/lib/turndown";
 import { Braces } from "lucide-react";
-import { setPendingScrape } from "./messaging-handler";
+import { setPendingScrape, setPendingNavigation } from "./messaging-handler";
 
 //TODO: Rewrite messaging to include pulling instead of pushing from the side panel, to avoid timing issues. (Create git branch for this)
 
@@ -45,20 +45,21 @@ export function contextMenuHandler() {
         break;
       }
       case CMI_ID.CAPTURE_SELECTION_AS_IS: {
+        setPendingNavigation("/entries/new");
         if (import.meta.env.FIREFOX) {
-          // @ts-ignore: sidebarAction is a Firefox-specific API
-          browser.sidebarAction.setPanel({
-            tabId: tab.id, // NOTE: For some reason necessary for Firefox
-            panel: browser.runtime.getURL("/sidepanel.html#/entries/new"),
-          });
+          // // @ts-ignore: sidebarAction is a Firefox-specific API
+          // browser.sidebarAction.setPanel({
+          //   tabId: tab.id,
+          //   panel: browser.runtime.getURL("/sidepanel.html#/entries/new"),
+          // });
           // @ts-ignore: sidebarAction is a Firefox-specific API
           browser.sidebarAction.open();
         } else {
-          browser.sidePanel.setOptions({
-            // NOTE: {tabId: tab.id} For some reason unnecessary for Chrome
-            path: "sidepanel.html#/entries/new",
-            enabled: true,
-          });
+          // browser.sidePanel.setOptions({
+          //   tabId: tab.id, // NOTE: {tabId: tab.id} For some reason unnecessary for Chrome
+          //   path: "sidepanel.html#/entries/new",
+          //   enabled: true,
+          // });
           browser.sidePanel.open({ windowId: tab.windowId });
         }
 

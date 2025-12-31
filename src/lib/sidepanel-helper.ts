@@ -1,46 +1,47 @@
-export function resetSidePanel() {
+export function resetSidePanel(tabId?: number) {
   if (import.meta.env.FIREFOX) {
-    resetFirefoxSidePanel();
+    resetFirefoxSidePanel(tabId);
   } else {
-    resetChromeSidePanel();
+    resetChromeSidePanel(tabId);
   }
 }
 
-export async function resetSidePanelAsync() {
+export async function resetSidePanelAsync(tabId?: number) {
   if (import.meta.env.FIREFOX) {
-    await resetFirefoxSidePanelAsync();
+    await resetFirefoxSidePanelAsync(tabId);
   } else {
-    await resetChromeSidePanelAsync();
+    await resetChromeSidePanelAsync(tabId);
   }
 }
 
-export function resetFirefoxSidePanel() {
+export function resetFirefoxSidePanel(tabId?: number) {
+  const options: any = { panel: browser.runtime.getURL("/sidepanel.html") };
+  if (tabId !== undefined) options.tabId = tabId;
   // @ts-ignore: sidebarAction is a Firefox-specific API
-  browser.sidebarAction.setPanel({
-    //tabId: tab.id, // NOTE: For some reason necessary for Firefox
-    panel: browser.runtime.getURL("/sidepanel.html"),
-  });
+  browser.sidebarAction.setPanel(options);
 }
 
-export function resetChromeSidePanel() {
-  browser.sidePanel.setOptions({
-    // NOTE: {tabId: tab.id} For some reason unnecessary for Chrome
+export function resetChromeSidePanel(tabId?: number) {
+  const options: any = {
     path: "sidepanel.html",
     enabled: true,
-  });
+  };
+  if (tabId !== undefined) options.tabId = tabId;
+  browser.sidePanel.setOptions(options);
 }
 
-export async function resetFirefoxSidePanelAsync() {
+export async function resetFirefoxSidePanelAsync(tabId?: number) {
+  const options: any = { panel: browser.runtime.getURL("/sidepanel.html") };
+  if (tabId !== undefined) options.tabId = tabId;
   // @ts-ignore: sidebarAction is a Firefox-specific API
-  await browser.sidebarAction.setPanel({
-    //tabId: tab.id, // NOTE: For some reason necessary for Firefox
-    panel: browser.runtime.getURL("/sidepanel.html"),
-  });
+  await browser.sidebarAction.setPanel(options);
 }
 
-export async function resetChromeSidePanelAsync() {
-  await browser.sidePanel.setOptions({
+export async function resetChromeSidePanelAsync(tabId?: number) {
+  const options: any = {
     path: "sidepanel.html",
     enabled: true,
-  });
+  };
+  if (tabId !== undefined) options.tabId = tabId;
+  await browser.sidePanel.setOptions(options);
 }
