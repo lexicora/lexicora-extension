@@ -10,6 +10,12 @@ import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
 import { ArrowUpRight, PanelRight, PanelRightOpen } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
+import {
+  resetFirefoxSidePanel,
+  resetChromeSidePanel,
+  resetChromeSidePanelAsync,
+  resetFirefoxSidePanelAsync,
+} from "@/lib/sidepanel-helper";
 
 function HomePage() {
   const [count, setCount] = useState(0);
@@ -19,14 +25,16 @@ function HomePage() {
 
   const openSidePanel = async () => {
     if (import.meta.env.FIREFOX) {
+      resetFirefoxSidePanel();
       // @ts-ignore: sidebarAction is a Firefox-specific API
-      await browser.sidebarAction.toggle();
+      await browser.sidebarAction.open();
     } else {
       const [tab] = await browser.tabs.query({
         active: true,
         currentWindow: true,
       });
       if (!tab?.id) return;
+      await resetChromeSidePanelAsync();
       await browser.sidePanel.open({ tabId: tab.id });
     }
     window.close();

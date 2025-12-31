@@ -14,9 +14,11 @@ export function RouterListener() {
       (msg) => {
         if (!msg.data) return;
         const targetPath = msg.data.path;
+        //const currentHashPath = window.location.hash.replace("#", "");
+        //console.log("RouterListener: Navigating to", targetPath);
 
         if (targetPath && location.pathname !== targetPath) {
-          console.log(`RouterListener: Navigating to ${targetPath}`);
+          //console.log(`Forcing Navigation to: ${targetPath}`);
           navigate(targetPath);
         }
       },

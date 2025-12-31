@@ -10,6 +10,10 @@ import EntryDetailPage from "./pages/entries/[id]";
 import EntryEditPage from "./pages/entries/edit/[id]";
 import { RouterListener } from "./components/RouterListener";
 
+// Messaging
+import { MSG } from "@/types/messaging";
+import { onMessage } from "webext-bridge/popup"; //* NOTE: popup is temporary but works for sidepanel as well (maybe not optimal)
+
 function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="lexicora-ui-theme">
@@ -19,7 +23,11 @@ function App() {
           <Route path="/" element={<HomePage />} />
           {/*Entries */}
           <Route path="/entries" element={<EntriesPage />} />
-          <Route path="/entries/new" element={<NewEntryPage />} />
+          <Route
+            path="/entries/new"
+            element={<NewEntryPage />}
+            //key={}
+          />
           <Route path="/entries/:id" element={<EntryDetailPage />} />
           <Route path="/entries/:id/edit" element={<EntryEditPage />} />
         </Routes>

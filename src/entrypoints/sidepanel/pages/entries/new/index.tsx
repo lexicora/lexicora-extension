@@ -2,7 +2,7 @@ import "./NewEntryPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, House } from "lucide-react";
-import { onMessage } from "webext-bridge/popup"; //* NOTE: popup is temporary but works for sidepanel as well (maybe not optimal)
+import { onMessage, sendMessage } from "webext-bridge/popup"; //* NOTE: popup is temporary but works for sidepanel as well (maybe not optimal)
 import { useEffect, useState } from "react";
 import { pageData } from "@/types/page-selection-data.types";
 import { MSG } from "@/types/messaging";
@@ -15,45 +15,64 @@ import { useCreateBlockNote } from "@blocknote/react";
 
 function NewEntryPage() {
   const navigate = useNavigate();
-  const [contentHtml, setContentHtml] = useState<string | null>(null);
   const [language, setLanguage] = useState<string>(navigator.language || "en");
   const editor = useCreateBlockNote(defaultBlockNoteConfig);
 
-  useEffect(() => {
-    // Listen only for the data message
-    const unsubscribe = onMessage<pageData>(
-      MSG.SEND_PAGE_SELECTION_DATA,
-      (msg) => {
-        if (import.meta.env.DEV)
-          console.log("NewEntryPage: \nHTML Data: \n" + msg.data.HTML);
-        if (msg.data.HTML) {
-          if (import.meta.env.DEV)
-            console.log("NewEntryPage: Received HTML content.");
-          setContentHtml(msg.data.HTML);
-          setLanguage(msg.data.language || navigator.language || "en");
+  const updateEditorContent = (data: pageData) => {
+    if (data.HTML) {
+      setLanguage(data.language || navigator.language || "en");
+      const blocks = editor.tryParseHTMLToBlocks(data.HTML);
+      editor.replaceBlocks(editor.document, blocks);
+    }
+  };
 
-          // Parse and set content in BlockNote.js editor
-          const blocks = editor.tryParseHTMLToBlocks(msg.data.HTML);
-          editor.replaceBlocks(editor.document, blocks);
+  useEffect(() => {
+    const pullData = async () => {
+      const data = await sendMessage<pageData | null>(
+        MSG.REQUEST_PENDING_DATA,
+        {},
+        "background",
+      );
+      if (data) updateEditorContent(data);
+    };
+    pullData();
+
+    const unsubscribe = onMessage<pageData>(
+      MSG.GET_PAGE_SELECTION_DATA,
+      (msg) => {
+        if (msg.data) {
+          updateEditorContent(msg.data);
         }
       },
     );
 
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+    return () => unsubscribe();
+  }, [editor]);
 
   // useEffect(() => {
-  //   if (!contentHtml) return;
-  //   const setBlockNoteContent = () => {
-  //     const blocks = editor.tryParseHTMLToBlocks(contentHtml);
-  //     editor.replaceBlocks(editor.document, blocks);
-  //   };
+  //   // Listen only for the data message
+  //   const unsubscribe = onMessage<pageData>(
+  //     MSG.SEND_PAGE_SELECTION_DATA,
+  //     (msg) => {
+  //       if (import.meta.env.DEV)
+  //         console.log("NewEntryPage: \nHTML Data: \n" + msg.data.HTML);
+  //       if (msg.data.HTML) {
+  //         if (import.meta.env.DEV)
+  //           console.log("NewEntryPage: Received HTML content.");
+  //         setContentHtml(msg.data.HTML);
+  //         setLanguage(msg.data.language || navigator.language || "en");
+
+  //         // Parse and set content in BlockNote.js editor
+  //         const blocks = editor.tryParseHTMLToBlocks(msg.data.HTML);
+  //         editor.replaceBlocks(editor.document, blocks);
+  //       }
+  //     },
+  //   );
+
   //   return () => {
-  //     setBlockNoteContent();
+  //     unsubscribe();
   //   };
-  // }, [contentHtml]);
+  // }, []);
 
   return (
     <div className="p-4">
@@ -70,7 +89,9 @@ function NewEntryPage() {
       </header>
       <main>
         {/* TODO: Implement BlockNote.js editor here. */}
-        <h2 className="text-lg font-semibold mb-2">Scraped Content (RAW):</h2>
+        <h2 className="text-lg font-semibold mb-1 text-start">
+          Captured Content:
+        </h2>
         {/*{contentHtml ? (
           <div
             className="prose prose-sm dark:prose-invert mt-2 border p-2 rounded"
