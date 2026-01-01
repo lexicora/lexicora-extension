@@ -19,7 +19,11 @@ function App() {
           <Route path="/" element={<HomePage />} />
           {/*Entries */}
           <Route path="/entries" element={<EntriesPage />} />
-          <Route path="/entries/new" element={<NewEntryPage />} />
+          <Route
+            path="/entries/new"
+            element={<NewEntryPage />}
+            //key={}
+          />
           <Route path="/entries/:id" element={<EntryDetailPage />} />
           <Route path="/entries/:id/edit" element={<EntryEditPage />} />
         </Routes>

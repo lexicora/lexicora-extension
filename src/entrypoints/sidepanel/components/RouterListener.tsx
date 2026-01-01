@@ -1,7 +1,7 @@
 import { MSG } from "@/types/messaging";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { onMessage } from "webext-bridge/popup"; //* NOTE: popup is temporary but works for sidepanel as well (maybe not optimal)
+import { onMessage, sendMessage } from "webext-bridge/popup"; //* NOTE: popup is temporary but works for sidepanel as well (maybe not optimal)
 
 export function RouterListener() {
   const navigate = useNavigate();
@@ -14,10 +14,12 @@ export function RouterListener() {
       (msg) => {
         if (!msg.data) return;
         const targetPath = msg.data.path;
+        const isAlreadyOnPath = location.pathname === targetPath;
 
-        if (targetPath && location.pathname !== targetPath) {
-          console.log(`RouterListener: Navigating to ${targetPath}`);
-          navigate(targetPath);
+        if (targetPath && !isAlreadyOnPath) {
+          navigate(targetPath, { viewTransition: true });
+        } else {
+          window.location.reload();
         }
       },
     );
@@ -26,6 +28,21 @@ export function RouterListener() {
       unsubscribe();
     };
   }, [navigate, location]);
+
+  useEffect(() => {
+    const navigateToLocation = async () => {
+      const path = await sendMessage<string | null>(
+        MSG.REQUEST_PENDING_NAVIGATION,
+        {},
+        "background",
+      ).catch(() => {});
+      if (path) {
+        if (path === location.pathname) return;
+        navigate(path, { viewTransition: true });
+      }
+    };
+    navigateToLocation();
+  }, []);
 
   return null;
 }

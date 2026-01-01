@@ -38,7 +38,7 @@ function HomePage() {
           <ModeToggle />
         </div>
         <div className="mb-4">
-          <Link to="/entries/new">
+          <Link to="/entries/new" viewTransition={true}>
             <Button
               variant="secondary"
               className="create-button" //createBtn

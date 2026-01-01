@@ -14,20 +14,19 @@ import { useTheme } from "@/components/theme-provider";
 function HomePage() {
   const [count, setCount] = useState(0);
   //const { theme } = useTheme()
-  //const [localTheme, setLocalTheme] = useState(theme);
-  //const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
 
+  // MAYBE: Force side panel to open to home page with messaging navigation implementation.
   const openSidePanel = async () => {
     if (import.meta.env.FIREFOX) {
       // @ts-ignore: sidebarAction is a Firefox-specific API
-      await browser.sidebarAction.toggle();
+      await browser.sidebarAction.open();
     } else {
       const [tab] = await browser.tabs.query({
         active: true,
         currentWindow: true,
       });
-      if (!tab?.id) return;
-      await browser.sidePanel.open({ tabId: tab.id });
+      if (!tab) return;
+      await browser.sidePanel.open({ windowId: tab.windowId });
     }
     window.close();
   };
