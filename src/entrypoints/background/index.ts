@@ -8,7 +8,7 @@ import { setupMessagingHandlers } from "./messaging-handler";
 export default defineBackground(() => {
   //console.log("Hello background!", { id: browser.runtime.id });
   browser.runtime.onInstalled.addListener(() => {
-    console.log("Extension installed");
+    //console.log("Extension installed");
     //browser.contextMenus.removeAll();
 
     // Create context menu items from the imported constants

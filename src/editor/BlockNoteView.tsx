@@ -30,6 +30,7 @@ import {
 import { filterSuggestionItems } from "@blocknote/core/extensions";
 import { BlockNoteView as BaseBlockNoteView } from "@blocknote/shadcn";
 import "@blocknote/shadcn/style.css";
+// MAYBE: Enable for fallback fonts
 //import "@blocknote/core/fonts/inter.css";
 import "./styles.css";
 

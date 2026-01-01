@@ -14,8 +14,6 @@ import { useTheme } from "@/components/theme-provider";
 function HomePage() {
   const [count, setCount] = useState(0);
   //const { theme } = useTheme()
-  //const [localTheme, setLocalTheme] = useState(theme);
-  //const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
 
   const openSidePanel = async () => {
     if (import.meta.env.FIREFOX) {

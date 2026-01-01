@@ -6,7 +6,7 @@ import { Readability } from "@mozilla/readability";
 import { Article } from "@/types/mozilla-article.types";
 import turndownService from "@/lib/turndown";
 import { Braces } from "lucide-react";
-import { setPendingScrape, setPendingNavigation } from "./messaging-handler";
+import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
 
 //TODO: Rewrite messaging to include pulling instead of pushing from the side panel, to avoid timing issues. (Create git branch for this)
 
@@ -47,19 +47,9 @@ export function contextMenuHandler() {
       case CMI_ID.CAPTURE_SELECTION_AS_IS: {
         setPendingNavigation("/entries/new");
         if (import.meta.env.FIREFOX) {
-          // // @ts-ignore: sidebarAction is a Firefox-specific API
-          // browser.sidebarAction.setPanel({
-          //   tabId: tab.id,
-          //   panel: browser.runtime.getURL("/sidepanel.html#/entries/new"),
-          // });
           // @ts-ignore: sidebarAction is a Firefox-specific API
           browser.sidebarAction.open();
         } else {
-          // browser.sidePanel.setOptions({
-          //   tabId: tab.id, // NOTE: {tabId: tab.id} For some reason unnecessary for Chrome
-          //   path: "sidepanel.html#/entries/new",
-          //   enabled: true,
-          // });
           browser.sidePanel.open({ windowId: tab.windowId });
         }
 
@@ -72,7 +62,7 @@ export function contextMenuHandler() {
 
         if (pageSelectionData) {
           // Store for pull logic in side panel
-          setPendingScrape(pageSelectionData);
+          setPendingCapture(pageSelectionData);
 
           // Push logic if side panel is already open
           sendMessage(
@@ -87,66 +77,7 @@ export function contextMenuHandler() {
             pageSelectionData, //TODO: Handle null case in sidepanel editor component.
             "popup",
           ).catch(() => {});
-
-          // setTimeout(() => {
-          //   sendMessage(
-          //     MSG.SEND_PAGE_SELECTION_DATA,
-          //     pageSelectionData, //TODO: Handle null case in sidepanel editor component.
-          //     "popup",
-          //   ).catch(() => {});
-          // }, 50);
         }
-
-        // Reset side panel to main entries page after a delay
-        // if (import.meta.env.FIREFOX) {
-        //   // @ts-ignore: sidebarAction is a Firefox-specific API
-        //   browser.sidebarAction.setPanel({
-        //     tabId: tab.id, // NOTE: For some reason necessary for Firefox
-        //     panel: browser.runtime.getURL("/sidepanel.html"),
-        //   });
-        // } else {
-        //   browser.sidePanel.setOptions({
-        //     // NOTE: {tabId: tab.id} For some reason unnecessary for Chrome
-        //     path: "sidepanel.html",
-        //     enabled: true,
-        //   });
-        // }
-
-        // let selectionDataExists = pageSelectionData != null;
-
-        // if (!selectionDataExists) {
-        //   console.warn("No page selection data received.");
-        // }
-
-        // //const timeoutDurationInitialTest = import.meta.env.FIREFOX ? 50 : 50;
-        // const timeoutDurationInitial = import.meta.env.FIREFOX ? 100 : 75; //NOTE: Firefox seems to need a bit more time.
-
-        // // 3. Send two separate, decoupled messages.
-        // setTimeout(() => {
-        //   sendMessage(
-        //     MSG.NAVIGATE_IN_SIDEPANEL,
-        //     { path: "/entries/new" },
-        //     "popup",
-        //   );
-        // }, timeoutDurationInitial); //TODO MAYBE: Adjust delay if needed. (lower is better)
-
-        // //const timeoutDurationTest = import.meta.env.FIREFOX ? 150 : 100;
-        // // Fastest working was 125ms in Chrome, 200ms in Firefox
-        // const timeoutDuration = import.meta.env.FIREFOX ? 225 : 150; //NOTE: Firefox seems to need a bit more time.
-
-        // setTimeout(() => {
-        //   if (selectionDataExists) {
-        //     sendMessage(
-        //       MSG.SEND_PAGE_SELECTION_DATA,
-        //       pageSelectionData, //TODO: Handle null case in sidepanel editor component.
-        //       "popup",
-        //     );
-        //   }
-        // }, timeoutDuration); //TODO MAYBE: Adjust delay if needed. (lower is better)
-
-        // Todo: Save selectedHtml to markdown
-        //* pageSelectionData.pageHTML -> mozilla readability(leave out) -> markdown
-        //const markdown = turndownService.turndown(pageSelectionData.pageHTML);
 
         // Debug logs
         if (import.meta.env.DEV) {

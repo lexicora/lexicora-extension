@@ -3,12 +3,12 @@ import { MSG } from "@/types/messaging";
 import { pageData } from "@/types/page-selection-data.types";
 
 // This stays private to this module (encapsulation)
-let pendingScrape: pageData | null = null;
+let pendingCapture: pageData | null = null;
 let pendingNavigation: string | null = null;
 
 // Export the setter so context-menu.ts can call it
-export const setPendingScrape = (data: pageData | null) => {
-  pendingScrape = data;
+export const setPendingCapture = (data: pageData | null) => {
+  pendingCapture = data;
 };
 
 export const setPendingNavigation = (path: string | null) => {
@@ -17,8 +17,8 @@ export const setPendingNavigation = (path: string | null) => {
 
 export function setupMessagingHandlers() {
   onMessage(MSG.REQUEST_PENDING_DATA, () => {
-    const data = pendingScrape;
-    pendingScrape = null; // Clear after delivery to prevent stale data
+    const data = pendingCapture;
+    pendingCapture = null; // Clear after delivery to prevent stale data
     return data;
   });
 
