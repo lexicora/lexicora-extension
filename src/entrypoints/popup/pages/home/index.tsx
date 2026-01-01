@@ -15,6 +15,7 @@ function HomePage() {
   const [count, setCount] = useState(0);
   //const { theme } = useTheme()
 
+  // MAYBE: Force side panel to open to home page with messaging navigation implementation.
   const openSidePanel = async () => {
     if (import.meta.env.FIREFOX) {
       // @ts-ignore: sidebarAction is a Firefox-specific API

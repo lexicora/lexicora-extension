@@ -1,5 +1,3 @@
-import { onMessage, sendMessage } from "webext-bridge/background";
-import { type Message, MSG } from "@/types/messaging";
 import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/types/context-menu-items";
 import { pageData } from "@/types/page-selection-data.types";
 import { contextMenuHandler } from "./context-menu";

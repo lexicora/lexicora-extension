@@ -1,5 +1,5 @@
 import { MSG } from "@/types/messaging";
-import { SetStateAction, Dispatch, useEffect } from "react";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { onMessage, sendMessage } from "webext-bridge/popup"; //* NOTE: popup is temporary but works for sidepanel as well (maybe not optimal)
 

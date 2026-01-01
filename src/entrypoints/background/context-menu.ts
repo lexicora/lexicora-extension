@@ -53,7 +53,7 @@ export function contextMenuHandler() {
           browser.sidePanel.open({ windowId: tab.windowId });
         }
 
-        // 2. Request page selection data from content script
+        // Request page selection data from content script
         const pageSelectionData = await sendMessage<pageData | null>(
           MSG.GET_PAGE_SELECTION_DATA,
           {},

@@ -1,9 +1,6 @@
 import { onMessage } from "webext-bridge/content-script";
 import { MSG } from "@/types/messaging";
-import {
-  getSelectionPageArticle as getSelectionPageArticle,
-  getSelectionPageData,
-} from "./selection";
+import { getSelectionPageArticle, getSelectionPageData } from "./selection";
 
 export default defineContentScript({
   //matches: ['*://*.google.com/*'],
