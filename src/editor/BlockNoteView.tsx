@@ -82,6 +82,8 @@ export function BlockNoteView({
       emojiPicker={false}
       //slashMenu={false}
       //spellCheck={false}
+      // MAYBE TODO: Add custom selector property
+      //lc-data-theming
     >
       <FormattingToolbarController
         formattingToolbar={() => (

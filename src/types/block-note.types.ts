@@ -27,7 +27,7 @@ export const defaultBlockNoteConfig = {
     //   class: "bn-code-bg",
     // },
     block: {
-      class: "bn-table-header bn-code-content", //TODO: Change later: bn-table-border
+      class: "bn-table-content bn-code-content", //TODO: Change later: bn-table-border
     },
   },
 };

@@ -2,7 +2,7 @@ import "./NewEntryPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, House } from "lucide-react";
-import { onMessage, sendMessage } from "webext-bridge/popup"; //* NOTE: popup is temporary but works for sidepanel as well (maybe not optimal)
+import { onMessage, sendMessage } from "webext-bridge/popup"; //* HACK NOTE: popup is a workaround but works for sidepanel(/sidepanel does not exist) (maybe not optimal)
 import { useEffect, useState } from "react";
 import { pageData } from "@/types/page-selection-data.types";
 import { MSG } from "@/types/messaging";
@@ -12,6 +12,7 @@ import { defaultBlockNoteConfig } from "@/types/block-note.types";
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { BlockNoteView } from "@/editor/BlockNoteView";
 import { useCreateBlockNote } from "@blocknote/react";
+// TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 
 function NewEntryPage() {
   const navigate = useNavigate();

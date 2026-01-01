@@ -11,6 +11,9 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { ArrowUpRight, PanelRight, PanelRightOpen } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
 
+import { MSG } from "@/types/messaging";
+import { sendMessage } from "webext-bridge/background"; // HACK NOTE: Using background works for sidepanel, due to sidepanel using popup as a workaround
+
 function HomePage() {
   const [count, setCount] = useState(0);
   //const { theme } = useTheme()
@@ -18,6 +21,7 @@ function HomePage() {
   // MAYBE: Force side panel to open to home page with messaging navigation implementation.
   const openSidePanel = async () => {
     if (import.meta.env.FIREFOX) {
+      // NOTE: Firefox always reloads the sidebar to default page, even when open.
       // @ts-ignore: sidebarAction is a Firefox-specific API
       await browser.sidebarAction.open();
     } else {
@@ -28,6 +32,9 @@ function HomePage() {
       if (!tab) return;
       await browser.sidePanel.open({ windowId: tab.windowId });
     }
+    // sendMessage(MSG.NAVIGATE_IN_SIDEPANEL, { path: "/" }, "popup").catch(
+    //   () => {},
+    // );
     window.close();
   };
 

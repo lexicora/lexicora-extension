@@ -30,18 +30,23 @@ export function RouterListener() {
   }, [navigate, location]);
 
   useEffect(() => {
-    const navigateToLocation = async () => {
-      const path = await sendMessage<string | null>(
-        MSG.REQUEST_PENDING_NAVIGATION,
-        {},
-        "background",
-      ).catch(() => {});
-      if (path) {
-        if (path === location.pathname) return;
-        navigate(path, { viewTransition: true });
-      }
-    };
+    const navigateToLocation = async () =>
+      //destination: "background" | "popup" | "content",
+      {
+        const path = await sendMessage<string | null>(
+          MSG.REQUEST_PENDING_NAVIGATION,
+          {},
+          "background", //destination,
+        ).catch(() => {});
+        if (path) {
+          if (path === location.pathname) return;
+          navigate(path, { viewTransition: true });
+        }
+      };
     navigateToLocation();
+    // navigateToLocation("background");
+    // navigateToLocation("content");
+    // navigateToLocation("popup");
   }, []);
 
   return null;
