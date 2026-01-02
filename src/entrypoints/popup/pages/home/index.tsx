@@ -63,7 +63,7 @@ function HomePage() {
                 count is {count}
               </Button>*/}
               {/*<ModeToggle />*/}
-              <Avatar className="size-8 border">
+              <Avatar className="size-8 border" title="Profile">
                 <AvatarImage
                   src="https://github.com/tgrant06.png"
                   alt="@tgrant06"
@@ -73,6 +73,7 @@ function HomePage() {
             </div>
             <div className="shrink-0">
               {/*Maybe remove later and keep it blank*/}
+              {/*Maybe add link to lexicora.com */}
               <img
                 src={lexicoraLightThemeLogo}
                 className="h-9 lc-light-theme-logo"
@@ -102,6 +103,7 @@ function HomePage() {
       <div>
         <section>
           <span className="inline-flex gap-3 items-baseline">
+            {/*Maybe add link to lexicora.com */}
             <img
               src={lexicoraLightThemeLogo}
               className="h-6.5 lc-light-theme-logo"
