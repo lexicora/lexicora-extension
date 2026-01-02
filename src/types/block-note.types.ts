@@ -28,6 +28,7 @@ export const defaultBlockNoteConfig = {
     // },
     block: {
       class: "bn-table-content bn-code-content", //TODO: Change later: bn-table-border
+      // TODO MAYBE: Use only one class for all custom styling with tailored CSS selectors
     },
   },
 };

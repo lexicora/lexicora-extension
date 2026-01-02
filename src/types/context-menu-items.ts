@@ -12,11 +12,19 @@ export const CMI_ID = {
   CAPTURE_FROM_CLIPBOARD: "save-from-clipboard",
 } as const;
 
-// Todo: localize titles later and change order for better UX
+// TODO: localize titles later and change order for better UX
+/**
+ * Context Menu Items Definitions
+ */
 export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   {
     id: CMI_ID.OPEN_LEXICORA,
     title: "Open Lexicora Website",
+    contexts: ["all"],
+  },
+  {
+    id: "separator1",
+    type: "separator",
     contexts: ["all"],
   },
   {
