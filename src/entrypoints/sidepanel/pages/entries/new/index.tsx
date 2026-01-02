@@ -13,6 +13,7 @@ import { defaultBlockNoteConfig } from "@/types/block-note.types";
 import { BlockNoteView } from "@/editor/BlockNoteView";
 import { useCreateBlockNote } from "@blocknote/react";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
+// TODO: Add loading state while waiting for content (also use a skeleton loader for BlockNote.js editor)
 
 function NewEntryPage() {
   const navigate = useNavigate();
