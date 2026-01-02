@@ -46,6 +46,7 @@ export function contextMenuHandler() {
       }
       case CMI_ID.CAPTURE_SELECTION_AS_IS: {
         setPendingNavigation("/entries/new");
+        // TODO: Update panel scope to tab scope if needed
         if (import.meta.env.FIREFOX) {
           // @ts-ignore: sidebarAction is a Firefox-specific API
           browser.sidebarAction.open();
