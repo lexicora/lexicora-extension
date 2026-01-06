@@ -67,11 +67,13 @@
 }
 
 /*Same as: .bn-container button.bn-button:hover */
-.bn-container .bn-button:is(button):hover {
+.bn-container[data-color-scheme] .bn-button:is(button):hover {
     background-color: light-dark(#ededed, #333333);
+    border-radius: 6px;
 }
 
-.bn-container .bn-button:is(button)[aria-label="Open block menu"] {
+.bn-container[data-color-scheme]
+    .bn-button:is(button)[aria-label="Open block menu"] {
     cursor: grab;
 }
 
