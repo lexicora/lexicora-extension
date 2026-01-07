@@ -4,7 +4,7 @@ import * as Button from "@/components/ui/button";
 import * as DropdownMenu from "./components/dropdown-menu";
 // import * as Form from "@/components/ui/form";
 // import * as Input from "@/components/ui/input";
-// import * as Label from "@/components/ui/label";
+import * as Label from "@/components/ui/label";
 // import * as Popover from "./popover";
 // import * as Select from "./select";
 // import * as Tabs from "@/components/ui/tabs";
@@ -46,6 +46,7 @@ export function BlockNoteView({
   lang = navigator.language || "en", // Pass the language that was from the website or user preference
   //MAYBE: If no language is passed, disable spellcheck?
   spellCheck = true,
+  id = "lc-blocknote-view",
 }: {
   editor: ReturnType<typeof useCreateBlockNote>;
   className?: string;
@@ -53,6 +54,7 @@ export function BlockNoteView({
   editable?: boolean;
   lang?: string;
   spellCheck?: boolean;
+  id?: string;
 }) {
   //TODO: Implement no spellcheck in code blocks
   return (
@@ -64,6 +66,7 @@ export function BlockNoteView({
       theme={getAppTheme()}
       lang={lang}
       spellCheck={spellCheck}
+      id={id}
       shadCNComponents={{
         //Badge,
         Button,
@@ -71,7 +74,7 @@ export function BlockNoteView({
         DropdownMenu,
         // Form,
         // Input,
-        // Label,
+        Label,
         // Popover,
         // Select,
         // Tabs,

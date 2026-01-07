@@ -13,9 +13,11 @@ import { useTheme } from "@/components/theme-provider";
 
 import { MSG } from "@/types/messaging";
 import { sendMessage } from "webext-bridge/background"; // HACK NOTE: Using background works for sidepanel, due to sidepanel using popup as a workaround
+import { Textarea } from "@/components/ui/textarea";
 
 function HomePage() {
   const [count, setCount] = useState(0);
+  const [promptText, setPromptText] = useState("");
   //const { theme } = useTheme()
 
   // MAYBE: Force side panel to open to home page with messaging navigation implementation.
@@ -39,7 +41,7 @@ function HomePage() {
   };
 
   return (
-    <div className="w-85 overflow-auto h-full pt-20 pb-20 px-6">
+    <main className="w-85 overflow-auto h-full pt-20 pb-20 px-3">
       <div>
         <section
           className="fixed top-0 left-0 w-full p-3 z-10
@@ -145,35 +147,47 @@ function HomePage() {
           <p className="read-the-docs">
             Click on the WXT and React logos to learn more
           </p>
-          <p>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-            nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-            erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-            et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
-            Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-            sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-            et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
-            accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-            no sea takimata sanctus est Lorem ipsum dolor sit amet.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-            nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-            erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-            et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
-            Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-            sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-            et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
-            accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-            no sea takimata sanctus est Lorem ipsum dolor sit amet.
-          </p>
+          <article>
+            <p>
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+              nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+              erat, sed diam voluptua. At vero eos et accusam et justo duo
+              dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+              sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
+              amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+              invidunt ut labore et dolore magna aliquyam erat, sed diam
+              voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+              Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
+              dolor sit amet.
+            </p>
+            <p>
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+              nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+              erat, sed diam voluptua. At vero eos et accusam et justo duo
+              dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+              sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
+              amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+              invidunt ut labore et dolore magna aliquyam erat, sed diam
+              voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+              Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
+              dolor sit amet.
+            </p>
+          </article>
+        </section>
+      </div>
+      <div className="mt-6">
+        <section>
+          <Textarea
+            placeholder="Type your desired AI prompt here."
+            className="resize-y field-sizing-content min-h-29 w-[calc(100%-2px)]"
+            value={promptText} // 3. Bind the state to the value prop
+            onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke
+          />
         </section>
       </div>
       <div>
         <section
           className="fixed bottom-0 left-0 h-15.25 w-full p-3 z-10
-          /*border-t border-solid border-(--color-border)*/
-          /*bg-background/80 backdrop-blur-lg*/
           lc-bottom-bar-styled-bg"
         >
           <div
@@ -189,20 +203,23 @@ function HomePage() {
               <Button
                 variant="secondary"
                 title="Capture page"
-                className="w-full"
+                className="w-full hover:bg-secondary hover:brightness-90 /*active:brightness-80*/"
               >
                 Capture
               </Button>
             </div>
             <div className="flex justify-end flex-1">
-              <Button title="Capture page with AI" className="w-full">
+              <Button
+                title="Capture page with AI"
+                className="w-full hover:bg-primary hover:brightness-90 /*active:brightness-80*/"
+              >
                 Capture with AI
               </Button>
             </div>
           </div>
         </section>
       </div>
-    </div>
+    </main>
   );
 }
 

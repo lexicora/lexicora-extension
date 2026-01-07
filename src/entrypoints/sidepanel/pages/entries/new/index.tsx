@@ -12,6 +12,7 @@ import { defaultBlockNoteConfig } from "@/types/block-note.types";
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { BlockNoteView } from "@/editor/BlockNoteView";
 import { useCreateBlockNote } from "@blocknote/react";
+import { Label } from "@/components/ui/label";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 // TODO: Add loading state while waiting for content (also use a skeleton loader for BlockNote.js editor)
 
@@ -103,11 +104,12 @@ function NewEntryPage() {
         <h1 className="text-xl font-bold">New Entry</h1>
       </header>
       <main>
-        {/* TODO: Implement BlockNote.js editor here. */}
-        <h2 className="text-lg font-semibold mb-1 text-start">
-          Captured Content:
-        </h2>
-        {/*{contentHtml ? (
+        <section>
+          {/* TODO: Implement BlockNote.js editor here. */}
+          {/*<h2 className="text-lg font-semibold mb-1 text-start">
+            Captured Content:
+          </h2>
+          {contentHtml ? (
           <div
             className="prose prose-sm dark:prose-invert mt-2 border p-2 rounded"
             dangerouslySetInnerHTML={{ __html: contentHtml }}
@@ -115,17 +117,28 @@ function NewEntryPage() {
         ) : (
           <p className="text-gray-500">Waiting for selected content...</p>
         )}*/}
-        {/*<div className="p-1 dark:bg-white/10 bg-black/10 rounded-sm min-h-20 wrap-break-word">
+          {/*<div className="p-1 dark:bg-white/10 bg-black/10 rounded-sm min-h-20 wrap-break-word">
           {contentHtml}
         </div>*/}
-        <div className="text-start">
-          <BlockNoteView
-            editor={editor}
-            className=""
-            lang={language}
-            //editable={false}
-          />
-        </div>
+          <div className="text-start">
+            <Label
+              htmlFor="lc-blocknote-view-new-entry"
+              onClick={() => {
+                editor.focus();
+              }}
+              className="text-sm ml-2 mb-0.5"
+            >
+              Captured Content
+            </Label>
+            <BlockNoteView
+              editor={editor}
+              className=""
+              lang={language}
+              id="lc-blocknote-view-new-entry"
+              //editable={false}
+            />
+          </div>
+        </section>
       </main>
     </div>
   );
