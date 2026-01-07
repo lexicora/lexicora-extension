@@ -172,8 +172,9 @@ function HomePage() {
       <div>
         <section
           className="fixed bottom-0 left-0 h-15.25 w-full p-3 z-10
-          border-t border-solid border-(--color-border)
-          bg-background/80 backdrop-blur-lg"
+          /*border-t border-solid border-(--color-border)*/
+          /*bg-background/80 backdrop-blur-lg*/
+          lc-bottom-bar-styled-bg"
         >
           <div
             style={{
