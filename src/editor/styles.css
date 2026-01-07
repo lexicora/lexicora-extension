@@ -135,6 +135,16 @@
     text-decoration-line: none;
 }
 
+.bn-container[data-color-scheme="dark"]
+    .bn-code-content
+    .bn-block-content[data-content-type="codeBlock"]
+    select
+    option {
+    margin-left: 6px;
+    background-color: #333333;
+    color: var(--color-foreground);
+}
+
 /* * NOTE: Custom Styles for BlockNote*/
 .bn-code-content
     .bn-block-content:not([data-content-type="codeBlock"])

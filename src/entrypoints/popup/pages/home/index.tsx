@@ -41,7 +41,7 @@ function HomePage() {
   };
 
   return (
-    <div className="w-85 overflow-auto h-full pt-20 pb-20 px-3">
+    <div className="w-85 overflow-auto h-full pt-20 pb-15 px-2">
       <header>
         <nav
           className="fixed top-0 left-0 w-full p-3 z-10
@@ -162,7 +162,7 @@ function HomePage() {
         <section className="mt-6">
           <Textarea
             placeholder="Type your desired AI prompt here."
-            className="resize-y field-sizing-content min-h-29 w-[calc(100%-2px)]"
+            className="resize-y field-sizing-content min-h-29 ml-px w-[calc(100%-4px)] focus-visible:ring-0"
             value={promptText} // 3. Bind the state to the value prop
             onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke
           />
@@ -170,7 +170,7 @@ function HomePage() {
       </main>
       <footer>
         <section
-          className="fixed bottom-0 left-0 h-15.25 w-full p-3 z-10
+          className="fixed bottom-0 left-0 h-15.25 w-full p-3 pt-3.25 z-10
           lc-bottom-bar-styled-bg"
         >
           <div className="flex gap-3 items-center justify-between w-full">
