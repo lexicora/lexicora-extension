@@ -41,22 +41,14 @@ function HomePage() {
   };
 
   return (
-    <main className="w-85 overflow-auto h-full pt-20 pb-20 px-3">
-      <div>
-        <section
+    <div className="w-85 overflow-auto h-full pt-20 pb-20 px-3">
+      <header>
+        <nav
           className="fixed top-0 left-0 w-full p-3 z-10
           border-b border-solid border-(--color-border)
           bg-background/80 backdrop-blur-lg"
         >
-          <div
-            style={{
-              display: "flex",
-              gap: "0",
-              alignItems: "center",
-              justifyContent: "space-between",
-              width: "100%",
-            }}
-          >
+          <div className="flex gap-0 items-center justify-between w-full">
             <div className="flex justify-start flex-1 gap-1">
               {/*<Button
                 onClick={() => setCount((count) => count + 1)}
@@ -100,9 +92,9 @@ function HomePage() {
               </Button>
             </div>
           </div>
-        </section>
-      </div>
-      <div>
+        </nav>
+      </header>
+      <main>
         <section>
           <span className="inline-flex gap-3 items-baseline">
             {/*Maybe add link to lexicora.com */}
@@ -124,14 +116,7 @@ function HomePage() {
           </span>
           <h2 className="test-app text-2xl font-bold">WXT + React</h2>
           <div className="card">
-            <div
-              style={{
-                display: "flex",
-                gap: "10px",
-                justifyContent: "center",
-                marginBottom: "10px",
-              }}
-            >
+            <div className="flex gap-2.5 justify-center mb-2.5">
               <Button onClick={() => setCount((count) => count + 1)}>
                 count is {count}
               </Button>
@@ -174,9 +159,7 @@ function HomePage() {
             </p>
           </article>
         </section>
-      </div>
-      <div className="mt-6">
-        <section>
+        <section className="mt-6">
           <Textarea
             placeholder="Type your desired AI prompt here."
             className="resize-y field-sizing-content min-h-29 w-[calc(100%-2px)]"
@@ -184,21 +167,13 @@ function HomePage() {
             onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke
           />
         </section>
-      </div>
-      <div>
+      </main>
+      <footer>
         <section
           className="fixed bottom-0 left-0 h-15.25 w-full p-3 z-10
           lc-bottom-bar-styled-bg"
         >
-          <div
-            style={{
-              display: "flex",
-              gap: "12px",
-              alignItems: "center",
-              justifyContent: "space-between",
-              width: "100%",
-            }}
-          >
+          <div className="flex gap-3 items-center justify-between w-full">
             <div className="flex justify-start flex-1">
               <Button
                 variant="secondary"
@@ -218,8 +193,8 @@ function HomePage() {
             </div>
           </div>
         </section>
-      </div>
-    </main>
+      </footer>
+    </div>
   );
 }
 
