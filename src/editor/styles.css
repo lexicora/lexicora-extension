@@ -8,6 +8,26 @@
 /* Changes for dark mode */
 .bn-container[data-color-scheme="dark"] {
     color-scheme: dark;
+
+    /*Highlighting colors*/
+    --bn-colors-highlights-gray-text: #bebdb8;
+    --bn-colors-highlights-gray-background: #434241;
+    --bn-colors-highlights-brown-text: #8e6552;
+    --bn-colors-highlights-brown-background: #43342e;
+    --bn-colors-highlights-red-text: #ec4040;
+    --bn-colors-highlights-red-background: #632929;
+    --bn-colors-highlights-orange-text: #e3790d;
+    --bn-colors-highlights-orange-background: #6d441c;
+    --bn-colors-highlights-yellow-text: #dfab01;
+    --bn-colors-highlights-yellow-background: #7d6824;
+    --bn-colors-highlights-green-text: #33b751;
+    --bn-colors-highlights-green-background: #396142;
+    --bn-colors-highlights-blue-text: #1f92d5;
+    --bn-colors-highlights-blue-background: #2c4d67;
+    --bn-colors-highlights-purple-text: #925ee3;
+    --bn-colors-highlights-purple-background: #4c3e63;
+    --bn-colors-highlights-pink-text: #e52d9b;
+    --bn-colors-highlights-pink-background: #772857;
 }
 
 /* Changes for light mode */
