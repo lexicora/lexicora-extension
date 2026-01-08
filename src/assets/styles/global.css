@@ -184,13 +184,13 @@ html.dark {
     /*box-shadow: inset 0 -26px 16px 0px
         color-mix(in srgb, var(--background), transparent 30%);*/
     /*box-shadow: inset 0 -40px 16px -14px var(--background);*/
-    box-shadow: inset 0 -41px 16px -16px
-        color-mix(in srgb, var(--background), transparent 80%);
+    box-shadow: inset 0 -64px 16px -16px
+        color-mix(in srgb, var(--background), transparent 70%);
 }
 
 .dark .lc-bottom-bar-styled-bg {
-    box-shadow: inset 0 -26px 16px 0px
-        color-mix(in srgb, var(--background), transparent 20%);
+    box-shadow: inset 0 -64px 16px -16px
+        color-mix(in srgb, var(--background), transparent 30%);
 }
 
 .lc-bottom-bar-styled-bg::before {
@@ -199,11 +199,11 @@ html.dark {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 90%;
+    height: 100%;
     z-index: -1;
     /*background-color: hsl(var(--background) / 0.8);*/
     -webkit-mask: linear-gradient(transparent, black, black);
     mask: linear-gradient(transparent, black, black);
     backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(6px);
 }
