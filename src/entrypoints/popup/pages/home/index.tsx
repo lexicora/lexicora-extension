@@ -171,14 +171,21 @@ function HomePage() {
       <footer>
         <section
           className="fixed bottom-0 left-0 h-15.25 w-full p-3 pt-3.25 z-10
-          lc-bottom-bar-styled-bg"
+                lc-bottom-bar-styled-bg"
         >
-          <div className="flex gap-3 items-center justify-between w-full">
-            <div className="flex justify-start flex-1">
+          <div className="flex gap-0 items-center justify-between w-full">
+            <div
+              className={`flex justify-start transition-all duration-300 ease-in-out overflow-hidden ${
+                promptText.trim() !== ""
+                  ? "flex-0 max-w-0 opacity-0 mr-0"
+                  : "flex-1 max-w-[50%] mr-3"
+              }`}
+            >
               <Button
                 variant="secondary"
                 title="Capture page"
                 className="w-full hover:bg-secondary hover:brightness-90 /*active:brightness-80*/"
+                disabled={promptText.trim() !== ""}
               >
                 Capture
               </Button>
