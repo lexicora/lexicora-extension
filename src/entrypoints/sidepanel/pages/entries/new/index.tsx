@@ -2,7 +2,9 @@ import "./NewEntryPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, House } from "lucide-react";
-import { onMessage, sendMessage } from "webext-bridge/popup"; //* HACK NOTE: popup is a workaround but works for sidepanel(/sidepanel does not exist) (maybe not optimal)
+//import { onMessage, sendMessage } from "webext-bridge/popup"; //* HACK NOTE: popup is a workaround but works for sidepanel(/sidepanel does not exist) (maybe not optimal)
+//import { getSidePanel } from "webext-bridge/side-panel"; // TODO: Change to background when messaging is reworked
+import { useSidePanelMessaging } from "@/entrypoints/sidepanel/components/SidePanelMessagingProvider";
 import { useEffect, useState } from "react";
 import { pageData } from "@/types/page-selection-data.types";
 import { MSG } from "@/types/messaging";
@@ -20,6 +22,7 @@ function NewEntryPage() {
   const navigate = useNavigate();
   const [language, setLanguage] = useState<string>(navigator.language || "en");
   const editor = useCreateBlockNote(defaultBlockNoteConfig);
+  const { sendMessage, onMessage } = useSidePanelMessaging();
 
   const updateEditorContent = (data: pageData) => {
     if (data.HTML) {
@@ -29,6 +32,48 @@ function NewEntryPage() {
     }
   };
 
+  // useEffect(() => {
+  //   let unsubscribe: (() => void) | undefined;
+
+  //   const setupMessaging = async () => {
+  //     const [tab] = await browser.tabs.query({
+  //       active: true,
+  //       currentWindow: true,
+  //     });
+
+  //     // The getSidePanel function is synchronous and needs a tabId to scope the messaging.
+  //     const sidePanel = getSidePanel(tab.id);
+
+  //     // Pull initial data when the component mounts
+  //     const data = await sidePanel.sendMessage<pageData | null>(
+  //       MSG.REQUEST_PENDING_DATA,
+  //       {},
+  //       "background",
+  //     );
+  //     if (data) {
+  //       updateEditorContent(data);
+  //     }
+
+  //     // Set up the listener and store the cleanup function
+  //     unsubscribe = sidePanel.onMessage<pageData>(
+  //       MSG.GET_PAGE_SELECTION_DATA,
+  //       (msg: { data: pageData }) => {
+  //         if (msg.data) {
+  //           updateEditorContent(msg.data);
+  //         }
+  //       },
+  //     );
+  //   };
+
+  //   setupMessaging();
+
+  //   // The useEffect cleanup function will be called on unmount.
+  //   // It calls the unsubscribe function captured from the async setup.
+  //   return () => {
+  //     unsubscribe?.();
+  //   };
+  // }, [editor]);
+
   useEffect(() => {
     const pullData = async () => {
       const data = await sendMessage<pageData | null>(
@@ -36,7 +81,9 @@ function NewEntryPage() {
         {},
         "background",
       );
-      if (data) updateEditorContent(data);
+      if (data) {
+        updateEditorContent(data);
+      }
     };
     pullData();
 
@@ -51,44 +98,6 @@ function NewEntryPage() {
 
     return () => unsubscribe();
   }, [editor]);
-
-  // useEffect(() => {
-  //   const unsubscribe = onMessage<pageData>(
-  //     MSG.GET_PAGE_SELECTION_DATA,
-  //     (msg) => {
-  //       if (msg.data) {
-  //         updateEditorContent(msg.data);
-  //       }
-  //     },
-  //   );
-
-  //   return () => unsubscribe();
-  // }, []);
-
-  // useEffect(() => {
-  //   // Listen only for the data message
-  //   const unsubscribe = onMessage<pageData>(
-  //     MSG.SEND_PAGE_SELECTION_DATA,
-  //     (msg) => {
-  //       if (import.meta.env.DEV)
-  //         console.log("NewEntryPage: \nHTML Data: \n" + msg.data.HTML);
-  //       if (msg.data.HTML) {
-  //         if (import.meta.env.DEV)
-  //           console.log("NewEntryPage: Received HTML content.");
-  //         setContentHtml(msg.data.HTML);
-  //         setLanguage(msg.data.language || navigator.language || "en");
-
-  //         // Parse and set content in BlockNote.js editor
-  //         const blocks = editor.tryParseHTMLToBlocks(msg.data.HTML);
-  //         editor.replaceBlocks(editor.document, blocks);
-  //       }
-  //     },
-  //   );
-
-  //   return () => {
-  //     unsubscribe();
-  //   };
-  // }, []);
 
   return (
     <div className="p-4">
@@ -105,21 +114,6 @@ function NewEntryPage() {
       </header>
       <main>
         <section>
-          {/* TODO: Implement BlockNote.js editor here. */}
-          {/*<h2 className="text-lg font-semibold mb-1 text-start">
-            Captured Content:
-          </h2>
-          {contentHtml ? (
-          <div
-            className="prose prose-sm dark:prose-invert mt-2 border p-2 rounded"
-            dangerouslySetInnerHTML={{ __html: contentHtml }}
-          />
-        ) : (
-          <p className="text-gray-500">Waiting for selected content...</p>
-        )}*/}
-          {/*<div className="p-1 dark:bg-white/10 bg-black/10 rounded-sm min-h-20 wrap-break-word">
-          {contentHtml}
-        </div>*/}
           <div className="text-start">
             <Label
               htmlFor="lc-blocknote-view-new-entry"

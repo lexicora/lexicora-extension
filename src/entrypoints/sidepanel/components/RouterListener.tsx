@@ -1,11 +1,13 @@
 import { MSG } from "@/types/messaging";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { onMessage, sendMessage } from "webext-bridge/popup"; //* NOTE: popup is temporary but works for sidepanel as well (maybe not optimal)
+//import { sendMessage, onMessage } from "webext-bridge/popup"; //* NOTE: popup is temporary but works for sidepanel as well (maybe not optimal)
+import { useSidePanelMessaging } from "./SidePanelMessagingProvider";
 
 export function RouterListener() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { sendMessage, onMessage } = useSidePanelMessaging();
 
   useEffect(() => {
     // Listen only for the navigation message

@@ -11,6 +11,7 @@ codeBlockOptions.defaultLanguage = "text";
 //   // MAYBE: Make default language configurable from outside
 //   indentLineWithTab: true,
 // };
+// MAYBE: Add more languages
 
 export const defaultBlockNoteConfig = {
   schema: BlockNoteSchema.create().extend({

@@ -6,6 +6,27 @@
         <title>Lexicora</title>
         <meta name="manifest.open_at_install" content="false" />
         <meta name="manifest.browser_style" content="false" />
+        <!--<script>
+            (function () {
+                let theme = localStorage.getItem("lexicora-ui-theme");
+
+                if (!theme) {
+                    theme = "system";
+                    localStorage.setItem("lexicora-ui-theme", theme);
+                }
+
+                if (theme === "system") {
+                    const prefersDark = window.matchMedia(
+                        "(prefers-color-scheme: dark)",
+                    ).matches;
+                    theme = prefersDark ? "dark" : "light";
+                }
+                const root = document.documentElement;
+
+                root.removeAttribute("class");
+                root.setAttribute("class", theme);
+            })();
+        </script>-->
     </head>
     <body>
         <noscript>

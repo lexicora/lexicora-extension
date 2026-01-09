@@ -23,6 +23,7 @@ export function contextMenuHandler() {
         break;
       }
       case CMI_ID.CAPTURE_SELECTION_AI_ASSISTED: {
+        // @ts-ignore: Article does not satisfy JsonValue
         const pageSelectionArticle = await sendMessage<Article>(
           MSG.GET_PAGE_SELECTION_ARTICLE,
           {},
@@ -48,10 +49,19 @@ export function contextMenuHandler() {
         setPendingNavigation("/entries/new");
         // TODO: Update panel scope to tab scope if needed
         if (import.meta.env.FIREFOX) {
+          // // @ts-ignore: sidebarAction is a Firefox-specific API
+          // browser.sidebarAction.setPanel({
+          //   tabId: tab.id,
+          // });
           // @ts-ignore: sidebarAction is a Firefox-specific API
           browser.sidebarAction.open();
         } else {
+          // browser.sidePanel.setOptions({
+          //   tabId: tab.id,
+          // });
+          //if (!tab.id) return;
           browser.sidePanel.open({ windowId: tab.windowId });
+          //browser.sidePanel.open({ tabId: tab.id });
         }
 
         // Request page selection data from content script
@@ -69,14 +79,14 @@ export function contextMenuHandler() {
           sendMessage(
             MSG.NAVIGATE_IN_SIDEPANEL,
             { path: "/entries/new" },
-            "popup",
+            "side-panel@" + tab.id,
           ).catch(() => {});
 
           // Small wait to ensure page and editor have mounted
           sendMessage(
             MSG.SEND_PAGE_SELECTION_DATA,
             pageSelectionData, //TODO: Handle null case in sidepanel editor component.
-            "popup",
+            "side-panel@" + tab.id,
           ).catch(() => {});
         }
 
