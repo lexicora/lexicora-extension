@@ -34,6 +34,7 @@ import "@blocknote/shadcn/style.css";
 //import "@blocknote/core/fonts/inter.css";
 import "./styles.css";
 
+// TODO: Overhaul theme implementation (with props passed down with the parent using the useTheme hook)
 import { getAppTheme } from "@/lib/theme-helper";
 //import { getAppTheme } from "./theme-config";
 //import { getCustomSlashMenuItems } from "./config";

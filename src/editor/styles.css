@@ -59,24 +59,33 @@
     padding-top: 0px;
 }
 
-.bn-shadcn .bn-toolbar {
-    max-width: 97vw;
-}
-
 /* Hide toolbars anywhere when a disabled bm-content exists */
 /*.bn-editor[contenteditable="false"] [data-floating-ui-focusable],
 .bn-editor[contenteditable="false"] .bn-toolbar {
     display: none !important;
 }*/
 
-.bn-container:has(.bn-editor[contenteditable="false"]) .bn-toolbar {
-    display: none !important;
-}
-
 /*.bn-container:has(.bn-editor[contenteditable="false"])
     [data-floating-ui-focusable] {
     display: none !important;
 }*/
+
+.bn-shadcn .bn-toolbar {
+    max-width: 97vw;
+}
+
+.bn-container:has(.bn-editor[contenteditable="false"]) .bn-toolbar {
+    display: none !important;
+}
+
+/*Should only affect link related input fields*/
+.bn-container[data-color-scheme]
+    .bn-toolbar
+    .bn-text-input
+    input[data-slot="input"] {
+    border-radius: calc(0.25em + 1px);
+    padding-inline: calc(0.25em + 1px);
+}
 
 .bn-container .bn-table-handle:is(button) {
     padding-inline: 0;
@@ -200,3 +209,5 @@
 /*.bn-table-border table th td {
     border-color: var(--color-border);
 }*/
+
+/*TODO: overhaul and make all selectors more consistent, to avoid inconsistent behavior*/
