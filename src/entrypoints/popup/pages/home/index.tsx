@@ -177,7 +177,7 @@ function HomePage() {
         >
           <div className="flex gap-0 items-center justify-between w-full">
             <div
-              className={`flex justify-start transition-all duration-300 ease-in-out overflow-hidden ${
+              className={`flex justify-start transition-all duration-300 ease-in-out /*overflow-visible*/ ${
                 promptText.trimEnd() === ""
                   ? "flex-1 max-w-[50%] mr-3"
                   : "flex-0 max-w-0 opacity-0 mr-0 blur-[6px]"
@@ -186,7 +186,7 @@ function HomePage() {
               <Button
                 variant="secondary"
                 title="Capture page"
-                className="w-full hover:bg-secondary hover:brightness-90 /*active:brightness-80*/"
+                className="w-full hover:bg-secondary hover:brightness-90 overflow-hidden /*active:brightness-80*/"
                 disabled={promptText.trimEnd() !== ""}
               >
                 Capture
