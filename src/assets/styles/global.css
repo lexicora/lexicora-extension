@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@import "./vendors.css";
+
 @source "../../../node_modules/@blocknote/shadcn";
 
 @custom-variant dark (&:is(.dark *));
@@ -165,47 +167,3 @@ html.dark {
     scrollbar-width: thin;
     scrollbar-color: #9f9f9f #ffffff08;
 }
-
-/*Lexicora abbreviation: lc*/
-/*Custom classes*/
-
-.lc-light-theme-logo,
-.dark .lc-dark-theme-logo {
-    display: block;
-}
-
-.lc-dark-theme-logo,
-.dark .lc-light-theme-logo {
-    display: none;
-}
-
-.lc-bottom-bar-styled-bg {
-    /*box-shadow: inset 0 -26px 16px 0px var(--background);*/
-    /*box-shadow: inset 0 -26px 16px 0px
-        color-mix(in srgb, var(--background), transparent 30%);*/
-    /*box-shadow: inset 0 -40px 16px -14px var(--background);*/
-    box-shadow: inset 0 -64px 16px -16px
-        color-mix(in srgb, var(--background), transparent 70%);
-}
-
-.dark .lc-bottom-bar-styled-bg {
-    box-shadow: inset 0 -64px 16px -16px
-        color-mix(in srgb, var(--background), transparent 40%);
-}
-
-.lc-bottom-bar-styled-bg::before {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    /*background-color: hsl(var(--background) / 0.8);*/
-    -webkit-mask: linear-gradient(transparent, black, black);
-    mask: linear-gradient(transparent, black, black);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-}
-
-/*MAYBE: Put custom css in different file (same folder than global.css) and then import it in to global.css*/

@@ -1,0 +1,44 @@
+/* Lexicora Custom Styles and classes */
+
+/*Classes for Lexicora logos in light and dark mode*/
+
+.lc-display-light, /*has implicit .light class*/
+.dark .lc-display-dark {
+    display: block;
+}
+
+.lc-display-dark, /*has implicit .light class*/
+.dark .lc-display-light {
+    display: none;
+}
+
+/*Component styles for bottom bar background blur effect*/
+
+.lc-bottom-bar-styled-bg {
+    /*box-shadow: inset 0 -26px 16px 0px var(--background);*/
+    /*box-shadow: inset 0 -26px 16px 0px
+        color-mix(in srgb, var(--background), transparent 30%);*/
+    /*box-shadow: inset 0 -40px 16px -14px var(--background);*/
+    box-shadow: inset 0 -64px 16px -16px
+        color-mix(in srgb, var(--background), transparent 65%);
+}
+
+.dark .lc-bottom-bar-styled-bg {
+    box-shadow: inset 0 -64px 16px -16px
+        color-mix(in srgb, var(--background), transparent 35%);
+}
+
+.lc-bottom-bar-styled-bg::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    /*background-color: hsl(var(--background) / 0.8);*/
+    -webkit-mask: linear-gradient(transparent, black, black);
+    mask: linear-gradient(transparent, black, black);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}

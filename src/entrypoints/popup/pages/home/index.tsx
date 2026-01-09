@@ -7,13 +7,12 @@ import { getAppTheme } from "@/lib/theme-helper";
 import "./HomePage.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { ModeToggle } from "@/components/mode-toggle";
 import { ArrowUpRight, PanelRight, PanelRightOpen } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
 
 import { MSG } from "@/types/messaging";
-import { sendMessage } from "webext-bridge/background"; // HACK NOTE: Using background works for sidepanel, due to sidepanel using popup as a workaround
-import { Textarea } from "@/components/ui/textarea";
 
 function HomePage() {
   const [count, setCount] = useState(0);
@@ -25,12 +24,15 @@ function HomePage() {
     if (import.meta.env.FIREFOX) {
       // NOTE: Firefox always reloads the sidebar to default page, even when open.
       // @ts-ignore: sidebarAction is a Firefox-specific API
+      //await browser.sidebarAction.isOpen({});
+      // @ts-ignore: sidebarAction is a Firefox-specific API
       await browser.sidebarAction.open();
     } else {
       const [tab] = await browser.tabs.query({
         active: true,
         currentWindow: true,
       });
+      const windowId = await browser.windows.getCurrent().then((win) => win.id);
       if (!tab) return;
       await browser.sidePanel.open({ windowId: tab.windowId });
     }
@@ -70,13 +72,13 @@ function HomePage() {
               {/*Maybe add link to lexicora.com */}
               <img
                 src={lexicoraLightThemeLogo}
-                className="h-9 lc-light-theme-logo"
+                className="h-9 lc-display-light"
                 alt="Lexicora logo"
                 draggable="false"
               />
               <img
                 src={lexicoraDarkThemeLogo}
-                className="h-9 lc-dark-theme-logo"
+                className="h-9 lc-display-dark"
                 alt="Lexicora logo"
                 draggable="false"
               />
@@ -100,13 +102,13 @@ function HomePage() {
             {/*Maybe add link to lexicora.com */}
             <img
               src={lexicoraLightThemeLogo}
-              className="h-6.5 lc-light-theme-logo"
+              className="h-6.5 lc-display-light"
               alt="Lexicora logo"
               draggable="false"
             />
             <img
               src={lexicoraDarkThemeLogo}
-              className="h-6.5 lc-dark-theme-logo"
+              className="h-6.5 lc-display-dark"
               alt="Lexicora logo"
               draggable="false"
             />
@@ -176,9 +178,9 @@ function HomePage() {
           <div className="flex gap-0 items-center justify-between w-full">
             <div
               className={`flex justify-start transition-all duration-300 ease-in-out overflow-hidden ${
-                promptText.trimEnd() !== ""
-                  ? "flex-0 max-w-0 opacity-0 mr-0"
-                  : "flex-1 max-w-[50%] mr-3"
+                promptText.trimEnd() === ""
+                  ? "flex-1 max-w-[50%] mr-3"
+                  : "flex-0 max-w-0 opacity-0 mr-0 blur-[6px]"
               }`}
             >
               <Button
