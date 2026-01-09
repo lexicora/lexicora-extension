@@ -207,3 +207,5 @@ html.dark {
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
 }
+
+/*MAYBE: Put custom css in different file (same folder than global.css) and then import it in to global.css*/
