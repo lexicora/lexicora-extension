@@ -2,8 +2,6 @@ import "./NewEntryPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, House } from "lucide-react";
-//import { onMessage, sendMessage } from "webext-bridge/popup"; //* HACK NOTE: popup is a workaround but works for sidepanel(/sidepanel does not exist) (maybe not optimal)
-//import { getSidePanel } from "webext-bridge/side-panel"; // TODO: Change to background when messaging is reworked
 import { useSidePanelMessaging } from "@/entrypoints/sidepanel/components/SidePanelMessagingProvider";
 import { useEffect, useState } from "react";
 import { pageData } from "@/types/page-selection-data.types";
@@ -31,48 +29,6 @@ function NewEntryPage() {
       editor.replaceBlocks(editor.document, blocks);
     }
   };
-
-  // useEffect(() => {
-  //   let unsubscribe: (() => void) | undefined;
-
-  //   const setupMessaging = async () => {
-  //     const [tab] = await browser.tabs.query({
-  //       active: true,
-  //       currentWindow: true,
-  //     });
-
-  //     // The getSidePanel function is synchronous and needs a tabId to scope the messaging.
-  //     const sidePanel = getSidePanel(tab.id);
-
-  //     // Pull initial data when the component mounts
-  //     const data = await sidePanel.sendMessage<pageData | null>(
-  //       MSG.REQUEST_PENDING_DATA,
-  //       {},
-  //       "background",
-  //     );
-  //     if (data) {
-  //       updateEditorContent(data);
-  //     }
-
-  //     // Set up the listener and store the cleanup function
-  //     unsubscribe = sidePanel.onMessage<pageData>(
-  //       MSG.GET_PAGE_SELECTION_DATA,
-  //       (msg: { data: pageData }) => {
-  //         if (msg.data) {
-  //           updateEditorContent(msg.data);
-  //         }
-  //       },
-  //     );
-  //   };
-
-  //   setupMessaging();
-
-  //   // The useEffect cleanup function will be called on unmount.
-  //   // It calls the unsubscribe function captured from the async setup.
-  //   return () => {
-  //     unsubscribe?.();
-  //   };
-  // }, [editor]);
 
   useEffect(() => {
     const pullData = async () => {

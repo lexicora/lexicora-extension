@@ -8,7 +8,7 @@ import turndownService from "@/lib/turndown";
 import { Braces } from "lucide-react";
 import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
 
-//TODO: Rewrite messaging to include pulling instead of pushing from the side panel, to avoid timing issues. (Create git branch for this)
+// TODO: Add messages for users (if exceptions occur, e.g., no selection made)
 
 /**
  * Handles context menu item clicks and actions.
@@ -49,19 +49,10 @@ export function contextMenuHandler() {
         setPendingNavigation("/entries/new");
         // TODO: Update panel scope to tab scope if needed
         if (import.meta.env.FIREFOX) {
-          // // @ts-ignore: sidebarAction is a Firefox-specific API
-          // browser.sidebarAction.setPanel({
-          //   tabId: tab.id,
-          // });
           // @ts-ignore: sidebarAction is a Firefox-specific API
           browser.sidebarAction.open();
         } else {
-          // browser.sidePanel.setOptions({
-          //   tabId: tab.id,
-          // });
-          //if (!tab.id) return;
           browser.sidePanel.open({ windowId: tab.windowId });
-          //browser.sidePanel.open({ tabId: tab.id });
         }
 
         // Request page selection data from content script
@@ -79,14 +70,14 @@ export function contextMenuHandler() {
           sendMessage(
             MSG.NAVIGATE_IN_SIDEPANEL,
             { path: "/entries/new" },
-            "side-panel@" + tab.id,
+            "side-panel@" + tab.windowId,
           ).catch(() => {});
 
           // Small wait to ensure page and editor have mounted
           sendMessage(
             MSG.SEND_PAGE_SELECTION_DATA,
             pageSelectionData, //TODO: Handle null case in sidepanel editor component.
-            "side-panel@" + tab.id,
+            "side-panel@" + tab.windowId,
           ).catch(() => {});
         }
 

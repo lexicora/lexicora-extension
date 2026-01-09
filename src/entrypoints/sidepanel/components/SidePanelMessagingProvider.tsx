@@ -28,21 +28,25 @@ export function SidePanelMessagingProvider({
   useEffect(() => {
     const initSidePanel = async () => {
       try {
-        const [tab] = await browser.tabs.query({
-          active: true,
-          currentWindow: true,
-        });
-        if (tab?.id) {
-          setSidePanel(getSidePanel(tab.id));
+        // const [tab] = await browser.tabs.query({
+        //   active: true,
+        //   currentWindow: true,
+        // });
+        const windowId = await browser.windows
+          .getCurrent()
+          .then((win) => win.id);
+
+        if (windowId) {
+          setSidePanel(getSidePanel(windowId));
         } else {
           // Fallback for contexts where a tab might not be active,
           // though less ideal.
-          setSidePanel(getSidePanel(""));
+          setSidePanel(getSidePanel("")); // 0 works too
         }
       } catch (error) {
         console.error("Failed to initialize side panel messaging:", error);
         // Fallback if tabs query fails
-        setSidePanel(getSidePanel(""));
+        setSidePanel(getSidePanel("")); // 0 works too
       }
     };
 
