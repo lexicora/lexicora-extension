@@ -25,6 +25,7 @@ function HomePage() {
       // NOTE: Firefox always reloads the sidebar to default page, even when open.
       // @ts-ignore: sidebarAction is a Firefox-specific API
       //await browser.sidebarAction.isOpen({});
+      // TODO: Put this logic in the button itself to change functionality to fix the open sidebar issue (user event has to trigger it)
       // @ts-ignore: sidebarAction is a Firefox-specific API
       await browser.sidebarAction.open();
     } else {
@@ -32,7 +33,7 @@ function HomePage() {
         active: true,
         currentWindow: true,
       });
-      const windowId = await browser.windows.getCurrent().then((win) => win.id);
+      //const windowId = await browser.windows.getCurrent().then((win) => win.id);
       if (!tab) return;
       await browser.sidePanel.open({ windowId: tab.windowId });
     }
@@ -46,7 +47,7 @@ function HomePage() {
     <div className="w-85 overflow-auto h-full pt-20 pb-15 px-2">
       <header>
         <nav
-          className="fixed top-0 left-0 w-full p-3 z-10
+          className="fixed top-0 left-0 w-full p-2.75 z-10
           border-b border-solid border-(--color-border)
           bg-background/80 backdrop-blur-lg"
         >
@@ -59,7 +60,7 @@ function HomePage() {
                 count is {count}
               </Button>*/}
               {/*<ModeToggle />*/}
-              <Avatar className="size-8 border" title="Profile">
+              <Avatar className="size-8 border ml-0.5" title="Profile">
                 <AvatarImage
                   src="https://github.com/tgrant06.png"
                   alt="@tgrant06"
@@ -172,7 +173,7 @@ function HomePage() {
       </main>
       <footer>
         <section
-          className="fixed bottom-0 left-0 h-15.25 w-full p-3 pt-3.25 z-10
+          className="fixed bottom-0 left-0 h-15 w-full p-3 z-10
                 lc-bottom-bar-styled-bg"
         >
           <div className="flex gap-0 items-center justify-between w-full">
