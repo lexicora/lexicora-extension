@@ -68,7 +68,12 @@ function HomePage() {
                 <AvatarFallback>TM</AvatarFallback>
               </Avatar>
             </div>
-            <div className="shrink-0">
+            <div
+              className="shrink-0"
+              onClick={() => {
+                window.scrollTo({ top: 0 });
+              }}
+            >
               {/*Maybe remove later and keep it blank*/}
               {/*Maybe add link to lexicora.com */}
               <img
@@ -180,7 +185,7 @@ function HomePage() {
         >
           <div className="flex gap-0 items-center justify-between w-full">
             <div
-              className={`flex justify-start transition-all duration-300 ease-in-out /*overflow-visible*/ ${
+              className={`flex justify-start transition-all motion-reduce:transition-none duration-300 ease-in-out /*overflow-visible*/ ${
                 promptText.trimEnd() === ""
                   ? "flex-1 max-w-[50%] mr-3"
                   : "flex-0 max-w-0 opacity-0 mr-0 blur-[6px]"

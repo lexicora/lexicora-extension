@@ -42,7 +42,7 @@
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
 
-    /*Lexicora styles*/
+    /*Lexicora styles / variables*/
     --lc-font-sans-serif:
         "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;
     --lc-font-monospace:
@@ -88,7 +88,7 @@
     --sidebar-border: oklch(0.269 0 0);
     --sidebar-ring: oklch(0.439 0 0);
 
-    /*Lexicora styles*/
+    /*Lexicora styles / variables*/
 }
 
 @theme inline {
@@ -128,14 +128,21 @@
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
+
+    /*Lexicora styles / variables*/
 }
 
 @layer base {
     * {
-        @apply border-border outline-ring/50;
+        @apply border-border outline-ring/50 scroll-smooth;
     }
     body {
         @apply bg-background text-foreground;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            @apply scroll-auto;
+        }
     }
     button:not(:disabled),
     [role="button"]:not(:disabled) {
@@ -167,3 +174,7 @@ html.dark {
     scrollbar-width: thin;
     scrollbar-color: #9f9f9f #ffffff08;
 }
+/*
+@view-transition {
+    navigation: auto;
+}*/
