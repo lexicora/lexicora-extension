@@ -166,7 +166,8 @@ function HomePage() {
           <Textarea
             id="ai-prompt-textarea"
             placeholder="Type your desired AI prompt here."
-            className="resize-y field-sizing-content min-h-29 ml-px w-[calc(100%-4px)] focus-visible:ring-0"
+            className="field-sizing-content resize-y min-h-29 ml-px w-[calc(100%-4px)] focus-visible:ring-0"
+            maxLength={1000}
             value={promptText} // 3. Bind the state to the value prop
             onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke
           />

@@ -103,7 +103,7 @@ function NewEntryPage() {
               //rows={4}
               maxLength={500}
               placeholder="Type your desired AI prompt here."
-              className="resize-y field-sizing-content max-h-100 focus-visible:ring-0 dark:bg-[#121212] bg-white scrollbar-thin"
+              className="field-sizing-content resize-none max-h-100 focus-visible:ring-0 backdrop-blur-xl dark:bg-[#121212dd] bg-[#ffffffdd] scrollbar-thin"
               value={promptText} // 3. Bind the state to the value prop
               onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke
             />
