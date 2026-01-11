@@ -103,9 +103,19 @@ function NewEntryPage() {
               //rows={4}
               maxLength={500}
               placeholder="Type your desired AI prompt here."
-              className="field-sizing-content resize-none max-h-100 focus-visible:ring-0 backdrop-blur-xl dark:bg-[#121212dd] bg-[#ffffffdd] scrollbar-thin"
+              className="field-sizing-content resize-none max-h-100 min-h-10.5 focus-visible:ring-0 backdrop-blur-lg dark:bg-[#121212dd] bg-[#fefefedd] scrollbar-thin"
               value={promptText} // 3. Bind the state to the value prop
               onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  // TODO: Also check editor content, if empty
+                  if (promptText.trim() === "") return;
+                  // Submit AI prompt logic here
+                  alert("Submitted AI request successfully!");
+                }
+              }}
+              // onBlur={() => {}}
             />
           </div>
           <div className="flex gap-0 items-center justify-between w-full">
@@ -119,7 +129,7 @@ function NewEntryPage() {
               <Button
                 variant="secondary"
                 title="Save Entry"
-                className="w-full hover:bg-secondary hover:brightness-90 overflow-hidden /*active:brightness-80*/"
+                className="w-full overflow-hidden hover:bg-secondary hover:brightness-90 /*active:brightness-80*/"
                 disabled={promptText.trimEnd() !== ""}
               >
                 Save Entry
