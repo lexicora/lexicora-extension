@@ -164,6 +164,7 @@ function HomePage() {
         </section>
         <section className="mt-6">
           <Textarea
+            id="ai-prompt-textarea"
             placeholder="Type your desired AI prompt here."
             className="resize-y field-sizing-content min-h-29 ml-px w-[calc(100%-4px)] focus-visible:ring-0"
             value={promptText} // 3. Bind the state to the value prop

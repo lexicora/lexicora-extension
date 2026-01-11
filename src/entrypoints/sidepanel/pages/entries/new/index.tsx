@@ -1,6 +1,8 @@
 import "./NewEntryPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, House } from "lucide-react";
 import { useSidePanelMessaging } from "@/entrypoints/sidepanel/components/SidePanelMessagingProvider";
 import { useEffect, useState } from "react";
@@ -12,7 +14,6 @@ import { defaultBlockNoteConfig } from "@/types/block-note.types";
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { BlockNoteView } from "@/editor/BlockNoteView";
 import { useCreateBlockNote } from "@blocknote/react";
-import { Label } from "@/components/ui/label";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 // TODO: Add loading state while waiting for content (also use a skeleton loader for BlockNote.js editor)
 
@@ -21,6 +22,7 @@ function NewEntryPage() {
   const [language, setLanguage] = useState<string>(navigator.language || "en");
   const editor = useCreateBlockNote(defaultBlockNoteConfig);
   const { sendMessage, onMessage } = useSidePanelMessaging();
+  const [promptText, setPromptText] = useState("");
 
   const updateEditorContent = (data: pageData) => {
     if (data.HTML) {
@@ -56,7 +58,7 @@ function NewEntryPage() {
   }, [editor]);
 
   return (
-    <div className="p-4">
+    <div className="p-2.25">
       <header className="flex items-center gap-2 mb-4">
         <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
           <ArrowLeft />
@@ -90,6 +92,50 @@ function NewEntryPage() {
           </div>
         </section>
       </main>
+      <footer className="mt-43.5">
+        <section
+          className="fixed bottom-0 left-0 min-h-15 w-full p-3 z-1000
+                lc-bottom-bar-styled-bg"
+        >
+          <div className="pb-3">
+            <Textarea
+              id="ai-prompt-textarea"
+              //rows={4}
+              maxLength={500}
+              placeholder="Type your desired AI prompt here."
+              className="resize-y field-sizing-content max-h-100 focus-visible:ring-0 dark:bg-[#121212] bg-white scrollbar-thin"
+              value={promptText} // 3. Bind the state to the value prop
+              onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke
+            />
+          </div>
+          <div className="flex gap-0 items-center justify-between w-full">
+            <div
+              className={`flex justify-start transition-all duration-300 ease-in-out /*overflow-visible*/ ${
+                promptText.trimEnd() === ""
+                  ? "flex-1 max-w-[50%] mr-3"
+                  : "flex-0 max-w-0 opacity-0 mr-0 blur-[6px]"
+              }`}
+            >
+              <Button
+                variant="secondary"
+                title="Save Entry"
+                className="w-full hover:bg-secondary hover:brightness-90 overflow-hidden /*active:brightness-80*/"
+                disabled={promptText.trimEnd() !== ""}
+              >
+                Save Entry
+              </Button>
+            </div>
+            <div className="flex justify-end flex-1">
+              <Button
+                title="Revise Entry with AI"
+                className="w-full hover:bg-primary hover:brightness-90 /*active:brightness-80*/"
+              >
+                Revise with AI
+              </Button>
+            </div>
+          </div>
+        </section>
+      </footer>
     </div>
   );
 }
