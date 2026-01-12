@@ -115,6 +115,7 @@ function NewEntryPage() {
               onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
+                  // Maybe change it to Ctrl/Cmd + Enter?
                   e.preventDefault();
                   // TODO: Also check editor content, if empty
                   if (promptText.trim() === "") return;
