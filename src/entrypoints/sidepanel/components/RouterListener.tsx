@@ -14,18 +14,20 @@ export function RouterListener() {
       MSG.NAVIGATE_IN_SIDEPANEL,
       (msg) => {
         if (!msg.data) return;
-        const targetPath = msg.data.path;
-        const isAlreadyOnPath = location.pathname === targetPath;
+        navigate(msg.data.path, { viewTransition: true });
 
-        if (targetPath && !isAlreadyOnPath) {
-          navigate(targetPath, { viewTransition: true });
-        } else {
-          navigate(targetPath, {
-            state: { reload: true },
-            viewTransition: true,
-          });
-          //window.location.reload();
-        }
+        // const targetPath = msg.data.path;
+        // const isAlreadyOnPath = location.pathname === targetPath;
+
+        // if (targetPath && !isAlreadyOnPath) {
+        //   navigate(targetPath, { viewTransition: true });
+        // } else {
+        //   navigate(targetPath, {
+        //     state: { reload: true }, // pass state to component, then in component const location = useLocation(); if(location.state.reload) { do something }
+        //     viewTransition: true,
+        //   });
+        //   //window.location.reload();
+        // }
       },
     );
 

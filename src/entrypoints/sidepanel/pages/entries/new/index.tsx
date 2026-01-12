@@ -18,7 +18,7 @@ import { useCreateBlockNote } from "@blocknote/react";
 // TODO: Add loading state while waiting for content (also use a skeleton loader for BlockNote.js editor)
 
 function NewEntryPage() {
-  const location = useLocation();
+  const location = useLocation(); // This is used in order to trigger useEffect on location change
   const navigate = useNavigate();
   const [language, setLanguage] = useState<string>(navigator.language || "en");
   const editor = useCreateBlockNote(defaultBlockNoteConfig);
@@ -108,7 +108,9 @@ function NewEntryPage() {
               //rows={4}
               maxLength={500}
               placeholder="Type your desired AI prompt here."
-              className="field-sizing-content resize-none max-h-100 min-h-10.5 focus-visible:ring-0 backdrop-blur-lg dark:bg-[#121212dd] bg-[#fefefedd] scrollbar-thin"
+              className={`field-sizing-content resize-none max-h-100 min-h-10.5 focus-visible:ring-0 backdrop-blur-lg dark:bg-[#121212dd] bg-[#fefefedd] scrollbar-thin ${
+                import.meta.env.FIREFOX ? "resize-y h-10.5" : ""
+              }`}
               value={promptText} // 3. Bind the state to the value prop
               onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke
               onKeyDown={(e) => {

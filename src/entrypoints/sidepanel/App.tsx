@@ -1,6 +1,7 @@
 import "./App.css";
 import {
   createHashRouter,
+  createMemoryRouter,
   RouterProvider,
   Outlet,
   HashRouter,
@@ -8,6 +9,9 @@ import {
   Routes,
 } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
+import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
+
+// Pages
 import HomePage from "./pages/home";
 
 // Entries Pages
@@ -19,6 +23,8 @@ import { RouterListener } from "./components/RouterListener";
 import { SidePanelMessagingProvider } from "./components/SidePanelMessagingProvider";
 
 function RootLayout() {
+  useMouseNavigation();
+
   return (
     <SidePanelMessagingProvider>
       <RouterListener />
@@ -27,7 +33,7 @@ function RootLayout() {
   );
 }
 
-const router = createHashRouter([
+const router = createMemoryRouter([
   {
     path: "/",
     element: <RootLayout />,
