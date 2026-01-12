@@ -22,10 +22,6 @@ function HomePage() {
   // MAYBE: Force side panel to open to home page with messaging navigation implementation.
   const openSidePanel = async () => {
     if (import.meta.env.FIREFOX) {
-      // NOTE: Firefox always reloads the sidebar to default page, even when open.
-      // @ts-ignore: sidebarAction is a Firefox-specific API
-      //await browser.sidebarAction.isOpen({});
-      // TODO: Put this logic in the button itself to change functionality to fix the open sidebar issue (user event has to trigger it)
       // @ts-ignore: sidebarAction is a Firefox-specific API
       await browser.sidebarAction.open();
     } else {
@@ -75,7 +71,6 @@ function HomePage() {
               }}
             >
               {/*Maybe remove later and keep it blank*/}
-              {/*Maybe add link to lexicora.com */}
               <img
                 src={lexicoraLightThemeLogo}
                 className="h-9 lc-display-light"
