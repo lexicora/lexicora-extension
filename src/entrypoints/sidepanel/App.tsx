@@ -1,13 +1,5 @@
 import "./App.css";
-import {
-  createHashRouter,
-  createMemoryRouter,
-  RouterProvider,
-  Outlet,
-  HashRouter,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { createMemoryRouter, RouterProvider, Outlet } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
 import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
 

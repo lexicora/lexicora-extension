@@ -1,18 +1,33 @@
 import "./App.css";
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { createMemoryRouter, RouterProvider, Outlet } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
+
+// Pages
 import HomePage from "./pages/home";
+
+function RootLayout() {
+  return (
+    <>
+      <Outlet />
+    </>
+  );
+}
+
+const router = createMemoryRouter([
+  {
+    path: "/",
+    element: <RootLayout />,
+    children: [
+      { path: "/", element: <HomePage /> },
+      //MAYBE: Add (if not logged in pages here)
+    ],
+  },
+]);
 
 function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="lexicora-ui-theme">
-      <HashRouter>
-        {/*<RouterListener />*/}
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          {/*MAYBE: Add (if not logged in pages here) */}
-        </Routes>
-      </HashRouter>
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 }
