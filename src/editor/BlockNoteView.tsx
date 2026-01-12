@@ -1,7 +1,7 @@
 //import * as Badge from "@/components/ui/badge";
 import * as Button from "@/components/ui/button";
 //import * as Card from "@/components/ui/card";
-import * as DropdownMenu from "./components/dropdown-menu";
+import * as DropdownMenu from "./components/ui/dropdown-menu";
 // import * as Form from "@/components/ui/form";
 // import * as Input from "@/components/ui/input";
 import * as Label from "@/components/ui/label";
@@ -9,7 +9,7 @@ import * as Label from "@/components/ui/label";
 // import * as Select from "./select";
 // import * as Tabs from "@/components/ui/tabs";
 // import * as Toggle from "@/components/ui/toggle";
-// import * as Tooltip from "@/components/ui/tooltip";
+import * as Tooltip from "./components/ui/tooltip";
 
 import {
   BasicTextStyleButton,
@@ -58,10 +58,13 @@ export function BlockNoteView({
   spellCheck?: boolean;
   id?: string;
 }) {
-  const { theme } = useTheme();
-  const [editorTheme, setEditorTheme] = useState(resolveAppTheme(theme));
+  // const { theme } = useTheme();
+  // const [editorTheme, setEditorTheme] = useState(resolveAppTheme(theme));
 
-  useEffect(() => {}, [theme]);
+  // useEffect(() => {
+  //   setEditorTheme(resolveAppTheme(theme));
+  // }, [theme]);
+
   //TODO: Implement no spellcheck in code blocks
   return (
     <BaseBlockNoteView
@@ -69,7 +72,7 @@ export function BlockNoteView({
       className={className}
       style={style}
       editable={editable}
-      theme={getAppTheme()}
+      theme={getAppTheme()} // can be left for now
       lang={lang}
       spellCheck={spellCheck}
       id={id}
@@ -85,7 +88,7 @@ export function BlockNoteView({
         // Select,
         // Tabs,
         // Toggle,
-        // Tooltip,
+        Tooltip,
       }}
       formattingToolbar={false}
       emojiPicker={false}

@@ -8,14 +8,23 @@ import "./HomePage.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { ModeToggle } from "@/components/mode-toggle";
-import { ArrowUpRight, PanelRight, PanelRightOpen } from "lucide-react";
+import {
+  ArrowUpRight,
+  PanelRight,
+  PanelRightOpen,
+  SquareArrowOutUpRight,
+} from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
 
 import { MSG } from "@/types/messaging";
 
 function HomePage() {
-  const [count, setCount] = useState(0);
   const [promptText, setPromptText] = useState("");
   //const { theme } = useTheme()
 
@@ -49,13 +58,7 @@ function HomePage() {
         >
           <div className="flex gap-0 items-center justify-between w-full">
             <div className="flex justify-start flex-1 gap-1">
-              {/*<Button
-                onClick={() => setCount((count) => count + 1)}
-                variant="secondary"
-              >
-                count is {count}
-              </Button>*/}
-              {/*<ModeToggle />*/}
+              {/*MAYBE: Add dropdown menu of quick actions here (profile included)*/}
               <Avatar className="size-8 border ml-0.5" title="Profile">
                 <AvatarImage
                   src="https://github.com/tgrant06.png"
@@ -99,77 +102,72 @@ function HomePage() {
       </header>
       <main>
         <section>
-          <span className="inline-flex gap-3 items-baseline">
-            {/*Maybe add link to lexicora.com */}
-            <img
-              src={lexicoraLightThemeLogo}
-              className="h-6.5 lc-display-light"
-              alt="Lexicora logo"
-              draggable="false"
-            />
-            <img
-              src={lexicoraDarkThemeLogo}
-              className="h-6.5 lc-display-dark"
-              alt="Lexicora logo"
-              draggable="false"
-            />
-            <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground">
-              Lexicora
-            </h1>
-          </span>
-          <h2 className="test-app text-2xl font-bold">WXT + React</h2>
-          <div className="card">
-            <div className="flex gap-2.5 justify-center mb-2.5">
-              <Button onClick={() => setCount((count) => count + 1)}>
-                count is {count}
-              </Button>
-              <Button onClick={openSidePanel}>
-                Open Side Panel <ArrowUpRight />
-              </Button>
-              <ModeToggle />
-            </div>
-            <p>
-              Edit <code>src/App.tsx</code> and save to test HMR
-            </p>
-          </div>
-          <p className="read-the-docs">
-            Click on the WXT and React logos to learn more
-          </p>
+          <Tooltip>
+            <TooltipTrigger className="cursor-pointer" asChild>
+              <a
+                href="https://lexicora.com"
+                target="_blank"
+                className="flex justify-center"
+              >
+                <span className="inline-flex gap-3 items-baseline">
+                  {/*Maybe add link to lexicora.com */}
+                  <img
+                    src={lexicoraLightThemeLogo}
+                    className="h-6.5 lc-display-light"
+                    alt="Lexicora logo"
+                    draggable="false"
+                  />
+                  <img
+                    src={lexicoraDarkThemeLogo}
+                    className="h-6.5 lc-display-dark"
+                    alt="Lexicora logo"
+                    draggable="false"
+                  />
+                  <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground">
+                    Lexicora
+                  </h1>
+                </span>
+              </a>
+            </TooltipTrigger>
+            <TooltipContent className="p-1">
+              <p>
+                Visit Lexicora.com <ArrowUpRight className="inline" size={16} />
+                {/*<ArrowUpRight className="inline-block ml-1" />*/}
+              </p>
+            </TooltipContent>
+          </Tooltip>
+          <hr className="mt-2.5" />
           <article>
-            <p>
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-              nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-              erat, sed diam voluptua. At vero eos et accusam et justo duo
-              dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
-              sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
-              amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-              invidunt ut labore et dolore magna aliquyam erat, sed diam
-              voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-              Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
-              dolor sit amet.
+            <h2 className="text-lg font-medium mt-4 mb-1 text-[#00143d] dark:text-foreground">
+              Describe what you want AI to do
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Provide instructions for capturing and enhancing the content of
+              the current page using AI.
             </p>
-            <p>
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-              nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-              erat, sed diam voluptua. At vero eos et accusam et justo duo
-              dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
-              sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
-              amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-              invidunt ut labore et dolore magna aliquyam erat, sed diam
-              voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-              Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
-              dolor sit amet.
+            <hr className="mx-24 mt-2.5" />
+            <p className="text-sm text-muted-foreground mt-2">
+              Or, leave it blank to capture the page as-is.
             </p>
           </article>
         </section>
-        <section className="mt-6">
+        <section className="mt-5">
           <Textarea
             id="ai-prompt-textarea"
             placeholder="Type your desired AI prompt here."
-            className="field-sizing-content resize-y min-h-29 ml-px w-[calc(100%-4px)] focus-visible:ring-0"
+            className="field-sizing-content resize-y /*min-h-40.5*/ min-h-34.5 ml-px w-[calc(100%-4px)] focus-visible:ring-0"
             maxLength={1000}
             value={promptText} // 3. Bind the state to the value prop
             onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke
+            onKeyDown={(e) => {
+              if (e.ctrlKey && e.key === "Enter") {
+                // Submit AI prompt logic here
+                e.preventDefault();
+                if (promptText.trim() === "") return;
+                alert("Submitted AI request successfully!");
+                // TODO: do more here
+              }
+            }}
           />
         </section>
       </main>
