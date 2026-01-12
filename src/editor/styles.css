@@ -200,6 +200,13 @@
     border-spacing: 0;*/
 }
 
+.bn-container[data-color-scheme]
+    .bn-table-content
+    .bn-block-content[data-content-type="table"]
+    .tableWrapper {
+    margin-right: 5px;
+}
+
 /*.bn-container:has(.bn-editor[contenteditable="true"])
     .bn-block-content[data-content-type="table"]
     table {
