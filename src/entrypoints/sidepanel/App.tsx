@@ -31,6 +31,7 @@ const router = createMemoryRouter([
     element: <RootLayout />,
     children: [
       { path: "/", element: <HomePage /> },
+      //{ path: "settings", element: <SettingsPage /> },
       // Entries
       { path: "entries", element: <EntriesPage /> },
       { path: "entries/new", element: <NewEntryPage /> },
