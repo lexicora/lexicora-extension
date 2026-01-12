@@ -58,12 +58,14 @@ export function BlockNoteView({
   spellCheck?: boolean;
   id?: string;
 }) {
-  // const { theme } = useTheme();
-  // const [editorTheme, setEditorTheme] = useState(resolveAppTheme(theme));
+  // TODO: Not finished yet (needs event listener for system theme changes)
+  const { theme } = useTheme();
+  const [editorTheme, setEditorTheme] = useState(resolveAppTheme(theme));
 
-  // useEffect(() => {
-  //   setEditorTheme(resolveAppTheme(theme));
-  // }, [theme]);
+  useEffect(() => {
+    setEditorTheme(resolveAppTheme(theme));
+    //console.log("BlockNoteView: Theme changed to", theme);
+  }, [theme]);
 
   //TODO: Implement no spellcheck in code blocks
   return (
@@ -72,7 +74,7 @@ export function BlockNoteView({
       className={className}
       style={style}
       editable={editable}
-      theme={getAppTheme()} // can be left for now
+      theme={editorTheme} // can be left for now
       lang={lang}
       spellCheck={spellCheck}
       id={id}
