@@ -164,7 +164,7 @@
     color: var(--lc-text-color-monospace);
     /*border-radius: 4px;*/
     border-radius: calc(0.1em + 3px);
-    padding: 2px 0.28em 1px; /*Shorthand definition*/
+    padding: 0.1rem 0.28em 0.1rem; /*Shorthand definition*/
     font-family: var(--lc-font-monospace);
     font-size: calc(1em - 2px); /*MAYBE: Adjust later*/
     font-weight: 400; /*Hevier font for better readability, due to different display in light mode*/
