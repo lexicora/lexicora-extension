@@ -20,7 +20,11 @@ export function RouterListener() {
         if (targetPath && !isAlreadyOnPath) {
           navigate(targetPath, { viewTransition: true });
         } else {
-          window.location.reload();
+          navigate(targetPath, {
+            state: { reload: true },
+            viewTransition: true,
+          });
+          //window.location.reload();
         }
       },
     );

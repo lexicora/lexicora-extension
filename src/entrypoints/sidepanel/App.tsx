@@ -1,5 +1,12 @@
 import "./App.css";
-import { HashRouter, Route, Routes } from "react-router-dom";
+import {
+  createHashRouter,
+  RouterProvider,
+  Outlet,
+  HashRouter,
+  Route,
+  Routes,
+} from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
 import HomePage from "./pages/home";
 
@@ -11,26 +18,34 @@ import EntryEditPage from "./pages/entries/edit/[id]";
 import { RouterListener } from "./components/RouterListener";
 import { SidePanelMessagingProvider } from "./components/SidePanelMessagingProvider";
 
+function RootLayout() {
+  return (
+    <SidePanelMessagingProvider>
+      <RouterListener />
+      <Outlet />
+    </SidePanelMessagingProvider>
+  );
+}
+
+const router = createHashRouter([
+  {
+    path: "/",
+    element: <RootLayout />,
+    children: [
+      { path: "/", element: <HomePage /> },
+      // Entries
+      { path: "entries", element: <EntriesPage /> },
+      { path: "entries/new", element: <NewEntryPage /> },
+      { path: "entries/:id", element: <EntryDetailPage /> },
+      { path: "entries/:id/edit", element: <EntryEditPage /> },
+    ],
+  },
+]);
+
 function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="lexicora-ui-theme">
-      <HashRouter>
-        <SidePanelMessagingProvider>
-          <RouterListener />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            {/*Entries */}
-            <Route path="/entries" element={<EntriesPage />} />
-            <Route
-              path="/entries/new"
-              element={<NewEntryPage />}
-              //key={}
-            />
-            <Route path="/entries/:id" element={<EntryDetailPage />} />
-            <Route path="/entries/:id/edit" element={<EntryEditPage />} />
-          </Routes>
-        </SidePanelMessagingProvider>
-      </HashRouter>
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 }

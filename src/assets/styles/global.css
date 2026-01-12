@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 
 @import "./vendors.css";
+@import "./animations.css";
 
 @source "../../../node_modules/@blocknote/shadcn";
 
@@ -174,7 +175,3 @@ html.dark {
     scrollbar-width: thin;
     scrollbar-color: #9f9f9f #ffffff08;
 }
-/*
-@view-transition {
-    navigation: auto;
-}*/

@@ -1,5 +1,5 @@
 import "./NewEntryPage.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,6 +18,7 @@ import { useCreateBlockNote } from "@blocknote/react";
 // TODO: Add loading state while waiting for content (also use a skeleton loader for BlockNote.js editor)
 
 function NewEntryPage() {
+  const location = useLocation();
   const navigate = useNavigate();
   const [language, setLanguage] = useState<string>(navigator.language || "en");
   const editor = useCreateBlockNote(defaultBlockNoteConfig);
@@ -55,12 +56,16 @@ function NewEntryPage() {
     );
 
     return () => unsubscribe();
-  }, [editor]);
+  }, [editor, location]);
 
   return (
     <div className="p-2.25">
       <header className="flex items-center gap-2 mb-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate("/", { viewTransition: true })}
+        >
           <ArrowLeft />
         </Button>
         {/*<Link to="/entries">
