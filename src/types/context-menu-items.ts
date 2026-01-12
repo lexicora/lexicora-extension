@@ -43,4 +43,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
     contexts: ["all"],
   },
   //TODO MAYBE: Add option to save without opening side panel and only show notification of success/failure
+
+  // Add more browser-specific excluded URLs if needed (like extensions own pages)
+  // documentUrlPatterns: ["https://**", "https://**"] (put in each item if needed)
 ];

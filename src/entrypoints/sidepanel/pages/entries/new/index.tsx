@@ -108,16 +108,15 @@ function NewEntryPage() {
               //rows={4}
               maxLength={500}
               placeholder="Type your desired AI prompt here."
-              className={`field-sizing-content resize-none max-h-100 min-h-10.5 focus-visible:ring-0 backdrop-blur-lg dark:bg-[#121212dd] bg-[#fefefedd] scrollbar-thin ${
+              className={`field-sizing-content resize-none max-h-100 min-h-10.5 focus-visible:ring-0 backdrop-blur-lg dark:bg-[#171717dd] bg-[#fdfdfddd] scrollbar-thin ${
                 import.meta.env.FIREFOX ? "resize-y h-10.5" : ""
               }`} // NOTE (feature parity discrepancy): No support fo field sizing content in Firefox and also different behavior compared to Chrome
               value={promptText} // 3. Bind the state to the value prop
               onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke
               onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
+                if (e.ctrlKey && e.key === "Enter") {
                   // Maybe change it to Ctrl/Cmd + Enter?
                   e.preventDefault();
-                  // TODO: Also check editor content, if empty
                   if (promptText.trim() === "") return;
                   // Submit AI prompt logic here
                   alert("Submitted AI request successfully!");

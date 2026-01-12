@@ -16,7 +16,7 @@ import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
 export function contextMenuHandler() {
   browser.contextMenus.onClicked.addListener(async (info, tab) => {
     if (!tab) return;
-
+    // Add browser-specific excluded URLs if needed (like extensions own pages)
     switch (info.menuItemId) {
       case CMI_ID.OPEN_LEXICORA: {
         browser.tabs.create({ url: "https://lexicora.com" });

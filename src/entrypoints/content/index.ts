@@ -10,7 +10,7 @@ export default defineContentScript({
     : [
         "https://chromewebstore.google.com/*",
         "https://microsoftedge.microsoft.com/*",
-      ],
+      ], // Add more browser-specific excluded URLs if needed (like extensions own pages)
   main() {
     //console.log("Hello content.");
 
