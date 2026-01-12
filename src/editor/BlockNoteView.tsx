@@ -35,7 +35,8 @@ import "@blocknote/shadcn/style.css";
 import "./styles.css";
 
 // TODO: Overhaul theme implementation (with props passed down with the parent using the useTheme hook)
-import { getAppTheme } from "@/lib/theme-helper";
+import { getAppTheme, resolveAppTheme } from "@/lib/theme-helper";
+import { useTheme } from "@/components/theme-provider";
 //import { getAppTheme } from "./theme-config";
 //import { getCustomSlashMenuItems } from "./config";
 
@@ -57,6 +58,10 @@ export function BlockNoteView({
   spellCheck?: boolean;
   id?: string;
 }) {
+  const { theme } = useTheme();
+  const [editorTheme, setEditorTheme] = useState(resolveAppTheme(theme));
+
+  useEffect(() => {}, [theme]);
   //TODO: Implement no spellcheck in code blocks
   return (
     <BaseBlockNoteView
