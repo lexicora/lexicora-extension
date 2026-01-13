@@ -48,6 +48,11 @@ function HomePage() {
     window.close();
   };
 
+  useEffect(() => {
+    // MAYBE: Enable later for convenience
+    //document.getElementById("ai-prompt-textarea")?.focus();
+  }, []);
+
   return (
     <div className="w-85 overflow-auto h-full pt-20 pb-15 px-2">
       <header>
@@ -102,45 +107,35 @@ function HomePage() {
         </nav>
       </header>
       <main>
-        <section>
-          {/*<Tooltip>
-            <TooltipTrigger className="cursor-pointer" asChild>*/}
+        <section className="">
           <span className="inline-flex gap-3 items-baseline">
-            {/*Maybe add link to lexicora.com */}
-            <img
-              src={lexicoraLightThemeLogo}
-              className="h-6.5 lc-display-light"
-              alt="Lexicora logo"
-              draggable="false"
-            />
-            <img
-              src={lexicoraDarkThemeLogo}
-              className="h-6.5 lc-display-dark"
-              alt="Lexicora logo"
-              draggable="false"
-            />
-            <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground">
+            <a
+              href="https://lexicora.com"
+              target="_blank"
+              className=" transition-opacity duration-100 hover:opacity-75"
+              title="https://lexicora.com"
+            >
+              {/*Maybe add link to lexicora.com */}
+              <img
+                src={lexicoraLightThemeLogo}
+                className="h-6.5 lc-display-light"
+                alt="Lexicora logo"
+                draggable="false"
+              />
+              <img
+                src={lexicoraDarkThemeLogo}
+                className="h-6.5 lc-display-dark"
+                alt="Lexicora logo"
+                draggable="false"
+              />
+            </a>
+            {/*#00143d is the Lexicora color */}
+            <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground leading-0">
               Lexicora
             </h1>
           </span>
           {/*TODO: Maybe show indication (like in browsers bottom left of window), where this link leads */}
-          {/*</TooltipTrigger>
-            <TooltipContent className="p-1">
-          <p>
-            Visit Lexicora.com <ArrowUpRight className="inline" size={16} />
-          </p>
-          </TooltipContent>
-          </Tooltip>*/}
-          <a
-            href="https://lexicora.com"
-            target="_blank"
-            className="flex justify-center text-sm mt-0.5 text-muted-foreground hover:underline hover:underline-offset-2"
-            //title="Go to Lexicora.com"
-            title="https://lexicora.com"
-          >
-            Visit lexicora.com <ArrowUpRight className="inline" size={16} />
-          </a>
-          <hr className="mt-2.5 mx-2" />
+          <hr className="mt-4.5 mx-2" />
           <article>
             <h2 className="text-lg font-medium mt-4 mb-1 text-[#00143d] dark:text-foreground">
               Describe what you want AI to do
@@ -149,7 +144,7 @@ function HomePage() {
               Provide instructions for capturing and enhancing the content of
               the current page using AI.
             </p>
-            <hr className="mx-24 mt-2.5" />
+            <hr className="mx-24 mt-2.75" />
             <p className="text-sm text-muted-foreground mt-2">
               Or, leave it blank to capture the page as-is.
             </p>
@@ -160,7 +155,7 @@ function HomePage() {
             id="ai-prompt-textarea"
             placeholder="Type your desired AI prompt here."
             // Adjust default height to either 6 rows (min-h-40.5) or 5 rows (min-h-34.5)
-            className="field-sizing-content resize-y /*min-h-40.5*/ min-h-34.5 ml-px w-[calc(100%-4px)] focus-visible:ring-0"
+            className="field-sizing-content resize-y /*min-h-40.5*/ min-h-34.5 max-h-300 ml-px w-[calc(100%-4px)] focus-visible:ring-0"
             maxLength={1000}
             value={promptText} // 3. Bind the state to the value prop
             onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke
