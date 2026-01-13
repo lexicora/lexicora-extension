@@ -72,6 +72,7 @@ function HomePage() {
               onClick={() => {
                 window.scrollTo({ top: 0 });
               }}
+              title="Scroll to top"
             >
               {/*Maybe remove later and keep it blank*/}
               <img
@@ -104,30 +105,24 @@ function HomePage() {
         <section>
           {/*<Tooltip>
             <TooltipTrigger className="cursor-pointer" asChild>*/}
-          <a
-            href="https://lexicora.com"
-            target="_blank"
-            className="flex justify-center cursor-pointer"
-          >
-            <span className="inline-flex gap-3 items-baseline  decoration-2 hover:underline hover:underline-offset-2">
-              {/*Maybe add link to lexicora.com */}
-              <img
-                src={lexicoraLightThemeLogo}
-                className="h-6.5 lc-display-light"
-                alt="Lexicora logo"
-                draggable="false"
-              />
-              <img
-                src={lexicoraDarkThemeLogo}
-                className="h-6.5 lc-display-dark"
-                alt="Lexicora logo"
-                draggable="false"
-              />
-              <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground">
-                Lexicora
-              </h1>
-            </span>
-          </a>
+          <span className="inline-flex gap-3 items-baseline">
+            {/*Maybe add link to lexicora.com */}
+            <img
+              src={lexicoraLightThemeLogo}
+              className="h-6.5 lc-display-light"
+              alt="Lexicora logo"
+              draggable="false"
+            />
+            <img
+              src={lexicoraDarkThemeLogo}
+              className="h-6.5 lc-display-dark"
+              alt="Lexicora logo"
+              draggable="false"
+            />
+            <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground">
+              Lexicora
+            </h1>
+          </span>
           {/*TODO: Maybe show indication (like in browsers bottom left of window), where this link leads */}
           {/*</TooltipTrigger>
             <TooltipContent className="p-1">

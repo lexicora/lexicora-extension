@@ -28,6 +28,9 @@
     --bn-colors-highlights-purple-background: #4c3e63;
     --bn-colors-highlights-pink-text: #e52d9b;
     --bn-colors-highlights-pink-background: #772857;
+
+    /*Editor background color*/
+    --bn-colors-editor-background: #1d1d1d;
 }
 
 /* Changes for light mode */
@@ -183,6 +186,17 @@
     font-size: 14px; /*MAYBE: Adjust later*/
     font-weight: 300;
     /*line-height: 1.2;*/
+}
+
+.bn-container[data-color-scheme="dark"]
+    .bn-block-content[data-content-type="codeBlock"] {
+    /*border: 1px solid var(--color-border);*/
+    background-color: #151515;
+}
+
+.bn-container[data-color-scheme="light"]
+    .bn-block-content[data-content-type="codeBlock"] {
+    background-color: #202020;
 }
 
 .bn-table-content .bn-block-content[data-content-type="table"] th {

@@ -20,9 +20,9 @@ import { useCreateBlockNote } from "@blocknote/react";
 function NewEntryPage() {
   const location = useLocation(); // This is used in order to trigger useEffect on location change
   const navigate = useNavigate();
-  const [language, setLanguage] = useState<string>(navigator.language || "en");
   const editor = useCreateBlockNote(defaultBlockNoteConfig);
   const { sendMessage, onMessage } = useSidePanelMessaging();
+  const [language, setLanguage] = useState<string>(navigator.language || "en");
   const [promptText, setPromptText] = useState("");
 
   const updateEditorContent = (data: pageData) => {
