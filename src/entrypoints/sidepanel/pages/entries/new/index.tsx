@@ -24,6 +24,8 @@ function NewEntryPage() {
   const { sendMessage, onMessage } = useSidePanelMessaging();
   const [language, setLanguage] = useState<string>(navigator.language || "en");
   const [promptText, setPromptText] = useState("");
+  const footerRef = useRef<HTMLElement>(null);
+  const footerContentRef = useRef<HTMLElement>(null);
 
   const updateEditorContent = (data: pageData) => {
     if (data.HTML) {
@@ -57,6 +59,23 @@ function NewEntryPage() {
 
     return () => unsubscribe();
   }, [editor, location]);
+
+  useEffect(() => {
+    const footerElement = footerRef.current;
+    const footerContentElement = footerContentRef.current;
+
+    if (!footerElement || !footerContentElement) {
+      return;
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      footerElement.style.height = `${footerContentElement.offsetHeight}px`;
+    });
+
+    resizeObserver.observe(footerContentElement);
+
+    return () => resizeObserver.disconnect();
+  }, []);
 
   return (
     <div className="p-2.25">
@@ -92,23 +111,25 @@ function NewEntryPage() {
               className=""
               lang={language}
               id="lc-blocknote-view-new-entry"
+              //ref={editorContainerRef.current}
               //editable={false}
             />
           </div>
         </section>
       </main>
-      <footer className="mt-43.5">
+      <footer className="mt-10.5" ref={footerRef}>
         <section
-          className="fixed bottom-0 left-0 min-h-15 w-full p-3 z-1000
+          ref={footerContentRef}
+          className="fixed bottom-0 left-0 min-h-15 w-full p-3 z-40
                 lc-bottom-bar-styled-bg"
         >
-          <div className="pb-3">
+          <div className="pb-3 /*mt-1*/">
             <Textarea
               id="ai-prompt-textarea"
               //rows={4}
               maxLength={500}
               placeholder="Type your desired AI prompt here."
-              className={`field-sizing-content resize-none max-h-100 min-h-10.5 focus-visible:ring-0 backdrop-blur-lg dark:bg-[#171717dd] bg-[#fdfdfddd] scrollbar-thin ${
+              className={`field-sizing-content resize-none max-h-88.5 min-h-10.5 focus-visible:ring-0 backdrop-blur-lg dark:bg-[#171717dd] bg-[#fdfdfddd] scrollbar-thin ${
                 import.meta.env.FIREFOX ? "resize-y h-10.5" : ""
               }`} // NOTE (feature parity discrepancy): No support fo field sizing content in Firefox and also different behavior compared to Chrome
               value={promptText} // 3. Bind the state to the value prop
@@ -144,10 +165,10 @@ function NewEntryPage() {
             </div>
             <div className="flex justify-end flex-1">
               <Button
-                title="Revise Entry with AI"
+                title="Refine Entry with AI"
                 className="w-full hover:bg-primary hover:brightness-90 /*active:brightness-80*/"
               >
-                Revise with AI
+                Refine with AI
               </Button>
             </div>
           </div>
