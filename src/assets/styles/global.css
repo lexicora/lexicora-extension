@@ -145,6 +145,17 @@
             @apply scroll-auto;
         }
     }
+    html.light {
+        scrollbar-width: thin;
+        scrollbar-color: #8b8b8b #00000012;
+        /*TODO: Change color later to better suiting colors*/
+    }
+
+    html.dark {
+        scrollbar-width: thin;
+        scrollbar-color: #9f9f9f #ffffff08;
+        /*TODO: Change color later to better suiting colors*/
+    }
     button:not(:disabled),
     [role="button"]:not(:disabled) {
         cursor: pointer;
@@ -164,14 +175,4 @@ body {
     line-height: 1.5;
     font-weight: 400;
     font-size: 78%; /* With Wix Madefor Text font to be the same size as Inter (default: 75%) */
-}
-
-html.light {
-    scrollbar-width: thin;
-    scrollbar-color: #8b8b8b #00000012;
-}
-
-html.dark {
-    scrollbar-width: thin;
-    scrollbar-color: #9f9f9f #ffffff08;
 }
