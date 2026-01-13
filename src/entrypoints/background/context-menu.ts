@@ -33,6 +33,7 @@ export function contextMenuHandler() {
         // Todo: Future implementation for AI-assisted saving
         //* pageSelectionData.pageHTML -> mozilla readability -> markdown -> Backend(self to AI to self) -> markdown ->
 
+        //* INFO: Debug logs
         if (import.meta.env.DEV) {
           console.log(
             "TEST: \nURL:",
@@ -81,7 +82,7 @@ export function contextMenuHandler() {
           ).catch(() => {});
         }
 
-        // Debug logs
+        //* INFO: Debug logs
         if (import.meta.env.DEV) {
           console.log(
             "TEST: \nURL:",
@@ -96,7 +97,7 @@ export function contextMenuHandler() {
         break;
       }
       case CMI_ID.CAPTURE_FROM_CLIPBOARD: {
-        // Todo: Implement saving from clipboard
+        // Todo: Implement saving from clipboard (maybe scrap this)
         console.log("Save from Clipboard not implemented yet.");
         break;
       }

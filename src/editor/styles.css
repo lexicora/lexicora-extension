@@ -77,6 +77,23 @@
     --bn-ui-base-z-index: 1000;
 }*/
 /*.bn-shadcn [data-floating-ui-focusable]*/
+/*.bn-container[data-color-scheme]
+    .bn-toolbar
+    [data-radix-popper-content-wrapper]
+    [data-radix-menu-content].bn-color-picker-dropdown {
+    /*max-height: calc(65dvh - 184px);
+    max-height: 70dvh;
+    /*margin-bottom: 172px;
+    /*transform: translateY(-112px) !important;
+}*/
+
+/*.bn-container[data-color-scheme]
+    .bn-toolbar
+    [data-radix-popper-content-wrapper]:has(
+        [data-radix-menu-content].bn-color-picker-dropdown
+    ) {
+    --radix-popper-available-height: calc(40dvh - 184px) !important;
+}*/
 
 .bn-container[data-color-scheme]
     .bn-side-menu

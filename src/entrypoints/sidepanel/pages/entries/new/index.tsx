@@ -78,7 +78,7 @@ function NewEntryPage() {
   }, []);
 
   return (
-    <div className="p-2.25">
+    <div className="p-3">
       <header className="flex items-center gap-2 mb-4">
         <Button
           variant="ghost"
@@ -120,7 +120,7 @@ function NewEntryPage() {
       <footer className="mt-10.5" ref={footerRef}>
         <section
           ref={footerContentRef}
-          className="fixed bottom-0 left-0 min-h-15 w-full max-w-7xl mx-auto inset-x-0 p-3 z-40
+          className="fixed bottom-0 left-0 min-h-15 w-full max-w-7xl mx-auto inset-x-0 p-3 z-30
                 lc-bottom-bar-styled-bg"
         >
           <div className="pb-3 /*mt-1*/">
