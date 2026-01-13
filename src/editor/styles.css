@@ -38,18 +38,18 @@
     --bn-colors-editor-background: #fefefe;
 }*/
 
+.bn-default-styles {
+    /*--bn-font-family: var(--lc-font-sans-serif);*/
+    font-family: var(--lc-font-sans-serif);
+}
+
 /*maybe unnecessary*/
 .bn-container[data-color-scheme] .bn-editor {
     /*--bn-font-family: var(--lc-font-sans-serif);*/
     font-family: var(--lc-font-sans-serif);
 }
 
-.bn-default-styles {
-    /*--bn-font-family: var(--lc-font-sans-serif);*/
-    font-family: var(--lc-font-sans-serif);
-}
-
-.bn-editor {
+.bn-container[data-color-scheme] .bn-editor {
     padding-top: 8px;
     padding-inline-start: 50px;
     padding-inline-end: 8px !important;
@@ -57,7 +57,7 @@
     border: 1px solid var(--color-border);
 }
 
-.bn-editor[contenteditable="false"] {
+.bn-container[data-color-scheme] .bn-editor[contenteditable="false"] {
     padding-inline: 8px !important;
     padding-top: 0px;
 }
@@ -73,11 +73,34 @@
     display: none !important;
 }*/
 
-.bn-shadcn .bn-toolbar {
+/*.bn-container[data-color-scheme] .bn-suggestion-menu {
+    --bn-ui-base-z-index: 1000;
+}*/
+/*.bn-shadcn [data-floating-ui-focusable]*/
+
+.bn-container[data-color-scheme]
+    .bn-side-menu
+    [data-radix-popper-content-wrapper]
+    [data-radix-menu-content].bn-color-picker-dropdown {
+    max-height: calc(100vh - 184px);
+    margin-bottom: 172px;
+    /*transform: translateY(-112px) !important;*/
+}
+
+.bn-container[data-color-scheme]
+    .bn-side-menu
+    [data-radix-popper-content-wrapper]
+    [data-radix-menu-content]:not(.bn-color-picker-dropdown) {
+    /*max-height: calc(100vh - 124px);*/
+    margin-bottom: 100px;
+}
+
+.bn-container[data-color-scheme] .bn-toolbar {
     max-width: 97vw;
 }
 
-.bn-container:has(.bn-editor[contenteditable="false"]) .bn-toolbar {
+.bn-container[data-color-scheme]:has(.bn-editor[contenteditable="false"])
+    .bn-toolbar {
     display: none !important;
 }
 
@@ -90,12 +113,12 @@
     padding-inline: calc(0.25em + 1px);
 }
 
-.bn-container .bn-table-handle:is(button) {
+.bn-container[data-color-scheme] .bn-table-handle:is(button) {
     padding-inline: 0;
     background-color: light-dark(#ededed, #333333);
 }
 
-.bn-container .bn-table-handle:is(button):hover {
+.bn-container[data-color-scheme] .bn-table-handle:is(button):hover {
     background-color: light-dark(#aaaaaa, #666666);
 }
 
@@ -139,10 +162,10 @@
     /*TODO: Prevent too much overflow*/
 }
 
-.bn-editor code::spelling-error,
-.bn-editor pre::spelling-error,
-.bn-editor code::grammar-error,
-.bn-editor pre::grammar-error {
+.bn-container[data-color-scheme] .bn-editor code::spelling-error,
+.bn-container[data-color-scheme] .bn-editor pre::spelling-error,
+.bn-container[data-color-scheme] .bn-editor code::grammar-error,
+.bn-container[data-color-scheme] .bn-editor pre::grammar-error {
     text-decoration: none;
     text-decoration-line: none;
 }
