@@ -108,34 +108,37 @@ function HomePage() {
       </header>
       <main>
         <section className="">
-          <span className="inline-flex gap-3 items-baseline">
-            <a
-              href="https://lexicora.com"
-              target="_blank"
-              className=" transition-opacity duration-100 hover:opacity-75"
-              title="https://lexicora.com"
-            >
-              {/*Maybe add link to lexicora.com */}
-              <img
-                src={lexicoraLightThemeLogo}
-                className="h-6.5 lc-display-light"
-                alt="Lexicora logo"
-                draggable="false"
-              />
-              <img
-                src={lexicoraDarkThemeLogo}
-                className="h-6.5 lc-display-dark"
-                alt="Lexicora logo"
-                draggable="false"
-              />
-            </a>
+          <span className="flex justify-center gap-3 items-baseline mb-3">
+            {/*Maybe add link to lexicora.com */}
+            <img
+              src={lexicoraLightThemeLogo}
+              className="h-6.5 lc-display-light"
+              alt="Lexicora logo"
+              draggable="false"
+            />
+            <img
+              src={lexicoraDarkThemeLogo}
+              className="h-6.5 lc-display-dark"
+              alt="Lexicora logo"
+              draggable="false"
+            />
             {/*#00143d is the Lexicora color */}
             <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground leading-0">
               Lexicora
             </h1>
           </span>
+          <div className="flex justify-center mt-1">
+            <a
+              href="https://lexicora.com"
+              target="_blank"
+              className="text-sm text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 dark:hover:brightness-110 hover:brightness-90"
+              title="https://lexicora.com"
+            >
+              Visit Lexicora.com <ArrowUpRight className="inline" size={16} />
+            </a>
+          </div>
           {/*TODO: Maybe show indication (like in browsers bottom left of window), where this link leads */}
-          <hr className="mt-4.5 mx-2" />
+          <hr className="mt-3 mx-2" />
           <article>
             <h2 className="text-lg font-medium mt-4 mb-1 text-[#00143d] dark:text-foreground">
               Describe what you want AI to do
