@@ -44,7 +44,9 @@
 }
 
 /*Second optional shadow, to make backdrop even darker (if necessary)
-MAYBE: Change selector to different class entirely for this, since it is "opt in"*/
+MAYBE: Change selector to different class entirely for this, since it is "opt in"
+Should be implemented separately in scoped styles, with a new css class/selector (to manually enable) or
+override the standard bottom bar class*/
 /*.lc-bottom-bar-styled-bg::after {
     content: "";
     position: absolute;
