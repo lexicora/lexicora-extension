@@ -113,6 +113,7 @@
 }
 
 .bn-container[data-color-scheme] .bn-toolbar {
+    /*Make space for scrollbar maybe change to calc(100vw - 10px) (or width of scrollbar)*/
     max-width: 97vw;
 }
 

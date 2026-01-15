@@ -9,6 +9,11 @@ html {
     overflow-x: hidden;
 }
 
+body[data-scroll-locked] {
+    /*margin-right: 0 !important;*/
+    --removed-body-scroll-bar-size: 0;
+}
+
 .logo {
     height: 6em;
     padding: 1.5em;

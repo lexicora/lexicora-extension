@@ -44,6 +44,7 @@
     --sidebar-ring: oklch(0.708 0 0);
 
     /*Lexicora styles / variables*/
+    /*MAYBE: Later set --font-mono and --font-sans to the --lc-... fonts*/
     --lc-font-sans-serif:
         "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;
     --lc-font-monospace:
