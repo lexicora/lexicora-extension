@@ -42,3 +42,9 @@
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
 }
+
+/*Utils (Export to utils.css class)*/
+.scrollbar-thin {
+    scrollbar-width: thin;
+    /*scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);*/
+}
