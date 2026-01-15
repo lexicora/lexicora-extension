@@ -158,7 +158,7 @@ function HomePage() {
             id="ai-prompt-textarea"
             placeholder="Type your desired AI prompt here."
             // Adjust default height to either 6 rows (min-h-40.5) or 5 rows (min-h-34.5)
-            className="field-sizing-content resize-y /*min-h-40.5*/ min-h-34.5 max-h-300 ml-px w-[calc(100%-4px)] scrollbar-thin focus-visible:ring-0"
+            className="field-sizing-content resize-y /*min-h-40.5*/ min-h-34.5 /*max-h-300*/ ml-px w-[calc(100%-4px)] scrollbar-thin focus-visible:ring-0"
             maxLength={1000}
             value={promptText} // 3. Bind the state to the value prop
             onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke

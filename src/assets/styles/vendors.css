@@ -39,9 +39,35 @@
     /*background-color: hsl(var(--background) / 0.8);*/
     -webkit-mask: linear-gradient(transparent, black, black);
     mask: linear-gradient(transparent, black, black);
-    backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
 }
+
+/*Second optional shadow, to make backdrop even darker (if necessary)
+MAYBE: Change selector to different class entirely for this, since it is "opt in"*/
+/*.lc-bottom-bar-styled-bg::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 90%;
+    z-index: -1;
+    box-shadow: inset 0 -64px 16px -16px
+        color-mix(in srgb, var(--background), transparent 80%);
+}
+
+.dark .lc-bottom-bar-styled-bg::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 90%;
+    z-index: -1;
+    box-shadow: inset 0 -64px 16px -16px
+        color-mix(in srgb, var(--background), transparent 50%);
+}*/
 
 /*Utils (Export to utils.css class)*/
 .scrollbar-thin {
