@@ -9,6 +9,7 @@ html {
     overflow-x: hidden;
 }
 
+/*NOTE: Prevents layout shift when editing with editor*/
 body[data-scroll-locked] {
     /*margin-right: 0 !important;*/
     --removed-body-scroll-bar-size: 0;
