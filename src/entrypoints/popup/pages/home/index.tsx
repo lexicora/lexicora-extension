@@ -1,8 +1,8 @@
 import { useState } from "react";
 import reactLogo from "@/assets/logos/react.svg";
 import wxtLogo from "/wxt.svg";
-import lexicoraLightThemeLogo from "@/assets/logos/Lexicora_alt1.svg";
-import lexicoraDarkThemeLogo from "@/assets/logos/Lexicora_alt2.svg";
+import lexicoraLightThemeLogo from "@/assets/logos/lexicora_inverted_bg-transparent.svg";
+import lexicoraDarkThemeLogo from "@/assets/logos/lexicora_standard_bg-transparent.svg";
 import { getAppTheme } from "@/lib/theme-helper";
 import "./HomePage.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
