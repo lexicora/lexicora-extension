@@ -3,6 +3,8 @@ import reactLogo from "@/assets/logos/react.svg";
 import wxtLogo from "/wxt.svg";
 import lexicoraLightThemeLogo from "@/assets/logos/lexicora_inverted_bg-transparent.svg";
 import lexicoraDarkThemeLogo from "@/assets/logos/lexicora_standard_bg-transparent.svg";
+import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
+import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
 import { getAppTheme } from "@/lib/theme-helper";
 import "./HomePage.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -81,14 +83,14 @@ function HomePage() {
             >
               {/*Maybe remove later and keep it blank*/}
               <img
-                src={lexicoraLightThemeLogo}
-                className="h-9 lc-display-light"
+                src={lexicoraLightThemeLogoNoBg}
+                className="h-8 lc-display-light rounded-[3px]"
                 alt="Lexicora logo"
                 draggable="false"
               />
               <img
-                src={lexicoraDarkThemeLogo}
-                className="h-9 lc-display-dark"
+                src={lexicoraDarkThemeLogoNoBg}
+                className="h-8 lc-display-dark rounded-[3px]"
                 alt="Lexicora logo"
                 draggable="false"
               />
@@ -100,25 +102,25 @@ function HomePage() {
                 size="icon"
                 title="Open Side Panel"
               >
-                <PanelRight />
+                <PanelRight className="size-4.5" />
               </Button>
             </div>
           </div>
         </nav>
       </header>
       <main>
-        <section className="">
+        <section>
           <span className="flex justify-center gap-3 items-baseline mb-3">
             {/*Maybe add link to lexicora.com */}
             <img
-              src={lexicoraLightThemeLogo}
-              className="h-6.5 lc-display-light"
+              src={lexicoraLightThemeLogoNoBg}
+              className="h-6.5 lc-display-light rounded-xs"
               alt="Lexicora logo"
               draggable="false"
             />
             <img
-              src={lexicoraDarkThemeLogo}
-              className="h-6.5 lc-display-dark"
+              src={lexicoraDarkThemeLogoNoBg}
+              className="h-6.5 lc-display-dark rounded-xs"
               alt="Lexicora logo"
               draggable="false"
             />

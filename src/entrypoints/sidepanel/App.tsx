@@ -19,8 +19,10 @@ function RootLayout() {
 
   return (
     <SidePanelMessagingProvider>
+      {/*TODO: Add top bar */}
       <RouterListener />
       <Outlet />
+      {/*TODO: Add bottom bar */}
     </SidePanelMessagingProvider>
   );
 }
