@@ -15,6 +15,9 @@ export const setPendingNavigation = (path: string | null) => {
   pendingNavigation = path;
 };
 
+/**
+ * Sets up message handlers for pending data and navigation requests
+ */
 export function setupMessagingHandlers() {
   onMessage(MSG.REQUEST_PENDING_DATA, () => {
     const data = pendingCapture;

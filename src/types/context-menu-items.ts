@@ -31,11 +31,13 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
     id: CMI_ID.CAPTURE_SELECTION_AI_ASSISTED,
     title: "Capture Selection with AI",
     contexts: ["selection"],
+    documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   },
   {
     id: CMI_ID.CAPTURE_SELECTION_AS_IS,
     title: "Capture Selection",
     contexts: ["selection"],
+    documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   },
   {
     id: CMI_ID.CAPTURE_FROM_CLIPBOARD,
@@ -44,6 +46,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   },
   //TODO MAYBE: Add option to save without opening side panel and only show notification of success/failure
 
+  //type: "normal" is the default.
   // Add more browser-specific excluded URLs if needed (like extensions own pages)
   // documentUrlPatterns: ["https://**", "https://**"] (put in each item if needed)
 ];

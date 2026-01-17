@@ -10,10 +10,13 @@ import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
 
 // TODO: Add messages for users (if exceptions occur, e.g., no selection made)
 
+const UNSUPPORTED_URL_REGEX = /\.pdf(\?|$)/i; // Currently excludes: *.pdf*
+//const UNSUPPORTED_URL_REGEX = /\.pdf(\?|$)|^(about|chrome|edge|browser|resource):/i;
+
 /**
  * Handles context menu item clicks and actions.
  */
-export function contextMenuHandler() {
+export function setupContextMenuActions() {
   browser.contextMenus.onClicked.addListener(async (info, tab) => {
     if (!tab) return;
     // Add browser-specific excluded URLs if needed (like extensions own pages)
@@ -104,6 +107,48 @@ export function contextMenuHandler() {
       default: {
         console.warn("Unknown context menu item clicked:", info.menuItemId);
       }
+    }
+  });
+}
+
+/**
+ * Sets up the synchronization between the active tab's URL
+ * and the menu item's enabled/disabled state.
+ */
+export function setupContextMenuStateSync(/*menuId: string*/) {
+  const updateUi = async (url?: string) => {
+    if (!url) return;
+
+    const isDisabled = UNSUPPORTED_URL_REGEX.test(url);
+
+    try {
+      await browser.contextMenus.update(CMI_ID.CAPTURE_SELECTION_AI_ASSISTED, {
+        //enabled: !isDisabled, //MAYBE: Use for stuff like, if it is locked, behind a subscription (plus, pro...)
+        visible: !isDisabled,
+      });
+      await browser.contextMenus.update(CMI_ID.CAPTURE_SELECTION_AS_IS, {
+        //enabled: !isDisabled,
+        visible: !isDisabled,
+      });
+    } catch (e) {
+      // Silently catch errors if the menu item hasn't been created yet
+    }
+  };
+
+  // 1. Sync when a tab finishes loading or changes URL
+  browser.tabs.onUpdated.addListener((_tabId, changeInfo) => {
+    if (changeInfo.url) {
+      updateUi(changeInfo.url);
+    }
+  });
+
+  // 2. Sync when the user switches between existing tabs
+  browser.tabs.onActivated.addListener(async (activeInfo) => {
+    try {
+      const tab = await browser.tabs.get(activeInfo.tabId);
+      updateUi(tab.url);
+    } catch (e) {
+      // Tab might be gone or restricted
     }
   });
 }

@@ -1,6 +1,9 @@
 import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/types/context-menu-items";
 import { pageData } from "@/types/page-selection-data.types";
-import { contextMenuHandler } from "./context-menu";
+import {
+  setupContextMenuActions,
+  setupContextMenuStateSync,
+} from "./context-menu";
 import { setupMessagingHandlers } from "./messaging-handler";
 
 export default defineBackground(() => {
@@ -28,7 +31,10 @@ export default defineBackground(() => {
     }
   });
 
-  // Context menu click handler
-  contextMenuHandler();
+  // Context menu action/click handler
+  setupContextMenuActions();
+  setupContextMenuStateSync();
+
+  // Messaging handlers
   setupMessagingHandlers();
 });
