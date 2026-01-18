@@ -1,7 +1,7 @@
 import { MSG } from "@/types/messaging";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSidePanelMessaging } from "./SidePanelMessagingProvider";
+import { useSidePanelMessaging } from "./../providers/SidePanelMessagingProvider";
 
 export function RouterListener() {
   const navigate = useNavigate();

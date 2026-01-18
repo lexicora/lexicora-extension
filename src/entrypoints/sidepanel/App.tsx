@@ -11,8 +11,8 @@ import EntriesPage from "./pages/entries";
 import NewEntryPage from "./pages/entries/new";
 import EntryDetailPage from "./pages/entries/[id]";
 import EntryEditPage from "./pages/entries/edit/[id]";
-import { RouterListener } from "./components/RouterListener";
-import { SidePanelMessagingProvider } from "./components/SidePanelMessagingProvider";
+import { RouterListener } from "./hooks/RouterListener";
+import { SidePanelMessagingProvider } from "./providers/SidePanelMessagingProvider";
 
 function RootLayout() {
   useMouseNavigation();

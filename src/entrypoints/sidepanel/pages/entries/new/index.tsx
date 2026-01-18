@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, House } from "lucide-react";
-import { useSidePanelMessaging } from "@/entrypoints/sidepanel/components/SidePanelMessagingProvider";
+import { useSidePanelMessaging } from "@/entrypoints/sidepanel/providers/SidePanelMessagingProvider";
 import { useEffect, useState } from "react";
 import { pageData } from "@/types/page-selection-data.types";
 import { MSG } from "@/types/messaging";
@@ -129,7 +129,7 @@ function NewEntryPage() {
               //rows={4}
               maxLength={500}
               placeholder="Type your desired AI prompt here."
-              className={`field-sizing-content resize-none max-h-88.5 min-h-10.5 focus-visible:ring-0 backdrop-blur-lg dark:bg-[#171717dd] bg-[#fdfdfddd] scrollbar-thin ${
+              className={`text-base! field-sizing-content resize-none max-h-88.5 min-h-10.5 focus-visible:ring-0 backdrop-blur-lg dark:bg-[#171717dd] bg-[#fdfdfddd] scrollbar-thin ${
                 import.meta.env.FIREFOX ? "resize-y h-10.5" : ""
               }`} // NOTE (feature parity discrepancy): No support fo field sizing content in Firefox and also different behavior compared to Chrome
               value={promptText} // 3. Bind the state to the value prop
