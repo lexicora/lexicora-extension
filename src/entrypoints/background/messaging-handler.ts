@@ -13,7 +13,9 @@ export const setPendingCapture = (data: pageData | null) => {
 
 export const setPendingNavigation = (path: string | null) => {
   pendingNavigation = path;
-};
+}; /*FIX TODO: Issue, when side panel is already open on on the /entries/new page the onMessage clear doesn't take effect and when
+the side panel is reopened it navigates to this page, because it is not cleared*/
+/*TODO: The solution is if already on /entries/new then in the context menu action handler reset this to null when data is sent (not via pull, but push logic)*/
 
 /**
  * Sets up message handlers for pending data and navigation requests
