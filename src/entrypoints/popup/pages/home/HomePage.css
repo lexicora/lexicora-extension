@@ -5,6 +5,7 @@
 }
 
 html {
+    scroll-padding-top: 82px;
     scroll-padding-bottom: 72px;
     /*scrollbar-width: none !important;*/
 }

@@ -199,6 +199,7 @@
     color: var(--color-foreground);
 }
 
+/*.bn-code-content and .bn-table-content can be replaced by bn-block or unified in to .bn-block-custom*/
 /* * NOTE: Custom Styles for BlockNote*/
 .bn-code-content
     .bn-block-content:not([data-content-type="codeBlock"])
@@ -233,7 +234,7 @@
 .bn-container[data-color-scheme="dark"]
     .bn-block-content[data-content-type="codeBlock"] {
     /*border: 1px solid var(--color-border);*/
-    background-color: #151515;
+    background-color: #141414;
 }
 
 .bn-container[data-color-scheme="light"]
