@@ -49,6 +49,7 @@ export function BlockNoteView({
   //MAYBE: If no language is passed, disable spellcheck?
   spellCheck = true,
   id = "lc-blocknote-view",
+  onSelectionChange,
   //ref,
 }: {
   editor: ReturnType<typeof useCreateBlockNote>;
@@ -58,6 +59,7 @@ export function BlockNoteView({
   lang?: string;
   spellCheck?: boolean;
   id?: string;
+  onSelectionChange?: (() => void) | undefined;
   //ref?: (instance: HTMLDivElement | null) => void;
 }) {
   // TODO: Not finished yet (needs event listener for system theme changes)
@@ -96,6 +98,7 @@ export function BlockNoteView({
       }}
       formattingToolbar={false}
       emojiPicker={false}
+      onSelectionChange={onSelectionChange}
       //ref={ref}
       //slashMenu={false}
       //spellCheck={false}

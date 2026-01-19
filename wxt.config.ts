@@ -21,7 +21,7 @@ export default defineConfig({
         "notifications",
         "sidePanel",
       ],
-      host_permissions: ["<all_urls>"],
+      //host_permissions: ["<all_urls>"], //* NOTE: Not needed, activeTab should be enough
     };
   },
 });
