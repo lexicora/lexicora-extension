@@ -26,7 +26,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
     id: "separator1",
     type: "separator",
     contexts: ["all"],
-  },
+  }, //TODO: Later add capture page option
   {
     id: CMI_ID.CAPTURE_SELECTION_AI_ASSISTED,
     title: "Capture Selection with AI",

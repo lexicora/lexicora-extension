@@ -10,7 +10,9 @@ import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
 
 // TODO: Add messages for users (if exceptions occur, e.g., no selection made)
 
-const UNSUPPORTED_URL_REGEX = /\.pdf(\?|$)/i; // Currently excludes: *.pdf*
+//const UNSUPPORTED_URL_REGEX = /\.pdf(\?|$)/i; // Currently excludes: *.pdf*
+const UNSUPPORTED_URL_REGEX =
+  /\.pdf(\?|$)|chrome\.google\.com\/webstore|chromewebstore\.google\.com|addons\.mozilla\.org/i;
 //const UNSUPPORTED_URL_REGEX = /\.pdf(\?|$)|^(about|chrome|edge|browser|resource):/i;
 
 /**
