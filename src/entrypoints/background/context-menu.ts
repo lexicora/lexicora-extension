@@ -71,8 +71,6 @@ export function setupContextMenuActions() {
           setPendingCapture(pageSelectionData);
 
           // Push logic if side panel is already open
-          // TODO: If it is open then a conformation, should be sent back to clear the pendingNavigation variable to not make side panel navigate unintentionally.
-          // See: In file message-handler.ts @ line 16.
           const clearPendingNavigation = await sendMessage<boolean | null>(
             MSG.NAVIGATE_IN_SIDEPANEL,
             { path: "/entries/new" },
