@@ -169,6 +169,7 @@ function HomePage() {
             value={promptText} // 3. Bind the state to the value prop
             onChange={(e) => {
               setPromptText(e.target.value);
+              // Makes sure shadow disappears
               if (e.target.value !== "") return;
               window.scrollTo({ top: 0 });
             }} // 4. Update state on every keystroke
