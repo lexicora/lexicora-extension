@@ -13,9 +13,9 @@ export function RouterListener() {
     const unsubscribe = onMessage<{ path: string }>(
       MSG.NAVIGATE_IN_SIDEPANEL,
       (msg) => {
-        if (!msg.data) return;
+        if (!msg.data) return null;
         navigate(msg.data.path, { viewTransition: true });
-
+        return true; //* NOTE: To signal to clear the location of pending navigation in the background or other scripts.
         // const targetPath = msg.data.path;
         // const isAlreadyOnPath = location.pathname === targetPath;
 
