@@ -149,13 +149,12 @@
     }
     html.light {
         scrollbar-width: thin;
-        scrollbar-color: #8b8b8b #00000012;
+        scrollbar-color: #b2b2b2 #ededed; /*was: #8b8b8b #00000012*/
         /*TODO: Change color later to better suiting colors*/
     }
-
     html.dark {
         scrollbar-width: thin;
-        scrollbar-color: #9f9f9f #ffffff08;
+        scrollbar-color: #646464 #121212; /*was: #9f9f9f #ffffff08*/
         /*TODO: Change color later to better suiting colors*/
     }
     button:not(:disabled),

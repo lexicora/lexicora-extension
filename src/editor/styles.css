@@ -31,7 +31,17 @@
 
     /*Editor background color*/
     --bn-colors-editor-background: #1d1d1d;
+
+    /*Editor text color*/
+    /*--bn-colors-editor-text: #d0d0d0;*/ /*originally: #cfcfcf*/
 }
+
+.bn-container[data-color-scheme="light"] {
+    /*Editor text color*/
+    --bn-colors-editor-text: #3e3e3e; /*was #3f3f3f then 3d3d3d*/
+}
+
+/*TODO: Clean file up and make selectors more consistent*/
 
 /* Changes for light mode */
 /*.bn-container[data-color-scheme="light"] {
@@ -134,6 +144,7 @@
 
 .bn-container[data-color-scheme] .bn-table-handle:is(button) {
     padding-inline: 0;
+    width: 20px;
     background-color: light-dark(#ededed, #333333);
 }
 

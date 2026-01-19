@@ -34,7 +34,7 @@ export function TopBar() {
           <div
             className="shrink-0"
             onClick={() => {
-              window.scrollTo({ top: 0 });
+              window.scrollTo({ top: 0 }); //MAYBE: Make instant (no animation or custom animation like motion blur...)
             }}
             title="Scroll to top"
           >

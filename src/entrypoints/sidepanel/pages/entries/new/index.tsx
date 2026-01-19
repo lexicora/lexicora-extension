@@ -20,7 +20,7 @@ import { useCreateBlockNote } from "@blocknote/react";
 function NewEntryPage() {
   const location = useLocation(); // This is used in order to trigger useEffect on location change
   const navigate = useNavigate();
-  const editor = useCreateBlockNote(defaultBlockNoteConfig);
+  const editor = useCreateBlockNote(defaultBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
   const { sendMessage, onMessage } = useSidePanelMessaging();
   const [language, setLanguage] = useState<string>(navigator.language || "en");
   const [promptText, setPromptText] = useState("");
@@ -83,6 +83,7 @@ function NewEntryPage() {
         <Button
           variant="ghost"
           size="icon"
+          title="Go back"
           onClick={() => navigate("/", { viewTransition: true })}
         >
           <ArrowLeft />
@@ -129,10 +130,9 @@ function NewEntryPage() {
               //rows={4}
               maxLength={500}
               placeholder="Type your desired AI prompt here."
-              className={`shadow-[0_-6px_6px_0px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_0px_var(--background)]/25
-                text-base! field-sizing-content resize-none max-h-88.5 min-h-10.5 focus-visible:ring-0 backdrop-blur-lg dark:bg-[#171717dd] bg-[#fdfdfddd] scrollbar-thin ${
-                  import.meta.env.FIREFOX ? "resize-y h-10.5" : ""
-                }`} // NOTE (feature parity discrepancy): No support fo field sizing content in Firefox and also different behavior compared to Chrome
+              className={`shadow-[0_-6px_6px_0px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_0px_var(--background)]/25 transition-colors duration-150
+                text-base! field-sizing-content resize-none max-h-88.5 min-h-10.5 focus-visible:ring-0 backdrop-blur-lg dark:bg-[#171717dd] dark:focus-visible:bg-[#171717] bg-[#fdfdfddd] focus-visible:bg-[#fdfdfd] scrollbar-thin
+                ${import.meta.env.FIREFOX ? "resize-y h-10.5" : ""}`} // NOTE (feature parity discrepancy): No support fo field sizing content in Firefox and also different behavior compared to Chrome
               value={promptText} // 3. Bind the state to the value prop
               onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke
               onKeyDown={(e) => {
