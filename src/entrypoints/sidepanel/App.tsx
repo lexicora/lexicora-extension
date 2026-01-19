@@ -13,6 +13,7 @@ import EntryDetailPage from "./pages/entries/[id]";
 import EntryEditPage from "./pages/entries/edit/[id]";
 import { RouterListener } from "./hooks/router-listener";
 import { SidePanelMessagingProvider } from "./providers/messaging";
+import { TopBar } from "./components/ui/top-bar";
 
 function RootLayout() {
   useMouseNavigation();
@@ -20,6 +21,7 @@ function RootLayout() {
   return (
     <SidePanelMessagingProvider>
       {/*TODO: Add top bar */}
+      <TopBar />
       <RouterListener />
       <Outlet />
       {/*TODO: Add bottom bar */}

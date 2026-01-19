@@ -78,7 +78,7 @@ function NewEntryPage() {
   }, []);
 
   return (
-    <div className="p-3">
+    <div className="lc-page-container">
       <header className="flex items-center gap-2 mb-4">
         <Button
           variant="ghost"

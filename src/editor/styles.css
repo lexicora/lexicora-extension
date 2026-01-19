@@ -51,6 +51,7 @@
 
 .bn-container[data-color-scheme] .bn-editor {
     padding-top: 8px;
+    padding-bottom: 8px;
     padding-inline-start: 50px;
     padding-inline-end: 8px !important;
     min-height: 100px;
@@ -99,7 +100,7 @@
     .bn-side-menu
     [data-radix-popper-content-wrapper]
     [data-radix-menu-content].bn-color-picker-dropdown {
-    max-height: calc(100vh - 184px);
+    max-height: calc(100vh - 244px);
     margin-bottom: 172px;
     /*transform: translateY(-112px) !important;*/
 }

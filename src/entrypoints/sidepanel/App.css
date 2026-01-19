@@ -1,5 +1,5 @@
 #root {
-    max-width: 1280px;
+    /*max-width: 1280px;*/
     margin: 0 auto;
     padding: 0;
     text-align: center;
@@ -13,6 +13,13 @@ html {
 body[data-scroll-locked] {
     /*margin-right: 0 !important;*/
     --removed-body-scroll-bar-size: 0;
+}
+
+.lc-page-container {
+    max-width: 1280px;
+    padding: 12px;
+    margin-inline: auto;
+    /*inset-inline: 0;*/
 }
 
 .logo {
