@@ -4,6 +4,7 @@
     user-select: none;
 }
 
-/*html {
-    scrollbar-width: none !important;
-}*/
+html {
+    scroll-padding-bottom: 72px;
+    /*scrollbar-width: none !important;*/
+}

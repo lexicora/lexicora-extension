@@ -64,7 +64,7 @@ function HomePage() {
       <header>
         <nav
           className={`fixed top-0 left-0 w-full p-2.75 z-10
-          border-b bg-background/80 backdrop-blur-lg shadow-md/5 dark:shadow-md/20
+          border-b bg-background/80 backdrop-blur-lg
           transition-shadow duration-300 ${isAtTop ? "shadow-none" : "shadow-md/5 dark:shadow-md/20"}`}
         >
           <div className="flex gap-0 items-center justify-between w-full">
