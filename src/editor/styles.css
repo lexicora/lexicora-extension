@@ -3,6 +3,7 @@
     --bn-font-family: var(--lc-font-sans-serif);
     color-scheme: normal;
     scrollbar-color: light-dark(#8b8b8b, #9f9f9f) transparent;
+    /*MAYBE: Update scrollbar colors*/
 }
 
 /* Changes for dark mode */
@@ -64,6 +65,7 @@
     padding-bottom: 8px;
     padding-inline-start: 50px;
     padding-inline-end: 8px !important;
+    /*TODO: Maybe revert inline padding to default if enough space is available*/
     min-height: 100px;
     border: 1px solid var(--color-border);
 }
@@ -206,7 +208,7 @@
     select
     option {
     margin-left: 6px;
-    background-color: #333333;
+    background-color: #232323;
     color: var(--color-foreground);
 }
 

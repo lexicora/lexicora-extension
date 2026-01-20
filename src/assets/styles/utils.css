@@ -4,3 +4,8 @@
     scrollbar-width: thin;
     /*scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);*/
 }
+
+/*Has default specified scrollbar foreground colors*/
+.scrollbar-bg-transparent {
+    scrollbar-color: light-dark(#b2b2b2, #646464) transparent;
+}

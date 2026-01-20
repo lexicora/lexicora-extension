@@ -104,6 +104,7 @@ export function BlockNoteView({
       //spellCheck={false}
       // MAYBE TODO: Add custom selector property
       //lc-data-theming
+      // ...props
     >
       <FormattingToolbarController
         formattingToolbar={() => (
