@@ -1,0 +1,28 @@
+/*#lc-bottom-navigation-item {
+}*/
+
+.lc-bottom-navigation {
+    /* Add filter to will-change to warn the browser */
+    will-change: transform, opacity; /* filter*/
+
+    transition:
+        transform 150ms cubic-bezier(0.2, 0, 0, 1),
+        opacity 150ms cubic-bezier(0.2, 0, 0, 1);
+    /*filter 150ms linear;*/ /* Sync filter with the other properties */
+
+    opacity: 1;
+    transform: translateY(0);
+    /*filter: blur(0); keep disabled for now*/
+}
+
+.lc-bottom-navigation--hidden {
+    transition:
+        transform 150ms cubic-bezier(0.4, 0, 1, 1),
+        opacity 100ms linear;
+    /*filter 150ms linear;*/
+
+    opacity: 0;
+    transform: translateY(100%);
+    /* Keep this small to save CPU cycles */
+    /*filter: blur(2px); keep disabled for now*/
+}

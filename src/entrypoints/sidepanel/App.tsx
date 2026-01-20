@@ -5,6 +5,7 @@ import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
 
 // Pages
 import HomePage from "./pages/home";
+import SettingsPage from "./pages/settings";
 
 // Entries Pages
 import EntriesPage from "./pages/entries";
@@ -36,7 +37,7 @@ const router = createMemoryRouter([
     element: <RootLayout />,
     children: [
       { path: "/", element: <HomePage /> },
-      //{ path: "settings", element: <SettingsPage /> },
+      { path: "settings", element: <SettingsPage /> },
       // Entries
       { path: "entries", element: <EntriesPage /> },
       { path: "entries/new", element: <NewEntryPage /> },

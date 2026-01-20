@@ -69,7 +69,7 @@ function HomePage() {
         >
           <div className="flex gap-0 items-center justify-between w-full">
             <div className="flex justify-start flex-1">
-              {/*MAYBE: Add dropdown menu of quick actions here (profile included)*/}
+              {/*MAYBE: Add dropdown menu of quick actions here (profile included, like maybe navigate directly to create new entry in sidepanel)*/}
               <Avatar className="size-8 border ml-0.5" title="Profile">
                 <AvatarImage
                   src="https://github.com/tgrant06.png"
