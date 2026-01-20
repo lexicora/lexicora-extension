@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ExternalLink } from "lucide-react";
+import { ExternalLinkIcon } from "lucide-react";
 
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
@@ -64,7 +64,7 @@ export function TopBar() {
                 title="Visit Lexicora.com"
                 target="_blank"
               >
-                <ExternalLink className="size-4.5" />
+                <ExternalLinkIcon className="size-4.5" />
               </a>
             </Button>
           </div>

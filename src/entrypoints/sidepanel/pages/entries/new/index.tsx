@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, House } from "lucide-react";
+import { ArrowLeftIcon, House } from "lucide-react";
 import { useSidePanelMessaging } from "@/entrypoints/sidepanel/providers/messaging";
 import { useEffect, useState } from "react";
 import { pageData } from "@/types/page-selection-data.types";
@@ -86,7 +86,7 @@ function NewEntryPage() {
           title="Go back"
           onClick={() => navigate("/", { viewTransition: true })}
         >
-          <ArrowLeft />
+          <ArrowLeftIcon />
         </Button>
         {/*<Link to="/entries">
           <Button variant="ghost" size="icon" title="Go to Entries Home">
@@ -131,7 +131,8 @@ function NewEntryPage() {
               maxLength={500}
               placeholder="Type your desired AI prompt here."
               className={`shadow-[0_-6px_6px_0px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_0px_var(--background)]/25 transition-colors duration-150
-                text-base! field-sizing-content resize-none max-h-88.5 min-h-10.5 focus-visible:ring-0 backdrop-blur-lg dark:bg-[#171717dd] dark:focus-visible:bg-[#171717] bg-[#fdfdfddd] focus-visible:bg-[#fdfdfd] scrollbar-thin
+                text-base! field-sizing-content resize-none max-h-88.5 min-h-10.5 focus-visible:ring-0 backdrop-blur-lg
+                dark:bg-[#171717dd] dark:focus-visible:bg-[#171717] bg-[#fdfdfddd] focus-visible:bg-[#fdfdfd] scrollbar-thin
                 ${import.meta.env.FIREFOX ? "resize-y h-10.5" : ""}`} // NOTE (feature parity discrepancy): No support fo field sizing content in Firefox and also different behavior compared to Chrome
               value={promptText} // 3. Bind the state to the value prop
               onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke

@@ -17,8 +17,8 @@ import {
 } from "@/components/ui/tooltip";
 import { ModeToggle } from "@/components/mode-toggle";
 import {
-  ArrowUpRight,
-  PanelRight,
+  ArrowUpRightIcon,
+  PanelRightIcon,
   PanelRightOpen,
   SquareArrowOutUpRight,
 } from "lucide-react";
@@ -106,7 +106,7 @@ function HomePage() {
                 size="icon"
                 title="Open Side Panel"
               >
-                <PanelRight className="size-4.5" />
+                <PanelRightIcon className="size-4.5" />
               </Button>
             </div>
           </div>
@@ -140,7 +140,8 @@ function HomePage() {
               className="text-sm text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 dark:hover:brightness-110 hover:brightness-90"
               title="https://lexicora.com"
             >
-              Visit Lexicora.com <ArrowUpRight className="inline" size={16} />
+              Visit Lexicora.com{" "}
+              <ArrowUpRightIcon className="inline" size={16} />
             </a>
           </div>
           {/*TODO: Maybe show indication (like in browsers bottom left of window), where this link leads */}

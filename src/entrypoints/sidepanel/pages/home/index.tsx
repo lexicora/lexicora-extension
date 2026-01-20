@@ -5,7 +5,7 @@ import "./HomePage.css";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Link } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 
 function HomePage() {
   const [count, setCount] = useState(0);
@@ -44,7 +44,7 @@ function HomePage() {
               className="create-button" //createBtn
               size="sm"
             >
-              <Plus /> New Entry
+              <PlusIcon /> New Entry
             </Button>
           </Link>
         </div>
