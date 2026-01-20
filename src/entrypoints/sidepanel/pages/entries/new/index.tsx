@@ -137,6 +137,7 @@ function NewEntryPage() {
               value={promptText} // 3. Bind the state to the value prop
               onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke
               onKeyDown={(e) => {
+                // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
                 if (e.ctrlKey && e.key === "Enter") {
                   // Maybe change it to Ctrl/Cmd + Enter?
                   e.preventDefault();
@@ -149,6 +150,7 @@ function NewEntryPage() {
             />
           </div>
           <div className="flex gap-0 items-center justify-between w-full">
+            {/*MAYBE: Remove the animation disabling motion-reduce, because it is a very noticeable and maybe not optimal for accessibility*/}
             <div
               className={`flex justify-start transition-all motion-reduce:transition-none duration-300 ease-in-out /*overflow-visible*/ ${
                 promptText.trimEnd() === ""

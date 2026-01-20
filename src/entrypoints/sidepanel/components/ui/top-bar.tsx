@@ -10,7 +10,7 @@ export function TopBar() {
 
   useEffect(() => {
     const handleScroll = () => setIsAtTop(window.scrollY <= 0);
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true }); //MAYBE TODO: Use observer later
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 

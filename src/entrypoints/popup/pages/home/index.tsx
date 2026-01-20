@@ -55,7 +55,7 @@ function HomePage() {
     // MAYBE: Enable later for convenience
     //document.getElementById("ai-prompt-textarea")?.focus();
     const handleScroll = () => setIsAtTop(window.scrollY <= 0);
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true }); //MAYBE TODO: Use observer later
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -176,6 +176,7 @@ function HomePage() {
               window.scrollTo({ top: 0 });
             }} // 4. Update state on every keystroke
             onKeyDown={(e) => {
+              // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
               if (e.ctrlKey && e.key === "Enter") {
                 // Submit AI prompt logic here
                 e.preventDefault();
@@ -192,6 +193,7 @@ function HomePage() {
           className="fixed bottom-0 left-0 h-15 w-full p-3 z-10
                 lc-bottom-bar-styled-bg"
         >
+          {/*MAYBE: Remove the animation disabling motion-reduce, because it is a very noticeable and maybe not optimal for accessibility*/}
           <div className="flex gap-0 items-center justify-between w-full">
             <div
               className={`flex justify-start transition-all motion-reduce:transition-none duration-300 ease-in-out /*overflow-visible*/ ${

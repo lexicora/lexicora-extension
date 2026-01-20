@@ -2,27 +2,54 @@
 }*/
 
 .lc-bottom-navigation {
+    pointer-events: auto;
     /* Add filter to will-change to warn the browser */
-    will-change: transform, opacity; /* filter*/
-
+    will-change: transform, opacity, visibility; /* filter*/
     transition:
         transform 150ms cubic-bezier(0.2, 0, 0, 1),
-        opacity 150ms cubic-bezier(0.2, 0, 0, 1);
+        opacity 150ms cubic-bezier(0.2, 0, 0, 1),
+        visibility 0s linear;
     /*filter 150ms linear;*/ /* Sync filter with the other properties */
-
     opacity: 1;
     transform: translateY(0);
+    visibility: visible;
     /*filter: blur(0); keep disabled for now*/
 }
 
 .lc-bottom-navigation--hidden {
+    pointer-events: none;
     transition:
         transform 150ms cubic-bezier(0.4, 0, 1, 1),
-        opacity 100ms linear;
+        opacity 100ms linear,
+        visibility 150ms step-end;
     /*filter 150ms linear;*/
-
     opacity: 0;
     transform: translateY(100%);
     /* Keep this small to save CPU cycles */
     /*filter: blur(2px); keep disabled for now*/
+    visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lc-bottom-navigation,
+    .lc-bottom-navigation--hidden {
+        /* Override sliding. Just use a gentle fade. */
+        transition: opacity 200ms ease-in-out !important;
+        transform: none !important; /* Force bar to stay in place */
+    }
+
+    .lc-bottom-navigation--hidden {
+        opacity: 0;
+        /* Since we removed the slide-down, we must use visibility
+           to ensure screen readers ignore it when hidden */
+        /*visibility: hidden; */
+    }
+}
+
+/* Manual Override: Completely Disable Transitions */
+/* Add this class to the element (or a parent) to kill all animation */
+.lc-no-transitions,
+.lc-no-transitions * {
+    transition: none !important;
+    animation: none !important;
 }
