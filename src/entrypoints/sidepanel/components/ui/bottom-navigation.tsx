@@ -40,7 +40,7 @@ export function BottomNavigation() {
         id="lc-bottom-navigation-item"
         className={
           `lc-bottom-navigation ${isHidden ? "lc-bottom-navigation--hidden" : ""}
-          fixed bottom-0 w-full h-15 px-3 z-100 select-none
+          fixed bottom-0 w-full h-14.75 px-3 z-100 select-none
           border-t bg-background/80 backdrop-blur-lg
           transition-shadow duration 300` /*TODO: Shadow effects */
         }
@@ -53,12 +53,19 @@ export function BottomNavigation() {
             <NavLink
               to="/"
               className={({ isActive, isPending }) =>
-                `flex flex-col items-center py-3 w-full ${isPending ? "" : isActive ? "" : ""}`
+                `flex flex-col items-center py-3 w-full ${isPending ? "" : isActive ? "dark:text-blue-100" : "will-change-transform duration-100 transition-transform hover:scale-115"}`
               }
               draggable={false}
               viewTransition
             >
-              <CustomHeroHomeIcon className="size-6" />
+              {({ isActive }) =>
+                isActive ? (
+                  <HomeIconSolid className="size-6.5" />
+                ) : (
+                  <CustomHeroHomeIcon className="size-6.5 text-muted-foreground" />
+                )
+              }
+              {/*<CustomHeroHomeIcon className="size-6.5" />*/}
               {/*Home*/}
             </NavLink>
           </div>
@@ -66,12 +73,18 @@ export function BottomNavigation() {
             <NavLink
               to="/entries"
               className={({ isActive, isPending }) =>
-                `flex flex-col items-center py-3 w-full ${isPending ? "" : isActive ? "" : ""}`
+                `flex flex-col items-center py-3 w-full ${isPending ? "" : isActive ? "" : "will-change-transform duration-100 transition-transform hover:scale-115"}`
               }
               draggable={false}
               viewTransition
             >
-              <StretchHorizontalIcon className="size-6" strokeWidth={1.5} />
+              {({ isActive }) => (
+                <StretchHorizontalIcon
+                  className={`size-6.5 ${isActive ? "dark:text-blue-100" : "text-muted-foreground"}`}
+                  strokeWidth={1.5}
+                  fill={isActive ? "currentColor" : "none"}
+                />
+              )}
               {/*Entries*/}
             </NavLink>
           </div>
@@ -79,12 +92,18 @@ export function BottomNavigation() {
             <NavLink
               to="/settings"
               className={({ isActive, isPending }) =>
-                `flex flex-col items-center py-3 w-full ${isPending ? "" : isActive ? "" : ""}`
+                `flex flex-col items-center py-3 w-full ${isPending ? "" : isActive ? "dark:text-blue-100" : "will-change-transform duration-100 transition-transform hover:scale-115"}`
               }
               draggable={false}
               viewTransition
             >
-              <Cog6ToothIcon className="size-6" />
+              {({ isActive }) =>
+                isActive ? (
+                  <Cog6ToothIconSolid className="size-6.5" />
+                ) : (
+                  <Cog6ToothIcon className="size-6.5 text-muted-foreground" />
+                )
+              }
               {/*Settings*/}
             </NavLink>
           </div>
