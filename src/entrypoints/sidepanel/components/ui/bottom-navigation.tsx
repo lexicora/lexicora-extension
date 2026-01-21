@@ -53,7 +53,7 @@ export function BottomNavigation() {
             <NavLink
               to="/"
               className={({ isActive, isPending }) =>
-                `flex flex-col items-center py-3 w-full ${isPending ? "" : isActive ? "dark:text-blue-100" : "will-change-transform duration-100 transition-transform hover:scale-115"}`
+                `flex flex-col items-center py-3 w-full ${/*isPending ? "" : */ isActive ? "" : "will-change-transform duration-100 transition-transform hover:scale-115"}`
               }
               draggable={false}
               viewTransition
@@ -73,14 +73,14 @@ export function BottomNavigation() {
             <NavLink
               to="/entries"
               className={({ isActive, isPending }) =>
-                `flex flex-col items-center py-3 w-full ${isPending ? "" : isActive ? "" : "will-change-transform duration-100 transition-transform hover:scale-115"}`
+                `flex flex-col items-center py-3 w-full ${/*isPending ? "" : */ isActive ? "" : "will-change-transform duration-100 transition-transform hover:scale-115"}`
               }
               draggable={false}
               viewTransition
             >
               {({ isActive }) => (
                 <StretchHorizontalIcon
-                  className={`size-6.5 ${isActive ? "dark:text-blue-100" : "text-muted-foreground"}`}
+                  className={`size-6.5 ${isActive ? "" : "text-muted-foreground"}`}
                   strokeWidth={1.5}
                   fill={isActive ? "currentColor" : "none"}
                 />
@@ -92,7 +92,7 @@ export function BottomNavigation() {
             <NavLink
               to="/settings"
               className={({ isActive, isPending }) =>
-                `flex flex-col items-center py-3 w-full ${isPending ? "" : isActive ? "dark:text-blue-100" : "will-change-transform duration-100 transition-transform hover:scale-115"}`
+                `flex flex-col items-center py-3 w-full ${isActive ? "" : "will-change-transform duration-100 transition-transform hover:scale-115"}`
               }
               draggable={false}
               viewTransition
