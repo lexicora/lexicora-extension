@@ -40,46 +40,52 @@ export function BottomNavigation() {
         id="lc-bottom-navigation-item"
         className={
           `lc-bottom-navigation ${isHidden ? "lc-bottom-navigation--hidden" : ""}
-          fixed bottom-0 w-full h-15 px-3 z-100
-        border-t bg-background/80 backdrop-blur-lg
-        transition-shadow duration 300` /*TODO: Shadow effects */
+          fixed bottom-0 w-full h-15 px-3 z-100 select-none
+          border-t bg-background/80 backdrop-blur-lg
+          transition-shadow duration 300` /*TODO: Shadow effects */
         }
       >
         <div
-          className="flex gap-3 items-center justify-between w-full max-w-317 h-full /*max-w-7xl*/ mx-auto inset-x-0"
+          className="flex gap-3 items-center justify-between text-center w-full max-w-317 h-full /*max-w-7xl*/ mx-auto inset-x-0"
           // had classes: lc-bottom-navigation-animate-blur ${isHidden ? "lc-bottom-navigation-animate-blur--hidden" : ""}
         >
           <div className="flex-1 mx-1.5 ml-0.5">
             <NavLink
               to="/"
               className={({ isActive, isPending }) =>
-                `block py-3 w-full ${isPending ? "" : isActive ? "" : ""}`
+                `flex flex-col items-center py-3 w-full ${isPending ? "" : isActive ? "" : ""}`
               }
+              draggable={false}
               viewTransition
             >
-              Home
+              <CustomHeroHomeIcon className="size-6" />
+              {/*Home*/}
             </NavLink>
           </div>
           <div className="flex-1 mx-1.5">
             <NavLink
               to="/entries"
               className={({ isActive, isPending }) =>
-                `block py-3 w-full h- ${isPending ? "" : isActive ? "" : ""}`
+                `flex flex-col items-center py-3 w-full ${isPending ? "" : isActive ? "" : ""}`
               }
+              draggable={false}
               viewTransition
             >
-              Entries
+              <StretchHorizontalIcon className="size-6" strokeWidth={1.5} />
+              {/*Entries*/}
             </NavLink>
           </div>
           <div className="flex-1 mx-1.5 mr-0.5">
             <NavLink
               to="/settings"
               className={({ isActive, isPending }) =>
-                `block py-3 w-full ${isPending ? "" : isActive ? "" : ""}`
+                `flex flex-col items-center py-3 w-full ${isPending ? "" : isActive ? "" : ""}`
               }
+              draggable={false}
               viewTransition
             >
-              Settings
+              <Cog6ToothIcon className="size-6" />
+              {/*Settings*/}
             </NavLink>
           </div>
         </div>

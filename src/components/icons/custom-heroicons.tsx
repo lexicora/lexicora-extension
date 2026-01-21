@@ -1,10 +1,14 @@
 export const HomeIconOutline = ({
   color = "currentColor",
-  size = "",
+  className = "",
   strokeWidth = 1.5,
   ...props
 }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={size}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    className={className}
+  >
     <path
       id="path_20"
       data-name="Path 20"
