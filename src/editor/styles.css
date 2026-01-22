@@ -108,6 +108,14 @@
     --radix-popper-available-height: calc(40dvh - 184px) !important;
 }*/
 
+/*TODO: Fix the toolbar Text formatter dropdown like this below.*/
+.bn-container[data-color-scheme]
+    .bn-toolbar
+    [data-radix-popper-content-wrapper]
+    [data-radix-menu-content].bn-color-picker-dropdown {
+    height: 50vh;
+}
+
 .bn-container[data-color-scheme]
     .bn-side-menu
     [data-radix-popper-content-wrapper]
