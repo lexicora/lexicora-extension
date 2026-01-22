@@ -9,7 +9,7 @@ import * as Label from "@/components/ui/label";
 // import * as Select from "./select";
 // import * as Tabs from "@/components/ui/tabs";
 // import * as Toggle from "@/components/ui/toggle";
-import * as Tooltip from "./components/ui/tooltip";
+import * as Tooltip from "@/components/ui/tooltip";
 
 import {
   BasicTextStyleButton,
