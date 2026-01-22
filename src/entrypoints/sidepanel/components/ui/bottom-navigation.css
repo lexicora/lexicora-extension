@@ -2,6 +2,7 @@
 }*/
 
 .lc-bottom-navigation {
+    backface-visibility: hidden;
     pointer-events: auto;
     /* Add filter to will-change to warn the browser */
     will-change: transform, opacity, visibility; /* filter*/
@@ -28,6 +29,25 @@
     /* Keep this small to save CPU cycles */
     /*filter: blur(2px); keep disabled for now*/
     visibility: hidden;
+}
+
+@keyframes icon-pop {
+    0% {
+        /* Start at the hover scale to catch the transition */
+        transform: scale(1.15);
+    }
+    /* Optional: small bounce */
+    /*50% {
+        transform: scale(0.95);
+    }*/
+    100% {
+        transform: scale(1);
+    }
+}
+
+.animate-icon-pop {
+    /* This ensures the active icon 'lands' smoothly */
+    animation: icon-pop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {

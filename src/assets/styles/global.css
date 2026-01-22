@@ -44,7 +44,7 @@
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
 
-    /*Lexicora styles / variables*/
+    /*Lexicora: styles / variables / colors */
     /*MAYBE: Later set --font-mono and --font-sans to the --lc-... fonts*/
     --lc-font-sans-serif:
         "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -55,6 +55,9 @@
         oklch(54.19% 0.152 23.67),
         oklch(65.34% 0.183 23.68)
     );
+
+    /* Colors: */
+    --lc-hover-foreground: oklch(0.35 0 0);
 }
 
 .dark {
@@ -91,7 +94,9 @@
     --sidebar-border: oklch(0.269 0 0);
     --sidebar-ring: oklch(0.439 0 0);
 
-    /*Lexicora styles / variables*/
+    /*Lexicora: styles / variables /colors */
+    /* Colors: */
+    --lc-hover-foreground: oklch(0.85 0 0);
 }
 
 @theme inline {

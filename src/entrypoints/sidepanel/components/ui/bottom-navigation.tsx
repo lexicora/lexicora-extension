@@ -50,63 +50,72 @@ export function BottomNavigation() {
           // had classes: lc-bottom-navigation-animate-blur ${isHidden ? "lc-bottom-navigation-animate-blur--hidden" : ""}
         >
           <div className="flex-1 mx-1.5 ml-0.5">
+            {/* Home */}
             <NavLink
               to="/"
-              className={({ isActive, isPending }) =>
-                `flex flex-col items-center py-3 w-full ${/*isPending ? "" : */ isActive ? "" : "will-change-transform duration-100 transition-transform hover:scale-115"}`
-              }
+              title={pathname !== "/" ? "Home" : ""}
               draggable={false}
               viewTransition
+              className="group flex flex-col items-center py-3 w-full"
             >
-              {({ isActive }) =>
-                isActive ? (
-                  <HomeIconSolid className="size-6.5" />
-                ) : (
-                  <CustomHeroHomeIcon className="size-6.5 text-muted-foreground" />
-                )
-              }
-              {/*<CustomHeroHomeIcon className="size-6.5" />*/}
-              {/*Home*/}
+              {({ isActive }) => (
+                <div
+                  className={`transition-all duration-200 will-change-transform ${isActive ? "scale-100" : "text-muted-foreground group-hover:scale-115 group-hover:text-(--lc-hover-foreground)"}`}
+                >
+                  {isActive ? (
+                    <HomeIconSolid className="size-6.5 animate-icon-pop" />
+                  ) : (
+                    <CustomHeroHomeIcon className="size-6.5" />
+                  )}
+                </div>
+              )}
             </NavLink>
           </div>
           <div className="flex-1 mx-1.5">
+            {/* Entries */}
             <NavLink
               to="/entries"
-              className={({ isActive, isPending }) =>
-                `flex flex-col items-center py-3 w-full ${/*isPending ? "" : */ isActive ? "" : "will-change-transform duration-100 transition-transform hover:scale-115"}`
-              }
+              title={pathname !== "/entries" ? "Entries" : ""}
               draggable={false}
               viewTransition
+              className="group flex flex-col items-center py-3 w-full"
             >
               {({ isActive }) => (
-                <StretchHorizontalIcon
-                  className={`size-6.5 ${isActive ? "" : "text-muted-foreground"}`}
-                  strokeWidth={1.5}
-                  fill={isActive ? "currentColor" : "none"}
-                />
+                <div
+                  className={`transition-all duration-200 will-change-transform ${isActive ? "scale-100" : "text-muted-foreground group-hover:scale-115 group-hover:text-(--lc-hover-foreground)"}`}
+                >
+                  <StretchHorizontalIcon
+                    className={`size-6.5 ${isActive ? "animate-icon-pop" : ""}`}
+                    strokeWidth={1.5}
+                    fill={isActive ? "currentColor" : "none"}
+                  />
+                </div>
               )}
-              {/*Entries*/}
             </NavLink>
           </div>
           <div className="flex-1 mx-1.5 mr-0.5">
+            {/* Settings */}
             <NavLink
               to="/settings"
-              className={({ isActive, isPending }) =>
-                `flex flex-col items-center py-3 w-full ${isActive ? "" : "will-change-transform duration-100 transition-transform hover:scale-115"}`
-              }
+              title={pathname !== "/settings" ? "Settings" : ""}
               draggable={false}
               viewTransition
+              className="group flex flex-col items-center py-3 w-full"
             >
-              {({ isActive }) =>
-                isActive ? (
-                  <Cog6ToothIconSolid className="size-6.5" />
-                ) : (
-                  <Cog6ToothIcon className="size-6.5 text-muted-foreground" />
-                )
-              }
-              {/*Settings*/}
+              {({ isActive }) => (
+                <div
+                  className={`transition-all duration-200 will-change-transform ${isActive ? "scale-100" : "text-muted-foreground group-hover:scale-115 group-hover:text-(--lc-hover-foreground)"}`}
+                >
+                  {isActive ? (
+                    <Cog6ToothIconSolid className="size-6.5 animate-icon-pop" />
+                  ) : (
+                    <Cog6ToothIcon className="size-6.5" />
+                  )}
+                </div>
+              )}
             </NavLink>
           </div>
+          {/*Possible new tabs: Search page and favorites page */}
         </div>
       </section>
     </div>
