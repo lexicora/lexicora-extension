@@ -1,4 +1,4 @@
-html {
+html:has(.bn-container .bn-editor) {
     /*For BlockNoteView (better accessibility)*/
     scroll-padding-top: 72px;
     scroll-padding-bottom: 132px;
