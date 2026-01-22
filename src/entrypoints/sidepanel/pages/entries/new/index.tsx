@@ -84,7 +84,7 @@ function NewEntryPage() {
           variant="ghost"
           size="icon"
           title="Go back"
-          onClick={() => navigate("/", { viewTransition: true })}
+          onClick={() => navigate(-1)} // was "/", { viewTransition: true }
         >
           <ArrowLeftIcon />
         </Button>
