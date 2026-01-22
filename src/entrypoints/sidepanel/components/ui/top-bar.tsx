@@ -18,7 +18,7 @@ export function TopBar() {
     <div className="mb-15">
       <section
         id="lc-top-bar-item"
-        className={`lc-top-bar fixed top-0 w-full p-2.75 z-30
+        className={`lc-top-bar fixed top-0 w-full p-2.75 py-[0.7rem] z-30
           border-b bg-background/80 backdrop-blur-lg transition-shadow duration-300
           ${isAtTop ? "shadow-none" : "shadow-md/5 dark:shadow-md/20"}`}
       >
