@@ -24,7 +24,7 @@ export function TopBar() {
       >
         <div className="flex gap-0 items-center justify-between w-full max-w-317 mx-auto inset-x-0">
           <div className="flex justify-start flex-1">
-            <Avatar className="size-8 border ml-0.5" title="Profile">
+            <Avatar className="size-8 ml-0.5" title="Profile">
               <AvatarImage
                 src="https://github.com/tgrant06.png"
                 alt="@tgrant06"
