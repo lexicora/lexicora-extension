@@ -31,14 +31,16 @@
     --bn-colors-highlights-pink-background: #772857;
 
     /*Editor background color*/
-    --bn-colors-editor-background: #1d1d1d;
+    /*--bn-colors-editor-background: #0c1019; /*was: #0f141f*/
+    --bn-colors-editor-background: #1c2026; /*was: #d1d1d1 in neutral theme */
 
     /*Editor text color*/
-    /*--bn-colors-editor-text: #d0d0d0;*/ /*originally: #cfcfcf*/
+    --bn-colors-editor-text: #d2d2d2; /*originally: #cfcfcf*/
 }
 
 .bn-container[data-color-scheme="light"] {
     /*Editor text color*/
+    /*TODO: Maybe add a subtile blue hue to it.*/
     --bn-colors-editor-text: #3e3e3e; /*was #3f3f3f then 3d3d3d*/
 }
 
