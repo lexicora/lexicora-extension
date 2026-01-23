@@ -63,7 +63,7 @@
 .bn-container[data-color-scheme] .bn-editor {
     padding-top: 8px;
     padding-bottom: 8px;
-    padding-inline-start: 50px;
+    padding-inline-start: 50px; /*TODO: Maybe increase to 52px later*/
     padding-inline-end: 8px !important;
     /*TODO: Maybe revert inline padding to default if enough space is available*/
     min-height: 100px;
@@ -74,6 +74,16 @@
     padding-inline: 8px !important;
     padding-top: 0px;
 }
+
+.bn-container[data-color-scheme].bn-shadcn .bn-side-menu {
+    margin-right: 1px; /*Incrased distance to block content slightly*/
+}
+
+/*.bn-container[data-color-scheme]
+    .bn-editor[contenteditable="true"]
+    .bn-block-group {
+    padding-left: 2px;
+}*/
 
 /* Hide toolbars anywhere when a disabled bm-content exists */
 /*.bn-editor[contenteditable="false"] [data-floating-ui-focusable],
@@ -162,11 +172,20 @@
     background-color: light-dark(#aaaaaa, #666666);
 }
 
-/*Same as: .bn-container button.bn-button:hover */
-.bn-container[data-color-scheme] .bn-button:is(button):hover {
-    background-color: light-dark(#ededed, #333333);
+.bn-container[data-color-scheme].bn-shadcn .bn-side-menu .bn-button:is(button) {
+    height: 24px;
+    width: 24px;
     border-radius: 6px;
 }
+
+/*Same as: .bn-container button.bn-button:hover */
+.bn-container[data-color-scheme].bn-shadcn
+    .bn-side-menu
+    .bn-button:is(button):hover {
+    background-color: light-dark(#ededed, #333333);
+}
+
+/*TODO: Add active state*/
 
 .bn-container[data-color-scheme]
     .bn-button:is(button)[aria-label="Open block menu"] {
