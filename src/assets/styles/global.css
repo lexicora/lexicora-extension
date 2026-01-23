@@ -159,7 +159,7 @@
     }
     html.dark {
         scrollbar-width: thin;
-        scrollbar-color: #646464 #121212; /*was: #9f9f9f #ffffff08*/
+        scrollbar-color: #535961 #0d111b; /*was: #9f9f9f #ffffff08*/
         /*TODO: Change color later to better suiting colors*/
     }
     button:not(:disabled),
