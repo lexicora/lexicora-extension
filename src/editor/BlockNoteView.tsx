@@ -2,6 +2,7 @@
 import * as Button from "@/components/ui/button";
 //import * as Card from "@/components/ui/card";
 import * as DropdownMenu from "./components/ui/dropdown-menu";
+//* NOTE: DropDownMenu currently used above is the same as the legacy component, due to compatibility (do not replace yet)
 // import * as Form from "@/components/ui/form";
 // import * as Input from "@/components/ui/input";
 import * as Label from "@/components/ui/label";
