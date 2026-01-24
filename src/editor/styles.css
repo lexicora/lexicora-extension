@@ -235,9 +235,18 @@
 }
 
 .bn-container[data-color-scheme]
+    .bn-side-menu
     .bn-button:is(button)[aria-label="Open block menu"] {
     cursor: grab;
 }
+
+/*This selector is targets the same element as the selector above*/
+/*MAYBE: reduce width of drag/menu button (look at notion)*/
+/*.bn-container[data-color-scheme]
+    .bn-side-menu
+    .bn-button:is(button):nth-child(2) {
+    width: 20px;
+}*/
 
 /*.bn-container .bn-button:is(button)[aria-label="Open block menu"]:active {
     cursor: grabbing;

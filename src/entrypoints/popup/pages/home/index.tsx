@@ -51,12 +51,22 @@ function HomePage() {
     window.close();
   };
 
+  // Handle scroll top detection
   useEffect(() => {
-    // MAYBE: Enable later for convenience
-    //document.getElementById("ai-prompt-textarea")?.focus();
-    const handleScroll = () => setIsAtTop(window.scrollY <= 0);
-    window.addEventListener("scroll", handleScroll, { passive: true }); //MAYBE TODO: Use observer later
-    return () => window.removeEventListener("scroll", handleScroll);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsAtTop(entry.isIntersecting);
+      },
+      {
+        root: null,
+        threshold: 0.1,
+      },
+    );
+    const target = document.querySelector("#start-of-content-sentinel");
+    if (target) {
+      observer.observe(target);
+    }
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -65,7 +75,7 @@ function HomePage() {
         <nav
           className={`fixed top-0 left-0 w-full p-2.75 z-10
           border-b bg-background/80 backdrop-blur-lg
-          transition-shadow duration-300 ${isAtTop ? "shadow-none" : "shadow-md/5 dark:shadow-md/20"}`}
+          transition-shadow duration-150 ${isAtTop ? "shadow-none" : "shadow-md/5 dark:shadow-md/20"}`}
         >
           <div className="flex gap-0 items-center justify-between w-full">
             <div className="flex justify-start flex-1">
@@ -172,8 +182,6 @@ function HomePage() {
             onChange={(e) => {
               setPromptText(e.target.value);
               // Makes sure shadow disappears
-              if (e.target.value !== "") return;
-              window.scrollTo({ top: 0 });
             }} // 4. Update state on every keystroke
             onKeyDown={(e) => {
               // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this

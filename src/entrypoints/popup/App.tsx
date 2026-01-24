@@ -8,6 +8,11 @@ import HomePage from "./pages/home";
 function RootLayout() {
   return (
     <>
+      <div
+        id="start-of-content-sentinel"
+        aria-hidden="true"
+        style={{ position: "absolute", top: 0, height: "1px", width: "100%" }}
+      ></div>
       <Outlet />
     </>
   );
