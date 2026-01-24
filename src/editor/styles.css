@@ -293,6 +293,15 @@
     color: var(--color-foreground);
 }
 
+.bn-container[data-color-scheme] .bn-toggle-button {
+    will-change: background-color;
+    transition: background-color 0.1s ease-in-out;
+}
+
+.bn-container[data-color-scheme="dark"] .bn-toggle-button:hover {
+    background-color: #272b33;
+}
+
 /*.bn-code-content and .bn-table-content can be replaced by bn-block or unified in to .bn-block-custom*/
 /* * NOTE: Custom Styles for BlockNote*/
 .bn-code-content
