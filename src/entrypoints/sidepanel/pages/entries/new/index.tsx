@@ -24,6 +24,7 @@ function NewEntryPage() {
   const { sendMessage, onMessage } = useSidePanelMessaging();
   const [language, setLanguage] = useState<string>(navigator.language || "en");
   const [promptText, setPromptText] = useState("");
+  const [isAtBottom, setIsAtBottom] = useState(true);
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
 
@@ -75,6 +76,24 @@ function NewEntryPage() {
     resizeObserver.observe(footerContentElement);
 
     return () => resizeObserver.disconnect();
+  }, []);
+
+  // Handle scroll top detection
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsAtBottom(entry.isIntersecting);
+      },
+      {
+        root: null,
+        threshold: 0.1,
+      },
+    );
+    const target = document.querySelector("#end-of-content-sentinel"); //MAYBE: use getElementById instead
+    if (target) {
+      observer.observe(target);
+    }
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -130,9 +149,10 @@ function NewEntryPage() {
               //rows={4}
               maxLength={500}
               placeholder="Type your desired AI prompt here."
-              className={`shadow-[0_-6px_6px_0px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_0px_var(--color-gray-900)]/25 transition-colors duration-150
+              className={`transition-all duration-150
                 text-base! field-sizing-content resize-none max-h-88.5 min-h-10.5 focus-visible:ring-0 backdrop-blur-lg
                 dark:bg-[#121724dd] dark:focus-visible:bg-[#121724] bg-[#fdfdfddd] focus-visible:bg-[#fdfdfd] scrollbar-thin scrollbar-bg-transparent
+                ${isAtBottom ? "shadow-none" : "shadow-[0_-6px_6px_0px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_0px_var(--color-gray-900)]/25"}
                 ${import.meta.env.FIREFOX ? "resize-y h-10.5" : ""}`} // NOTE (feature parity discrepancy): No support fo field sizing content in Firefox and also different behavior compared to Chrome
               value={promptText} // 3. Bind the state to the value prop
               onChange={(e) => setPromptText(e.target.value)} // 4. Update state on every keystroke

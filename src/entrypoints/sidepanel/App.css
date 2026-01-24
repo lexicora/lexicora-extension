@@ -19,6 +19,7 @@ body[data-scroll-locked] {
     max-width: 1280px;
     padding: 12px;
     margin-inline: auto;
+    margin-top: 60px; /*Account for TopBar height. was: 58px*/
     /*inset-inline: 0;*/
 }
 

@@ -22,11 +22,20 @@ function RootLayout() {
 
   return (
     <SidePanelMessagingProvider>
-      <TopBar />
       <RouterListener />
+      <TopBar />
+      <div
+        id="start-of-content-sentinel"
+        className="h-px w-full"
+        aria-hidden="true"
+      />
       <Outlet />
+      <div
+        id="end-of-content-sentinel"
+        className="h-px w-full"
+        aria-hidden="true"
+      />
       <BottomNavigation />
-      {/*TODO: Add bottom bar */}
     </SidePanelMessagingProvider>
   );
 }
