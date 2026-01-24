@@ -84,6 +84,13 @@
 
 .bn-container[data-color-scheme].bn-shadcn
     .bn-side-menu
+    .bn-menu-dropdown.bn-drag-handle-menu {
+    margin-left: 24px;
+    margin-bottom: 112px;
+}
+
+.bn-container[data-color-scheme].bn-shadcn
+    .bn-side-menu
     .bn-menu-dropdown.bn-drag-handle-menu
     div[role="menuitem"]:first-child {
     color: #ff645e;
@@ -156,18 +163,19 @@
     .bn-side-menu
     [data-radix-popper-content-wrapper]
     [data-radix-menu-content].bn-color-picker-dropdown {
-    max-height: calc(100vh - 280px);
-    margin-bottom: 208px;
+    max-height: calc(100vh - 256px);
+    margin-bottom: 184px;
     /*transform: translateY(-112px) !important;*/
 }
 
-.bn-container[data-color-scheme]
+/*Moved to a different and moe optimal selector above (see line: 85)*/
+/*.bn-container[data-color-scheme]
     .bn-side-menu
     [data-radix-popper-content-wrapper]
     [data-radix-menu-content]:not(.bn-color-picker-dropdown) {
-    /*max-height: calc(100vh - 124px);*/
-    margin-bottom: 100px;
-}
+    /*max-height: calc(100vh - 124px);
+    /*margin-bottom: 100px;
+}*/
 
 .bn-container[data-color-scheme] .bn-toolbar {
     /*Make space for scrollbar maybe change to calc(100vw - 10px) (or width of scrollbar)*/
@@ -265,6 +273,7 @@
     background-color: #181c20;
     border-color: #32363b;
 }
+/*MAYBE: add hover states to above*/
 
 .bn-container[data-color-scheme] .bn-editor code::spelling-error,
 .bn-container[data-color-scheme] .bn-editor pre::spelling-error,
@@ -336,13 +345,14 @@
     background-color: light-dark(#00000009, #ffffff09);
 }
 
+/*Light mode still has default border color*/
 .bn-container[data-color-scheme="dark"]
     .bn-block-content[data-content-type="table"]
     th,
 .bn-container[data-color-scheme="dark"]
     .bn-block-content[data-content-type="table"]
     td {
-    border: 1px inset var(--color-border) !important;
+    border: 1px inset #353a40 !important;
     /*border-collapse: collapse;
     border-spacing: 0;*/
 }
