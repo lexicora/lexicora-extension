@@ -39,6 +39,7 @@ function TooltipContent({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Content>) {
   return (
+    //* NOTE: Commented out Portal for BlcokNote compatibility
     //<TooltipPrimitive.Portal>
     <TooltipPrimitive.Content
       data-slot="tooltip-content"

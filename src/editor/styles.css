@@ -2,7 +2,7 @@
 .bn-container[data-color-scheme] {
     --bn-font-family: var(--lc-font-sans-serif);
     color-scheme: normal;
-    scrollbar-color: light-dark(#8b8b8b, #9f9f9f) transparent;
+    scrollbar-color: light-dark(#a0a0a0, #828282) transparent;
     /*MAYBE: Update scrollbar colors*/
 }
 
@@ -30,15 +30,18 @@
     --bn-colors-highlights-pink-text: #e52d9b;
     --bn-colors-highlights-pink-background: #772857;
 
-    /*Editor background color*/
-    --bn-colors-editor-background: #1d1d1d;
+    /*Border color*/
+    --bn-border: 1px solid var(--color-border); /*Editor background color*/
+    /*--bn-colors-editor-background: #0c1019; /*was: #0f141f*/
+    --bn-colors-editor-background: #1c2026; /*was: #d1d1d1 in neutral theme */
 
     /*Editor text color*/
-    /*--bn-colors-editor-text: #d0d0d0;*/ /*originally: #cfcfcf*/
+    --bn-colors-editor-text: #d2d2d2; /*originally: #cfcfcf*/
 }
 
 .bn-container[data-color-scheme="light"] {
     /*Editor text color*/
+    /*TODO: Maybe add a subtile blue hue to it.*/
     --bn-colors-editor-text: #3e3e3e; /*was #3f3f3f then 3d3d3d*/
 }
 
@@ -63,7 +66,7 @@
 .bn-container[data-color-scheme] .bn-editor {
     padding-top: 8px;
     padding-bottom: 8px;
-    padding-inline-start: 50px;
+    padding-inline-start: 50px; /*TODO: Maybe increase to 52px later*/
     padding-inline-end: 8px !important;
     /*TODO: Maybe revert inline padding to default if enough space is available*/
     min-height: 100px;
@@ -74,6 +77,46 @@
     padding-inline: 8px !important;
     padding-top: 0px;
 }
+
+.bn-container[data-color-scheme].bn-shadcn .bn-side-menu {
+    margin-right: 1px; /*Incrased distance to block content slightly*/
+}
+
+.bn-container[data-color-scheme].bn-shadcn
+    .bn-side-menu
+    .bn-menu-dropdown.bn-drag-handle-menu {
+    margin-left: 24px;
+    margin-bottom: 112px;
+}
+
+.bn-container[data-color-scheme].bn-shadcn
+    .bn-side-menu
+    .bn-menu-dropdown.bn-drag-handle-menu
+    div[role="menuitem"]:first-child {
+    color: #ff645e;
+}
+
+.bn-container[data-color-scheme="light"].bn-shadcn
+    .bn-side-menu
+    .bn-menu-dropdown.bn-drag-handle-menu
+    div[role="menuitem"]:first-child:hover {
+    /*color: var(--color-destructive);*/
+    background-color: oklch(from var(--color-destructive) l c h / 0.15);
+}
+
+.bn-container[data-color-scheme="dark"].bn-shadcn
+    .bn-side-menu
+    .bn-menu-dropdown.bn-drag-handle-menu
+    div[role="menuitem"]:first-child:hover {
+    color: var(--color-destructive);
+    background-color: oklch(from var(--color-destructive) l c h / 0.25);
+}
+
+/*.bn-container[data-color-scheme]
+    .bn-editor[contenteditable="true"]
+    .bn-block-group {
+    padding-left: 2px;
+}*/
 
 /* Hide toolbars anywhere when a disabled bm-content exists */
 /*.bn-editor[contenteditable="false"] [data-floating-ui-focusable],
@@ -108,22 +151,31 @@
     --radix-popper-available-height: calc(40dvh - 184px) !important;
 }*/
 
+/*TODO: Fix the toolbar Text formatter dropdown like this below.*/
 .bn-container[data-color-scheme]
-    .bn-side-menu
+    .bn-toolbar
     [data-radix-popper-content-wrapper]
     [data-radix-menu-content].bn-color-picker-dropdown {
-    max-height: calc(100vh - 244px);
-    margin-bottom: 172px;
-    /*transform: translateY(-112px) !important;*/
+    height: 50vh;
 }
 
 .bn-container[data-color-scheme]
     .bn-side-menu
     [data-radix-popper-content-wrapper]
-    [data-radix-menu-content]:not(.bn-color-picker-dropdown) {
-    /*max-height: calc(100vh - 124px);*/
-    margin-bottom: 100px;
+    [data-radix-menu-content].bn-color-picker-dropdown {
+    max-height: calc(100vh - 256px);
+    margin-bottom: 184px;
+    /*transform: translateY(-112px) !important;*/
 }
+
+/*Moved to a different and moe optimal selector above (see line: 85)*/
+/*.bn-container[data-color-scheme]
+    .bn-side-menu
+    [data-radix-popper-content-wrapper]
+    [data-radix-menu-content]:not(.bn-color-picker-dropdown) {
+    /*max-height: calc(100vh - 124px);
+    /*margin-bottom: 100px;
+}*/
 
 .bn-container[data-color-scheme] .bn-toolbar {
     /*Make space for scrollbar maybe change to calc(100vw - 10px) (or width of scrollbar)*/
@@ -135,29 +187,51 @@
     display: none !important;
 }
 
-/*Should only affect link related input fields*/
+/*Should affect link and image related input fields*/
+/*bn-formatting-toolbar*/
 .bn-container[data-color-scheme]
     .bn-toolbar
     .bn-text-input
+    input[data-slot="input"],
+.bn-container[data-color-scheme]
+    .bn-toolbar.bn-formatting-toolbar
     input[data-slot="input"] {
     border-radius: calc(0.25em + 1px);
     padding-inline: calc(0.25em + 1px);
 }
 
+/*Place lower for accessibility*/
+.bn-container[data-color-scheme] .bn-toolbar.bn-link-toolbar {
+    margin-bottom: -10px;
+}
+
 .bn-container[data-color-scheme] .bn-table-handle:is(button) {
     padding-inline: 0;
     width: 20px;
-    background-color: light-dark(#ededed, #333333);
+    background-color: light-dark(#ededed, #2e343d);
 }
 
 .bn-container[data-color-scheme] .bn-table-handle:is(button):hover {
-    background-color: light-dark(#aaaaaa, #666666);
+    background-color: light-dark(#bfbfbf, #414b59);
+}
+
+.bn-container[data-color-scheme].bn-shadcn .bn-side-menu .bn-button:is(button) {
+    height: 24px;
+    width: 24px;
+    border-radius: 6px;
 }
 
 /*Same as: .bn-container button.bn-button:hover */
-.bn-container[data-color-scheme] .bn-button:is(button):hover {
-    background-color: light-dark(#ededed, #333333);
-    border-radius: 6px;
+.bn-container[data-color-scheme].bn-shadcn
+    .bn-side-menu
+    .bn-button:is(button):hover {
+    background-color: light-dark(#ededed, #2e343d);
+}
+
+.bn-container[data-color-scheme].bn-shadcn .bn-side-menu .bn-button:is(button) {
+    &[aria-expanded="true"] {
+        background-color: light-dark(#d4d4d4, #3a3f4a);
+    }
 }
 
 .bn-container[data-color-scheme]
@@ -194,6 +268,13 @@
     /*TODO: Prevent too much overflow*/
 }
 
+.bn-container[data-color-scheme="dark"] .bn-extend-button-add-remove-rows,
+.bn-container[data-color-scheme="dark"] .bn-extend-button-add-remove-columns {
+    background-color: #181c20;
+    border-color: #32363b;
+}
+/*MAYBE: add hover states to above*/
+
 .bn-container[data-color-scheme] .bn-editor code::spelling-error,
 .bn-container[data-color-scheme] .bn-editor pre::spelling-error,
 .bn-container[data-color-scheme] .bn-editor code::grammar-error,
@@ -210,6 +291,15 @@
     margin-left: 6px;
     background-color: #232323;
     color: var(--color-foreground);
+}
+
+.bn-container[data-color-scheme] .bn-toggle-button {
+    will-change: background-color;
+    transition: background-color 0.1s ease-in-out;
+}
+
+.bn-container[data-color-scheme="dark"] .bn-toggle-button:hover {
+    background-color: #272b33;
 }
 
 /*.bn-code-content and .bn-table-content can be replaced by bn-block or unified in to .bn-block-custom*/
@@ -247,7 +337,7 @@
 .bn-container[data-color-scheme="dark"]
     .bn-block-content[data-content-type="codeBlock"] {
     /*border: 1px solid var(--color-border);*/
-    background-color: #141414;
+    background-color: #111116; /*was: #101015*/
 }
 
 .bn-container[data-color-scheme="light"]
@@ -255,17 +345,23 @@
     background-color: #202020;
 }
 
+/*.bn-container[data-color-scheme]
+    .bn-block-content[data-content-type="codeBlock"] {
+    background-color: light-dark(#202020, #111116);
+}*/
+
 .bn-table-content .bn-block-content[data-content-type="table"] th {
     background-color: light-dark(#00000009, #ffffff09);
 }
 
+/*Light mode still has default border color*/
 .bn-container[data-color-scheme="dark"]
     .bn-block-content[data-content-type="table"]
     th,
 .bn-container[data-color-scheme="dark"]
     .bn-block-content[data-content-type="table"]
     td {
-    border: 1px inset #393939 !important;
+    border: 1px inset #353a40 !important;
     /*border-collapse: collapse;
     border-spacing: 0;*/
 }
@@ -277,6 +373,15 @@
     margin-right: 5px;
 }
 
+/*.bn-container[data-color-scheme]
+    .bn-table-content
+    .bn-block-content[data-content-type="table"]
+    .tableWrapper
+    .tableWrapper-inner
+    table {
+    margin-right: 100px;
+}*/
+
 /*.bn-container:has(.bn-editor[contenteditable="true"])
     .bn-block-content[data-content-type="table"]
     table {
@@ -286,5 +391,18 @@
 /*.bn-table-border table th td {
     border-color: var(--color-border);
 }*/
+
+.bn-container[data-color-scheme="dark"]
+    .bn-block-content[data-content-type="quote"]
+    blockquote {
+    color: #b0b0b2;
+    border-left: 2px solid #75757c;
+}
+
+.bn-container[data-color-scheme="dark"]
+    .bn-block-content[data-content-type="divider"]
+    hr {
+    border-top: 1px solid #75757c;
+}
 
 /*TODO: overhaul and make all selectors more consistent, to avoid inconsistent behavior*/

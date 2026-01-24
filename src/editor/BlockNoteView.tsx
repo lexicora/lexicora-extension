@@ -2,6 +2,7 @@
 import * as Button from "@/components/ui/button";
 //import * as Card from "@/components/ui/card";
 import * as DropdownMenu from "./components/ui/dropdown-menu";
+//* NOTE: DropDownMenu currently used above is the same as the legacy component, due to compatibility (do not replace yet)
 // import * as Form from "@/components/ui/form";
 // import * as Input from "@/components/ui/input";
 import * as Label from "@/components/ui/label";
@@ -9,7 +10,7 @@ import * as Label from "@/components/ui/label";
 // import * as Select from "./select";
 // import * as Tabs from "@/components/ui/tabs";
 // import * as Toggle from "@/components/ui/toggle";
-import * as Tooltip from "./components/ui/tooltip";
+import * as Tooltip from "@/components/ui/tooltip";
 
 import {
   BasicTextStyleButton,

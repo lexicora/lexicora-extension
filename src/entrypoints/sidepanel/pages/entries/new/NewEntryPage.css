@@ -1,4 +1,4 @@
-html {
+html:has(.bn-container .bn-editor) {
     /*For BlockNoteView (better accessibility)*/
     scroll-padding-top: 72px;
     scroll-padding-bottom: 132px;
@@ -14,14 +14,15 @@ html {
         color-mix(in srgb, var(--background), transparent 35%) !important;
 }
 
-.light .lc-bottom-bar-styled-bg::after {
+/*.light */
+.lc-bottom-bar-styled-bg::after {
     content: "";
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 90%;
-    z-index: -1;
+    z-index: -2; /*behind the main bg, instead of above with -1*/
     box-shadow: inset 0 -64px 30px -26px
         color-mix(in srgb, var(--background), transparent 35%);
 }
@@ -33,7 +34,7 @@ html {
     left: 0;
     width: 100%;
     height: 90%;
-    z-index: -1;
+    z-index: -2; /*behind the main bg, instead of above with -1*/
     box-shadow: inset 0 -64px 30px -20px
         color-mix(in srgb, var(--background), transparent 25%);
 }
