@@ -34,12 +34,12 @@
 @keyframes icon-pop {
     0% {
         /* Start at the hover scale to catch the transition */
-        transform: scale(1.15);
+        transform: scale(1.1);
     }
     /* Optional: small bounce */
-    /*50% {
-        transform: scale(0.95);
-    }*/
+    50% {
+        transform: scale(0.92);
+    }
     100% {
         transform: scale(1);
     }
@@ -47,7 +47,7 @@
 
 .animate-icon-pop {
     /* This ensures the active icon 'lands' smoothly */
-    animation: icon-pop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    animation: icon-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; /*was: 0.25s without small bounce*/
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -57,7 +57,7 @@
     );
 
     /* Colors: */
-    --lc-hover-foreground: oklch(0.34 0.027 263);
+    --lc-muted-foreground-hover: oklch(0.34 0.027 263);
 }
 
 .dark {
@@ -96,7 +96,7 @@
 
     /*Lexicora: styles / variables /colors */
     /* Colors: */
-    --lc-hover-foreground: oklch(0.84 0.015 255);
+    --lc-muted-foreground-hover: oklch(0.84 0.015 255);
 }
 
 @theme inline {
