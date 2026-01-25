@@ -58,6 +58,13 @@
 
     /* Colors: */
     --lc-muted-foreground-hover: oklch(0.34 0.027 263);
+
+    /*Variables*/
+    --lc-scrollbar-width: calc(100vw - 100%);
+    --lc-max-scrollbar-width: 10px; /*Thin scrollbar*/
+    /*--lc-scrollbar-offset: calc(
+        var(--lc-max-scrollbar-width) - var(--lc-scrollbar-width)
+    );*/
 }
 
 .dark {

@@ -29,7 +29,7 @@ export function TopBar() {
   return (
     <section
       id="lc-top-bar-item"
-      className={`lc-top-bar fixed top-0 w-full p-2.75 py-[0.7rem] z-30
+      className={`lc-top-bar fixed top-0 w-full p-2.75 pr-[calc(var(--lc-max-scrollbar-width)-var(--lc-scrollbar-width)+2px)] py-[0.7rem] z-30
           border-b bg-background/80 backdrop-blur-lg transition-shadow duration-100
           ${isAtTop ? "shadow-none" : "shadow-md/4 dark:shadow-md/26"}`}
     >

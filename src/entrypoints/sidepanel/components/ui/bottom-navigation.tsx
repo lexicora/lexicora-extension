@@ -53,7 +53,7 @@ export function BottomNavigation() {
     <section
       id="lc-bottom-navigation-item"
       className={`lc-bottom-navigation
-          fixed bottom-0 w-full h-14.75 px-3 z-100 select-none
+          fixed bottom-0 w-full h-14.75 px-3 pr-[calc(var(--lc-max-scrollbar-width)-var(--lc-scrollbar-width)+2px)] z-100 select-none
           border-t bg-background/80 backdrop-blur-lg
           transition-shadow duration-300
           ${

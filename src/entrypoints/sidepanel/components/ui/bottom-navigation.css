@@ -36,9 +36,12 @@
         /* Start at the hover scale to catch the transition */
         transform: scale(1.1);
     }
+    /*25% {
+        transform: scale(1.12);
+    }*/
     /* Optional: small bounce */
     50% {
-        transform: scale(0.92);
+        transform: scale(0.92); /*MAYBE: Change to 0.91 or 0.9*/
     }
     100% {
         transform: scale(1);
