@@ -5,32 +5,16 @@ import { ExternalLinkIcon } from "lucide-react";
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
 
-export function TopBar() {
-  const [isAtTop, setIsAtTop] = useState(true);
+import { useScrollPos } from "../../providers/scroll-observer";
 
-  // Handle scroll top detection
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsAtTop(entry.isIntersecting);
-      },
-      {
-        root: null,
-        threshold: 0.1,
-      },
-    );
-    const target = document.querySelector("#start-of-content-sentinel"); //MAYBE: use getElementById instead
-    if (target) {
-      observer.observe(target);
-    }
-    return () => observer.disconnect();
-  }, []);
+export function TopBar() {
+  const { isAtTop } = useScrollPos();
 
   return (
     <section
       id="lc-top-bar-item"
       className={`lc-top-bar fixed top-0 w-full p-2.75 pr-[calc(var(--lc-max-scrollbar-width)-var(--lc-scrollbar-width)+2px)] py-[0.7rem] z-30
-          border-b bg-background/80 backdrop-blur-lg transition-shadow duration-100
+          border-b bg-background/80 backdrop-blur-lg transition-shadow duration-150
           ${isAtTop ? "shadow-none" : "shadow-md/4 dark:shadow-md/26"}`}
     >
       <div className="flex gap-0 items-center justify-between w-full max-w-317 mx-auto inset-x-0">

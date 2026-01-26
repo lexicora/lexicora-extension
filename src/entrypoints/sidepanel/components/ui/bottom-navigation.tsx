@@ -16,9 +16,11 @@ import {
 } from "lucide-react"; //Candidate for Entries page 5 (solid)
 import { NavLink, useLocation, matchPath } from "react-router-dom";
 
+import { useScrollPos } from "../../providers/scroll-observer";
+
 export function BottomNavigation() {
   const { pathname } = useLocation();
-  const [isAtBottom, setIsAtBottom] = useState(false);
+  const { isAtBottom } = useScrollPos();
 
   const hiddenPatterns = [
     "entries/new",
@@ -30,24 +32,6 @@ export function BottomNavigation() {
     matchPath({ path: pattern, end: true }, pathname),
   );
 
-  // Handle scroll top detection
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsAtBottom(entry.isIntersecting);
-      },
-      {
-        root: null,
-        threshold: 0.1,
-      },
-    );
-    const target = document.querySelector("#end-of-content-sentinel"); //MAYBE: use getElementById instead
-    if (target) {
-      observer.observe(target);
-    }
-    return () => observer.disconnect();
-  }, []); // if it doesnt work properly put the pathname in the dependency array
-
   //* NOTE: Every page that opts in to the bottom navigation should provide its own margin at the bottom
   return (
     <section
@@ -55,7 +39,6 @@ export function BottomNavigation() {
       className={`lc-bottom-navigation
           fixed bottom-0 w-full h-14.75 px-3 pr-[calc(var(--lc-max-scrollbar-width)-var(--lc-scrollbar-width)+2px)] z-100 select-none
           border-t bg-background/80 backdrop-blur-lg
-          transition-shadow duration-300
           ${
             isHidden
               ? "lc-bottom-navigation--hidden"

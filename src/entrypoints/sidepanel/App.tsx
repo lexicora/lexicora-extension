@@ -14,6 +14,7 @@ import EntryDetailPage from "./pages/entries/[id]";
 import EntryEditPage from "./pages/entries/edit/[id]";
 import { RouterListener } from "./hooks/router-listener";
 import { SidePanelMessagingProvider } from "./providers/messaging";
+import { ScrollObserverProvider } from "./providers/scroll-observer";
 import { TopBar } from "./components/ui/top-bar";
 import { BottomNavigation } from "./components/ui/bottom-navigation";
 
@@ -23,19 +24,11 @@ function RootLayout() {
   return (
     <SidePanelMessagingProvider>
       <RouterListener />
-      <TopBar />
-      <div
-        id="start-of-content-sentinel"
-        className="h-px w-full"
-        aria-hidden="true"
-      />
-      <Outlet />
-      <div
-        id="end-of-content-sentinel"
-        className="h-px w-full"
-        aria-hidden="true"
-      />
-      <BottomNavigation />
+      <ScrollObserverProvider>
+        <TopBar />
+        <Outlet />
+        <BottomNavigation />
+      </ScrollObserverProvider>
     </SidePanelMessagingProvider>
   );
 }
