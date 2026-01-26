@@ -70,7 +70,7 @@ function HomePage() {
   }, []);
 
   return (
-    <div className="w-85 overflow-auto h-full pt-20 pb-15 px-2">
+    <div className="w-85 overflow-auto h-full pt-20 pb-15 px-3">
       <header>
         <nav
           className={`fixed top-0 left-0 w-full p-2.75 z-10
@@ -175,7 +175,7 @@ function HomePage() {
             id="ai-prompt-textarea"
             placeholder="Type your desired AI prompt here."
             // Adjust default height to either 6 rows (min-h-40.5) or 5 rows (min-h-34.5)
-            className="field-sizing-content resize-y /*min-h-40.5*/ min-h-34.5 /*max-h-300*/ ml-px w-[calc(100%-4px)] scrollbar-thin
+            className="field-sizing-content resize-y /*min-h-40.5*/ min-h-34.5 /*max-h-300*/ ml-px w-[calc(100%-2px)] scrollbar-thin
             transition-colors duration-150 focus-visible:ring-0"
             maxLength={1000}
             value={promptText} // 3. Bind the state to the value prop
