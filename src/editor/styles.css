@@ -3,7 +3,7 @@
     --bn-font-family: var(--lc-font-sans-serif);
     color-scheme: normal;
     scrollbar-color: light-dark(#a0a0a0, #828282) transparent;
-    /*MAYBE: Update scrollbar colors*/
+    /*TODO MAYBE: Update scrollbar colors*/
 }
 
 /* Changes for dark mode */
@@ -342,6 +342,16 @@
     font-weight: 300;
     /*line-height: 1.2;*/
 }
+
+/*TODO: Later change this and for other elements*/
+/*.bn-container[data-color-scheme]
+    .bn-code-content
+    .bn-block-content[data-content-type="codeBlock"]
+    pre
+    code::selection {
+    background-color: light-dark(#3390ff66, #3390ff66);
+    /*color: var(--color-foreground);
+}*/
 
 .bn-container[data-color-scheme="dark"]
     .bn-block-content[data-content-type="codeBlock"] {
