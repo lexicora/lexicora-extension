@@ -14,7 +14,7 @@ body[data-scroll-locked] {
     /*margin-right: 0 !important;*/
     --removed-body-scroll-bar-size: 0;
     /*Does no longer prevent layout shift by dropdown (shadcn-ui/radix), must put this as a style property in the body with !important declaration
-    to do this, set margin-right to 0 !important. Do this only if no layout shift is needed*/
+    to do this, set margin-right to 0 !important. Do this only if no layout shift is needed (via id might work too)*/
 }
 
 .lc-page-container {

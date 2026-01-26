@@ -53,6 +53,9 @@ function HomePage() {
 
   // Handle scroll top detection
   useEffect(() => {
+    // Focus the textarea on component mount, for better UX
+    document.getElementById("ai-prompt-textarea")?.focus();
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsAtTop(entry.isIntersecting);
