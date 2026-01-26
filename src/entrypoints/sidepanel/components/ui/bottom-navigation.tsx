@@ -36,8 +36,9 @@ export function BottomNavigation() {
   return (
     <section
       id="lc-bottom-navigation-item"
+      // Change px-2.25 to px-2 if four items are present
       className={`lc-bottom-navigation
-          fixed bottom-0 w-full h-14.75 px-3 pr-[calc(var(--lc-max-scrollbar-width)-var(--lc-scrollbar-width)+2px)] z-100 select-none
+          fixed bottom-0 w-full h-14.75 px-2.25 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-100 select-none
           border-t bg-background/80 backdrop-blur-lg
           ${
             isHidden
@@ -49,10 +50,10 @@ export function BottomNavigation() {
           `}
     >
       <div
-        className="flex gap-3 items-center justify-between text-center w-full max-w-317 h-full /*max-w-7xl*/ mx-auto inset-x-0"
+        className="flex items-center justify-between text-center w-full max-w-317 h-full /*max-w-7xl*/ mx-auto inset-x-0"
         // had classes: lc-bottom-navigation-animate-blur ${isHidden ? "lc-bottom-navigation-animate-blur--hidden" : ""}
       >
-        <div className="flex-1 mx-1.5 ml-0.5 flex items-center justify-center h-full">
+        <div className="flex-1 mx-3 /*ml-0.5*/ flex items-center justify-center h-full">
           {/* Home */}
           <NavLink
             to="/"
@@ -74,7 +75,7 @@ export function BottomNavigation() {
             )}
           </NavLink>
         </div>
-        <div className="flex-1 mx-1.5 flex items-center justify-center h-full">
+        <div className="flex-1 mx-3 flex items-center justify-center h-full">
           {/* Entries */}
           <NavLink
             to="/entries"
@@ -96,7 +97,7 @@ export function BottomNavigation() {
             )}
           </NavLink>
         </div>
-        <div className="flex-1 mx-1.5 mr-0.5 flex items-center justify-center h-full">
+        <div className="flex-1 mx-3 /*mr-0.5*/ flex items-center justify-center h-full">
           {/* Settings */}
           <NavLink
             to="/settings"

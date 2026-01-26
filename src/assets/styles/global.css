@@ -45,12 +45,12 @@
     --sidebar-ring: oklch(0.707 0.022 261.325);
 
     /*Lexicora: styles / variables / colors */
-    /*MAYBE: Later set --font-mono and --font-sans to the --lc-... fonts*/
+    /*MAYBE: Later set --font-mono and --font-sans to the --lc-... fonts (add other and more fallback fonts)*/
     --lc-font-sans-serif:
         "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;
     --lc-font-monospace:
-        "JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco",
-        "Consolas", "Liberation Mono", "Courier New", monospace;
+        "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
 
     /* Colors: */
     --lc-text-color-monospace: oklch(54.19% 0.152 23.67);
@@ -58,10 +58,11 @@
 
     /*Variables*/
     --lc-scrollbar-width: calc(100vw - 100%);
-    --lc-max-scrollbar-width: 10px; /*Thin scrollbar*/
-    /*--lc-scrollbar-offset: calc(
+    --lc-max-scrollbar-width: 10px; /*width of thin scrollbar / base padding width*/
+    --lc-scrollbar-offset: calc(
         var(--lc-max-scrollbar-width) - var(--lc-scrollbar-width)
-    );*/
+    );
+    /*Used in the default .lc-page-container and is now opt out (so set padding to pr-3! for example)*/
 }
 
 .dark {
@@ -166,17 +167,14 @@
             scrollbar-color: #535961 #0d111b;
         }
     }
-    html {
+    /*Custom scrollbar (experimental)*/
+    /*html {
         &::-webkit-scrollbar {
-            /*width: var(--lc-scrollbar-width);
-            max-width: var(--lc-max-scrollbar-width);
-            background-color: transparent;*/
             width: 10px;
         }
         &.light::-webkit-scrollbar-button {
             height: 12px;
             background-color: #ededed;
-            /*TODO: Maybe add background-color*/
         }
         &.dark::-webkit-scrollbar-button {
             height: 12px;
@@ -185,61 +183,46 @@
         &.light::-webkit-scrollbar-track {
             background-color: transparent;
             background-color: #ededed;
-
-            /*TODO: Maybe add background-color*/
         }
         &.dark::-webkit-scrollbar-track {
             background-color: transparent;
             background-color: #0d111b;
-
-            /*TODO: Maybe add background-color*/
         }
         &.light::-webkit-scrollbar-thumb {
             border-radius: 10px;
-            background: #a0a0a0; /*was: #b2b2b2*/
+            background: #a0a0a0;
             border: 3px solid transparent;
             background-clip: content-box;
         }
         &.light::-webkit-scrollbar-thumb:hover {
             background: #6f6f72;
-            /*border-top-left-radius: 19px;
-            border-top-right-radius: 20px;
-            border-bottom-left-radius: 19px;
-            border-bottom-right-radius: 20px;
-            border-left: 2px solid transparent;
-            border-right: 2px solid transparent;*/
             border: 2px solid transparent;
             background-clip: content-box;
         }
         &.dark::-webkit-scrollbar-thumb {
             border-radius: 10px;
-            background: #50565d; /*was: #535961*/
+            background: #50565d;
             border: 3px solid transparent;
             background-clip: content-box;
         }
         &.dark::-webkit-scrollbar-thumb:hover {
             background: #83878c;
-            /*border-top-left-radius: 19px;
-            border-top-right-radius: 20px;
-            border-bottom-left-radius: 19px;
-            border-bottom-right-radius: 20px;
-            border-left: 2px solid transparent;
-            border-right: 2px solid transparent;*/
             border: 2px solid transparent;
             background-clip: content-box;
         }
-        /*When using this scrollbar, make sure all page content has a buffer padding,
-        that is dynamic with: pr-[calc(var(--lc-max-scrollbar-width)-var(--lc-scrollbar-width)+2px)]
-        also adjust the variables used in there, to match scrollbar width*/
-    }
+    }*/
+    /*When using this scrollbar, make sure all page content has a buffer padding,
+    that is dynamic with: pr-[calc(var(--lc-max-scrollbar-width)-var(--lc-scrollbar-width)+2px)]
+    also adjust the variables used in there, to match scrollbar width*/
     button:not(:disabled),
     [role="button"]:not(:disabled) {
         cursor: pointer;
     }
     button,
     [role="button"] {
+        /*MAYBE: Put this in component directly*/
         font-weight: 600 !important;
-        /*letter-spacing: 0.01rem; (bit more than default maybe*/
+        /*letter-spacing: 0.01rem; (bit more than default maybe)*/
     }
 }
 

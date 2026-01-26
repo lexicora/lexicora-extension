@@ -13,13 +13,17 @@ html {
 body[data-scroll-locked] {
     /*margin-right: 0 !important;*/
     --removed-body-scroll-bar-size: 0;
+    /*Does no longer prevent layout shift by dropdown (shadcn-ui/radix), must put this as a style property in the body with !important declaration
+    to do this, set margin-right to 0 !important. Do this only if no layout shift is needed*/
 }
 
 .lc-page-container {
     max-width: 1280px;
     padding: 12px;
+    padding-right: calc(var(--lc-scrollbar-offset) + 2px);
     margin-inline: auto;
     margin-top: 60px; /*Account for TopBar height. was: 58px*/
+    margin-bottom: 60px; /*Account for BottomNavigation height. was: 58px (opt out on a page level)*/
     /*inset-inline: 0;*/
 }
 

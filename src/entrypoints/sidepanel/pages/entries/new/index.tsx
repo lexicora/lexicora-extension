@@ -81,7 +81,8 @@ function NewEntryPage() {
   }, []);
 
   return (
-    <div className="lc-page-container">
+    //* NOTE: temporarily opt out of scrollbar offset padding until figured out if this page is suitable for it (content spacing wise (seems a bit tight with it))
+    <div className="lc-page-container pr-3! mb-0!">
       <header className="flex items-center gap-2 mb-4">
         <Button
           variant="ghost"
@@ -99,7 +100,7 @@ function NewEntryPage() {
         <h1 className="text-xl font-bold">New Entry</h1>
       </header>
       <main>
-        <section>
+        <section className="mx-px">
           <div className="text-start">
             <Label
               htmlFor="lc-blocknote-view-new-entry"
@@ -124,10 +125,11 @@ function NewEntryPage() {
       <footer className="mt-10.5" ref={footerRef}>
         <section
           ref={footerContentRef}
-          className="fixed bottom-0 left-0 min-h-15 w-full max-w-7xl mx-auto inset-x-0 p-3 z-30
+          //* NOTE: temporarily opt out of scrollbar offset padding until figured out if this page is suitable for it (content spacing wise (seems a bit tight with it))
+          className="fixed bottom-0 left-0 min-h-15 w-full max-w-7xl mx-auto inset-x-0 p-3 /*pr-[calc(var(--lc-scrollbar-offset)+2px)]*/ z-30
                 lc-bottom-bar-styled-bg"
         >
-          <div className="pb-3 /*mt-1*/">
+          <div className="pb-3 mx-px /*mt-1*/">
             <Textarea
               id="ai-prompt-textarea"
               //rows={4}
