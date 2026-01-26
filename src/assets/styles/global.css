@@ -159,15 +159,55 @@
             @apply scroll-auto;
         }
     }
-    html.light {
+    html {
         scrollbar-width: thin;
-        scrollbar-color: #b2b2b2 #ededed; /*was: #8b8b8b #00000012*/
-        /*TODO: Change color later to better suiting colors*/
+        &.light {
+            scrollbar-color: #b2b2b2 #ededed;
+        }
+        &.dark {
+            scrollbar-color: #535961 #0d111b;
+        }
     }
-    html.dark {
-        scrollbar-width: thin;
-        scrollbar-color: #535961 #0d111b; /*was: #9f9f9f #ffffff08*/
-        /*TODO: Change color later to better suiting colors*/
+    html {
+        &::-webkit-scrollbar {
+            /*width: var(--lc-scrollbar-width);
+            max-width: var(--lc-max-scrollbar-width);
+            background-color: transparent;*/
+            width: 8px;
+            /*height: 10px;*/
+        }
+        &::-webkit-scrollbar-button {
+            height: 12px;
+        }
+        &::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+        &.light::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background: #b2b2b2;
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+        &.light::-webkit-scrollbar-thumb:hover {
+            background: #8b8b8b;
+            border: 1px solid transparent;
+            background-color: content-box;
+        }
+        &.dark::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background: #535961;
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+        &.dark::-webkit-scrollbar-thumb:hover {
+            background: #646b75;
+            width: 8px;
+            border: 1px solid transparent;
+            background-clip: content-box;
+        }
+        /*When using this scrollbar, make sure all page content has a buffer padding,
+        that is dynamic with: pr-[calc(var(--lc-max-scrollbar-width)-var(--lc-scrollbar-width)+2px)]
+        also adjust the variables used in there, to match scrollbar width*/
     }
     button:not(:disabled),
     [role="button"]:not(:disabled) {
