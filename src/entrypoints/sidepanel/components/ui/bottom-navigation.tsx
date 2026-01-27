@@ -36,9 +36,9 @@ export function BottomNavigation() {
   return (
     <section
       id="lc-bottom-navigation-item"
-      // Change px-2.25 to px-2 if four items are present
+      // Change px-3 to px-2.5 if four items are present
       className={`lc-bottom-navigation
-          fixed bottom-0 w-full h-14.75 px-2.25 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-100 select-none
+          fixed bottom-0 w-full h-14.75 px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-100 select-none
           border-t bg-background/80 backdrop-blur-lg
           ${
             isHidden
