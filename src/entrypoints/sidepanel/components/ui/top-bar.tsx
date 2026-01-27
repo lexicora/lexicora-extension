@@ -28,7 +28,7 @@ export function TopBar() {
           </Avatar>
         </div>
         <div
-          className="shrink-0"
+          className="shrink-0 select-none"
           onClick={() => {
             window.scrollTo({ top: 0 }); //MAYBE: Make instant (no animation or custom animation like motion blur...)
           }}

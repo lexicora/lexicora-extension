@@ -38,7 +38,7 @@ export function BottomNavigation() {
       id="lc-bottom-navigation-item"
       // Change px-3 to px-2.5 if four items are present
       className={`lc-bottom-navigation
-          fixed bottom-0 w-full h-14.75 px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-100 select-none
+          fixed bottom-0 w-full h-14.75 px-2.75 pr-[calc(var(--lc-scrollbar-offset)+1px)] z-100 select-none
           border-t bg-background/80 backdrop-blur-lg
           ${
             isHidden
@@ -53,7 +53,8 @@ export function BottomNavigation() {
         className="flex items-center justify-between text-center w-full max-w-317 h-full /*max-w-7xl*/ mx-auto inset-x-0"
         // had classes: lc-bottom-navigation-animate-blur ${isHidden ? "lc-bottom-navigation-animate-blur--hidden" : ""}
       >
-        <div className="flex-1 mx-3 /*ml-0.5*/ flex items-center justify-center h-full">
+        {/*ml-2.5 for the outer most link (left)*/}
+        <div className="flex-1 mx-3 ml-2.5 /*ml-0.5*/ flex items-center justify-center h-full">
           {/* Home */}
           <NavLink
             to="/"
@@ -97,7 +98,8 @@ export function BottomNavigation() {
             )}
           </NavLink>
         </div>
-        <div className="flex-1 mx-3 /*mr-0.5*/ flex items-center justify-center h-full">
+        {/*mr-2.5 for the outer most link (right)*/}
+        <div className="flex-1 mx-3 mr-2.5 /*mr-0.5*/ flex items-center justify-center h-full">
           {/* Settings */}
           <NavLink
             to="/settings"
