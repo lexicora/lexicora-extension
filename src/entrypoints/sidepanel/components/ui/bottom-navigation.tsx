@@ -36,7 +36,7 @@ export function BottomNavigation() {
   return (
     <section
       id="lc-bottom-navigation-item"
-      // Change px-3 to px-2.5 if four items are present
+      // Change px-2.75 to px-2.5 if four items are present
       className={`lc-bottom-navigation
           fixed bottom-0 w-full h-14.75 px-2.75 pr-[calc(var(--lc-scrollbar-offset)+1px)] z-100 select-none
           border-t bg-background/80 backdrop-blur-lg
@@ -53,7 +53,7 @@ export function BottomNavigation() {
         className="flex items-center justify-between text-center w-full max-w-317 h-full /*max-w-7xl*/ mx-auto inset-x-0"
         // had classes: lc-bottom-navigation-animate-blur ${isHidden ? "lc-bottom-navigation-animate-blur--hidden" : ""}
       >
-        {/*ml-2.5 for the outer most link (left)*/}
+        {/*ml-2.5 for the outer most link (left) (change, when four items are present)*/}
         <div className="flex-1 mx-3 ml-2.5 /*ml-0.5*/ flex items-center justify-center h-full">
           {/* Home */}
           <NavLink
@@ -98,7 +98,7 @@ export function BottomNavigation() {
             )}
           </NavLink>
         </div>
-        {/*mr-2.5 for the outer most link (right)*/}
+        {/*mr-2.5 for the outer most link (right) (change, when four items are present)*/}
         <div className="flex-1 mx-3 mr-2.5 /*mr-0.5*/ flex items-center justify-center h-full">
           {/* Settings */}
           <NavLink

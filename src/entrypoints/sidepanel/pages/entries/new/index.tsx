@@ -88,16 +88,17 @@ function NewEntryPage() {
           variant="ghost"
           size="icon"
           title="Go back"
+          className="size-10 rounded-lg"
           onClick={() => navigate(-1)} // was "/", { viewTransition: true }
         >
-          <ArrowLeftIcon />
+          <ArrowLeftIcon className="size-4.5" />
         </Button>
         {/*<Link to="/entries">
           <Button variant="ghost" size="icon" title="Go to Entries Home">
             <House />
           </Button>
         </Link>*/}
-        <h1 className="text-xl font-bold">New Entry</h1>
+        <h1 className="text-2xl font-semibold">New Entry</h1>
       </header>
       <main>
         <section className="mx-px">

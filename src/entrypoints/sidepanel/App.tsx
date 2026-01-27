@@ -1,22 +1,28 @@
 import "./App.css";
 import { createMemoryRouter, RouterProvider, Outlet } from "react-router-dom";
+
+// Hooks, Providers and Components
+import { RouterListener } from "./hooks/router-listener";
+import { SidePanelMessagingProvider } from "./providers/messaging";
+import { ScrollObserverProvider } from "./providers/scroll-observer";
 import { ThemeProvider } from "@/components/theme-provider";
 import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
+import { TopBar } from "./components/ui/top-bar";
+import { BottomNavigation } from "./components/ui/bottom-navigation";
 
 // Pages
 import HomePage from "./pages/home";
-import SettingsPage from "./pages/settings";
 
 // Entries Pages
 import EntriesPage from "./pages/entries";
 import NewEntryPage from "./pages/entries/new";
 import EntryDetailPage from "./pages/entries/[id]";
 import EntryEditPage from "./pages/entries/edit/[id]";
-import { RouterListener } from "./hooks/router-listener";
-import { SidePanelMessagingProvider } from "./providers/messaging";
-import { ScrollObserverProvider } from "./providers/scroll-observer";
-import { TopBar } from "./components/ui/top-bar";
-import { BottomNavigation } from "./components/ui/bottom-navigation";
+
+// Settings Pages
+import SettingsPage from "./pages/settings";
+import PersonalizationSettingsPage from "./pages/settings/personalization";
+import NotificationsSettingsPage from "./pages/settings/notifications";
 
 function RootLayout() {
   useMouseNavigation();
@@ -39,12 +45,23 @@ const router = createMemoryRouter([
     element: <RootLayout />,
     children: [
       { path: "/", element: <HomePage /> },
-      { path: "settings", element: <SettingsPage /> },
       // Entries
       { path: "entries", element: <EntriesPage /> },
       { path: "entries/new", element: <NewEntryPage /> },
       { path: "entries/:id", element: <EntryDetailPage /> },
       { path: "entries/:id/edit", element: <EntryEditPage /> },
+      // Settings
+      { path: "settings", element: <SettingsPage /> },
+      {
+        path: "settings/personalization",
+        element: <PersonalizationSettingsPage />,
+      },
+      {
+        path: "settings/notifications",
+        element: <NotificationsSettingsPage />,
+      },
+
+      // Fallback Pages (404 and error display page)
     ],
   },
 ]);
