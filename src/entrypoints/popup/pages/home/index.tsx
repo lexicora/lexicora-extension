@@ -54,7 +54,8 @@ function HomePage() {
   // Handle scroll top detection
   useEffect(() => {
     // Focus the textarea on component mount, for better UX
-    document.getElementById("ai-prompt-textarea")?.focus();
+    document.getElementById("ai-prompt-textarea")?.focus(); //* NOTE: Having this enabled makes the buttons below flicker, when opening the pupup
+    //FIX: potentially set a timer for focus (few ms delay)
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -181,7 +182,7 @@ function HomePage() {
             className="field-sizing-content resize-y /*min-h-40.5*/ min-h-34.5 /*max-h-300*/ ml-px w-[calc(100%-2px)] scrollbar-thin
             transition-colors duration-150 focus-visible:ring-0"
             maxLength={1000}
-            value={promptText} // 3. Bind the state to the value prop
+            value={promptText}
             onChange={(e) => {
               setPromptText(e.target.value);
               // Makes sure shadow disappears
