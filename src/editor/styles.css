@@ -40,6 +40,7 @@
 }
 
 .bn-container[data-color-scheme="light"] {
+    color-scheme: light;
     /*Editor text color*/
     /*TODO: Maybe add a subtile blue hue to it.*/
     --bn-colors-editor-text: #3e3e3e; /*was #3f3f3f then 3d3d3d*/
@@ -76,10 +77,6 @@
 .bn-container[data-color-scheme] .bn-editor[contenteditable="false"] {
     padding-inline: 8px !important;
     padding-top: 0px;
-}
-
-.bn-container[data-color-scheme].bn-shadcn .bn-side-menu {
-    margin-right: 1px; /*Incrased distance to block content slightly*/
 }
 
 .bn-container[data-color-scheme].bn-shadcn
@@ -241,12 +238,15 @@
 }
 
 /*This selector is targets the same element as the selector above*/
-/*MAYBE: reduce width of drag/menu button (look at notion)*/
-/*.bn-container[data-color-scheme]
+.bn-container[data-color-scheme]
     .bn-side-menu
     .bn-button:is(button):nth-child(2) {
-    width: 20px;
-}*/
+    width: 22px;
+}
+
+.bn-container[data-color-scheme].bn-shadcn .bn-side-menu {
+    margin-right: 2px; /*Incrased distance to block content slightly*/
+}
 
 /*.bn-container .bn-button:is(button)[aria-label="Open block menu"]:active {
     cursor: grabbing;

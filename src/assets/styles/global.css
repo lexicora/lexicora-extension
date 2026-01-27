@@ -166,6 +166,19 @@
         &.dark {
             scrollbar-color: #535961 #0d111b;
         }
+        &::selection {
+            background-color: #2383e247; /*was: #3390ff66, #2383e257*/
+            /*color: var(--color-foreground);*/
+        }
+        &::spelling-error,
+        &::grammar-error {
+            /*text-decoration-color: var(--color-destructive);*/
+            text-decoration-line: underline;
+            text-decoration-skip-ink: none;
+            text-decoration-style: dotted;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 2px;
+        }
     }
     /*Custom scrollbar (experimental)*/
     /*html {
