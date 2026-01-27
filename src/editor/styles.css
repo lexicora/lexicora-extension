@@ -11,24 +11,41 @@
     color-scheme: dark;
 
     /*Highlighting colors*/
-    --bn-colors-highlights-gray-text: #a5a49f;
-    --bn-colors-highlights-gray-background: #434241;
-    --bn-colors-highlights-brown-text: #8e6552;
-    --bn-colors-highlights-brown-background: #43342e;
-    --bn-colors-highlights-red-text: #d13e3e;
-    --bn-colors-highlights-red-background: #632929;
-    --bn-colors-highlights-orange-text: #d7720b;
-    --bn-colors-highlights-orange-background: #6d441c;
-    --bn-colors-highlights-yellow-text: #dfab01;
-    --bn-colors-highlights-yellow-background: #7d6824;
-    --bn-colors-highlights-green-text: #33b751;
-    --bn-colors-highlights-green-background: #396142;
-    --bn-colors-highlights-blue-text: #1f92d5;
-    --bn-colors-highlights-blue-background: #2c4d67;
-    --bn-colors-highlights-purple-text: #925ee3;
-    --bn-colors-highlights-purple-background: #4c3e63;
-    --bn-colors-highlights-pink-text: #e52d9b;
-    --bn-colors-highlights-pink-background: #772857;
+    /* Gray: Silvery text on a subtle slate background */
+    --bn-colors-highlights-gray-text: #bdbdbd;
+    --bn-colors-highlights-gray-background: #353a45;
+
+    /* Brown: Sand/Beige text on a deep espresso background */
+    --bn-colors-highlights-brown-text: #d4a88c;
+    --bn-colors-highlights-brown-background: #4a362d;
+
+    /* Red: Soft Coral text on a deep maroon background */
+    --bn-colors-highlights-red-text: #ff8282;
+    --bn-colors-highlights-red-background: #5c2b2b;
+
+    /* Orange: Peachy-Amber text on a burnt umber background */
+    --bn-colors-highlights-orange-text: #ffab70;
+    --bn-colors-highlights-orange-background: #664024;
+
+    /* Yellow: Gold text (not neon) on a dark olive background */
+    --bn-colors-highlights-yellow-text: #ffd666;
+    --bn-colors-highlights-yellow-background: #5c4d1f;
+
+    /* Green: Mint/Sage text on a deep forest background */
+    --bn-colors-highlights-green-text: #69cf85;
+    --bn-colors-highlights-green-background: #264730;
+
+    /* Blue: Sky blue text on a deep navy background */
+    --bn-colors-highlights-blue-text: #6ec1ff;
+    --bn-colors-highlights-blue-background: #204a69;
+
+    /* Purple: Lavender text on a deep plum background */
+    --bn-colors-highlights-purple-text: #bd93f9;
+    --bn-colors-highlights-purple-background: #442f63;
+
+    /* Pink: Rose text on a dark magenta background */
+    --bn-colors-highlights-pink-text: #ff7acd;
+    --bn-colors-highlights-pink-background: #5c2646;
 
     /*Border color*/
     --bn-border: 1px solid var(--color-border); /*Editor background color*/
@@ -44,6 +61,26 @@
     /*Editor text color*/
     /*TODO: Maybe add a subtile blue hue to it.*/
     --bn-colors-editor-text: #3e3e3e; /*was #3f3f3f then 3d3d3d*/
+}
+
+/*Prevent scrolling, when certain stuff is present (also use layout shift mitigator technique to avoid disappearing scrollbar)*/
+html:has(
+    .bn-container[data-color-scheme]
+        .bn-side-menu
+        [data-radix-popper-content-wrapper]
+        .bn-menu-dropdown.bn-drag-handle-menu
+),
+html:has(
+    .bn-container[data-color-scheme]
+        [data-floating-ui-focusable]
+        [data-radix-popper-content-wrapper]
+        .bn-table-handle-menu
+) {
+    overflow: hidden;
+}
+
+.bn-container[data-color-scheme]:has(.bn-table-handle-menu) .bn-side-menu {
+    display: none;
 }
 
 /*TODO: Clean file up and make selectors more consistent*/
@@ -82,9 +119,22 @@
 .bn-container[data-color-scheme].bn-shadcn
     .bn-side-menu
     .bn-menu-dropdown.bn-drag-handle-menu {
+    /*display: flex;
+    flex-direction: column-reverse;*/
+    /*Color picker above delete*/
     margin-left: 24px;
     margin-bottom: 112px;
 }
+
+/*TODO: Maybe enable later*/
+/*without margin-left: 24px above, set to 48px in the translate() function below*/
+/*.bn-container[data-color-scheme]
+    .bn-side-menu
+    [data-radix-popper-content-wrapper]:has(
+        .bn-menu-dropdown.bn-drag-handle-menu
+    ) {
+    transform: translate(24px, 0) !important;
+}*/
 
 .bn-container[data-color-scheme].bn-shadcn
     .bn-side-menu
@@ -108,6 +158,14 @@
     color: var(--color-destructive);
     background-color: oklch(from var(--color-destructive) l c h / 0.25);
 }
+
+/*TODO: Maybe enable later*/
+/*Offset table menu, for better accessibility*/
+/*.bn-container[data-color-scheme]
+    [data-floating-ui-focusable]
+    [data-radix-popper-content-wrapper]:has(.bn-table-handle-menu) {
+    transform: translate(24px, -5px) !important;
+}*/
 
 /*.bn-container[data-color-scheme]
     .bn-editor[contenteditable="true"]
@@ -159,9 +217,10 @@
 .bn-container[data-color-scheme]
     .bn-side-menu
     [data-radix-popper-content-wrapper]
+    .bn-menu-dropdown.bn-drag-handle-menu
     [data-radix-menu-content].bn-color-picker-dropdown {
     max-height: calc(100vh - 256px);
-    margin-bottom: 184px;
+    margin-bottom: 160px;
     /*transform: translateY(-112px) !important;*/
 }
 
@@ -242,7 +301,39 @@
     .bn-side-menu
     .bn-button:is(button):nth-child(2) {
     width: 22px;
+    position: relative;
 }
+
+/* Tooltip */
+/*.bn-container[data-color-scheme]
+    .bn-side-menu
+    .bn-button:is(button):nth-child(2)::after {
+    content: "Click/Drag";
+    position: absolute;
+    top: calc(100% - 52px);
+    left: -6px;
+    transform: translateX(-50%);
+
+    border: 1px solid var(--color-border);
+    background: #212126;
+    color: #fff;
+    padding: 2px 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    border-radius: 4px;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+    z-index: 1000;
+}*/
+
+/* Show on hover*/
+/*.bn-container[data-color-scheme]
+    .bn-side-menu
+    .bn-button:is(button):nth-child(2):hover::after {
+    opacity: 1;
+}*/
 
 .bn-container[data-color-scheme].bn-shadcn .bn-side-menu {
     margin-right: 2px; /*Incrased distance to block content slightly*/
@@ -342,16 +433,6 @@
     font-weight: 300;
     /*line-height: 1.2;*/
 }
-
-/*TODO: Later change this and for other elements*/
-/*.bn-container[data-color-scheme]
-    .bn-code-content
-    .bn-block-content[data-content-type="codeBlock"]
-    pre
-    code::selection {
-    background-color: light-dark(#3390ff66, #3390ff66);
-    /*color: var(--color-foreground);
-}*/
 
 .bn-container[data-color-scheme="dark"]
     .bn-block-content[data-content-type="codeBlock"] {

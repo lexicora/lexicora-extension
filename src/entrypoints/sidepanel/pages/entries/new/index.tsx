@@ -81,8 +81,8 @@ function NewEntryPage() {
   }, []);
 
   return (
-    //* NOTE: temporarily opt out of scrollbar offset padding until figured out if this page is suitable for it (content spacing wise (seems a bit tight with it))
-    <div className="lc-page-container pr-3! mb-0!">
+    //* NOTE: Opt in for now, because of editor styles being changed
+    <div className="lc-page-container mb-0! /*pr-3!*/">
       <header className="flex items-center gap-2 mb-4">
         <Button
           variant="ghost"
@@ -102,6 +102,7 @@ function NewEntryPage() {
       </header>
       <main>
         <section className="mx-px">
+          {/*TODO: Maybe add relative and overflow-x-hidden later, when it is guaranteed to fill the entire page (height wise) */}
           <div className="text-start">
             <Label
               htmlFor="lc-blocknote-view-new-entry"
@@ -126,8 +127,8 @@ function NewEntryPage() {
       <footer className="mt-10.5" ref={footerRef}>
         <section
           ref={footerContentRef}
-          //* NOTE: temporarily opt out of scrollbar offset padding until figured out if this page is suitable for it (content spacing wise (seems a bit tight with it))
-          className="fixed bottom-0 left-0 min-h-15 w-full max-w-7xl mx-auto inset-x-0 p-3 /*pr-[calc(var(--lc-scrollbar-offset)+2px)]*/ z-30
+          //* NOTE: Opt in for now, because of editor styles being changed
+          className="fixed bottom-0 left-0 min-h-15 w-full max-w-7xl mx-auto inset-x-0 p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-30
                 lc-bottom-bar-styled-bg"
         >
           <div className="pb-3 mx-px /*mt-1*/">
@@ -137,7 +138,7 @@ function NewEntryPage() {
               maxLength={500}
               placeholder="Type your desired AI prompt here."
               className={`transition-all duration-150
-                text-base! field-sizing-content resize-none max-h-88.5 min-h-10.5 focus-visible:ring-0 backdrop-blur-lg
+                text-base! field-sizing-content resize-none max-h-[35vh] min-h-10.5 focus-visible:ring-0 backdrop-blur-lg
                 dark:bg-[#121724dd] dark:focus-visible:bg-[#121724] bg-[#fdfdfddd] focus-visible:bg-[#fdfdfd] scrollbar-thin scrollbar-bg-transparent
                 ${isAtBottom ? "shadow-none" : "shadow-[0_-6px_6px_0px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_0px_#000010]/25"}
                 ${import.meta.env.FIREFOX ? "resize-y h-10.5" : ""}`} // NOTE (feature parity discrepancy): No support fo field sizing content in Firefox and also different behavior compared to Chrome

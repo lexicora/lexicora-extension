@@ -7,5 +7,9 @@
 
 /*Has default specified scrollbar foreground colors*/
 .scrollbar-bg-transparent {
-    scrollbar-color: light-dark(#b2b2b2, #646464) transparent;
+    scrollbar-color: #b2b2b2 transparent; /*was: light-dark(#b2b2b2, #646464)*/
+}
+
+.dark .scrollbar-bg-transparent {
+    scrollbar-color: #535961 transparent; /*was: light-dark(#b2b2b2, #646464)*/
 }
