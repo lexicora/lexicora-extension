@@ -54,8 +54,10 @@ function HomePage() {
   // Handle scroll top detection
   useEffect(() => {
     // Focus the textarea on component mount, for better UX
-    document.getElementById("ai-prompt-textarea")?.focus(); //* NOTE: Having this enabled makes the buttons below flicker, when opening the pupup
-    //FIX: potentially set a timer for focus (few ms delay)
+    setTimeout(() => {
+      document.getElementById("ai-prompt-textarea")?.focus();
+      //* NOTE: Having this enabled makes the buttons below flicker, when opening the pupup
+    }, 100);
 
     const observer = new IntersectionObserver(
       ([entry]) => {

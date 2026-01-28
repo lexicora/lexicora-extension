@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import {
   ChevronRightIcon,
   CogIcon,
+  CircleQuestionMarkIcon,
   PaletteIcon,
   PersonStandingIcon,
   BellDotIcon,
@@ -23,8 +24,12 @@ import {
   BellRingIcon,
   EllipsisIcon,
   LanguagesIcon,
+  LifeBuoyIcon,
+  LightbulbIcon,
+  MessageCircleQuestionMarkIcon,
   TimerIcon,
   SunMoonIcon,
+  ShieldCheckIcon,
   UserRoundIcon,
 } from "lucide-react";
 import { CogIcon as HeroCogIcon } from "@heroicons/react/16/solid";
@@ -47,12 +52,15 @@ function SettingsPage() {
           <Item
             variant="muted"
             size="default"
-            className="group transition-colors duration-150  bg-slate-200/75 dark:bg-muted/50 hover:bg-slate-300/75! dark:hover:bg-muted! rounded-2xl /*rounded-b-none*/"
+            className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl /*rounded-b-none*/"
             asChild
           >
             <Link to="/settings/account" viewTransition>
               <ItemMedia variant="icon">
-                <Avatar className="size-7" title="Profile">
+                <Avatar
+                  className="size-7 not-dark:border not-dark:border-gray-400/75"
+                  title="Profile"
+                >
                   <AvatarImage
                     src="https://github.com/tgrant06.png"
                     alt="@tgrant06"
@@ -82,7 +90,7 @@ function SettingsPage() {
           <Item
             variant="muted"
             size="sm"
-            className="group transition-colors duration-150  bg-slate-200/75 dark:bg-muted/50 hover:bg-slate-300/75! dark:hover:bg-muted! rounded-2xl /*rounded-b-none*/"
+            className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl /*rounded-b-none*/"
             asChild
           >
             <Link to="/settings/personalization/theme" viewTransition>
@@ -171,14 +179,14 @@ function SettingsPage() {
             </ItemActions>
           </Item>
           <div className="flex flex-row">
-            <div className="shrink-0 w-10.5 h-0 border-t border-t-slate-200/75  dark:border-t-muted/50"></div>
+            <div className="shrink-0 w-10.5 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
             <div className="flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-[#c4cbd4] dark:border-t-[#2b3b52]"></div>
             <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
           </div>
           <Item
             variant="muted"
             size="sm"
-            className={`group transition-colors duration-150 bg-slate-200/75 dark:bg-muted/50 hover:bg-slate-300/75! dark:hover:bg-muted! rounded-2xl rounded-t-none
+            className={`group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl rounded-t-none
               ${!enableNotifications ? "opacity-65 pointer-events-none" : ""}`}
             asChild
           >
@@ -206,7 +214,7 @@ function SettingsPage() {
           <Item
             variant="muted"
             size="sm"
-            className="group transition-colors duration-150  bg-slate-200/75 dark:bg-muted/50 hover:bg-slate-300/75! dark:hover:bg-muted! rounded-2xl rounded-b-none"
+            className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl rounded-b-none"
             asChild
           >
             <Link to="/settings/general/accessibility" viewTransition>
@@ -225,14 +233,14 @@ function SettingsPage() {
             </Link>
           </Item>
           <div className="flex flex-row">
-            <div className="shrink-0 w-10.5 h-0 border-t border-t-slate-200/75  dark:border-t-muted/50"></div>
+            <div className="shrink-0 w-10.5 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
             <div className="flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-[#c4cbd4] dark:border-t-[#2b3b52]"></div>
             <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
           </div>
           <Item
             variant="muted"
             size="sm"
-            className="group transition-colors duration-150  bg-slate-200/75 dark:bg-muted/50 hover:bg-slate-300/75! dark:hover:bg-muted! */rounded-2xl*/ rounded-none"
+            className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! */rounded-2xl*/ rounded-none"
             asChild
           >
             <Link to="/settings/general/language" viewTransition>
@@ -251,14 +259,40 @@ function SettingsPage() {
             </Link>
           </Item>
           <div className="flex flex-row">
-            <div className="shrink-0 w-10.5 h-0 border-t border-t-slate-200/75  dark:border-t-muted/50"></div>
+            <div className="shrink-0 w-10.5 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
             <div className="flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-[#c4cbd4] dark:border-t-[#2b3b52]"></div>
             <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
           </div>
           <Item
             variant="muted"
             size="sm"
-            className="group transition-colors duration-150 bg-slate-200/75 dark:bg-muted/50 hover:bg-slate-300/75! dark:hover:bg-muted! rounded-2xl rounded-t-none"
+            className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! /*rounded-2xl*/ rounded-none"
+            asChild
+          >
+            <Link to="/settings/general/privacy-policy" viewTransition>
+              <ItemMedia variant="icon">
+                <ShieldCheckIcon className="size-5 text-indigo-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>Privacy policy</ItemTitle>
+                {/*<ItemDescription>
+                  Customize the appearance and behavior of the extension.
+                </ItemDescription>*/}
+              </ItemContent>
+              <ItemActions>
+                <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
+              </ItemActions>
+            </Link>
+          </Item>
+          <div className="flex flex-row">
+            <div className="shrink-0 w-10.5 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
+            <div className="flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-[#c4cbd4] dark:border-t-[#2b3b52]"></div>
+            <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
+          </div>
+          <Item
+            variant="muted"
+            size="sm"
+            className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl rounded-t-none"
             asChild
           >
             <Link to="/settings/general/miscellaneous" viewTransition>
@@ -277,7 +311,84 @@ function SettingsPage() {
             </Link>
           </Item>
         </section>
-        <section id="help-faq-tipsntricks-section"></section>
+        <section id="help-faq-tipsntricks-section">
+          <Label htmlFor="" className="text-sm ml-2 mb-0.5">
+            <LifeBuoyIcon className="size-3.5 text-pink-400" /> Help
+          </Label>
+          <Item
+            variant="muted"
+            size="sm"
+            className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl rounded-b-none"
+            asChild
+          >
+            <Link to="/settings/help" viewTransition>
+              <ItemMedia variant="icon">
+                <CircleQuestionMarkIcon className="size-5 text-rose-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>Help</ItemTitle>
+                {/*<ItemDescription>
+                  Customize the appearance and behavior of the extension.
+                </ItemDescription>*/}
+              </ItemContent>
+              <ItemActions>
+                <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
+              </ItemActions>
+            </Link>
+          </Item>
+          <div className="flex flex-row">
+            <div className="shrink-0 w-10.5 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
+            <div className="flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-[#c4cbd4] dark:border-t-[#2b3b52]"></div>
+            <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
+          </div>
+          <Item
+            variant="muted"
+            size="sm"
+            className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! */rounded-2xl*/ rounded-none"
+            asChild
+          >
+            <Link to="/settings/help/faq" viewTransition>
+              <ItemMedia variant="icon">
+                <MessageCircleQuestionMarkIcon className="size-5 text-violet-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>FAQ</ItemTitle>
+                {/*<ItemDescription>
+                  Customize the appearance and behavior of the extension.
+                </ItemDescription>*/}
+              </ItemContent>
+              <ItemActions>
+                <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
+              </ItemActions>
+            </Link>
+          </Item>
+          <div className="flex flex-row">
+            <div className="shrink-0 w-10.5 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
+            <div className="flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-[#c4cbd4] dark:border-t-[#2b3b52]"></div>
+            <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
+          </div>
+          <Item
+            variant="muted"
+            size="sm"
+            className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl rounded-t-none"
+            asChild
+          >
+            <Link to="/settings/general/privacy-policy" viewTransition>
+              <ItemMedia variant="icon">
+                <LightbulbIcon className="size-5 text-yellow-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>Tips & Tricks</ItemTitle>
+                {/*<ItemDescription>
+                  Customize the appearance and behavior of the extension.
+                </ItemDescription>*/}
+              </ItemContent>
+              <ItemActions>
+                <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
+              </ItemActions>
+            </Link>
+          </Item>
+        </section>
         <section id="about-license-section"></section>{" "}
         {/*also provide official links and more here*/}
         {/*<section id="personalization-section">
