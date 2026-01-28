@@ -12,6 +12,7 @@ import { BottomNavigation } from "./components/ui/bottom-navigation";
 
 // Pages
 import HomePage from "./pages/home";
+import NotFoundPage from "./pages/not-found";
 
 // Entries Pages
 import EntriesPage from "./pages/entries";
@@ -21,7 +22,8 @@ import EntryEditPage from "./pages/entries/edit/[id]";
 
 // Settings Pages
 import SettingsPage from "./pages/settings";
-import PersonalizationSettingsPage from "./pages/settings/personalization";
+// Sub-settings pages
+import ThemePersonalizationSettingsPage from "./pages/settings/personalization/theme";
 import NotificationsSettingsPage from "./pages/settings/notifications";
 
 function RootLayout() {
@@ -53,13 +55,14 @@ const router = createMemoryRouter([
       // Settings
       { path: "settings", element: <SettingsPage /> },
       {
-        path: "settings/personalization",
-        element: <PersonalizationSettingsPage />,
+        path: "settings/personalization/theme",
+        element: <ThemePersonalizationSettingsPage />,
       },
       {
         path: "settings/notifications",
         element: <NotificationsSettingsPage />,
       },
+      { path: "*", element: <NotFoundPage /> },
 
       // Fallback Pages (404 and error display page)
     ],

@@ -24,7 +24,7 @@ export function TopBar() {
               src="https://github.com/tgrant06.png"
               alt="@tgrant06"
             />
-            <AvatarFallback>TM</AvatarFallback>
+            <AvatarFallback>TG</AvatarFallback>
           </Avatar>
         </div>
         <div

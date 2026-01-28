@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./Settings.css";
 import {
   Item,
@@ -7,31 +8,89 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
-import { ChevronRightIcon, PaletteIcon, BellDotIcon } from "lucide-react";
+import {
+  ChevronRightIcon,
+  CogIcon,
+  PaletteIcon,
+  PersonStandingIcon,
+  BellDotIcon,
+  BellIcon,
+  BellOffIcon,
+  BellRingIcon,
+  EllipsisIcon,
+  LanguagesIcon,
+  TimerIcon,
+  SunMoonIcon,
+  UserRoundIcon,
+} from "lucide-react";
+import { CogIcon as HeroCogIcon } from "@heroicons/react/16/solid";
 
 // TODO: Maybe change the style of the settings, (might too closely resemble Apple's IOS settings app)
 
 function SettingsPage() {
+  const [enableNotifications, setEnableNotifications] = useState(true); // Placeholder for actual state management
+
   return (
     <div className="lc-page-container select-none">
       <header className="mb-4 mt-1">
         <h1 className="text-2xl font-semibold">Settings</h1>
       </header>
-      <main className="flex flex-col gap-6 w-full px-1">
-        <section id="initial-settings">
+      <main className="flex flex-col gap-6 w-full px-1.5">
+        <section id="account-settings">
+          <Label htmlFor="" className="text-sm ml-2 mb-0.5">
+            <UserRoundIcon className="size-3.5 text-fuchsia-400" /> Account
+          </Label>
+          <Item
+            variant="muted"
+            size="default"
+            className="group transition-colors duration-150  bg-slate-200/75 dark:bg-muted/50 hover:bg-slate-300/75! dark:hover:bg-muted! rounded-2xl /*rounded-b-none*/"
+            asChild
+          >
+            <Link to="/settings/account" viewTransition>
+              <ItemMedia variant="icon">
+                <Avatar className="size-7" title="Profile">
+                  <AvatarImage
+                    src="https://github.com/tgrant06.png"
+                    alt="@tgrant06"
+                  />
+                  <AvatarFallback>TG</AvatarFallback>
+                </Avatar>
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle className="text-base /*font-semibold*/">
+                  Account
+                </ItemTitle>
+                {/*Later display name of user or account specific data*/}
+                {/*<ItemDescription>
+                  Customize the appearance and behavior of the extension.
+                </ItemDescription>*/}
+              </ItemContent>
+              <ItemActions>
+                <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
+              </ItemActions>
+            </Link>
+          </Item>
+        </section>
+        <section id="personalization-settings">
+          <Label htmlFor="" className="text-sm ml-2 mb-0.5">
+            <PaletteIcon className="size-3.5 text-blue-400" /> Personalization
+          </Label>
           <Item
             variant="muted"
             size="sm"
-            className="group transition-colors duration-150  bg-slate-200/75 dark:bg-muted/50 hover:bg-slate-300/75! dark:hover:bg-muted! rounded-2xl rounded-b-none"
+            className="group transition-colors duration-150  bg-slate-200/75 dark:bg-muted/50 hover:bg-slate-300/75! dark:hover:bg-muted! rounded-2xl /*rounded-b-none*/"
             asChild
           >
-            <Link to="/settings/personalization" viewTransition>
+            <Link to="/settings/personalization/theme" viewTransition>
               <ItemMedia variant="icon">
-                <PaletteIcon className="size-5 text-blue-500" />
+                <SunMoonIcon className="size-5 text-amber-500" />
               </ItemMedia>
               <ItemContent>
-                <ItemTitle>Personalization</ItemTitle>
+                <ItemTitle>Theme</ItemTitle>
                 {/*<ItemDescription>
                   Customize the appearance and behavior of the extension.
                 </ItemDescription>*/}
@@ -42,12 +101,12 @@ function SettingsPage() {
             </Link>
           </Item>
           {/*<hr className="text-border bg-slate-300 dark:bg-muted/50 dark:text-[#2a2e3b]" />*/}
-          <div className="flex flex-row">
-            <div className="shrink-0 w-10.5 h-px bg-slate-200/75 dark:bg-muted/50"></div>
-            <div className="flex-1 w-full h-px max-w-[calc(100%-57px)] bg-slate-300/75 dark:bg-muted"></div>
-            <div className="shrink-0 w-3.75 h-px bg-slate-200/75 dark:bg-muted/50"></div>
-          </div>
-          <Item
+          {/*<div className="flex flex-row">
+            <div className="shrink-0 w-10.5 h-0 border-t border-t-slate-200/75  dark:border-t-muted/50"></div>
+            <div className="flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-slate-300/75 dark:border-t-muted"></div>
+            <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
+          </div>*/}
+          {/*<Item
             variant="muted"
             size="sm"
             className="group transition-colors duration-150 bg-slate-200/75 dark:bg-muted/50 hover:bg-slate-300/75! dark:hover:bg-muted! rounded-2xl rounded-t-none"
@@ -59,6 +118,76 @@ function SettingsPage() {
               </ItemMedia>
               <ItemContent>
                 <ItemTitle>Notifications</ItemTitle>
+              </ItemContent>
+              <ItemActions>
+                <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
+              </ItemActions>
+            </Link>
+          </Item>*/}
+        </section>
+        <section id="notification-settings">
+          <Label htmlFor="" className="text-sm ml-2 mb-0.5">
+            <BellDotIcon className="size-3.5 text-red-400" />
+            Notifications
+          </Label>
+          <Item
+            variant="muted"
+            size="sm"
+            className="group transition-colors duration-150 hover:cursor-pointer bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-b-none"
+            onClick={() => {
+              setEnableNotifications(!enableNotifications);
+            }}
+          >
+            <ItemMedia variant="icon">
+              {/*{enableNotifications ? (
+                <BellRingIcon
+                  className="size-5 text-green-500"
+                />
+              ) : (
+                <BellOffIcon className="size-5 text-gray-500" />
+              )}*/}
+              <BellRingIcon
+                className={`size-5 text-green-500 transition-all scale-100 rotate-0 ${enableNotifications ? "" : "scale-0! -rotate-90!"}`}
+              />
+              <BellOffIcon
+                className={`absolute size-5 text-gray-500 transition-all scale-100 rotate-0 ${enableNotifications ? "scale-0! rotate-90!" : ""}`}
+              />
+              {/*<BellDotIcon className="size-5 text-red-500" />*/}
+            </ItemMedia>
+            <ItemContent>
+              <ItemTitle>Notifications</ItemTitle>
+              {/*<ItemDescription>
+                  Customize the appearance and behavior of the extension.
+                </ItemDescription>*/}
+            </ItemContent>
+            <ItemActions>
+              <Switch
+                className="data-[state=unchecked]:bg-gray-400 dark:data-[state=unchecked]:bg-gray-700"
+                checked={enableNotifications}
+                onClick={() => {
+                  setEnableNotifications(!enableNotifications);
+                }}
+              />
+            </ItemActions>
+          </Item>
+          <div className="flex flex-row">
+            <div className="shrink-0 w-10.5 h-0 border-t border-t-slate-200/75  dark:border-t-muted/50"></div>
+            <div className="flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-[#c4cbd4] dark:border-t-[#2b3b52]"></div>
+            <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
+          </div>
+          <Item
+            variant="muted"
+            size="sm"
+            className={`group transition-colors duration-150 bg-slate-200/75 dark:bg-muted/50 hover:bg-slate-300/75! dark:hover:bg-muted! rounded-2xl rounded-t-none
+              ${!enableNotifications ? "opacity-65 pointer-events-none" : ""}`}
+            asChild
+          >
+            <Link to="/settings/notifications/duration" viewTransition>
+              <ItemMedia variant="icon">
+                <TimerIcon className="size-5 text-orange-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>Duration</ItemTitle>
                 {/*<ItemDescription>
                   Customize the appearance and behavior of the extension.
                 </ItemDescription>*/}
@@ -69,6 +198,88 @@ function SettingsPage() {
             </Link>
           </Item>
         </section>
+        <section id="general-settings">
+          <Label htmlFor="" className="text-sm ml-2 mb-0.5">
+            <HeroCogIcon className="size-3.5 text-gray-400" /> General
+          </Label>
+          {/*MAYBE: Add General page in of itself  */}
+          <Item
+            variant="muted"
+            size="sm"
+            className="group transition-colors duration-150  bg-slate-200/75 dark:bg-muted/50 hover:bg-slate-300/75! dark:hover:bg-muted! rounded-2xl rounded-b-none"
+            asChild
+          >
+            <Link to="/settings/general/accessibility" viewTransition>
+              <ItemMedia variant="icon">
+                <PersonStandingIcon className="size-5 text-teal-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>Accessibility</ItemTitle>
+                {/*<ItemDescription>
+                  Customize the appearance and behavior of the extension.
+                </ItemDescription>*/}
+              </ItemContent>
+              <ItemActions>
+                <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
+              </ItemActions>
+            </Link>
+          </Item>
+          <div className="flex flex-row">
+            <div className="shrink-0 w-10.5 h-0 border-t border-t-slate-200/75  dark:border-t-muted/50"></div>
+            <div className="flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-[#c4cbd4] dark:border-t-[#2b3b52]"></div>
+            <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
+          </div>
+          <Item
+            variant="muted"
+            size="sm"
+            className="group transition-colors duration-150  bg-slate-200/75 dark:bg-muted/50 hover:bg-slate-300/75! dark:hover:bg-muted! */rounded-2xl*/ rounded-none"
+            asChild
+          >
+            <Link to="/settings/general/language" viewTransition>
+              <ItemMedia variant="icon">
+                <LanguagesIcon className="size-5 text-sky-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>Language</ItemTitle>
+                {/*<ItemDescription>
+                  Customize the appearance and behavior of the extension.
+                </ItemDescription>*/}
+              </ItemContent>
+              <ItemActions>
+                <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
+              </ItemActions>
+            </Link>
+          </Item>
+          <div className="flex flex-row">
+            <div className="shrink-0 w-10.5 h-0 border-t border-t-slate-200/75  dark:border-t-muted/50"></div>
+            <div className="flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-[#c4cbd4] dark:border-t-[#2b3b52]"></div>
+            <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
+          </div>
+          <Item
+            variant="muted"
+            size="sm"
+            className="group transition-colors duration-150 bg-slate-200/75 dark:bg-muted/50 hover:bg-slate-300/75! dark:hover:bg-muted! rounded-2xl rounded-t-none"
+            asChild
+          >
+            <Link to="/settings/general/miscellaneous" viewTransition>
+              <ItemMedia variant="icon">
+                <EllipsisIcon className="size-5 text-gray-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>Miscellaneous</ItemTitle>
+                {/*<ItemDescription>
+                  Customize the appearance and behavior of the extension.
+                </ItemDescription>*/}
+              </ItemContent>
+              <ItemActions>
+                <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
+              </ItemActions>
+            </Link>
+          </Item>
+        </section>
+        <section id="help-faq-tipsntricks-section"></section>
+        <section id="about-license-section"></section>{" "}
+        {/*also provide official links and more here*/}
         {/*<section id="personalization-section">
           <article id="personalization-theme">
             <h2 className="text-lg font-semibold mb-2">Theme</h2>
