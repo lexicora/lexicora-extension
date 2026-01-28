@@ -11,7 +11,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ChevronRightIcon,
   CogIcon,
@@ -37,6 +37,7 @@ import { CogIcon as HeroCogIcon } from "@heroicons/react/16/solid";
 // TODO: Maybe change the style of the settings, (might too closely resemble Apple's IOS settings app)
 
 function SettingsPage() {
+  const navigate = useNavigate();
   const [enableNotifications, setEnableNotifications] = useState(true); // Placeholder for actual state management
 
   return (
@@ -55,7 +56,7 @@ function SettingsPage() {
             className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl /*rounded-b-none*/"
             asChild
           >
-            <Link to="/settings/account" viewTransition>
+            <Link to="/settings/account" draggable={false} viewTransition>
               <ItemMedia variant="icon">
                 <Avatar
                   className="size-7 not-dark:border not-dark:border-gray-400/75"
@@ -93,7 +94,11 @@ function SettingsPage() {
             className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl /*rounded-b-none*/"
             asChild
           >
-            <Link to="/settings/personalization/theme" viewTransition>
+            <Link
+              to="/settings/personalization/theme"
+              draggable={false}
+              viewTransition
+            >
               <ItemMedia variant="icon">
                 <SunMoonIcon className="size-5 text-amber-500" />
               </ItemMedia>
@@ -187,10 +192,18 @@ function SettingsPage() {
             variant="muted"
             size="sm"
             className={`group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl rounded-t-none
-              ${!enableNotifications ? "opacity-65 pointer-events-none" : ""}`}
+              ${!enableNotifications ? "opacity-65 pointer-events-none tab" : ""}`}
             asChild
           >
-            <Link to="/settings/notifications/duration" viewTransition>
+            <button
+              onClick={() =>
+                navigate("/settings/notifications/duration", {
+                  viewTransition: true,
+                })
+              }
+              disabled={!enableNotifications}
+              draggable={false}
+            >
               <ItemMedia variant="icon">
                 <TimerIcon className="size-5 text-orange-500" />
               </ItemMedia>
@@ -203,7 +216,7 @@ function SettingsPage() {
               <ItemActions>
                 <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
               </ItemActions>
-            </Link>
+            </button>
           </Item>
         </section>
         <section id="general-settings">
@@ -217,7 +230,11 @@ function SettingsPage() {
             className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl rounded-b-none"
             asChild
           >
-            <Link to="/settings/general/accessibility" viewTransition>
+            <Link
+              to="/settings/general/accessibility"
+              draggable={false}
+              viewTransition
+            >
               <ItemMedia variant="icon">
                 <PersonStandingIcon className="size-5 text-teal-500" />
               </ItemMedia>
@@ -243,7 +260,11 @@ function SettingsPage() {
             className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! */rounded-2xl*/ rounded-none"
             asChild
           >
-            <Link to="/settings/general/language" viewTransition>
+            <Link
+              to="/settings/general/language"
+              draggable={false}
+              viewTransition
+            >
               <ItemMedia variant="icon">
                 <LanguagesIcon className="size-5 text-sky-500" />
               </ItemMedia>
@@ -269,7 +290,11 @@ function SettingsPage() {
             className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! /*rounded-2xl*/ rounded-none"
             asChild
           >
-            <Link to="/settings/general/privacy-policy" viewTransition>
+            <Link
+              to="/settings/general/privacy-policy"
+              draggable={false}
+              viewTransition
+            >
               <ItemMedia variant="icon">
                 <ShieldCheckIcon className="size-5 text-indigo-500" />
               </ItemMedia>
@@ -295,9 +320,13 @@ function SettingsPage() {
             className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl rounded-t-none"
             asChild
           >
-            <Link to="/settings/general/miscellaneous" viewTransition>
+            <Link
+              to="/settings/general/miscellaneous"
+              draggable={false}
+              viewTransition
+            >
               <ItemMedia variant="icon">
-                <EllipsisIcon className="size-5 text-gray-500" />
+                <EllipsisIcon className="size-5 text-slate-500" />
               </ItemMedia>
               <ItemContent>
                 <ItemTitle>Miscellaneous</ItemTitle>
@@ -321,7 +350,7 @@ function SettingsPage() {
             className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl rounded-b-none"
             asChild
           >
-            <Link to="/settings/help" viewTransition>
+            <Link to="/settings/help" draggable={false} viewTransition>
               <ItemMedia variant="icon">
                 <CircleQuestionMarkIcon className="size-5 text-rose-500" />
               </ItemMedia>
@@ -347,7 +376,7 @@ function SettingsPage() {
             className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! */rounded-2xl*/ rounded-none"
             asChild
           >
-            <Link to="/settings/help/faq" viewTransition>
+            <Link to="/settings/help/faq" draggable={false} viewTransition>
               <ItemMedia variant="icon">
                 <MessageCircleQuestionMarkIcon className="size-5 text-violet-500" />
               </ItemMedia>
@@ -373,7 +402,11 @@ function SettingsPage() {
             className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl rounded-t-none"
             asChild
           >
-            <Link to="/settings/general/privacy-policy" viewTransition>
+            <Link
+              to="/settings/general/privacy-policy"
+              draggable={false}
+              viewTransition
+            >
               <ItemMedia variant="icon">
                 <LightbulbIcon className="size-5 text-yellow-500" />
               </ItemMedia>
@@ -388,6 +421,7 @@ function SettingsPage() {
               </ItemActions>
             </Link>
           </Item>
+          {/*TODO: Terms of service Item */}
         </section>
         <section id="about-license-section"></section>{" "}
         {/*also provide official links and more here*/}
