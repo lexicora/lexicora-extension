@@ -47,6 +47,7 @@ const router = createMemoryRouter([
     element: <RootLayout />,
     children: [
       { path: "/", element: <HomePage /> },
+      { path: "*", element: <NotFoundPage /> },
       // Entries
       { path: "entries", element: <EntriesPage /> },
       { path: "entries/new", element: <NewEntryPage /> },
@@ -62,7 +63,6 @@ const router = createMemoryRouter([
         path: "settings/notifications",
         element: <NotificationsSettingsPage />,
       },
-      { path: "*", element: <NotFoundPage /> },
 
       // Fallback Pages (404 and error display page)
     ],
