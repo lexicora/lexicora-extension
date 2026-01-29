@@ -23,7 +23,9 @@ body[data-scroll-locked] {
     padding-right: calc(var(--lc-scrollbar-offset) + 2px);
     margin-inline: auto;
     margin-top: 60px; /*Account for TopBar height. was: 58px*/
+    scroll-padding-top: 60px; /*Account for TopBar height. was: 58px*/
     margin-bottom: 60px; /*Account for BottomNavigation height. was: 58px (opt out on a page level)*/
+    scroll-padding-bottom: 60px; /*Account for BottomNavigation height. was: 58px (opt out on a page level)*/
     /*inset-inline: 0;*/
 }
 

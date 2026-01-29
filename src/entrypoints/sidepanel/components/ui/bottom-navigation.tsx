@@ -80,7 +80,7 @@ export function BottomNavigation() {
           {/* Entries */}
           <NavLink
             to="/entries"
-            title={pathname !== "/entries" ? "Entries" : ""}
+            title={pathname.startsWith("/entries") ? "" : "Entries"}
             draggable={false}
             viewTransition
             className="group flex flex-col items-center py-4 w-full"
@@ -103,7 +103,7 @@ export function BottomNavigation() {
           {/* Settings */}
           <NavLink
             to="/settings"
-            title={pathname !== "/settings" ? "Settings" : ""}
+            title={pathname.startsWith("/settings") ? "" : "Settings"}
             draggable={false}
             viewTransition
             className="group flex flex-col items-center py-4 w-full"

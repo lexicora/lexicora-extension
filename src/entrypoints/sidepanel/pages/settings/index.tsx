@@ -23,7 +23,9 @@ import {
   BellOffIcon,
   BellRingIcon,
   EllipsisIcon,
+  FileTextIcon,
   HeartPlusIcon,
+  InfoIcon,
   LanguagesIcon,
   LifeBuoyIcon,
   LightbulbIcon,
@@ -37,6 +39,7 @@ import { SparklesIcon } from "@heroicons/react/24/solid";
 import {
   CogIcon as HeroCogIcon,
   SparklesIcon as HeroSparklesIcon,
+  InformationCircleIcon as HeroInformationCircleIcon,
 } from "@heroicons/react/16/solid";
 
 import { SettingsItemSeperator } from "@/entrypoints/sidepanel/components/ui/settings-item-seperator";
@@ -268,7 +271,29 @@ function SettingsPage() {
           />
           {/*TODO: Terms of service Item */}
         </section>
-        <section id="about-license-section"></section>{" "}
+        <section id="about-license-section" className="mb-2.5">
+          <Label htmlFor="" className="text-sm ml-2 mb-0.5">
+            <HeroInformationCircleIcon className="size-3.5 text-teal-400" />{" "}
+            About
+          </Label>
+          <SettingsItem
+            to="/settings/about"
+            size="sm"
+            MediaIcon={InfoIcon}
+            mediaIconColor="text-blue-500"
+            itemTitle="About"
+            roundingClass="rounded-b-none"
+          />
+          <SettingsItemSeperator />
+          <SettingsItem
+            to="/settings/about/licenses"
+            size="sm"
+            MediaIcon={FileTextIcon}
+            mediaIconColor="text-emerald-500"
+            itemTitle="Licenses"
+            roundingClass="rounded-t-none"
+          />
+        </section>
         {/*<SettingsItem
           to="/settings/general/terms-of-service"
           size="sm"
