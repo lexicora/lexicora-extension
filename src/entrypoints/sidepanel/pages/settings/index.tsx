@@ -84,6 +84,7 @@ function SettingsPage() {
             </Link>
           </Item>
         </section>
+        <section id="ai-settings"></section>
         <section id="personalization-settings">
           <Label htmlFor="" className="text-sm ml-2 mb-0.5">
             <PaletteIcon className="size-3.5 text-blue-400" /> Personalization
