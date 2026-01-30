@@ -94,6 +94,7 @@ function SettingsPage() {
               </ItemActions>
             </Link>
           </Item>
+          {/*TODO MAYBE: Add subscription settings right below above or put it in the account settings */}
         </section>
         <section id="ai-settings">
           <Label htmlFor="" className="text-sm ml-2 mb-0.5">
@@ -209,7 +210,6 @@ function SettingsPage() {
             itemTitle="Accessibility"
             roundingClass="rounded-b-none"
           />
-          <SettingsItemSeperator />
           <SettingsItem
             to="/settings/general/language"
             size="sm"
@@ -218,7 +218,6 @@ function SettingsPage() {
             itemTitle="Language"
             roundingClass="rounded-none!"
           />
-          <SettingsItemSeperator />
           <SettingsItem
             //Maybe make this an external link
             to="/settings/general/privacy-policy"
@@ -228,7 +227,6 @@ function SettingsPage() {
             itemTitle="Privacy policy"
             roundingClass="rounded-none!"
           />
-          <SettingsItemSeperator />
           <SettingsItem
             to="/settings/general/miscellaneous"
             size="sm"
@@ -251,7 +249,6 @@ function SettingsPage() {
             itemTitle="Support"
             roundingClass="rounded-b-none"
           />
-          <SettingsItemSeperator />
           <SettingsItem
             to="/settings/help/faq"
             size="sm"
@@ -260,7 +257,6 @@ function SettingsPage() {
             itemTitle="FAQ"
             roundingClass="rounded-none!"
           />
-          <SettingsItemSeperator />
           <SettingsItem
             to="/settings/help/tips-and-tricks"
             size="sm"
@@ -284,7 +280,6 @@ function SettingsPage() {
             itemTitle="About"
             roundingClass="rounded-b-none"
           />
-          <SettingsItemSeperator />
           <SettingsItem
             to="/settings/about/licenses"
             size="sm"

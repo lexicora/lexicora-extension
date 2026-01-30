@@ -1,3 +1,4 @@
+import { SettingsItemSeperator } from "./settings-item-seperator";
 import {
   Item,
   ItemActions,
@@ -32,26 +33,31 @@ export function SettingsItem({
   roundingClass?: "" | "rounded-b-none" | "rounded-t-none" | "rounded-none!"; // TODO
 }) {
   return (
-    <Item
-      variant="muted"
-      size={size}
-      className={`group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl ${roundingClass}`}
-      asChild
-    >
-      <Link to={to} draggable={false} viewTransition>
-        <ItemMedia variant="icon">
-          <MediaIcon className={`size-5 ${mediaIconColor}`} />
-        </ItemMedia>
-        <ItemContent>
-          <ItemTitle>{itemTitle}</ItemTitle>
-          {/*<ItemDescription>
+    <>
+      <Item
+        variant="muted"
+        size={size}
+        className={`group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl ${roundingClass}`}
+        asChild
+      >
+        <Link to={to} draggable={false} viewTransition>
+          <ItemMedia variant="icon">
+            <MediaIcon className={`size-5 ${mediaIconColor}`} />
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle>{itemTitle}</ItemTitle>
+            {/*<ItemDescription>
           Customize the appearance and behavior of the extension.
         </ItemDescription>*/}
-        </ItemContent>
-        <ItemActions>
-          <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
-        </ItemActions>
-      </Link>
-    </Item>
+          </ItemContent>
+          <ItemActions>
+            <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
+          </ItemActions>
+        </Link>
+      </Item>
+      {roundingClass !== "" && roundingClass !== "rounded-t-none" && (
+        <SettingsItemSeperator />
+      )}
+    </>
   );
 }

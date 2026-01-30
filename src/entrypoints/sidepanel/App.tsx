@@ -1,5 +1,10 @@
 import "./App.css";
-import { createMemoryRouter, RouterProvider, Outlet } from "react-router-dom";
+import {
+  createMemoryRouter,
+  RouterProvider,
+  Outlet,
+  ScrollRestoration,
+} from "react-router-dom";
 
 // Hooks, Providers and Components
 import { RouterListener } from "./hooks/router-listener";
@@ -32,6 +37,7 @@ function RootLayout() {
   return (
     <SidePanelMessagingProvider>
       <RouterListener />
+      <ScrollRestoration style={{ scrollBehavior: "auto" }} />
       <ScrollObserverProvider>
         <TopBar />
         <Outlet />

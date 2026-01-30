@@ -60,7 +60,7 @@ export function BottomNavigation() {
             to="/"
             title={pathname !== "/" ? "Home" : ""}
             draggable={false}
-            viewTransition
+            viewTransition={pathname === "/" ? false : true}
             className="group flex flex-col items-center py-4 w-full"
           >
             {({ isActive }) => (
@@ -82,7 +82,7 @@ export function BottomNavigation() {
             to="/entries"
             title={pathname.startsWith("/entries") ? "" : "Entries"}
             draggable={false}
-            viewTransition
+            viewTransition={pathname === "/entries" ? false : true}
             className="group flex flex-col items-center py-4 w-full"
           >
             {({ isActive }) => (
@@ -105,7 +105,7 @@ export function BottomNavigation() {
             to="/settings"
             title={pathname.startsWith("/settings") ? "" : "Settings"}
             draggable={false}
-            viewTransition
+            viewTransition={pathname === "/settings" ? false : true}
             className="group flex flex-col items-center py-4 w-full"
           >
             {({ isActive }) => (
