@@ -8,12 +8,12 @@ function ThemePersonalizationSettingsPage() {
 
   return (
     <div className="lc-page-container select-none">
-      <header className="flex items-center gap-2 mb-4">
+      <header className="flex items-center /*gap-2*/ mb-4 w-full">
         <Button
           variant="ghost"
           size="icon"
           title="Go back"
-          className="size-10 rounded-lg"
+          className="shrink-0 size-10 rounded-lg"
           onClick={() => navigate(-1)}
         >
           <ArrowLeftIcon className="size-4.5" />
@@ -23,7 +23,7 @@ function ThemePersonalizationSettingsPage() {
           <House />
         </Button>
       </Link>*/}
-        <h1 className="text-2xl font-semibold">Theme</h1>
+        <h1 className="flex-1 mr-10 /*mr-12*/ text-2xl font-semibold">Theme</h1>
       </header>
       <main>
         <section>

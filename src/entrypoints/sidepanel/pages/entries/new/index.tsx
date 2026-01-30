@@ -83,7 +83,7 @@ function NewEntryPage() {
   return (
     //* NOTE: Opt in for now, because of editor styles being changed
     <div className="lc-page-container mb-0! /*pr-3!*/">
-      <header className="flex items-center gap-2 mb-4">
+      <header className="flex items-center /*gap-2*/ mb-4 w-full">
         <Button
           variant="ghost"
           size="icon"
@@ -98,7 +98,9 @@ function NewEntryPage() {
             <House />
           </Button>
         </Link>*/}
-        <h1 className="text-2xl font-semibold">New Entry</h1>
+        <h1 className="flex-1 mr-10 /*mr-12*/ text-2xl font-semibold">
+          New Entry
+        </h1>
       </header>
       <main>
         <section className="mx-px">
