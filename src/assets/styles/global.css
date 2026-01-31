@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 
 @import "./vendors.css";
-/*@import "./animations.css";*/
+@import "./animations.css";
 @import "./utils.css";
 
 @source "../../../node_modules/@blocknote/shadcn";

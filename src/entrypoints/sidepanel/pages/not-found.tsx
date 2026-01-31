@@ -19,11 +19,6 @@ function NotFoundPage() {
         >
           <ArrowLeftIcon className="size-4.5" />
         </Button>
-        {/*<Link to="/entries">
-        <Button variant="ghost" size="icon" title="Go to Entries Home">
-          <House />
-        </Button>
-      </Link>*/}
         <h1 className="flex-1 mr-10 text-2xl font-semibold">Page Not Found</h1>
         {/*flex-1 mr-12 (mr-10 if gap-2 is removed) for center positioning of title*/}
       </header>
