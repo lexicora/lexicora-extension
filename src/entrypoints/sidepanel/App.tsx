@@ -28,7 +28,7 @@ import EntryEditPage from "./pages/entries/edit/[id]";
 // Settings Pages
 import SettingsPage from "./pages/settings";
 // Sub-settings pages
-// import ThemePersonalizationSettingsPage from "./pages/settings/personalization/theme";
+import ThemePersonalizationSettingsPage from "./pages/settings/personalization/theme";
 // import NotificationsSettingsPage from "./pages/settings/notifications";
 
 function RootLayout() {
@@ -62,10 +62,10 @@ const router = createMemoryRouter([
       { path: "entries/:id/edit", element: <EntryEditPage /> },
       // Settings
       { path: "settings", element: <SettingsPage /> },
-      // {
-      //   path: "settings/personalization/theme",
-      //   element: <ThemePersonalizationSettingsPage />,
-      // },
+      {
+        path: "settings/personalization/theme",
+        element: <ThemePersonalizationSettingsPage />,
+      },
       // {
       //   path: "settings/notifications",
       //   element: <NotificationsSettingsPage />,

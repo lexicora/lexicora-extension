@@ -1,4 +1,9 @@
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Link } from "react-router-dom";
 
 import { PlusIcon } from "lucide-react";
@@ -17,6 +22,7 @@ function EntriesPage() {
             <Button
               size="icon"
               title="New Entry"
+              draggable={false}
               className="size-10 rounded-lg green-button shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)] ring-1 ring-inset ring-black/25 dark:ring-white/30 hover:ring-black/30 dark:hover:ring-white/25"
               asChild
             >
@@ -24,6 +30,24 @@ function EntriesPage() {
                 <PlusIcon className="size-5" />
               </Link>
             </Button>
+            {/*<Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="icon"
+                  //title="New Entry"
+                  className="size-10 rounded-lg green-button shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)] ring-1 ring-inset ring-black/25 dark:ring-white/30 hover:ring-black/30 dark:hover:ring-white/25"
+                  asChild
+                  draggable={false}
+                >
+                  <Link to="/entries/new" viewTransition={true}>
+                    <PlusIcon className="size-5" />
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="left">
+                <p>New Entry</p>
+              </TooltipContent>
+            </Tooltip>*/}
           </div>
         </div>
       </div>
