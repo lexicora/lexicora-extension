@@ -41,7 +41,7 @@ function HomePage() {
           <Link to="/entries/new" viewTransition={true}>
             <Button
               variant="secondary"
-              className="create-button" //createBtn
+              className="green-button" //createBtn
               size="sm"
             >
               <PlusIcon /> New Entry

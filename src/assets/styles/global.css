@@ -55,6 +55,7 @@
     /* Colors: */
     --lc-text-color-monospace: oklch(54.19% 0.152 23.67);
     --lc-muted-foreground-hover: oklch(0.34 0.027 263);
+    --lc-light-foreground-color: oklch(0.985 0.002 247.839);
 
     /*Variables*/
     --lc-scrollbar-width: calc(100vw - 100%);

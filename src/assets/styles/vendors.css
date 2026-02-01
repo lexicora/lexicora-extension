@@ -70,3 +70,22 @@ override the standard bottom bar class*/
     box-shadow: inset 0 -64px 16px -16px
         color-mix(in srgb, var(--background), transparent 50%);
 }*/
+
+.green-button {
+    color: var(--lc-light-foreground-color);
+    background-color: var(--color-green-600);
+}
+
+.dark .green-button {
+    background-color: var(--color-green-700);
+}
+
+.green-button:hover {
+    background-color: var(--color-green-700);
+    /*color: */
+}
+
+.dark .green-button:hover {
+    background-color: var(--color-green-800);
+    /*color: */
+}

@@ -1,9 +1,0 @@
-.create-button {
-    background-color: var(--color-green-600);
-    color: var(--color-white);
-}
-
-.create-button:hover {
-    background-color: var(--color-green-700);
-    color: var(--color-gray-100);
-}
