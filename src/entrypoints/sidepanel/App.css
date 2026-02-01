@@ -18,10 +18,10 @@ body[data-scroll-locked] {
 }
 
 .lc-page-container {
-    max-width: 1280px;
+    /*max-width: 1280px;*/
     padding: 12px;
     padding-right: calc(var(--lc-scrollbar-offset) + 2px);
-    margin-inline: auto;
+    /*margin-inline: auto;*/
     margin-top: 58px; /*Account for TopBar height. was: 60px*/
     scroll-padding-top: 58px; /*Account for TopBar height. was: 60px*/
     margin-bottom: 58px; /*Account for BottomNavigation height. was: 60px (opt out on a page level)*/
@@ -35,8 +35,9 @@ body[data-scroll-locked] {
 }*/
 
 .lc-page-container-inner {
-    max-width: 1280px;
+    max-width: 1256px;
     margin-inline: auto;
+    /*inset-inline: 0;*/
 }
 
 /*TODO: fix layout issues*/

@@ -170,7 +170,7 @@
     html {
         scrollbar-width: thin;
         &.light {
-            scrollbar-color: #b2b2b2 #ededed;
+            scrollbar-color: #b0b0b0 #ededed; /*was: #b2b2b2 */
         }
         &.dark {
             scrollbar-color: #535961 #0d111b;
