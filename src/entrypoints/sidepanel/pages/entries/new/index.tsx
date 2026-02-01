@@ -82,7 +82,7 @@ function NewEntryPage() {
 
   return (
     //* NOTE: Opt in for now, because of editor styles being changed
-    <div className="lc-page-container mb-0! /*pr-3!*/">
+    <div id="lc-new-entry-page" className="lc-page-container mb-0! /*pr-3!*/">
       <header className="flex items-center /*gap-2*/ mb-4 w-full">
         <Button
           variant="ghost"
@@ -126,7 +126,11 @@ function NewEntryPage() {
           </div>
         </section>
       </main>
-      <footer className="mt-10.5" ref={footerRef}>
+      <footer
+        id="lc-new-entry-bottom-footer"
+        className="mt-10.5"
+        ref={footerRef}
+      >
         <section
           ref={footerContentRef}
           //* NOTE: Opt in for now, because of editor styles being changed

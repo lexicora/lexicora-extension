@@ -29,6 +29,18 @@ body[data-scroll-locked] {
     /*inset-inline: 0;*/
 }
 
+/*.lc-page-container > div {
+    max-width: 1280px;
+    margin-inline: auto;
+}*/
+
+.lc-page-container-inner {
+    max-width: 1280px;
+    margin-inline: auto;
+}
+
+/*TODO: fix layout issues*/
+
 /*.lc-top-bar {
 
 }

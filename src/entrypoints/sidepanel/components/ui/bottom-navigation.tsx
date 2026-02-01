@@ -32,6 +32,11 @@ export function BottomNavigation() {
     matchPath({ path: pattern, end: true }, pathname),
   );
 
+  const noShadowPaths = ["/"];
+
+  // Determine if the current path is in the noShadowPaths array
+  const isNoShadowPath = noShadowPaths.includes(pathname);
+
   //* NOTE: Every page that opts in to the bottom navigation should provide its own margin at the bottom
   return (
     <section
@@ -43,9 +48,11 @@ export function BottomNavigation() {
           ${
             isHidden
               ? "lc-bottom-navigation--hidden"
-              : isAtBottom
+              : isNoShadowPath
                 ? "shadow-none"
-                : "shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-2px_rgba(0,0,0,0.1)]/4 dark:shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-2px_rgba(0,0,0,0.1)]/26"
+                : isAtBottom
+                  ? "shadow-none"
+                  : "shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-2px_rgba(0,0,0,0.1)]/4 dark:shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-2px_rgba(0,0,0,0.1)]/26"
           }
           `}
     >

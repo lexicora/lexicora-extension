@@ -11,9 +11,8 @@ function EntriesPage() {
       </header>
       <main>{/* Entries list would go here */}</main>
       <footer></footer>
-      <div>
-        {/*Create New entry position fixed */}
-        <div className="fixed bottom-17.75 right-3 z-50">
+      <div className="fixed bottom-17.75 w-full max-w-317 px-2.5 pr-[calc(var(--lc-scrollbar-offset)+2px)] mx-auto inset-x-0 z-50">
+        <div className="shrink-0 flex items-center justify-end">
           <Button
             size="icon"
             title="New Entry"
