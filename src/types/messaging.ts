@@ -3,6 +3,8 @@ export const MSG = {
   // From anywhere to background
   SAVE_SELECTION_TO_MARKDOWN: "background/SAVE_SELECTION_TO_MARKDOWN",
   SAVE_PAGE_TO_MARKDOWN: "background/SAVE_PAGE_TO_MARKDOWN",
+  TRIGGER_AUTO_CAPTURE_NOTIFICATION:
+    "background/TRIGGER_AUTO_CAPTURE_NOTIFICATION",
 
   // From background to content script
   GET_PAGE_SELECTION_ARTICLE: "content/GET_PAGE_SELECTION_ARTICLE",
@@ -27,6 +29,7 @@ export type Message =
       payload: { selectionText: string };
     }
   | { type: typeof MSG.SAVE_PAGE_TO_MARKDOWN }
+  | { type: typeof MSG.TRIGGER_AUTO_CAPTURE_NOTIFICATION }
 
   // Message from background to content script to request data
   | { type: typeof MSG.GET_PAGE_SELECTION_ARTICLE }
