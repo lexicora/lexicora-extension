@@ -6,9 +6,6 @@ import {
   type ShadowRootContentScriptUi,
 } from "wxt/utils/content-script-ui/shadow-root";
 //import "@/assets/styles/global.css"; // Essential for Tailwind
-import { Toaster } from "@/components/ui/sonner"; // Import your component
-import { toast } from "sonner"; // Import the trigger
-
 // TODO: Rename file to capture-notification.ts maybe add handle to name too
 // TODO: Also rename exporting method to something like setupCaptureNotificationHandler
 
