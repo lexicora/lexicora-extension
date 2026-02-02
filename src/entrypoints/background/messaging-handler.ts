@@ -33,9 +33,9 @@ export function setupMessagingHandlers() {
 
   onMessage(MSG.OPEN_SIDEPANEL, ({ sender }) => {
     if (import.meta.env.FIREFOX) {
+      // NOTE (feature parity discrepancy): Not supported on Firefox due to quicker loss of the direct user context action.
       // @ts-ignore: Firefox specific API
-      browser.sidebarAction.open();
-      //* NOTE: Not supported on firefox due to quicker loss of the direct user context action.
+      //browser.sidebarAction.open();
     } else {
       browser.sidePanel.open({ tabId: sender.tabId });
     }

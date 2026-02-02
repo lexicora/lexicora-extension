@@ -20,6 +20,8 @@ export default defineContentScript({
     onMessage(MSG.GET_PAGE_SELECTION_ARTICLE, getSelectionPageArticle);
     onMessage(MSG.GET_PAGE_SELECTION_DATA, getSelectionPageData);
 
-    setupAutoCaptureTimer(ctx);
+    if (!import.meta.env.FIREFOX) {
+      setupAutoCaptureTimer(ctx);
+    }
   },
 });

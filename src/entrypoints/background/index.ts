@@ -5,7 +5,6 @@ import {
   setupContextMenuStateSync,
 } from "./context-menu";
 import { setupMessagingHandlers } from "./messaging-handler";
-import { setupNotificationHandlers } from "./notification-handler";
 
 export default defineBackground(() => {
   //console.log("Hello background!", { id: browser.runtime.id });
@@ -38,7 +37,4 @@ export default defineBackground(() => {
 
   // Messaging handlers
   setupMessagingHandlers();
-
-  // Notification handlers
-  setupNotificationHandlers();
 });
