@@ -30,4 +30,14 @@ export function setupMessagingHandlers() {
     pendingNavigation = null; // Clear after delivery to prevent stale navigation
     return path;
   });
+
+  onMessage(MSG.OPEN_SIDEPANEL, ({ sender }) => {
+    if (import.meta.env.FIREFOX) {
+      // @ts-ignore: Firefox specific API
+      browser.sidebarAction.open();
+      //* NOTE: Not supported on firefox due to quicker loss of the direct user context action.
+    } else {
+      browser.sidePanel.open({ tabId: sender.tabId });
+    }
+  });
 }

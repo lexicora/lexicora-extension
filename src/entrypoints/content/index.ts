@@ -12,7 +12,7 @@ export default defineContentScript({
         "https://chromewebstore.google.com/*",
         "https://microsoftedge.microsoft.com/*",
       ], // Add more browser-specific excluded URLs if needed (like extensions own pages)
-  main() {
+  main(ctx) {
     //console.log("Hello content.");
 
     //* INFO: Handle Messages (maybe move to messaging-handler.ts if it grows)
@@ -20,6 +20,6 @@ export default defineContentScript({
     onMessage(MSG.GET_PAGE_SELECTION_ARTICLE, getSelectionPageArticle);
     onMessage(MSG.GET_PAGE_SELECTION_DATA, getSelectionPageData);
 
-    setupAutoCaptureTimer();
+    setupAutoCaptureTimer(ctx);
   },
 });

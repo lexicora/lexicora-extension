@@ -190,7 +190,7 @@ function SettingsPage() {
                   <TimerIcon className="size-5 text-orange-500" />
                 </ItemMedia>
                 <ItemContent>
-                  <ItemTitle>Duration</ItemTitle>
+                  <ItemTitle>Delay</ItemTitle>
                 </ItemContent>
                 <ItemActions>
                   <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
