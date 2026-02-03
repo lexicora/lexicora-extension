@@ -197,6 +197,7 @@ function SettingsPage() {
                 </ItemActions>
               </button>
             </Item>
+            {/*Add website exclusions of notifications setting */}
           </section>
           <section id="general-settings">
             <Label htmlFor="" className="text-sm ml-2 mb-0.5">

@@ -111,21 +111,10 @@ export function setupAutoCaptureTimer(ctx: any) {
         transform: translateX(0) scale(1);
       }
 
-      /* Hover State */
-      /*.lex-toast:hover {
-        background-color: var(--lc-surface-hover);
-        border-color: var(--lc-border-hover);
-        box-shadow:
-          0 12px 15px -5px rgba(0, 0, 0, 0.2),
-          0 -3px 10px -3px rgba(0, 0, 0, 0.1);
-          /*0 0 0 1px rgba(255, 255, 255, 0.1);*/
-      }*/
-
       /* Dragging State */
       .lex-toast.dragging {
         transition: none;
-        cursor: grabbing;
-        background-color: var(--lc-surface-hover);
+        /*cursor: grabbing;*/
       }
 
       /* Icon Box - Using Surface Hover color */
@@ -351,64 +340,6 @@ export function setupAutoCaptureTimer(ctx: any) {
     });
 
     ui.mount();
-    //     // 3. TRIGGER ANIMATION
-    //     // We use requestAnimationFrame to allow the DOM to paint the initial state (hidden)
-    //     // before applying the 'visible' class.
-    //     requestAnimationFrame(() => {
-    //       const el = uiContainer.querySelector("#lexicora-toast");
-    //       if (el) el.classList.add("visible");
-    //     });
-
-    //     // 4. LOGIC & LISTENERS
-    //     const close = () => {
-    //       const el = uiContainer.querySelector("#lexicora-toast");
-    //       if (el) {
-    //         el.classList.remove("visible"); // Triggers slide-down animation
-
-    //         // Wait for animation (300ms) before destroying UI
-    //         setTimeout(() => {
-    //           ui?.remove();
-    //           ui = null;
-    //         }, 300);
-    //       }
-    //     };
-
-    //     uiContainer
-    //       .querySelector("#lex-btn-close")
-    //       ?.addEventListener("click", close);
-    //     uiContainer
-    //       .querySelector("#lex-btn-dismiss")
-    //       ?.addEventListener("click", close);
-
-    //     uiContainer
-    //       .querySelector("#lex-btn-save")
-    //       ?.addEventListener("click", async () => {
-    //         // --- OPEN POPUP ---
-    //         // const windowId = await browser.windows.getCurrent().then((win) => {
-    //         //   return win.id;
-    //         // });
-    //         // if (!windowId) return;
-    //         // browser.sidePanel.open({ windowId: windowId });
-    //         sendMessage(MSG.OPEN_SIDEPANEL, {}, "background");
-    //         const url = browser.runtime.getURL("/sidepanel.html");
-    //         const width = 450;
-    //         const height = window.screen.availHeight;
-    //         const left = window.screen.availWidth - width;
-    //         // window.open(
-    //         //   url,
-    //         //   "LexicoraCapture",
-    //         //   `popup=yes,width=${width},height=${height},left=${left},top=0`,
-    //         // );
-
-    //         close();
-    //       });
-    //   },
-    //   onRemove: (uiContainer) => {
-    //     //uiContainer.innerHTML = '';
-    //   },
-    // });
-
-    // ui.mount();
   };
 
   // --- TIMER LOGIC ---
@@ -426,61 +357,3 @@ export function setupAutoCaptureTimer(ctx: any) {
     else startTimer();
   });
 }
-
-// export function setupAutoCaptureTimer() {
-//   let captureTimer: ReturnType<typeof setTimeout> | null = null;
-
-//   // State to track if we already notified for this specific URL
-//   let hasTriggered = false;
-//   let lastUrl = window.location.href;
-
-//   const startTimer = () => {
-//     // 1. SPA Check: If the URL changed since we last looked, reset the trigger flag
-//     if (window.location.href !== lastUrl) {
-//       hasTriggered = false;
-//       lastUrl = window.location.href;
-//     }
-
-//     // 2. "Once per lifetime" Check: If we already fired for this URL, do nothing
-//     if (hasTriggered) return;
-
-//     // 3. Reset Check: Clear any existing timer so we don't have duplicates
-//     if (captureTimer) clearTimeout(captureTimer);
-
-//     captureTimer = setTimeout(() => {
-//       // Double-check visibility and trigger status before sending
-//       if (document.visibilityState === "visible" && !hasTriggered) {
-//         hasTriggered = true; // Mark as done so it doesn't fire again for this URL
-//         sendMessage(MSG.TRIGGER_AUTO_CAPTURE_NOTIFICATION, {}, "background");
-//       }
-//     }, TIMER_DURATION_MS);
-//   };
-
-//   const stopTimer = () => {
-//     if (captureTimer) {
-//       clearTimeout(captureTimer);
-//       captureTimer = null;
-//     }
-//   };
-
-//   // --- Listeners ---
-
-//   // Start immediately
-//   startTimer();
-
-//   // Handle Tab Switching (Reset logic)
-//   document.addEventListener("visibilitychange", () => {
-//     if (document.visibilityState === "hidden") {
-//       stopTimer(); // Kills the timer (reset)
-//     } else {
-//       startTimer(); // Starts a fresh 60s timer
-//     }
-//   });
-
-//   // Optional: Handle SPA navigation (History API) to reset logic immediately
-//   // This helps if the user navigates without switching tabs
-//   window.addEventListener("popstate", startTimer);
-
-//   // Cleanup
-//   window.addEventListener("beforeunload", stopTimer);
-// }
