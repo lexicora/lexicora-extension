@@ -1,6 +1,5 @@
 import { sendMessage } from "webext-bridge/content-script";
 import { MSG } from "@/types/messaging";
-import ReactDOM from "react-dom/client";
 import {
   createShadowRootUi,
   type ShadowRootContentScriptUi,
@@ -8,26 +7,18 @@ import {
 import "@fontsource/wix-madefor-text/400.css";
 import "@fontsource/wix-madefor-text/500.css";
 import "@fontsource/wix-madefor-text/600.css";
-//import "@/assets/styles/global.css"; // Essential for Tailwind
-// TODO: Rename file to capture-notification.ts maybe add handle to name too
-// TODO: Also rename exporting method to something like setupCaptureNotificationHandler
 
-// const TIMER_DURATION_MS = import.meta.env.DEV ? 1000 : 60000; // 1 Minute // TODO: Get from settings later
-
-export async function setupAutoCaptureTimer(ctx: any) {
+export async function setupCapturePrompt(ctx: any) {
   const TIMER_MS = import.meta.env.DEV ? 1000 : 60000;
-  //let ui: ReturnType<typeof createShadowRootUi> | null = null;
   let ui: ShadowRootContentScriptUi<void> | null = null;
-  //let ui: ShadowRootContentScriptUi<ReactDOM.Root> | null = null;
   let timer: ReturnType<typeof setTimeout>;
 
-  // --- SHARED STATE (Must be outer scope for cleanup) ---
   let autoHideTimeout: ReturnType<typeof setTimeout>;
   let onDragMove: ((e: MouseEvent) => void) | null = null;
   let onDragEnd: (() => void) | null = null;
 
   const mountUi = async () => {
-    // 1. SAFETY: If UI exists, remove it first to trigger cleanup
+    // Initial cleanup
     if (ui) {
       ui.remove();
       ui = null;
@@ -47,21 +38,21 @@ export async function setupAutoCaptureTimer(ctx: any) {
         --lexicora-shadow-subtle: rgba(0, 0, 0, 0.3);
 
         --lexicora-radius: 0.625rem;
-        --lexicora-font-sans: "Wix Madefor Text", system-ui, -apple-system, sans-serif;
+        --lexicora-font-sans: "Wix Madefor Text", system-ui, "Segoe UI", -apple-system, Avenir, Helvetica, Arial, sans-serif
       }
 
       /* LIGHT MODE OVERRIDES - Matches :root in global.css */
       @media (prefers-color-scheme: light) {
         :host {
           --lexicora-fg: #00143d;
-          --lexicora-bg: oklch(1 0 0); /* White */
-          --lexicora-border: oklch(0.900 0.006 264.531); /* Zinc 200 */
+          --lexicora-bg: oklch(1 0 0);
+          --lexicora-border: oklch(0.900 0.006 264.531);
           --lexicora-bg-diff-hover: rgba(0, 0, 0, 0.1);
-          --lexicora-surface-hover: oklch(0.985 0.003 264.542); /* Zinc 100 */
-          --lexicora-text-primary: oklch(0.13 0.028 261.692); /* Zinc 900 */
-          --lexicora-text-secondary: oklch(0.551 0.027 264.364); /* Zinc 500 */
-          --lexicora-icon-bg: rgba(0, 0, 0, 0.04); /* Subtle dark tint for white bg */
-          --lexicora-shadow-color: rgba(0, 0, 0, 0.1); /* Much lighter shadow for light mode */
+          --lexicora-surface-hover: oklch(0.985 0.003 264.542);
+          --lexicora-text-primary: oklch(0.13 0.028 261.692);
+          --lexicora-text-secondary: oklch(0.551 0.027 264.364);
+          --lexicora-icon-bg: rgba(0, 0, 0, 0.04);
+          --lexicora-shadow-color: rgba(0, 0, 0, 0.1);
           --lexicora-shadow-subtle: rgba(0, 0, 0, 0.05);
         }
       }
@@ -80,23 +71,18 @@ export async function setupAutoCaptureTimer(ctx: any) {
         align-items: center;
         gap: 14px;
         width: 340px;
-        padding: 12px;
+        padding-top: 12px;
         padding-bottom: 10px;
         padding-inline: 14px;
         background-color: var(--lexicora-bg);
         border: 1px solid var(--lexicora-border);
         border-radius: var(--lexicora-radius);
-
-        /* Deep bluish shadow */
         box-shadow:
           0 8px 13px -4px rgba(0, 0, 0, 0.3),
           0 4px 6px -5px rgba(0, 0, 0, 0.1),
           0 -4px 11px -4px rgba(0, 0, 0, 0.2);
-
         cursor: pointer;
         user-select: none;
-
-        /* Animation Base State */
         opacity: 0;
         transform: translateY(-90px) scale(0.95); /*was -20px*/
         transition:
@@ -107,19 +93,16 @@ export async function setupAutoCaptureTimer(ctx: any) {
           background-color 0.2s ease;
       }
 
-      /* Visible State */
       .lexicora-toast.visible {
         opacity: 1;
         transform: translateY(0) scale(1);
       }
 
-      /* Dragging State */
       .lexicora-toast.dragging {
         transition: none;
         /*cursor: grabbing;*/
       }
 
-      /* Icon Box - Using Surface Hover color */
       .lexicora-icon-box {
         display: flex;
         align-items: center;
@@ -129,10 +112,7 @@ export async function setupAutoCaptureTimer(ctx: any) {
         padding: 0;
         flex-shrink: 0;
         border-radius: 8px;
-        /*background-color: rgba(255, 255, 255, 0.05);*/
-        /*color: var(--lexicora-text-primary);*/
         color: var(--lexicora-fg);
-        /*border: 1px solid var(--lexicora-border);*/
         pointer-events: none;
       }
 
@@ -146,10 +126,10 @@ export async function setupAutoCaptureTimer(ctx: any) {
       .lexicora-title {
         font-size: 14px;
         font-weight: 500;
-        /*color: var(--lexicora-text-primary);*/
         color: var(--lexicora-fg);
         margin: 0;
         line-height: 1.2;
+        /*letter-spacing: [TODO];*/
       }
 
       .lexicora-desc {
@@ -159,7 +139,6 @@ export async function setupAutoCaptureTimer(ctx: any) {
         line-height: 1.4;
       }
 
-      /* Close Button */
       .lexicora-btn-close {
         display: flex;
         align-items: center;
@@ -177,7 +156,6 @@ export async function setupAutoCaptureTimer(ctx: any) {
       }
 
       .lexicora-btn-close:hover {
-        /*background-color: rgba(255, 255, 255, 0.1);*/
         background-color: var(--lexicora-bg-diff-hover);
         color: var(--lexicora-text-primary);
       }
@@ -191,12 +169,8 @@ export async function setupAutoCaptureTimer(ctx: any) {
       name: "lexicora-ui-host",
       position: "inline",
       anchor: "body",
-      css: styles, // was: Max Z-Index z-index: 2147483647;
+      css: styles,
       onMount: (uiContainer) => {
-        // 1. DEFINE RAW CSS
-        // This style block is scoped strictly to the Shadow Root.
-
-        // 2. INJECT HTML + CSS
         uiContainer.innerHTML = `
           <div class="lexicora-toast-wrapper">
             <div id="lexicora-toast" class="lexicora-toast" tabindex="0" aria-label="Lexicora Capture Notification">
@@ -228,7 +202,7 @@ export async function setupAutoCaptureTimer(ctx: any) {
           });
         });
 
-        // --- INTERNAL VARS ---
+        // Internal variables
         let startX = 0;
         let startY = 0;
         let currentX = 0;
@@ -243,7 +217,7 @@ export async function setupAutoCaptureTimer(ctx: any) {
         let velocityX = 0;
         let velocityY = 0;
 
-        // --- ACTIONS ---
+        // Actions
         const destroy = () => {
           ui?.remove(); // Triggers onRemove
           ui = null;
@@ -254,7 +228,7 @@ export async function setupAutoCaptureTimer(ctx: any) {
 
           clearTimeout(autoHideTimeout);
 
-          toastEl.style.transform = "translateY(-90px) scale(0.95)"; //was -20px
+          toastEl.style.transform = "translateY(-90px) scale(0.95)";
           toastEl.style.opacity = "0";
 
           setTimeout(destroy, 400); // maybe change to 300 or 350
@@ -265,13 +239,13 @@ export async function setupAutoCaptureTimer(ctx: any) {
           close();
         };
 
-        // --- AUTO HIDE ---
-        if (import.meta.env.PROD) {
-          autoHideTimeout = setTimeout(close, 15000);
-        }
+        // Auto-hide timer
+        // if (import.meta.env.PROD) {
+        //   autoHideTimeout = setTimeout(close, 15000);
+        // }
+        autoHideTimeout = setTimeout(close, 15000);
 
-        // --- DRAG LOGIC ---
-        // Assigned to outer scope vars
+        // Drag logic
         onDragMove = (e: MouseEvent) => {
           const now = Date.now();
           const diffX = e.clientX - startX;
@@ -301,16 +275,14 @@ export async function setupAutoCaptureTimer(ctx: any) {
           switch (dragAxis) {
             case "x":
               currentX = diffX;
-              // Resistance logic for left drag (unchanged)
-              //const translateX = diffX > 0 ? diffX : diffX * 0.02;
+              // Resistance logic for left drag
               const translateX =
                 diffX > 0 ? diffX : -Math.pow(Math.abs(diffX), 0.25);
               toastEl.style.transform = `translateX(${translateX}px)`;
               break;
             case "y":
               currentY = diffY;
-              // Allow dragging UP (negative), add resistance for dragging DOWN (positive)
-              //const translateY = diffY < 0 ? diffY : diffY * 0.05;
+              // Resistance logic for down drag
               const translateY = diffY < 0 ? diffY : Math.pow(diffY, 0.25);
               toastEl.style.transform = `translateY(${translateY}px)`;
               break;
@@ -325,8 +297,8 @@ export async function setupAutoCaptureTimer(ctx: any) {
 
           toastEl.classList.remove("dragging");
 
-          // DISMISS LOGIC
-          // 1. Swipe Right (> 100px)
+          // Dismissal Logic
+          // Swipe Right (> 100px)
           if (
             (dragAxis === "x" && currentX > 100) ||
             (dragAxis === "x" && currentX > 0 && velocityX > 0.5)
@@ -337,7 +309,7 @@ export async function setupAutoCaptureTimer(ctx: any) {
             toastEl.style.opacity = "0";
             finishDismiss();
           }
-          // 2. Swipe Up (< -50px) - Note: UP is negative Y
+          // Swipe Up (< -50px) - Note: UP is negative Y
           else if (
             (dragAxis === "y" && currentY < -40) ||
             (dragAxis === "y" && currentY < 0 && velocityY < -0.5)
@@ -348,15 +320,16 @@ export async function setupAutoCaptureTimer(ctx: any) {
             toastEl.style.opacity = "0";
             finishDismiss();
           }
-          // 3. Reset (Snap back)
+          // Reset (Snap back)
           else {
             toastEl.style.transition = "";
             toastEl.style.transform = "";
             toastEl.style.opacity = "";
             // Restart timer only if we cancelled a drag
-            if (import.meta.env.PROD) {
-              autoHideTimeout = setTimeout(close, 15000);
-            }
+            // if (import.meta.env.PROD) {
+            //   autoHideTimeout = setTimeout(close, 15000);
+            // }
+            autoHideTimeout = setTimeout(close, 15000);
           }
 
           // Reset internal state
@@ -394,7 +367,7 @@ export async function setupAutoCaptureTimer(ctx: any) {
           }
         };
 
-        // --- LISTENERS ---
+        // Listeners
         toastEl.addEventListener("mousedown", onMouseDown);
 
         closeBtn.addEventListener("click", (e) => {
@@ -413,8 +386,7 @@ export async function setupAutoCaptureTimer(ctx: any) {
       },
 
       onRemove: (uiContainer) => {
-        // --- CLEANUP ---
-        // This runs automatically when ui.remove() is called
+        // Cleanup
         clearTimeout(autoHideTimeout);
 
         if (onDragMove) window.removeEventListener("mousemove", onDragMove);
@@ -428,7 +400,7 @@ export async function setupAutoCaptureTimer(ctx: any) {
     ui.mount();
   };
 
-  // --- TIMER LOGIC ---
+  // Timer logic
   const startTimer = async () => {
     clearTimeout(timer);
     const isOpen = await sendMessage<boolean>(

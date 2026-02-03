@@ -1,7 +1,7 @@
 import { onMessage } from "webext-bridge/content-script";
 import { MSG } from "@/types/messaging";
 import { getSelectionPageArticle, getSelectionPageData } from "./selection";
-import { setupAutoCaptureTimer } from "./auto-capture";
+import { setupCapturePrompt } from "./capture-prompt";
 
 export default defineContentScript({
   //matches: ['*://*.google.com/*'],
@@ -21,7 +21,7 @@ export default defineContentScript({
     onMessage(MSG.GET_PAGE_SELECTION_DATA, getSelectionPageData);
 
     if (!import.meta.env.FIREFOX) {
-      setupAutoCaptureTimer(ctx);
+      setupCapturePrompt(ctx);
     }
   },
 });

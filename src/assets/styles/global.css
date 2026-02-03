@@ -47,7 +47,8 @@
     /*Lexicora: styles / variables / colors */
     /*MAYBE: Later set --font-mono and --font-sans to the --lc-... fonts (add other and more fallback fonts)*/
     --lc-font-sans-serif:
-        "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;
+        "Wix Madefor Text", system-ui, "Segoe UI", -apple-system, Avenir,
+        Helvetica, Arial, sans-serif;
     --lc-font-monospace:
         "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
         "Liberation Mono", "Courier New", monospace;

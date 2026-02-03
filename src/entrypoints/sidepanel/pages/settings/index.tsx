@@ -13,6 +13,8 @@ import { Switch } from "@/components/ui/switch";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  CameraIcon,
+  CameraOffIcon,
   ChevronRightIcon,
   CogIcon,
   CircleQuestionMarkIcon,
@@ -130,10 +132,11 @@ function SettingsPage() {
           </section>
           {/*NOTE: Firefox does not support Notifications currently */}
           {import.meta.env.FIREFOX ? null : (
+            //TODO: Maybe put in entire separate page
             <section id="notification-settings">
               <Label htmlFor="" className="text-sm ml-2 mb-0.5">
-                <BellDotIcon className="size-3.5 text-red-400" />
-                Notifications
+                <CameraIcon className="size-3.5 text-red-400" />
+                Capture Suggestions
               </Label>
               <Item
                 variant="muted"
@@ -151,15 +154,15 @@ function SettingsPage() {
               ) : (
                 <BellOffIcon className="size-5 text-gray-500" />
               )}*/}
-                  <BellRingIcon
+                  <CameraIcon
                     className={`size-5 text-green-500 transition-all scale-100 rotate-0 ${enableNotifications ? "" : "scale-0! -rotate-90!"}`}
                   />
-                  <BellOffIcon
+                  <CameraOffIcon
                     className={`absolute size-5 text-gray-500 transition-all scale-100 rotate-0 ${enableNotifications ? "scale-0! rotate-90!" : ""}`}
                   />
                 </ItemMedia>
                 <ItemContent>
-                  <ItemTitle>Notifications</ItemTitle>
+                  <ItemTitle>Capture Suggestions</ItemTitle>
                 </ItemContent>
                 <ItemActions>
                   <Switch
