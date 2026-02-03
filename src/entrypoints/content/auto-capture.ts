@@ -35,47 +35,47 @@ export async function setupAutoCaptureTimer(ctx: any) {
     const styles = `
       :host {
         /* DEFAULT (DARK MODE) - Matches .dark in global.css */
-        --lc-fg: #ffffff;
-        --lc-bg: oklch(0.21 0.034 264.665);
-        --lc-border: oklch(1 0 0 / 0.14);
-        --lc-bg-diff-hover: rgba(255, 255, 255, 0.1);
-        --lc-surface-hover: oklch(0.245 0.033 256.848);
-        --lc-text-primary: oklch(0.985 0.002 247.839);
-        --lc-text-secondary: oklch(0.707 0.022 261.325);
-        --lc-icon-bg: rgba(255, 255, 255, 0.05);
-        --lc-shadow-color: rgba(0, 0, 0, 0.5);
-        --lc-shadow-subtle: rgba(0, 0, 0, 0.3);
+        --lexicora-fg: #ffffff;
+        --lexicora-bg: oklch(0.21 0.034 264.665);
+        --lexicora-border: oklch(1 0 0 / 0.14);
+        --lexicora-bg-diff-hover: rgba(255, 255, 255, 0.1);
+        --lexicora-surface-hover: oklch(0.245 0.033 256.848);
+        --lexicora-text-primary: oklch(0.985 0.002 247.839);
+        --lexicora-text-secondary: oklch(0.707 0.022 261.325);
+        --lexicora-icon-bg: rgba(255, 255, 255, 0.05);
+        --lexicora-shadow-color: rgba(0, 0, 0, 0.5);
+        --lexicora-shadow-subtle: rgba(0, 0, 0, 0.3);
 
-        --lc-radius: 0.625rem;
-        --lc-font-sans: "Wix Madefor Text", system-ui, -apple-system, sans-serif;
+        --lexicora-radius: 0.625rem;
+        --lexicora-font-sans: "Wix Madefor Text", system-ui, -apple-system, sans-serif;
       }
 
       /* LIGHT MODE OVERRIDES - Matches :root in global.css */
       @media (prefers-color-scheme: light) {
         :host {
-          --lc-fg: #00143d;
-          --lc-bg: oklch(1 0 0); /* White */
-          --lc-border: oklch(0.900 0.006 264.531); /* Zinc 200 */
-          --lc-bg-diff-hover: rgba(0, 0, 0, 0.1);
-          --lc-surface-hover: oklch(0.985 0.003 264.542); /* Zinc 100 */
-          --lc-text-primary: oklch(0.13 0.028 261.692); /* Zinc 900 */
-          --lc-text-secondary: oklch(0.551 0.027 264.364); /* Zinc 500 */
-          --lc-icon-bg: rgba(0, 0, 0, 0.04); /* Subtle dark tint for white bg */
-          --lc-shadow-color: rgba(0, 0, 0, 0.1); /* Much lighter shadow for light mode */
-          --lc-shadow-subtle: rgba(0, 0, 0, 0.05);
+          --lexicora-fg: #00143d;
+          --lexicora-bg: oklch(1 0 0); /* White */
+          --lexicora-border: oklch(0.900 0.006 264.531); /* Zinc 200 */
+          --lexicora-bg-diff-hover: rgba(0, 0, 0, 0.1);
+          --lexicora-surface-hover: oklch(0.985 0.003 264.542); /* Zinc 100 */
+          --lexicora-text-primary: oklch(0.13 0.028 261.692); /* Zinc 900 */
+          --lexicora-text-secondary: oklch(0.551 0.027 264.364); /* Zinc 500 */
+          --lexicora-icon-bg: rgba(0, 0, 0, 0.04); /* Subtle dark tint for white bg */
+          --lexicora-shadow-color: rgba(0, 0, 0, 0.1); /* Much lighter shadow for light mode */
+          --lexicora-shadow-subtle: rgba(0, 0, 0, 0.05);
         }
       }
 
-      .lex-toast-wrapper {
+      .lexicora-toast-wrapper {
         position: fixed;
         top: 24px;
         right: 24px;
         z-index: 2147483647;
-        font-family: var(--lc-font-sans);
+        font-family: var(--lexicora-font-sans);
         perspective: 1000px;
       }
 
-      .lex-toast {
+      .lexicora-toast {
         display: flex;
         align-items: center;
         gap: 14px;
@@ -84,9 +84,9 @@ export async function setupAutoCaptureTimer(ctx: any) {
         padding-bottom: 11px;
         /*padding-top: 10px;*/
         padding-inline: 14px;
-        background-color: var(--lc-bg);
-        border: 1px solid var(--lc-border);
-        border-radius: var(--lc-radius);
+        background-color: var(--lexicora-bg);
+        border: 1px solid var(--lexicora-border);
+        border-radius: var(--lexicora-radius);
 
         /* Deep bluish shadow */
         box-shadow:
@@ -109,19 +109,19 @@ export async function setupAutoCaptureTimer(ctx: any) {
       }
 
       /* Visible State */
-      .lex-toast.visible {
+      .lexicora-toast.visible {
         opacity: 1;
         transform: translateY(0) scale(1);
       }
 
       /* Dragging State */
-      .lex-toast.dragging {
+      .lexicora-toast.dragging {
         transition: none;
         /*cursor: grabbing;*/
       }
 
       /* Icon Box - Using Surface Hover color */
-      .lex-icon-box {
+      .lexicora-icon-box {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -131,37 +131,37 @@ export async function setupAutoCaptureTimer(ctx: any) {
         flex-shrink: 0;
         border-radius: 8px;
         /*background-color: rgba(255, 255, 255, 0.05);*/
-        /*color: var(--lc-text-primary);*/
-        color: var(--lc-fg);
-        /*border: 1px solid var(--lc-border);*/
+        /*color: var(--lexicora-text-primary);*/
+        color: var(--lexicora-fg);
+        /*border: 1px solid var(--lexicora-border);*/
         pointer-events: none;
       }
 
-      .lex-content {
+      .lexicora-content {
         flex: 1;
         display: flex;
         flex-direction: column;
         gap: 2px;
       }
 
-      .lex-title {
+      .lexicora-title {
         font-size: 14px;
         font-weight: 500;
-        /*color: var(--lc-text-primary);*/
-        color: var(--lc-fg);
+        /*color: var(--lexicora-text-primary);*/
+        color: var(--lexicora-fg);
         margin: 0;
         line-height: 1.2;
       }
 
-      .lex-desc {
+      .lexicora-desc {
         font-size: 13px;
-        color: var(--lc-text-secondary);
+        color: var(--lexicora-text-secondary);
         margin: 0;
         line-height: 1.4;
       }
 
       /* Close Button */
-      .lex-btn-close {
+      .lexicora-btn-close {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -171,19 +171,19 @@ export async function setupAutoCaptureTimer(ctx: any) {
         background: transparent;
         border: none;
         border-radius: 6px;
-        color: var(--lc-text-secondary);
+        color: var(--lexicora-text-secondary);
         cursor: pointer;
         transition: all 0.2s;
         margin-left: -4px;
       }
 
-      .lex-btn-close:hover {
+      .lexicora-btn-close:hover {
         /*background-color: rgba(255, 255, 255, 0.1);*/
-        background-color: var(--lc-bg-diff-hover);
-        color: var(--lc-text-primary);
+        background-color: var(--lexicora-bg-diff-hover);
+        color: var(--lexicora-text-primary);
       }
 
-      .lex-btn-close:active {
+      .lexicora-btn-close:active {
         background-color: rgba(255, 255, 255, 0.15);
       }
     `;
@@ -199,19 +199,19 @@ export async function setupAutoCaptureTimer(ctx: any) {
 
         // 2. INJECT HTML + CSS
         uiContainer.innerHTML = `
-          <div class="lex-toast-wrapper">
-            <div id="lexicora-toast" class="lex-toast" tabindex="0" aria-label="Lexicora Capture Notification">
-              <!--<div class="lex-icon-box">
+          <div class="lexicora-toast-wrapper">
+            <div id="lexicora-toast" class="lexicora-toast" tabindex="0" aria-label="Lexicora Capture Notification">
+              <!--<div class="lexicora-icon-box">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
               </div>-->
-              <div class="lex-icon-box lc-d-dark">
+              <div class="lexicora-icon-box">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512" style="border-radius: 4px;"><g transform="translate(-6143 -16217)"><path d="M457.142,0V124.571a45.714,45.714,0,0,1-45.714,45.714H0Z" transform="translate(6197.857 16558.715)" fill="currentColor"/><path d="M457.142,170.286V45.714A45.714,45.714,0,0,0,411.428,0H0Z" transform="translate(6143 16674.143) rotate(-90)" fill="currentColor"/><path d="M27.731,0H152.188a45.672,45.672,0,0,1,45.672,45.672V170.13l-393.4,223.688Z" transform="translate(6457.139 16217)" fill="currentColor"/></g></svg>
               </div>
-              <div class="lex-content">
-                <h4 class="lex-title">Capture with Lexicora?</h4>
-                <p class="lex-desc">Click to open the side panel.</p>
+              <div class="lexicora-content">
+                <h4 class="lexicora-title">Capture with Lexicora?</h4>
+                <p class="lexicora-desc">Click to open the side panel.</p>
               </div>
-              <button id="lex-btn-close" class="lex-btn-close" aria-label="Dismiss">
+              <button id="lexicora-btn-close" class="lexicora-btn-close" tabindex="1" aria-label="Dismiss">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
@@ -222,7 +222,7 @@ export async function setupAutoCaptureTimer(ctx: any) {
           "#lexicora-toast",
         ) as HTMLElement;
         const closeBtn = uiContainer.querySelector(
-          "#lex-btn-close",
+          "#lexicora-btn-close",
         ) as HTMLButtonElement;
 
         // Double RAF for animation stability
@@ -381,6 +381,7 @@ export async function setupAutoCaptureTimer(ctx: any) {
         });
 
         toastEl.addEventListener("keydown", (e) => {
+          if (!toastEl.matches(":focus")) return;
           if (e.key === "Enter") capture();
         });
       },
