@@ -251,7 +251,7 @@ html:has(
     input[data-slot="input"],
 .bn-container[data-color-scheme]
     .bn-toolbar.bn-formatting-toolbar
-    input[data-slot="input"] {
+    input[data-slot="input"]:not([data-test="embed-input"]) {
     border-radius: calc(0.25em + 1px);
     padding-inline: calc(0.25em + 1px);
 }
