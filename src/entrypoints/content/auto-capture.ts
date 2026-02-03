@@ -78,9 +78,12 @@ export async function setupAutoCaptureTimer(ctx: any) {
       .lex-toast {
         display: flex;
         align-items: center;
-        gap: 16px;
+        gap: 14px;
         width: 340px;
         padding: 12px;
+        padding-bottom: 11px;
+        /*padding-top: 10px;*/
+        padding-inline: 14px;
         background-color: var(--lc-bg);
         border: 1px solid var(--lc-border);
         border-radius: var(--lc-radius);
@@ -124,7 +127,7 @@ export async function setupAutoCaptureTimer(ctx: any) {
         justify-content: center;
         width: 32px;
         height: 32px;
-        padding: 2px;
+        padding: 0;
         flex-shrink: 0;
         border-radius: 8px;
         /*background-color: rgba(255, 255, 255, 0.05);*/
@@ -202,7 +205,7 @@ export async function setupAutoCaptureTimer(ctx: any) {
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
               </div>-->
               <div class="lex-icon-box lc-d-dark">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><g transform="translate(-6143 -16217)"><path d="M457.142,0V124.571a45.714,45.714,0,0,1-45.714,45.714H0Z" transform="translate(6197.857 16558.715)" fill="currentColor"/><path d="M457.142,170.286V45.714A45.714,45.714,0,0,0,411.428,0H0Z" transform="translate(6143 16674.143) rotate(-90)" fill="currentColor"/><path d="M27.731,0H152.188a45.672,45.672,0,0,1,45.672,45.672V170.13l-393.4,223.688Z" transform="translate(6457.139 16217)" fill="currentColor"/></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512" style="border-radius: 4px;"><g transform="translate(-6143 -16217)"><path d="M457.142,0V124.571a45.714,45.714,0,0,1-45.714,45.714H0Z" transform="translate(6197.857 16558.715)" fill="currentColor"/><path d="M457.142,170.286V45.714A45.714,45.714,0,0,0,411.428,0H0Z" transform="translate(6143 16674.143) rotate(-90)" fill="currentColor"/><path d="M27.731,0H152.188a45.672,45.672,0,0,1,45.672,45.672V170.13l-393.4,223.688Z" transform="translate(6457.139 16217)" fill="currentColor"/></g></svg>
               </div>
               <div class="lex-content">
                 <h4 class="lex-title">Capture with Lexicora?</h4>
@@ -260,7 +263,9 @@ export async function setupAutoCaptureTimer(ctx: any) {
         };
 
         // --- AUTO HIDE ---
-        autoHideTimeout = setTimeout(close, 15000);
+        if (import.meta.env.PROD) {
+          autoHideTimeout = setTimeout(close, 15000);
+        }
 
         // --- DRAG LOGIC ---
         // Assigned to outer scope vars
@@ -308,16 +313,16 @@ export async function setupAutoCaptureTimer(ctx: any) {
           toastEl.classList.remove("dragging");
 
           // DISMISS LOGIC
-          // 1. Swipe Right (> 100px)
-          if (dragAxis === "x" && currentX > 100) {
+          // 1. Swipe Right (> 75px (was 100px))
+          if (dragAxis === "x" && currentX > 75) {
             toastEl.style.transition =
               "transform 0.3s ease-out, opacity 0.3s ease";
             toastEl.style.transform = `translateX(400px)`;
             toastEl.style.opacity = "0";
             finishDismiss();
           }
-          // 2. Swipe Up (< -50px) - Note: UP is negative Y
-          else if (dragAxis === "y" && currentY < -50) {
+          // 2. Swipe Up (< -25px (was 50px)) - Note: UP is negative Y
+          else if (dragAxis === "y" && currentY < -25) {
             toastEl.style.transition =
               "transform 0.3s ease-out, opacity 0.3s ease";
             toastEl.style.transform = `translateY(-100px)`; // Fly up
@@ -330,7 +335,9 @@ export async function setupAutoCaptureTimer(ctx: any) {
             toastEl.style.transform = "";
             toastEl.style.opacity = "";
             // Restart timer only if we cancelled a drag
-            autoHideTimeout = setTimeout(close, 15000);
+            if (import.meta.env.PROD) {
+              autoHideTimeout = setTimeout(close, 15000);
+            }
           }
 
           // Reset internal state
@@ -371,6 +378,10 @@ export async function setupAutoCaptureTimer(ctx: any) {
 
         toastEl.addEventListener("click", () => {
           if (!wasDragging) capture();
+        });
+
+        toastEl.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") capture();
         });
       },
 
