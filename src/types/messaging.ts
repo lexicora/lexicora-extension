@@ -6,6 +6,7 @@ export const MSG = {
   TRIGGER_AUTO_CAPTURE_NOTIFICATION:
     "background/TRIGGER_AUTO_CAPTURE_NOTIFICATION",
   OPEN_SIDEPANEL: "background/OPEN_SIDEPANEL",
+  CHECK_SIDEPANEL_OPEN: "background/CHECK_SIDEPANEL_OPEN",
 
   // From background to content script
   GET_PAGE_SELECTION_ARTICLE: "content/GET_PAGE_SELECTION_ARTICLE",
@@ -20,6 +21,7 @@ export const MSG = {
   NAVIGATE_IN_SIDEPANEL: "sidepanel/NAVIGATE_IN_SIDEPANEL",
   REQUEST_PENDING_DATA: "sidepanel/REQUEST_PENDING_DATA",
   REQUEST_PENDING_NAVIGATION: "sidepanel/REQUEST_PENDING_NAVIGATION",
+  //REQUEST_SIDEPANEL_STATE: "sidepanel/REQUEST_SIDEPANEL_STATE",
 } as const;
 
 // Types for the messages and their payloads

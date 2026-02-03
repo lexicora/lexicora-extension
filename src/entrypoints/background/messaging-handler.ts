@@ -40,4 +40,16 @@ export function setupMessagingHandlers() {
       browser.sidePanel.open({ tabId: sender.tabId });
     }
   });
+
+  onMessage(MSG.CHECK_SIDEPANEL_OPEN, async ({ sender }) => {
+    //const tab = await browser.tabs.get(sender.tabId);
+
+    const contexts = await browser.runtime.getContexts({
+      contextTypes: ["SIDE_PANEL"],
+      //windowIds: [tab.windowId], //* NOTE: for same reason is not the normal windowId (is always -1 for side panel)
+    });
+    //console.log("Window", tab.windowId);
+
+    return contexts.length > 0 ? true : false;
+  });
 }

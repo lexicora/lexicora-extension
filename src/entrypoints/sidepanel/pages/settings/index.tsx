@@ -128,77 +128,80 @@ function SettingsPage() {
             <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
           </div>*/}
           </section>
-          <section id="notification-settings">
-            <Label htmlFor="" className="text-sm ml-2 mb-0.5">
-              <BellDotIcon className="size-3.5 text-red-400" />
-              Notifications
-            </Label>
-            <Item
-              variant="muted"
-              size="sm"
-              className="group transition-colors duration-150 hover:cursor-pointer bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-b-none"
-              onClick={() => {
-                setEnableNotifications(!enableNotifications);
-              }}
-            >
-              <ItemMedia variant="icon">
-                {/*{enableNotifications ? (
+          {/*NOTE: Firefox does not support Notifications currently */}
+          {import.meta.env.FIREFOX ? null : (
+            <section id="notification-settings">
+              <Label htmlFor="" className="text-sm ml-2 mb-0.5">
+                <BellDotIcon className="size-3.5 text-red-400" />
+                Notifications
+              </Label>
+              <Item
+                variant="muted"
+                size="sm"
+                className="group transition-colors duration-150 hover:cursor-pointer bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-b-none"
+                onClick={() => {
+                  setEnableNotifications(!enableNotifications);
+                }}
+              >
+                <ItemMedia variant="icon">
+                  {/*{enableNotifications ? (
                 <BellRingIcon
                   className="size-5 text-green-500"
                 />
               ) : (
                 <BellOffIcon className="size-5 text-gray-500" />
               )}*/}
-                <BellRingIcon
-                  className={`size-5 text-green-500 transition-all scale-100 rotate-0 ${enableNotifications ? "" : "scale-0! -rotate-90!"}`}
-                />
-                <BellOffIcon
-                  className={`absolute size-5 text-gray-500 transition-all scale-100 rotate-0 ${enableNotifications ? "scale-0! rotate-90!" : ""}`}
-                />
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle>Notifications</ItemTitle>
-              </ItemContent>
-              <ItemActions>
-                <Switch
-                  className="data-[state=unchecked]:bg-gray-400 dark:data-[state=unchecked]:bg-gray-700"
-                  checked={enableNotifications}
-                  onClick={() => {
-                    setEnableNotifications(!enableNotifications);
-                  }}
-                />
-              </ItemActions>
-            </Item>
-            <SettingsItemSeperator />
-            <Item
-              variant="muted"
-              size="sm"
-              className={`group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl rounded-t-none
-              ${!enableNotifications ? "opacity-65 pointer-events-none tab" : ""}`}
-              asChild
-            >
-              <button
-                onClick={() =>
-                  navigate("/settings/notifications/duration", {
-                    viewTransition: true,
-                  })
-                }
-                disabled={!enableNotifications}
-                draggable={false}
-              >
-                <ItemMedia variant="icon">
-                  <TimerIcon className="size-5 text-orange-500" />
+                  <BellRingIcon
+                    className={`size-5 text-green-500 transition-all scale-100 rotate-0 ${enableNotifications ? "" : "scale-0! -rotate-90!"}`}
+                  />
+                  <BellOffIcon
+                    className={`absolute size-5 text-gray-500 transition-all scale-100 rotate-0 ${enableNotifications ? "scale-0! rotate-90!" : ""}`}
+                  />
                 </ItemMedia>
                 <ItemContent>
-                  <ItemTitle>Delay</ItemTitle>
+                  <ItemTitle>Notifications</ItemTitle>
                 </ItemContent>
                 <ItemActions>
-                  <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
+                  <Switch
+                    className="data-[state=unchecked]:bg-gray-400 dark:data-[state=unchecked]:bg-gray-700"
+                    checked={enableNotifications}
+                    onClick={() => {
+                      setEnableNotifications(!enableNotifications);
+                    }}
+                  />
                 </ItemActions>
-              </button>
-            </Item>
-            {/*Add website exclusions of notifications setting */}
-          </section>
+              </Item>
+              <SettingsItemSeperator />
+              <Item
+                variant="muted"
+                size="sm"
+                className={`group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl rounded-t-none
+              ${!enableNotifications ? "opacity-65 pointer-events-none tab" : ""}`}
+                asChild
+              >
+                <button
+                  onClick={() =>
+                    navigate("/settings/notifications/duration", {
+                      viewTransition: true,
+                    })
+                  }
+                  disabled={!enableNotifications}
+                  draggable={false}
+                >
+                  <ItemMedia variant="icon">
+                    <TimerIcon className="size-5 text-orange-500" />
+                  </ItemMedia>
+                  <ItemContent>
+                    <ItemTitle>Delay</ItemTitle>
+                  </ItemContent>
+                  <ItemActions>
+                    <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
+                  </ItemActions>
+                </button>
+              </Item>
+              {/*Add website exclusions of notifications setting */}
+            </section>
+          )}
           <section id="general-settings">
             <Label htmlFor="" className="text-sm ml-2 mb-0.5">
               <HeroCogIcon className="size-3.5 text-gray-400" /> General

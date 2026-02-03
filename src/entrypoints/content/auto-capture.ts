@@ -14,7 +14,7 @@ import "@fontsource/wix-madefor-text/600.css";
 
 // const TIMER_DURATION_MS = import.meta.env.DEV ? 1000 : 60000; // 1 Minute // TODO: Get from settings later
 
-export function setupAutoCaptureTimer(ctx: any) {
+export async function setupAutoCaptureTimer(ctx: any) {
   const TIMER_MS = import.meta.env.DEV ? 1000 : 60000;
   //let ui: ReturnType<typeof createShadowRootUi> | null = null;
   let ui: ShadowRootContentScriptUi<void> | null = null;
@@ -96,7 +96,7 @@ export function setupAutoCaptureTimer(ctx: any) {
 
         /* Animation Base State */
         opacity: 0;
-        transform: translateX(20px) scale(0.95);
+        transform: translateY(-20px) scale(0.95);
         transition:
           transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
           opacity 0.4s ease-out,
@@ -108,7 +108,7 @@ export function setupAutoCaptureTimer(ctx: any) {
       /* Visible State */
       .lex-toast.visible {
         opacity: 1;
-        transform: translateX(0) scale(1);
+        transform: translateY(0) scale(1);
       }
 
       /* Dragging State */
@@ -244,13 +244,13 @@ export function setupAutoCaptureTimer(ctx: any) {
 
           clearTimeout(autoHideTimeout);
 
-          toastEl.style.transform = "translateX(20px) scale(0.95)";
+          toastEl.style.transform = "translateY(-20px) scale(0.95)"; //was on the X axis
           toastEl.style.opacity = "0";
 
           setTimeout(destroy, 400);
         };
 
-        const save = () => {
+        const capture = () => {
           sendMessage(MSG.OPEN_SIDEPANEL, {}, "background");
           close();
         };
@@ -263,11 +263,11 @@ export function setupAutoCaptureTimer(ctx: any) {
         onDragMove = (e: MouseEvent) => {
           const diff = e.clientX - startX;
           currentX = diff;
-          const translateX = diff > 0 ? diff : diff * 0.05;
+          const translateX = diff > 0 ? diff : diff < -800 ? -16 : diff * 0.02;
 
           toastEl.style.transform = `translateX(${translateX}px)`;
 
-          const opacity = Math.max(0, 1 - Math.abs(diff) / 200);
+          //const opacity = Math.max(0, 1 - Math.abs(diff) / 200);
           //toastEl.style.opacity = opacity.toString();
 
           if (Math.abs(diff) > 5) wasDragging = true;
@@ -287,14 +287,14 @@ export function setupAutoCaptureTimer(ctx: any) {
             toastEl.style.opacity = "0";
 
             clearTimeout(autoHideTimeout);
-            //autoHideTimeout = setTimeout(close, 300);
-            // TODO: Maybe start new timeout or better reset timeout
             setTimeout(destroy, 300);
           } else {
             // Reset
             toastEl.style.transition = "";
             toastEl.style.transform = "";
             toastEl.style.opacity = "";
+            // Restart auto hide timer
+            autoHideTimeout = setTimeout(close, 15000);
           }
         };
 
@@ -320,7 +320,7 @@ export function setupAutoCaptureTimer(ctx: any) {
         });
 
         toastEl.addEventListener("click", () => {
-          if (!wasDragging) save();
+          if (!wasDragging) capture();
         });
 
         toastEl.addEventListener("mousedown", onMouseDown);
@@ -343,8 +343,14 @@ export function setupAutoCaptureTimer(ctx: any) {
   };
 
   // --- TIMER LOGIC ---
-  const startTimer = () => {
+  const startTimer = async () => {
     clearTimeout(timer);
+    const isOpen = await sendMessage<boolean>(
+      MSG.CHECK_SIDEPANEL_OPEN,
+      {},
+      "background",
+    ).catch(() => false);
+    if (isOpen) return; // Do not show if side panel is open
     timer = setTimeout(() => {
       if (!document.hidden) mountUi();
     }, TIMER_MS);
