@@ -5,6 +5,9 @@ import {
   createShadowRootUi,
   type ShadowRootContentScriptUi,
 } from "wxt/utils/content-script-ui/shadow-root";
+import "@fontsource/wix-madefor-text/400.css";
+import "@fontsource/wix-madefor-text/500.css";
+import "@fontsource/wix-madefor-text/600.css";
 //import "@/assets/styles/global.css"; // Essential for Tailwind
 // TODO: Rename file to capture-notification.ts maybe add handle to name too
 // TODO: Also rename exporting method to something like setupCaptureNotificationHandler
@@ -31,40 +34,44 @@ export function setupAutoCaptureTimer(ctx: any) {
     }
     const styles = `
       :host {
-              /* DEFAULT (DARK MODE) - Matches .dark in global.css */
-              --bg: oklch(0.21 0.034 264.665);
-              --border: oklch(1 0 0 / 0.14);
-              --surface-hover: oklch(0.278 0.033 256.848);
-              --text-primary: oklch(0.985 0.002 247.839);
-              --text-secondary: oklch(0.707 0.022 261.325);
-              --icon-bg: rgba(255, 255, 255, 0.05);
-              --shadow-color: rgba(0, 0, 0, 0.5);
-              --shadow-subtle: rgba(0, 0, 0, 0.3);
+        /* DEFAULT (DARK MODE) - Matches .dark in global.css */
+        --lc-fg: #ffffff;
+        --lc-bg: oklch(0.21 0.034 264.665);
+        --lc-border: oklch(1 0 0 / 0.14);
+        --lc-bg-diff-hover: rgba(255, 255, 255, 0.1);
+        --lc-surface-hover: oklch(0.245 0.033 256.848);
+        --lc-text-primary: oklch(0.985 0.002 247.839);
+        --lc-text-secondary: oklch(0.707 0.022 261.325);
+        --lc-icon-bg: rgba(255, 255, 255, 0.05);
+        --lc-shadow-color: rgba(0, 0, 0, 0.5);
+        --lc-shadow-subtle: rgba(0, 0, 0, 0.3);
 
-              --radius: 0.625rem;
-              --font-sans: "Wix Madefor Text", system-ui, -apple-system, sans-serif;
-            }
+        --lc-radius: 0.625rem;
+        --lc-font-sans: "Wix Madefor Text", system-ui, -apple-system, sans-serif;
+      }
 
-            /* LIGHT MODE OVERRIDES - Matches :root in global.css */
-            @media (prefers-color-scheme: light) {
-              :host {
-                --bg: oklch(1 0 0); /* White */
-                --border: oklch(0.928 0.006 264.531); /* Zinc 200 */
-                --surface-hover: oklch(0.967 0.003 264.542); /* Zinc 100 */
-                --text-primary: oklch(0.13 0.028 261.692); /* Zinc 900 */
-                --text-secondary: oklch(0.551 0.027 264.364); /* Zinc 500 */
-                --icon-bg: rgba(0, 0, 0, 0.04); /* Subtle dark tint for white bg */
-                --shadow-color: rgba(0, 0, 0, 0.1); /* Much lighter shadow for light mode */
-                --shadow-subtle: rgba(0, 0, 0, 0.05);
-              }
-            }
+      /* LIGHT MODE OVERRIDES - Matches :root in global.css */
+      @media (prefers-color-scheme: light) {
+        :host {
+          --lc-fg: #00143d;
+          --lc-bg: oklch(1 0 0); /* White */
+          --lc-border: oklch(0.900 0.006 264.531); /* Zinc 200 */
+          --lc-bg-diff-hover: rgba(0, 0, 0, 0.1);
+          --lc-surface-hover: oklch(0.985 0.003 264.542); /* Zinc 100 */
+          --lc-text-primary: oklch(0.13 0.028 261.692); /* Zinc 900 */
+          --lc-text-secondary: oklch(0.551 0.027 264.364); /* Zinc 500 */
+          --lc-icon-bg: rgba(0, 0, 0, 0.04); /* Subtle dark tint for white bg */
+          --lc-shadow-color: rgba(0, 0, 0, 0.1); /* Much lighter shadow for light mode */
+          --lc-shadow-subtle: rgba(0, 0, 0, 0.05);
+        }
+      }
 
       .lex-toast-wrapper {
         position: fixed;
         top: 24px;
         right: 24px;
         z-index: 2147483647;
-        font-family: var(--font-sans);
+        font-family: var(--lc-font-sans);
         perspective: 1000px;
       }
 
@@ -73,15 +80,16 @@ export function setupAutoCaptureTimer(ctx: any) {
         align-items: center;
         gap: 16px;
         width: 340px;
-        padding: 16px;
-        background-color: var(--bg);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
+        padding: 12px;
+        background-color: var(--lc-bg);
+        border: 1px solid var(--lc-border);
+        border-radius: var(--lc-radius);
 
         /* Deep bluish shadow */
         box-shadow:
-          0 10px 15px -3px rgba(0, 0, 0, 0.5),
-          0 4px 6px -4px rgba(0, 0, 0, 0.3);
+          0 8px 13px -4px rgba(0, 0, 0, 0.3),
+          0 4px 6px -5px rgba(0, 0, 0, 0.1),
+          0 -2px 10px -4px rgba(0, 0, 0, 0.1);
 
         cursor: pointer;
         user-select: none;
@@ -104,19 +112,20 @@ export function setupAutoCaptureTimer(ctx: any) {
       }
 
       /* Hover State */
-      .lex-toast:hover {
-        background-color: var(--surface-hover);
-        border-color: rgba(255, 255, 255, 0.2);
+      /*.lex-toast:hover {
+        background-color: var(--lc-surface-hover);
+        border-color: var(--lc-border-hover);
         box-shadow:
-          0 20px 25px -5px rgba(0, 0, 0, 0.6),
-          0 0 0 1px rgba(255, 255, 255, 0.1);
-      }
+          0 12px 15px -5px rgba(0, 0, 0, 0.2),
+          0 -3px 10px -3px rgba(0, 0, 0, 0.1);
+          /*0 0 0 1px rgba(255, 255, 255, 0.1);*/
+      }*/
 
       /* Dragging State */
       .lex-toast.dragging {
         transition: none;
         cursor: grabbing;
-        background-color: var(--surface-hover);
+        background-color: var(--lc-surface-hover);
       }
 
       /* Icon Box - Using Surface Hover color */
@@ -124,13 +133,15 @@ export function setupAutoCaptureTimer(ctx: any) {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
+        padding: 2px;
         flex-shrink: 0;
         border-radius: 8px;
-        background-color: rgba(255, 255, 255, 0.05);
-        color: var(--text-primary);
-        border: 1px solid var(--border);
+        /*background-color: rgba(255, 255, 255, 0.05);*/
+        /*color: var(--lc-text-primary);*/
+        color: var(--lc-fg);
+        /*border: 1px solid var(--lc-border);*/
       }
 
       .lex-content {
@@ -143,14 +154,15 @@ export function setupAutoCaptureTimer(ctx: any) {
       .lex-title {
         font-size: 14px;
         font-weight: 500;
-        color: var(--text-primary);
+        /*color: var(--lc-text-primary);*/
+        color: var(--lc-fg);
         margin: 0;
         line-height: 1.2;
       }
 
       .lex-desc {
         font-size: 13px;
-        color: var(--text-secondary);
+        color: var(--lc-text-secondary);
         margin: 0;
         line-height: 1.4;
       }
@@ -166,15 +178,16 @@ export function setupAutoCaptureTimer(ctx: any) {
         background: transparent;
         border: none;
         border-radius: 6px;
-        color: var(--text-secondary);
+        color: var(--lc-text-secondary);
         cursor: pointer;
         transition: all 0.2s;
         margin-left: -4px;
       }
 
       .lex-btn-close:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-        color: var(--text-primary);
+        /*background-color: rgba(255, 255, 255, 0.1);*/
+        background-color: var(--lc-bg-diff-hover);
+        color: var(--lc-text-primary);
       }
 
       .lex-btn-close:active {
@@ -195,20 +208,19 @@ export function setupAutoCaptureTimer(ctx: any) {
         uiContainer.innerHTML = `
           <div class="lex-toast-wrapper">
             <div id="lexicora-toast" class="lex-toast">
-
-              <div class="lex-icon-box">
+              <!--<div class="lex-icon-box">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+              </div>-->
+              <div class="lex-icon-box lc-d-dark">
+                <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><g transform="translate(-6143 -16217)"><path d="M457.142,0V124.571a45.714,45.714,0,0,1-45.714,45.714H0Z" transform="translate(6197.857 16558.715)" fill="currentColor"/><path d="M457.142,170.286V45.714A45.714,45.714,0,0,0,411.428,0H0Z" transform="translate(6143 16674.143) rotate(-90)" fill="currentColor"/><path d="M27.731,0H152.188a45.672,45.672,0,0,1,45.672,45.672V170.13l-393.4,223.688Z" transform="translate(6457.139 16217)" fill="currentColor"/></g></svg>
               </div>
-
               <div class="lex-content">
-                <h4 class="lex-title">Save to Lexicora?</h4>
-                <p class="lex-desc">Click to capture this page.</p>
+                <h4 class="lex-title">Capture with Lexicora?</h4>
+                <p class="lex-desc">Click to open the side panel.</p>
               </div>
-
               <button id="lex-btn-close" class="lex-btn-close" aria-label="Dismiss">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
-
             </div>
           </div>
         `;
@@ -262,12 +274,12 @@ export function setupAutoCaptureTimer(ctx: any) {
         onDragMove = (e: MouseEvent) => {
           const diff = e.clientX - startX;
           currentX = diff;
-          const translateX = diff > 0 ? diff : diff * 0.2;
+          const translateX = diff > 0 ? diff : diff * 0.05;
 
           toastEl.style.transform = `translateX(${translateX}px)`;
 
           const opacity = Math.max(0, 1 - Math.abs(diff) / 200);
-          toastEl.style.opacity = opacity.toString();
+          //toastEl.style.opacity = opacity.toString();
 
           if (Math.abs(diff) > 5) wasDragging = true;
         };
