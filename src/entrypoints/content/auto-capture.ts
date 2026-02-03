@@ -131,6 +131,7 @@ export async function setupAutoCaptureTimer(ctx: any) {
         /*color: var(--lc-text-primary);*/
         color: var(--lc-fg);
         /*border: 1px solid var(--lc-border);*/
+        pointer-events: none;
       }
 
       .lex-content {
@@ -196,12 +197,12 @@ export async function setupAutoCaptureTimer(ctx: any) {
         // 2. INJECT HTML + CSS
         uiContainer.innerHTML = `
           <div class="lex-toast-wrapper">
-            <div id="lexicora-toast" class="lex-toast">
+            <div id="lexicora-toast" class="lex-toast" tabindex="0" aria-label="Lexicora Capture Notification">
               <!--<div class="lex-icon-box">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
               </div>-->
               <div class="lex-icon-box lc-d-dark">
-                <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><g transform="translate(-6143 -16217)"><path d="M457.142,0V124.571a45.714,45.714,0,0,1-45.714,45.714H0Z" transform="translate(6197.857 16558.715)" fill="currentColor"/><path d="M457.142,170.286V45.714A45.714,45.714,0,0,0,411.428,0H0Z" transform="translate(6143 16674.143) rotate(-90)" fill="currentColor"/><path d="M27.731,0H152.188a45.672,45.672,0,0,1,45.672,45.672V170.13l-393.4,223.688Z" transform="translate(6457.139 16217)" fill="currentColor"/></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><g transform="translate(-6143 -16217)"><path d="M457.142,0V124.571a45.714,45.714,0,0,1-45.714,45.714H0Z" transform="translate(6197.857 16558.715)" fill="currentColor"/><path d="M457.142,170.286V45.714A45.714,45.714,0,0,0,411.428,0H0Z" transform="translate(6143 16674.143) rotate(-90)" fill="currentColor"/><path d="M27.731,0H152.188a45.672,45.672,0,0,1,45.672,45.672V170.13l-393.4,223.688Z" transform="translate(6457.139 16217)" fill="currentColor"/></g></svg>
               </div>
               <div class="lex-content">
                 <h4 class="lex-title">Capture with Lexicora?</h4>
@@ -230,8 +231,11 @@ export async function setupAutoCaptureTimer(ctx: any) {
 
         // --- INTERNAL VARS ---
         let startX = 0;
+        let startY = 0;
         let currentX = 0;
+        let currentY = 0;
         let wasDragging = false;
+        let dragAxis: "x" | "y" | null = null;
 
         // --- ACTIONS ---
         const destroy = () => {
@@ -261,16 +265,40 @@ export async function setupAutoCaptureTimer(ctx: any) {
         // --- DRAG LOGIC ---
         // Assigned to outer scope vars
         onDragMove = (e: MouseEvent) => {
-          const diff = e.clientX - startX;
-          currentX = diff;
-          const translateX = diff > 0 ? diff : diff < -800 ? -16 : diff * 0.02;
+          const diffX = e.clientX - startX;
+          const diffY = e.clientY - startY;
 
-          toastEl.style.transform = `translateX(${translateX}px)`;
+          if (!dragAxis) {
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 5) {
+              dragAxis = "x";
+            } else if (
+              Math.abs(diffY) > Math.abs(diffX) &&
+              Math.abs(diffY) > 5
+            ) {
+              dragAxis = "y";
+            }
+          }
 
-          //const opacity = Math.max(0, 1 - Math.abs(diff) / 200);
-          //toastEl.style.opacity = opacity.toString();
+          switch (dragAxis) {
+            case "x":
+              currentX = diffX;
+              // Resistance logic for left drag (unchanged)
+              //const translateX = diffX > 0 ? diffX : diffX * 0.02;
+              const translateX =
+                diffX > 0 ? diffX : diffX < -800 ? -16 : diffX * 0.02;
+              toastEl.style.transform = `translateX(${translateX}px)`;
+              break;
+            case "y":
+              currentY = diffY;
+              // Allow dragging UP (negative), add resistance for dragging DOWN (positive)
+              //const translateY = diffY < 0 ? diffY : diffY * 0.05;
+              const translateY =
+                diffY < 0 ? diffY : diffY > 800 ? 16 : diffY * 0.02;
+              toastEl.style.transform = `translateY(${translateY}px)`;
+              break;
+          }
 
-          if (Math.abs(diff) > 5) wasDragging = true;
+          if (Math.abs(diffX) > 5 || Math.abs(diffY) > 5) wasDragging = true;
         };
 
         onDragEnd = () => {
@@ -279,23 +307,41 @@ export async function setupAutoCaptureTimer(ctx: any) {
 
           toastEl.classList.remove("dragging");
 
-          if (currentX > 100) {
-            // Dismiss
+          // DISMISS LOGIC
+          // 1. Swipe Right (> 100px)
+          if (dragAxis === "x" && currentX > 100) {
             toastEl.style.transition =
               "transform 0.3s ease-out, opacity 0.3s ease";
             toastEl.style.transform = `translateX(400px)`;
             toastEl.style.opacity = "0";
-
-            clearTimeout(autoHideTimeout);
-            setTimeout(destroy, 300);
-          } else {
-            // Reset
+            finishDismiss();
+          }
+          // 2. Swipe Up (< -50px) - Note: UP is negative Y
+          else if (dragAxis === "y" && currentY < -50) {
+            toastEl.style.transition =
+              "transform 0.3s ease-out, opacity 0.3s ease";
+            toastEl.style.transform = `translateY(-100px)`; // Fly up
+            toastEl.style.opacity = "0";
+            finishDismiss();
+          }
+          // 3. Reset (Snap back)
+          else {
             toastEl.style.transition = "";
             toastEl.style.transform = "";
             toastEl.style.opacity = "";
-            // Restart auto hide timer
+            // Restart timer only if we cancelled a drag
             autoHideTimeout = setTimeout(close, 15000);
           }
+
+          // Reset internal state
+          dragAxis = null;
+          currentX = 0;
+          currentY = 0;
+        };
+
+        const finishDismiss = () => {
+          clearTimeout(autoHideTimeout);
+          setTimeout(destroy, 300);
         };
 
         const onMouseDown = (e: MouseEvent) => {
@@ -303,8 +349,10 @@ export async function setupAutoCaptureTimer(ctx: any) {
 
           wasDragging = false;
           startX = e.clientX;
-          toastEl.classList.add("dragging");
+          startY = e.clientY;
+          dragAxis = null;
 
+          toastEl.classList.add("dragging");
           clearTimeout(autoHideTimeout);
 
           if (onDragMove && onDragEnd) {
@@ -314,6 +362,8 @@ export async function setupAutoCaptureTimer(ctx: any) {
         };
 
         // --- LISTENERS ---
+        toastEl.addEventListener("mousedown", onMouseDown);
+
         closeBtn.addEventListener("click", (e) => {
           e.stopPropagation();
           close();
@@ -322,8 +372,6 @@ export async function setupAutoCaptureTimer(ctx: any) {
         toastEl.addEventListener("click", () => {
           if (!wasDragging) capture();
         });
-
-        toastEl.addEventListener("mousedown", onMouseDown);
       },
 
       onRemove: (uiContainer) => {
