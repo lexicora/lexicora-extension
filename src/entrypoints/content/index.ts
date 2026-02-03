@@ -20,6 +20,8 @@ export default defineContentScript({
     onMessage(MSG.GET_PAGE_SELECTION_ARTICLE, getSelectionPageArticle);
     onMessage(MSG.GET_PAGE_SELECTION_DATA, getSelectionPageData);
 
+    //* NOTE (feature parity discrepancy): Not supported on Firefox due to quicker loss of the direct user context action.
+    //* NOTE: The messaging in Firefox does not support opening the sidebar from here due to context loss.
     if (!import.meta.env.FIREFOX) {
       setupCapturePrompt(ctx);
     }
