@@ -6,7 +6,7 @@ import {
 } from "wxt/utils/content-script-ui/shadow-root";
 import "@fontsource/wix-madefor-text/400.css";
 import "@fontsource/wix-madefor-text/500.css";
-import "@fontsource/wix-madefor-text/600.css";
+//import "@fontsource/wix-madefor-text/600.css";
 
 export async function setupCapturePrompt(ctx: any) {
   const TIMER_MS = import.meta.env.DEV ? 1000 : 60000;
@@ -27,8 +27,8 @@ export async function setupCapturePrompt(ctx: any) {
       :host {
         /* DEFAULT (DARK MODE) - Matches .dark in global.css */
         --lexicora-fg: #ffffff;
-        --lexicora-bg: oklch(0.21 0.034 264.665);
-        --lexicora-border: oklch(1 0 0 / 0.14);
+        --lexicora-bg: oklch(0.18 0.034 264.665); /*was:(0.18 was 0.21) oklch(0.1296 0.0274 261.69)*/
+        --lexicora-border: oklch(1 0 0 / 0.15);
         --lexicora-bg-diff-hover: rgba(255, 255, 255, 0.1);
         --lexicora-surface-hover: oklch(0.245 0.033 256.848);
         --lexicora-text-primary: oklch(0.985 0.002 247.839);
@@ -46,7 +46,7 @@ export async function setupCapturePrompt(ctx: any) {
         :host {
           --lexicora-fg: #00143d;
           --lexicora-bg: oklch(1 0 0);
-          --lexicora-border: oklch(0.900 0.006 264.531);
+          --lexicora-border: oklch(0.850 0.006 264.531);
           --lexicora-bg-diff-hover: rgba(0, 0, 0, 0.1);
           --lexicora-surface-hover: oklch(0.985 0.003 264.542);
           --lexicora-text-primary: oklch(0.13 0.028 261.692);
@@ -81,10 +81,11 @@ export async function setupCapturePrompt(ctx: any) {
           0 8px 13px -4px rgba(0, 0, 0, 0.3),
           0 4px 6px -5px rgba(0, 0, 0, 0.1),
           0 -4px 11px -4px rgba(0, 0, 0, 0.2);
-        cursor: pointer;
+        cursor: default;
         user-select: none;
         opacity: 0;
-        transform: translateY(-90px) scale(0.95); /*was -20px*/
+        transform: translateY(-90px) scale(0.95);
+        will-change: transform, opacity, box-shadow, border-color, background-color;
         transition:
           transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
           opacity 0.3s ease-out,
@@ -100,7 +101,6 @@ export async function setupCapturePrompt(ctx: any) {
 
       .lexicora-toast.dragging {
         transition: none;
-        /*cursor: grabbing;*/
       }
 
       .lexicora-icon-box {
@@ -129,7 +129,7 @@ export async function setupCapturePrompt(ctx: any) {
         color: var(--lexicora-fg);
         margin: 0;
         line-height: 1.2;
-        /*letter-spacing: [TODO];*/
+        letter-spacing: 0.01rem;
       }
 
       .lexicora-desc {
@@ -146,22 +146,18 @@ export async function setupCapturePrompt(ctx: any) {
         width: 24px;
         height: 24px;
         padding: 0;
-        background: transparent;
+        background-color: transparent;
         border: none;
         border-radius: 6px;
         color: var(--lexicora-text-secondary);
         cursor: pointer;
-        transition: all 0.2s;
-        margin-left: -4px;
+        will-change: color, background-color;
+        transition: color 0.2s ease, background-color 0.2s ease;
       }
 
       .lexicora-btn-close:hover {
         background-color: var(--lexicora-bg-diff-hover);
         color: var(--lexicora-text-primary);
-      }
-
-      .lexicora-btn-close:active {
-        background-color: rgba(255, 255, 255, 0.15);
       }
     `;
 
@@ -385,8 +381,8 @@ export async function setupCapturePrompt(ctx: any) {
         });
       },
 
+      // Cleanup
       onRemove: (uiContainer) => {
-        // Cleanup
         clearTimeout(autoHideTimeout);
 
         if (onDragMove) window.removeEventListener("mousemove", onDragMove);
