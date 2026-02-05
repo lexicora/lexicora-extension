@@ -19,6 +19,7 @@ function EntriesPage() {
         <footer></footer>
         <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20">
           <div className="shrink-0 flex items-center justify-end max-w-315 mx-auto inset-x-0">
+            {/*MAYBE: Make smaller */}
             <Button
               size="icon"
               title="New Entry"

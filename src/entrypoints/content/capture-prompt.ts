@@ -3,7 +3,7 @@ import { MSG } from "@/types/messaging";
 import {
   createShadowRootUi,
   type ShadowRootContentScriptUi,
-} from "wxt/utils/content-script-ui/shadow-root";
+} from "wxt/utils/content-script-ui/shadow-root"; // #imports works too or even omitting the entire import statement for this is possible (globally imported by wxt itself)
 import "@fontsource/wix-madefor-text/400.css";
 import "@fontsource/wix-madefor-text/500.css";
 

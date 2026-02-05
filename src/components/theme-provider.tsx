@@ -1,45 +1,68 @@
 import { createContext, useContext, useEffect, useState } from "react";
-
-type Theme = "dark" | "light" | "system";
-
-type ThemeProviderProps = {
-  children: React.ReactNode;
-  defaultTheme?: Theme;
-  storageKey?: string;
-};
+import { themeStorage, type Theme } from "@/lib/settings";
 
 type ThemeProviderState = {
   theme: Theme;
   setTheme: (theme: Theme) => void;
+  resolvedTheme: "light" | "dark"; // Optional: resolved theme based on system preference
+  isLoading: boolean; // Add loading state to handle async delay
 };
 
-const initialState: ThemeProviderState = {
-  theme: "system",
-  setTheme: () => null,
-};
-
-const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
+const ThemeProviderContext = createContext<ThemeProviderState | undefined>(
+  undefined,
+);
 
 export function ThemeProvider({
   children,
   defaultTheme = "system",
-  storageKey = "lexicora-ui-theme",
-  ...props
-}: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
-  );
+}: {
+  children: React.ReactNode;
+  defaultTheme?: Theme;
+}) {
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
+  const [isLoading, setIsLoading] = useState(true);
+
+  const applyThemeToDocument = (theme: Theme) => {
+    const root = window.document.documentElement;
+    root.classList.remove("light", "dark");
+
+    if (theme === "system") {
+      const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      root.classList.add(isDark ? "dark" : "light");
+      setResolvedTheme(isDark ? "dark" : "light");
+    } else {
+      root.classList.add(theme);
+      setResolvedTheme(theme);
+    }
+  };
+
+  // Initial Load & Syncing
+  useEffect(() => {
+    async function initTheme() {
+      // Get the value from async storage
+      const savedTheme = await themeStorage.getValue();
+      setTheme(savedTheme);
+      setIsLoading(false);
+
+      // Watch for changes from other parts of the extension
+      return themeStorage.watch((newTheme: Theme) => {
+        if (newTheme) setTheme(newTheme);
+      });
+    }
+
+    const unwatchPromise = initTheme();
+    return () => {
+      unwatchPromise.then((unwatch) => unwatch?.());
+    };
+  }, []);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const handleChange = () => {
-      if (theme === "system") {
-        const newSystemTheme = mediaQuery.matches ? "dark" : "light";
-        const root = window.document.documentElement;
-        root.classList.remove("light", "dark");
-        root.classList.add(newSystemTheme);
-      }
+      if (theme !== "system") return;
+      applyThemeToDocument(theme);
     };
 
     mediaQuery.addEventListener("change", handleChange);
@@ -49,44 +72,31 @@ export function ThemeProvider({
     };
   }, [theme]);
 
+  // Class Logic (Your existing logic is fine, just ensure it runs after loading)
   useEffect(() => {
-    const root = window.document.documentElement;
-
-    root.classList.remove("light", "dark");
-
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light";
-
-      root.classList.add(systemTheme);
-      return;
-    }
-
-    root.classList.add(theme);
-  }, [theme]);
+    if (!isLoading) applyThemeToDocument(theme);
+  }, [theme, isLoading]);
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
+    resolvedTheme,
+    isLoading,
+    setTheme: (newTheme: Theme) => {
+      setTheme(newTheme); // Optimistic UI update
+      themeStorage.setValue(newTheme); // Async save to browser storage
     },
   };
 
   return (
-    <ThemeProviderContext.Provider {...props} value={value}>
-      {children}
+    <ThemeProviderContext.Provider value={value}>
+      {/* Optionally hide children or show a loader to prevent theme flickering on load */}
+      {!isLoading && children}
     </ThemeProviderContext.Provider>
   );
 }
 
 export const useTheme = () => {
   const context = useContext(ThemeProviderContext);
-
-  if (context === undefined)
-    throw new Error("useTheme must be used within a ThemeProvider");
-
+  if (!context) throw new Error("useTheme must be used within a ThemeProvider");
   return context;
 };

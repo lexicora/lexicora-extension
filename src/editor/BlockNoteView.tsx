@@ -35,10 +35,7 @@ import "@blocknote/shadcn/style.css";
 //import "@blocknote/core/fonts/inter.css";
 import "./styles.css";
 
-// TODO: Overhaul theme implementation (with props passed down with the parent using the useTheme hook)
-import { getAppTheme, resolveAppTheme } from "@/lib/theme-helper";
 import { useTheme } from "@/components/theme-provider";
-//import { getAppTheme } from "./theme-config";
 //import { getCustomSlashMenuItems } from "./config";
 
 export function BlockNoteView({
@@ -63,23 +60,15 @@ export function BlockNoteView({
   //onSelectionChange?: (() => void) | undefined;
   //ref?: (instance: HTMLDivElement | null) => void;
 }) {
-  // TODO: Not finished yet (needs event listener for system theme changes)
-  const { theme } = useTheme();
-  const [editorTheme, setEditorTheme] = useState(resolveAppTheme(theme));
+  const { resolvedTheme } = useTheme();
 
-  useEffect(() => {
-    setEditorTheme(resolveAppTheme(theme));
-    //console.log("BlockNoteView: Theme changed to", theme);
-  }, [theme]);
-
-  //TODO: Implement no spellcheck in code blocks
   return (
     <BaseBlockNoteView
       editor={editor}
       className={className}
       style={style}
       editable={editable}
-      theme={editorTheme} // can be left for now
+      theme={resolvedTheme} // can be left for now
       lang={lang}
       spellCheck={spellCheck}
       id={id}
@@ -157,7 +146,7 @@ export function BlockNoteView({
       />
       <GridSuggestionMenuController
         triggerCharacter={":"}
-        // Changes the Emoji Picker to only have 5 columns.
+        // Changes the Emoji Picker to only have 8 columns.
         columns={8}
         minQueryLength={2}
       />

@@ -39,7 +39,12 @@ function ThemePersonalizationSettingsPage() {
             <BellDotIcon className="size-3.5 text-red-400" />
             Notifications
           </Label>*/}
-            <RadioGroup value={theme} defaultValue="system" className="gap-0">
+            <RadioGroup
+              value={theme}
+              //onValueChange={(val) => setTheme(val as typeof theme)}
+              defaultValue="system"
+              className="gap-0"
+            >
               <Item
                 variant="muted"
                 size="sm"
