@@ -8,7 +8,9 @@ import "@fontsource/wix-madefor-text/400.css";
 import "@fontsource/wix-madefor-text/500.css";
 
 export async function setupCapturePrompt(ctx: any) {
-  const TIMER_MS = import.meta.env.DEV ? 1000 : 60000;
+  // TODO: Let user enable/disable via extension settings
+  // TODO: Make timing configurable via extension settings
+  const TIMER_MS = import.meta.env.DEV ? 2000 : 120_000; // 2 minutes in production, 2 seconds in dev
   let ui: ShadowRootContentScriptUi<void> | null = null;
   let timer: ReturnType<typeof setTimeout>;
 
@@ -26,7 +28,7 @@ export async function setupCapturePrompt(ctx: any) {
       :host {
         /* DEFAULT (DARK MODE) - Matches .dark in global.css */
         --lexicora-fg: #ffffff;
-        --lexicora-bg: oklch(0.18 0.034 264.665); /*was:(0.18 was 0.21) oklch(0.1296 0.0274 261.69)*/
+        --lexicora-bg: oklch(0.19 0.034 264.665); /*was:(0.21) oklch(0.1296 0.0274 261.69)*/
         --lexicora-border: oklch(1 0 0 / 0.15);
         --lexicora-bg-diff-hover: rgba(255, 255, 255, 0.1);
         --lexicora-surface-hover: oklch(0.245 0.033 256.848);
