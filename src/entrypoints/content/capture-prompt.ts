@@ -6,7 +6,6 @@ import {
 } from "wxt/utils/content-script-ui/shadow-root";
 import "@fontsource/wix-madefor-text/400.css";
 import "@fontsource/wix-madefor-text/500.css";
-//import "@fontsource/wix-madefor-text/600.css";
 
 export async function setupCapturePrompt(ctx: any) {
   const TIMER_MS = import.meta.env.DEV ? 1000 : 60000;
@@ -33,9 +32,6 @@ export async function setupCapturePrompt(ctx: any) {
         --lexicora-surface-hover: oklch(0.245 0.033 256.848);
         --lexicora-text-primary: oklch(0.985 0.002 247.839);
         --lexicora-text-secondary: oklch(0.707 0.022 261.325);
-        --lexicora-icon-bg: rgba(255, 255, 255, 0.05);
-        --lexicora-shadow-color: rgba(0, 0, 0, 0.5);
-        --lexicora-shadow-subtle: rgba(0, 0, 0, 0.3);
 
         --lexicora-radius: 0.625rem;
         --lexicora-font-sans: "Wix Madefor Text", system-ui, "Segoe UI", -apple-system, Avenir, Helvetica, Arial, sans-serif
@@ -51,9 +47,6 @@ export async function setupCapturePrompt(ctx: any) {
           --lexicora-surface-hover: oklch(0.985 0.003 264.542);
           --lexicora-text-primary: oklch(0.13 0.028 261.692);
           --lexicora-text-secondary: oklch(0.551 0.027 264.364);
-          --lexicora-icon-bg: rgba(0, 0, 0, 0.04);
-          --lexicora-shadow-color: rgba(0, 0, 0, 0.1);
-          --lexicora-shadow-subtle: rgba(0, 0, 0, 0.05);
         }
       }
 
@@ -169,7 +162,7 @@ export async function setupCapturePrompt(ctx: any) {
       onMount: (uiContainer) => {
         uiContainer.innerHTML = `
           <div class="lexicora-toast-wrapper">
-            <div id="lexicora-toast" class="lexicora-toast" tabindex="0" aria-label="Lexicora Capture Notification">
+            <div id="lexicora-toast" class="lexicora-toast" tabindex="0" aria-label="Lexicora Capture prompt">
               <div class="lexicora-icon-box">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512" style="border-radius: 4px;"><g transform="translate(-6143 -16217)"><path d="M457.142,0V124.571a45.714,45.714,0,0,1-45.714,45.714H0Z" transform="translate(6197.857 16558.715)" fill="currentColor"/><path d="M457.142,170.286V45.714A45.714,45.714,0,0,0,411.428,0H0Z" transform="translate(6143 16674.143) rotate(-90)" fill="currentColor"/><path d="M27.731,0H152.188a45.672,45.672,0,0,1,45.672,45.672V170.13l-393.4,223.688Z" transform="translate(6457.139 16217)" fill="currentColor"/></g></svg>
               </div>
