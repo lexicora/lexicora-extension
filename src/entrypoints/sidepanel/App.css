@@ -9,6 +9,10 @@ html {
     overflow-x: hidden;
 }
 
+#lc-body {
+    margin-right: 0 !important;
+}
+
 /*NOTE: Prevents layout shift when editing with editor*/
 body[data-scroll-locked] {
     /*margin-right: 0 !important;*/

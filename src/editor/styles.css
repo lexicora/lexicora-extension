@@ -3,7 +3,7 @@
     --bn-font-family: var(--lc-font-sans-serif);
     color-scheme: normal;
     scrollbar-color: light-dark(#a0a0a0, #828282) transparent;
-    /*TODO MAYBE: Update scrollbar colors*/
+    /*TODO MAYBE: Update scrollbar colors (get inspired from Notion)*/
 }
 
 /* Changes for dark mode */
@@ -75,8 +75,33 @@ html:has(
         [data-floating-ui-focusable]
         [data-radix-popper-content-wrapper]
         .bn-table-handle-menu
+),
+html:has(
+    .bn-container[data-color-scheme]
+        .bn-toolbar
+        button:first-child[data-state="open"]
+),
+html:has(
+    .bn-container[data-color-scheme]
+        .bn-toolbar
+        button.bn-button:nth-child(10)[data-state="open"]
+),
+html:has(
+    .bn-container[data-color-scheme]
+        .bn-toolbar
+        button.bn-button:nth-child(13)[data-state="open"]
 ) {
     overflow: hidden;
+}
+
+/*Special case*/
+html:has(
+    .bn-container[data-color-scheme]
+        .bn-toolbar
+        button:first-child[data-state="open"]
+) {
+    scroll-padding-top: 0 !important;
+    scrollbar-width: 0 !important;
 }
 
 .bn-container[data-color-scheme]:has(.bn-table-handle-menu) .bn-side-menu {
