@@ -5,7 +5,6 @@ import lexicoraLightThemeLogo from "@/assets/logos/lexicora_inverted_bg-transpar
 import lexicoraDarkThemeLogo from "@/assets/logos/lexicora_standard_bg-transparent.svg";
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
-import { getAppTheme } from "@/lib/theme-helper";
 import "./HomePage.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
