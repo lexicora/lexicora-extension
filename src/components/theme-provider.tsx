@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { themeStorage, type Theme } from "@/lib/settings";
+import { themeStorage, type Theme } from "@/lib/utils/storage/settings";
 
 type ThemeProviderState = {
   theme: Theme;
@@ -37,7 +37,7 @@ export function ThemeProvider({
     }
   };
 
-  // Initial Load & Syncing
+  // Initial Load & Syncing (maybe use layout effect to avoid flicker?)
   useEffect(() => {
     async function initTheme() {
       // Get the value from async storage

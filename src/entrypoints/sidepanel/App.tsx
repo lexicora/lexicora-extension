@@ -30,6 +30,7 @@ import EntryEditPage from "./pages/entries/edit/[id]";
 import SettingsPage from "./pages/settings";
 // Sub-settings pages
 import ThemePersonalizationSettingsPage from "./pages/settings/personalization/theme";
+import CaptureSuggestionsSettingsPage from "./pages/settings/features/capture-suggestions";
 // import NotificationsSettingsPage from "./pages/settings/notifications";
 
 function RootLayout() {
@@ -67,10 +68,10 @@ const router = createMemoryRouter([
         path: "settings/personalization/theme",
         element: <ThemePersonalizationSettingsPage />,
       },
-      // {
-      //   path: "settings/notifications",
-      //   element: <NotificationsSettingsPage />,
-      // },
+      {
+        path: "settings/capture-suggestions",
+        element: <CaptureSuggestionsSettingsPage />,
+      },
     ],
   },
 ]);

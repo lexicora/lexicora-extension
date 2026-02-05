@@ -33,6 +33,7 @@ import {
   LightbulbIcon,
   MessageCircleQuestionMarkIcon,
   TimerIcon,
+  Settings2Icon,
   SunMoonIcon,
   ShieldCheckIcon,
   UserRoundIcon,
@@ -101,7 +102,7 @@ function SettingsPage() {
           </section>
           <section id="ai-settings">
             <Label htmlFor="" className="text-sm ml-2 mb-0.5">
-              <HeroSparklesIcon className="size-3.5 text-cyan-400" /> AI
+              <Settings2Icon className="size-3.5 text-cyan-400" /> Features
             </Label>
             <SettingsItem
               to="/settings/ai"
@@ -109,7 +110,15 @@ function SettingsPage() {
               MediaIcon={SparklesIcon}
               mediaIconColor="text-purple-500"
               itemTitle="AI Settings"
-              roundingClass=""
+              roundingClass="rounded-b-none"
+            />
+            <SettingsItem
+              to="/settings/capture-suggestions"
+              size="sm"
+              MediaIcon={CameraIcon}
+              mediaIconColor="text-red-500"
+              itemTitle="Capture Suggestions"
+              roundingClass="rounded-t-none"
             />
           </section>
           <section id="personalization-settings">

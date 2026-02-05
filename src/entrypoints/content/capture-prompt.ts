@@ -7,6 +7,7 @@ import {
 import "@fontsource/wix-madefor-text/400.css";
 import "@fontsource/wix-madefor-text/500.css";
 
+// TODO: Maybe rename to setupCaptureSuggestion
 export async function setupCapturePrompt(ctx: any) {
   // TODO: Let user enable/disable via extension settings
   // TODO: Make timing configurable via extension settings

@@ -11,6 +11,7 @@ html {
 
 #lc-body {
     margin-right: 0 !important;
+    /*Prevents layout shift when editing with editor*/
 }
 
 /*NOTE: Prevents layout shift when editing with editor*/
