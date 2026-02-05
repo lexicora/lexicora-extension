@@ -9,6 +9,9 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@variant data-horizontal (&:where([data-orientation="horizontal"]));
+@variant data-vertical (&:where([data-orientation="vertical"]));
+
 :root {
     --radius: 0.625rem;
     --background: oklch(1 0 0);
