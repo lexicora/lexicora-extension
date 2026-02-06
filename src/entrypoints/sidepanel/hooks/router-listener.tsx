@@ -8,7 +8,10 @@ export function RouterListener() {
   const location = useLocation();
   const { sendMessage, onMessage } = useSidePanelMessaging();
 
+  const pushEnabledRef = useRef(false);
+
   useEffect(() => {
+    if (!pushEnabledRef.current) return;
     // Listen only for the navigation message
     const unsubscribe = onMessage(MSG.NAVIGATE_IN_SIDEPANEL, (msg) => {
       if (!msg.data) return null;
@@ -26,7 +29,7 @@ export function RouterListener() {
     return () => {
       unsubscribe();
     };
-  }, [navigate, location]);
+  }, [pushEnabledRef, location]);
 
   useEffect(() => {
     const navigateToLocation = async () => {
@@ -39,6 +42,8 @@ export function RouterListener() {
         if (path === location.pathname) return;
         navigate(path, { viewTransition: true });
       }
+
+      pushEnabledRef.current = true;
     };
     navigateToLocation();
     // parameter: destination: "background" | "popup" | "content",
