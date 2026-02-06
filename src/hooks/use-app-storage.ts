@@ -5,10 +5,10 @@ export function useAppStorage<T>(storageItem: WxtStorageItem<T, any>) {
   const [value, setValue] = useState<T | undefined>(undefined);
 
   useEffect(() => {
-    // 1. Initial Load
+    // Initial Load
     storageItem.getValue().then((val) => setValue(val));
 
-    // 2. Watch for changes (Cross-context sync)
+    // Watch for changes (Cross-context sync)
     return storageItem.watch((newValue) => {
       setValue(newValue);
     });

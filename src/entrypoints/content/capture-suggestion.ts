@@ -5,17 +5,20 @@ import {
   type ShadowRootContentScriptUi,
 } from "wxt/utils/content-script-ui/shadow-root"; // #imports works too or even omitting the entire import statement for this is possible (globally imported by wxt itself)
 import { ContentScriptContext } from "wxt/utils/content-script-context";
+import {
+  captureSuggestionStorage,
+  captureSuggestionDelayMultiplierStorage,
+} from "@/lib/utils/storage/settings";
 import "@fontsource/wix-madefor-text/400.css";
 import "@fontsource/wix-madefor-text/500.css";
 
 export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
-  // TODO: Let user enable/disable via extension settings
-  // TODO: Make timing configurable via extension settings
-  const TIMER_MS = import.meta.env.DEV ? 2000 : 120_000; // 2 minutes in production, 2 seconds in dev
+  const BASE_DELAY_MS = 60_000; // Base delay of 1 minute, multiplied by the user-configurable multiplier
+
   let ui: ShadowRootContentScriptUi<void> | null = null;
   let timer: ReturnType<typeof setTimeout>;
-
   let autoHideTimeout: ReturnType<typeof setTimeout>;
+
   let onDragMove: ((e: MouseEvent) => void) | null = null;
   let onDragEnd: (() => void) | null = null;
 
@@ -393,18 +396,50 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
   };
 
   // Timer logic
-  const startTimer = async () => {
+  const startTimer = async (checkSidePanelState = true) => {
     clearTimeout(timer);
-    const isOpen = await sendMessage<boolean>(
-      MSG.CHECK_SIDEPANEL_OPEN,
-      {},
-      "background",
-    ).catch(() => false);
-    if (isOpen) return; // Do not show if side panel is open
+
+    const isEnabled = await captureSuggestionStorage.getValue();
+    if (!isEnabled) return;
+
+    if (checkSidePanelState) {
+      const isOpen = await sendMessage<boolean>(
+        MSG.CHECK_SIDEPANEL_OPEN,
+        {},
+        "background",
+      ).catch(() => false);
+      if (isOpen) return; // Do not show if side panel is open
+    }
+
+    const multiplier = await captureSuggestionDelayMultiplierStorage.getValue();
+    const dynamicDelay = import.meta.env.DEV
+      ? multiplier * 1000
+      : multiplier * BASE_DELAY_MS;
+
     timer = setTimeout(() => {
       if (!document.hidden) mountUi();
-    }, TIMER_MS);
+    }, dynamicDelay);
   };
+
+  // If user disables setting while on page, remove existing UI and stop timer
+  ctx.setInterval(() => {}, 0); // Just to ensure ctx is used
+
+  captureSuggestionStorage.watch((enabled) => {
+    if (!enabled) {
+      ui?.remove();
+      ui = null;
+      clearTimeout(timer);
+    } else {
+      startTimer(false);
+      //* NOTE: Since you must be in side-panel it is disabled, so here specifically dont check if side-panel is open
+    }
+  });
+
+  // If user changes the delay, restart the timer with new value
+  captureSuggestionDelayMultiplierStorage.watch(() => {
+    startTimer(false);
+    //* NOTE: Since you must be in side-panel it is disabled, so here specifically dont check if side-panel is open
+  });
 
   startTimer();
 

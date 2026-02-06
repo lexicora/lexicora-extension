@@ -147,10 +147,17 @@ function CaptureSuggestionsSettingsPage() {
                 </p>
               </div>
             </Item>
-            {/*<p className="mt-2 text-muted-foreground">
-              Adjust the delay of the capture suggestions
-            </p>*/}
+            {import.meta.env.DEV && (
+              <p className="mt-2 text-muted-foreground">
+                In dev mode minutes are seconds.
+              </p>
+            )}
           </section>
+          {/*TODO: Potential features to add later:
+          - Option to only show suggestions on certain sites or block suggestions on certain sites (with a toggle and input for sites)
+          - Option to customize the suggestions with instructions for the AI (like "suggest capturing if you are reading an article for more than 5 minutes" or "suggest capturing if you are on a shopping site for more than 10 minutes" etc.)
+          - max prompts per day/week/month with option to reset the count (with a toggle and input for number of prompts)
+          - snooze suggestions for a certain amount of time (with a button to snooze and input for snooze duration)*/}
         </main>
         <footer>{/* Footer content if needed */}</footer>
       </div>

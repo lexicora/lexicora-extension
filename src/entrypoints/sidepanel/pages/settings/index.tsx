@@ -128,6 +128,7 @@ function SettingsPage() {
               itemTitle="Theme"
               roundingClass=""
             />
+            {/*TODO: Maybe add option to style primary color. */}
             {/*<div className="flex flex-row">
             <div className="shrink-0 w-10.5 h-0 border-t border-t-slate-200/75  dark:border-t-muted/50"></div>
             <div className="flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-slate-300/75 dark:border-t-muted"></div>
