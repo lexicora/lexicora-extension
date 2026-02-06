@@ -23,12 +23,13 @@ function NewEntryPage() {
   const navigate = useNavigate();
   const editor = useCreateBlockNote(defaultBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
   const { sendMessage, onMessage } = useSidePanelMessaging();
-  const [language, setLanguage] = useState<string>(navigator.language || "en");
-  const [promptText, setPromptText] = useState("");
-  //const [isAtBottom, setIsAtBottom] = useState(true);
   const { isAtBottom } = useScrollPos();
+  const [language, setLanguage] = useState(navigator.language || "en");
+  const [promptText, setPromptText] = useState("");
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
+
+  //const pushEnabledRef = useRef(false); //* NOTE: This should not be necessary here
 
   const updateEditorContent = (data: PageData) => {
     if (data.HTML) {
@@ -37,6 +38,17 @@ function NewEntryPage() {
       editor.replaceBlocks(editor.document, blocks);
     }
   };
+
+  useEffect(() => {
+    const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
+      if (!msg.data) return null;
+
+      updateEditorContent(msg.data);
+      return true; //* NOTE: To signal to clear the pending capture data in the background or other scripts.
+    });
+
+    return () => unsubscribe();
+  }, [location]);
 
   useEffect(() => {
     const pullData = async () => {
@@ -52,40 +64,6 @@ function NewEntryPage() {
 
     pullData();
   }, []);
-
-  useEffect(() => {
-    const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
-      if (!msg.data) return null;
-
-      updateEditorContent(msg.data);
-      return true; //* NOTE: To signal to clear the pending capture data in the background or other scripts.
-    });
-
-    return () => unsubscribe();
-  }, [location]);
-
-  // useEffect(() => {
-  //   const pullData = async () => {
-  //     const data = await sendMessage(
-  //       MSG.REQUEST_PENDING_DATA,
-  //       null,
-  //       "background",
-  //     );
-  //     if (data) {
-  //       updateEditorContent(data);
-  //     }
-  //   };
-
-  //   pullData();
-
-  //   const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
-  //     if (msg.data) {
-  //       updateEditorContent(msg.data);
-  //     }
-  //   });
-
-  //   return () => unsubscribe();
-  // }, [location]);
 
   useEffect(() => {
     const footerElement = footerRef.current;
