@@ -10,20 +10,18 @@ export function RouterListener() {
 
   useEffect(() => {
     // Listen only for the navigation message
-    const unsubscribe = onMessage<{ path: string }>(
-      MSG.NAVIGATE_IN_SIDEPANEL,
-      (msg) => {
-        if (!msg.data) return null;
+    const unsubscribe = onMessage(MSG.NAVIGATE_IN_SIDEPANEL, (msg) => {
+      if (!msg.data) return null;
 
-        // If already on path, replace history so that navigate(-1) works as expected
-        const isAlreadyOnPath = location.pathname === msg.data.path;
-        navigate(msg.data.path, {
-          replace: isAlreadyOnPath,
-          viewTransition: true,
-        });
-        return true; //* NOTE: To signal to clear the location of pending navigation in the background or other scripts.
-      },
-    );
+      // If already on path, replace history so that navigate(-1) works as expected
+      const isAlreadyOnPath = location.pathname === msg.data.path;
+      navigate(msg.data.path, {
+        replace: isAlreadyOnPath,
+        flushSync: isAlreadyOnPath, // Ensure the navigation happens immediately to trigger specific logic in the destination component if needed
+        viewTransition: true,
+      });
+      return true; //* NOTE: To signal to clear the location of pending navigation in the background or other scripts.
+    });
 
     return () => {
       unsubscribe();
@@ -32,9 +30,9 @@ export function RouterListener() {
 
   useEffect(() => {
     const navigateToLocation = async () => {
-      const path = await sendMessage<string | null>(
+      const path = await sendMessage(
         MSG.REQUEST_PENDING_NAVIGATION,
-        {},
+        null,
         "background", //destination,
       ).catch(() => {});
       if (path) {

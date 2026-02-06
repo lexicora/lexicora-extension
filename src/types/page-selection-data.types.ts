@@ -1,4 +1,4 @@
-export type pageData = {
+export type PageData = {
   baseUri: string;
   HTML: string;
   language: string;

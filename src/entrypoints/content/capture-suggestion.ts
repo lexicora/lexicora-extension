@@ -230,7 +230,7 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
         };
 
         const capture = () => {
-          sendMessage(MSG.OPEN_SIDEPANEL, {}, "background");
+          sendMessage(MSG.OPEN_SIDEPANEL, null, "background");
           close();
         };
 
@@ -403,9 +403,9 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
     if (!isEnabled) return;
 
     if (checkSidePanelState) {
-      const isOpen = await sendMessage<boolean>(
+      const isOpen = await sendMessage(
         MSG.CHECK_SIDEPANEL_OPEN,
-        {},
+        null,
         "background",
       ).catch(() => false);
       if (isOpen) return; // Do not show if side panel is open

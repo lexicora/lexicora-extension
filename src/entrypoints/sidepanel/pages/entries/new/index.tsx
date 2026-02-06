@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeftIcon, House } from "lucide-react";
 import { useSidePanelMessaging } from "@/entrypoints/sidepanel/providers/messaging";
 import { useEffect, useState } from "react";
-import { pageData } from "@/types/page-selection-data.types";
+import { PageData } from "@/types/page-selection-data.types";
 import { MSG } from "@/types/messaging";
 import { defaultBlockNoteConfig } from "@/types/block-note.types";
 
@@ -30,7 +30,7 @@ function NewEntryPage() {
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
 
-  const updateEditorContent = (data: pageData) => {
+  const updateEditorContent = (data: PageData) => {
     if (data.HTML) {
       setLanguage(data.language || navigator.language || "en");
       const blocks = editor.tryParseHTMLToBlocks(data.HTML);
@@ -40,28 +40,52 @@ function NewEntryPage() {
 
   useEffect(() => {
     const pullData = async () => {
-      const data = await sendMessage<pageData | null>(
+      const data = await sendMessage(
         MSG.REQUEST_PENDING_DATA,
-        {},
+        null,
         "background",
       );
       if (data) {
         updateEditorContent(data);
       }
     };
-    pullData();
 
-    const unsubscribe = onMessage<pageData>(
-      MSG.GET_PAGE_SELECTION_DATA,
-      (msg) => {
-        if (msg.data) {
-          updateEditorContent(msg.data);
-        }
-      },
-    );
+    pullData();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
+      if (!msg.data) return null;
+
+      updateEditorContent(msg.data);
+      return true; //* NOTE: To signal to clear the pending capture data in the background or other scripts.
+    });
 
     return () => unsubscribe();
-  }, [editor, location]);
+  }, [location]);
+
+  // useEffect(() => {
+  //   const pullData = async () => {
+  //     const data = await sendMessage(
+  //       MSG.REQUEST_PENDING_DATA,
+  //       null,
+  //       "background",
+  //     );
+  //     if (data) {
+  //       updateEditorContent(data);
+  //     }
+  //   };
+
+  //   pullData();
+
+  //   const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
+  //     if (msg.data) {
+  //       updateEditorContent(msg.data);
+  //     }
+  //   });
+
+  //   return () => unsubscribe();
+  // }, [location]);
 
   useEffect(() => {
     const footerElement = footerRef.current;
