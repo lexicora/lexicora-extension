@@ -9,6 +9,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Data attribute variants for shadcn-ui components */
+@variant data-open (&:where([data-state="open"]));
+@variant data-closed (&:where([data-state="closed"]));
+@variant data-disabled (&:where([data-disabled], [disabled]));
+@variant data-checked (&:where([data-state="checked"]));
+@variant data-unchecked (&:where([data-state="unchecked"]));
 @variant data-horizontal (&:where([data-orientation="horizontal"]));
 @variant data-vertical (&:where([data-orientation="vertical"]));
 
