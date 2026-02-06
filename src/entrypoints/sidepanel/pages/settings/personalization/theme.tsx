@@ -1,5 +1,3 @@
-//import "./Settings.css";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Item,
@@ -8,7 +6,6 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { SettingsItemSeperator } from "@/entrypoints/sidepanel/components/ui/settings-item-seperator";
 import { Button } from "@/components/ui/button";
@@ -35,16 +32,7 @@ function ThemePersonalizationSettingsPage() {
         </header>
         <main className="flex flex-col gap-6 w-full pt-4.5 px-1.5">
           <section>
-            {/*<Label htmlFor="" className="text-sm ml-2 mb-0.5">
-            <BellDotIcon className="size-3.5 text-red-400" />
-            Notifications
-          </Label>*/}
-            <RadioGroup
-              value={theme}
-              //onValueChange={(val) => setTheme(val as typeof theme)}
-              defaultValue="system"
-              className="gap-0"
-            >
+            <RadioGroup value={theme} defaultValue="system" className="gap-0">
               <Item
                 variant="muted"
                 size="sm"

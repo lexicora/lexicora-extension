@@ -4,7 +4,7 @@ import {
   capturePromptDelayMultiplierStorage,
 } from "@/lib/utils/storage/settings";
 import { useAppStorage } from "@/hooks/use-app-storage";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Item,
   ItemActions,
@@ -13,21 +13,14 @@ import {
   ItemTitle,
   ItemDescription,
   ItemHeader,
-  ItemFooter,
 } from "@/components/ui/item";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { SettingsItemSeperator } from "@/entrypoints/sidepanel/components/ui/settings-item-seperator";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeftIcon,
   CameraIcon,
   CameraOffIcon,
-  MonitorIcon,
-  MoonIcon,
-  SunIcon,
   TimerIcon,
 } from "lucide-react";
 
@@ -37,7 +30,8 @@ function CaptureSuggestionsSettingsPage() {
   const [delayMultiplier, setDelayMultiplier] = useAppStorage(
     capturePromptDelayMultiplierStorage,
   );
-  //const [enabled, setEnabled] = useStorage();
+
+  const currentDelay = delayMultiplier || 2;
 
   return (
     <div className="lc-page-container select-none">
@@ -56,31 +50,24 @@ function CaptureSuggestionsSettingsPage() {
             Capture Suggestions
           </h1>
         </header>
-        <main className="flex flex-col gap-6 w-full pt-4.5 px-1.5">
+        <main className="flex flex-col gap-6.5 w-full pt-4.5 px-1.5 mb-2.5">
           <section>
             <Item
               variant="muted"
               size="default"
-              className="group transition-none bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-b-none"
+              className="group py-2.5 gap-2 transition-none bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-b-none"
             >
               <ItemHeader>
                 <ItemMedia variant="icon">
-                  <CameraIcon className="size-7 text-red-500" />
+                  <CameraIcon className="size-8 text-red-500" />
                 </ItemMedia>
               </ItemHeader>
               <ItemContent>
-                {/*<ItemTitle className="text-base">
-                  Account
-                </ItemTitle>*/}
-                <ItemDescription className="line-clamp-none">
-                  Capture Suggestions are prompts that suggest to capture the
-                  content of the current webpage.
-                  <br />
-                  They pop up in the top right corner of the current webpage,
-                  after spending a certain amount of time on the site.
-                  {/*Enable or disable capture suggestions to help you quickly save content.*/}
+                <ItemDescription className="line-clamp-none /*leading-relaxed*/">
+                  Webpage prompts that suggest capturing content after you've
+                  spent some time on a site.
+                  {/*TODO: Later change when this feature becomes smart with analysis*/}
                 </ItemDescription>
-                {/*Later display name of user or account specific data*/}
               </ItemContent>
             </Item>
             <div className="flex flex-row">
@@ -97,13 +84,6 @@ function CaptureSuggestionsSettingsPage() {
               }}
             >
               <ItemMedia variant="icon">
-                {/*{enableNotifications ? (
-              <BellRingIcon
-                className="size-5 text-green-500"
-              />
-            ) : (
-              <BellOffIcon className="size-5 text-gray-500" />
-            )}*/}
                 <CameraIcon
                   className={`size-5 text-green-500 transition-all scale-100 rotate-0 ${enabled ? "" : "scale-0! -rotate-90!"}`}
                 />
@@ -118,85 +98,57 @@ function CaptureSuggestionsSettingsPage() {
                 <Switch
                   className="data-[state=unchecked]:bg-gray-400 dark:data-[state=unchecked]:bg-gray-700"
                   checked={enabled}
-                  onClick={() => {
-                    setEnabled(!enabled);
-                  }}
                 />
               </ItemActions>
             </Item>
           </section>
-          <section>
+          <section
+            className={`transition-all duration-150 ${!enabled ? "opacity-65 grayscale-30 pointer-events-none" : "opacity-100"}`}
+          >
             <Item
               variant="muted"
-              size="sm"
-              className="group transition-none hover:cursor-pointer bg-slate-200/75 dark:bg-muted/50 rounded-2xl /*rounded-t-none*/"
+              size="xs"
+              className="bg-slate-200/75 dark:bg-muted/50 rounded-2xl py-2.5"
             >
-              <ItemMedia variant="icon">
-                <TimerIcon className="size-5 text-orange-500" />
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle className="mt-0.5">Delay</ItemTitle>
-              </ItemContent>
-              <ItemActions className="basis-full py-2">
-                <Slider
-                  className="w-full"
-                  min={1}
-                  max={10}
-                  step={1}
-                  value={[delayMultiplier || 2]}
-                  onValueChange={(value) => {
-                    setDelayMultiplier(value[0]);
-                  }}
-                />
-              </ItemActions>
-              <ItemFooter>
-                <div className="w-full flex justify-between gap-5.5 px-0.25 pl-0.75">
-                  <div className="flex-1 flex flex-col items-center">
-                    <span className="text-gray-400">|</span>
-                    <span>1</span>
+              <div className="flex flex-col w-full gap-4">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <TimerIcon className="size-5 text-orange-500" />
+                    <span className="text-sm font-semibold">Prompt Delay</span>
                   </div>
-                  <div className="flex-1 flex flex-col items-center">
-                    <span className="text-gray-400">|</span>
-                    <span>2</span>
+                  <div className="text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-600 border border-orange-700/25 dark:border-orange-600/25 px-2 py-0.5 rounded-full">
+                    {currentDelay} min
                   </div>
-                  <div className="flex-1 flex flex-col items-center">
-                    <span className="text-gray-400">|</span>
-                    <span>3</span>
-                  </div>
-                  <div className="flex-1 flex flex-col items-center">
-                    <span className="text-gray-400">|</span>
-                    <span>4</span>
-                  </div>
-                  <div className="flex-1 flex flex-col items-center">
-                    <span className="text-gray-400">|</span>
-                    <span>5</span>
-                  </div>
-                  <div className="flex-1 flex flex-col items-center">
-                    <span className="text-gray-400">|</span>
-                    <span>6</span>
-                  </div>
-                  <div className="flex-1 flex flex-col items-center">
-                    <span className="text-gray-400">|</span>
-                    <span>7</span>
-                  </div>
-                  <div className="flex-1 flex flex-col items-center">
-                    <span className="text-gray-400">|</span>
-                    <span>8</span>
-                  </div>
-                  <div className="flex-1 flex flex-col items-center">
-                    <span className="text-gray-400">|</span>
-                    <span>9</span>
-                  </div>
-                  <div className="flex-1 flex flex-col items-center">
-                    <span className="text-gray-400">|</span>
-                    <span>10</span>
-                  </div>
-                  {/*<span className="text-sm text-muted-foreground">Short</span>
-                  <span className="text-sm text-muted-foreground">Long</span>*/}
                 </div>
-              </ItemFooter>
+                <div className="px-1.5">
+                  <Slider
+                    min={1}
+                    max={60}
+                    step={1}
+                    value={[currentDelay]}
+                    onValueChange={(v) => setDelayMultiplier(v[0])}
+                  />
+                  <div className="flex justify-between mt-2 px-0.5">
+                    <span className="text-[10px] text-muted-foreground font-medium">
+                      1m
+                    </span>
+                    <span className="text-[10px] text-muted-foreground font-medium ">
+                      30m
+                    </span>
+                    <span className="text-[10px] text-muted-foreground font-medium">
+                      1h
+                    </span>
+                  </div>
+                </div>
+                <p className="text-[11px] text-muted-foreground italic text-center">
+                  Suggestions will appear after {currentDelay} minute
+                  {currentDelay > 1 ? "s" : ""} of activity.
+                </p>
+              </div>
             </Item>
-            <p className="mt-2 text-muted-foreground">...</p>
+            {/*<p className="mt-2 text-muted-foreground">
+              Adjust the delay of the capture suggestions
+            </p>*/}
           </section>
         </main>
         <footer>{/* Footer content if needed */}</footer>

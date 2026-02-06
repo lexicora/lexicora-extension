@@ -20,9 +20,9 @@ export const capturePromptStorage = storage.defineItem<boolean>(
 );
 
 /**
- * Multiplier of capture prompt delay. 2 is the default meaning with a base of one minute it equals 2 minutes as default.
+ * Multiplier of capture prompt delay. 5 is the default meaning with a base of one minute it equals 5 minutes as default.
  */
 export const capturePromptDelayMultiplierStorage = storage.defineItem<number>(
   "sync:settings-capture-prompt-delay",
-  { fallback: 2 },
+  { fallback: 5 },
 );

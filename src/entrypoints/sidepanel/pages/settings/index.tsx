@@ -112,14 +112,27 @@ function SettingsPage() {
               itemTitle="AI Settings"
               roundingClass="rounded-b-none"
             />
-            <SettingsItem
-              to="/settings/capture-suggestions"
-              size="sm"
-              MediaIcon={CameraIcon}
-              mediaIconColor="text-red-500"
-              itemTitle="Capture Suggestions"
-              roundingClass="rounded-t-none"
-            />
+            {import.meta.env.FIREFOX ? (
+              <SettingsItem
+                to="/settings/not-supported"
+                size="sm"
+                MediaIcon={CameraIcon}
+                mediaIconColor="text-red-500"
+                itemTitle="Capture Suggestions"
+                roundingClass="rounded-t-none"
+                disabled
+                disabledReason="Not supported in Firefox"
+              />
+            ) : (
+              <SettingsItem
+                to="/settings/capture-suggestions"
+                size="sm"
+                MediaIcon={CameraIcon}
+                mediaIconColor="text-red-500"
+                itemTitle="Capture Suggestions"
+                roundingClass="rounded-t-none"
+              />
+            )}
           </section>
           <section id="personalization-settings">
             <Label htmlFor="" className="text-sm ml-2 mb-0.5">
@@ -140,9 +153,7 @@ function SettingsPage() {
           </div>*/}
           </section>
           {/*NOTE: Firefox does not support Notifications currently */}
-          {import.meta.env.FIREFOX ? null : (
-            //TODO: Maybe put in entire separate page
-            <section id="notification-settings">
+          {/*<section id="notification-settings">
               <Label htmlFor="" className="text-sm ml-2 mb-0.5">
                 <CameraIcon className="size-3.5 text-red-400" />
                 Capture Suggestions
@@ -156,13 +167,6 @@ function SettingsPage() {
                 }}
               >
                 <ItemMedia variant="icon">
-                  {/*{enableNotifications ? (
-                <BellRingIcon
-                  className="size-5 text-green-500"
-                />
-              ) : (
-                <BellOffIcon className="size-5 text-gray-500" />
-              )}*/}
                   <CameraIcon
                     className={`size-5 text-green-500 transition-all scale-100 rotate-0 ${enableNotifications ? "" : "scale-0! -rotate-90!"}`}
                   />
@@ -188,7 +192,7 @@ function SettingsPage() {
                 variant="muted"
                 size="sm"
                 className={`group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl rounded-t-none
-              ${!enableNotifications ? "opacity-65 pointer-events-none tab" : ""}`}
+              ${!enableNotifications ? "opacity-65 pointer-events-none" : ""}`}
                 asChild
               >
                 <button
@@ -211,9 +215,8 @@ function SettingsPage() {
                   </ItemActions>
                 </button>
               </Item>
-              {/*Add website exclusions of notifications setting */}
-            </section>
-          )}
+              //Add website exclusions of notifications setting
+            </section>*/}
           <section id="general-settings">
             <Label htmlFor="" className="text-sm ml-2 mb-0.5">
               <HeroCogIcon className="size-3.5 text-gray-400" /> General

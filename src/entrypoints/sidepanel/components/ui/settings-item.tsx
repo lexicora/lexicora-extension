@@ -24,6 +24,8 @@ export function SettingsItem({
   mediaIconColor = "text-gray-500",
   itemTitle = "Settings Item",
   roundingClass = "",
+  disabled = false,
+  disabledReason = "",
 }: {
   to: string;
   size: "default" | "sm" | "xs";
@@ -31,13 +33,15 @@ export function SettingsItem({
   mediaIconColor?: string;
   itemTitle?: string;
   roundingClass?: "" | "rounded-b-none" | "rounded-t-none" | "rounded-none!"; // TODO
+  disabled?: boolean;
+  disabledReason?: string;
 }) {
   return (
-    <>
+    <div title={disabled && disabledReason ? disabledReason : ""}>
       <Item
         variant="muted"
         size={size}
-        className={`group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl ${roundingClass}`}
+        className={`group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl ${roundingClass} ${disabled ? "opacity-65 grayscale-30 pointer-events-none" : ""}`}
         asChild
       >
         <Link to={to} draggable={false} viewTransition>
@@ -59,6 +63,6 @@ export function SettingsItem({
       {roundingClass !== "" && roundingClass !== "rounded-t-none" && (
         <SettingsItemSeperator />
       )}
-    </>
+    </div>
   );
 }
