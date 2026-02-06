@@ -35,8 +35,6 @@ import "./Settings.css";
 
 import { SettingsItem } from "@/entrypoints/sidepanel/components/ui/settings-item";
 
-// TODO: Maybe change the style of the settings, (might too closely resemble Apple's IOS settings app)
-
 function SettingsPage() {
   return (
     <div className="lc-page-container select-none">
@@ -136,71 +134,6 @@ function SettingsPage() {
             <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
           </div>*/}
           </section>
-          {/*NOTE: Firefox does not support Notifications currently */}
-          {/*<section id="notification-settings">
-              <Label htmlFor="" className="text-sm ml-2 mb-0.5">
-                <CameraIcon className="size-3.5 text-red-400" />
-                Capture Suggestions
-              </Label>
-              <Item
-                variant="muted"
-                size="sm"
-                className="group transition-colors duration-150 hover:cursor-pointer bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-b-none"
-                onClick={() => {
-                  setEnableNotifications(!enableNotifications);
-                }}
-              >
-                <ItemMedia variant="icon">
-                  <CameraIcon
-                    className={`size-5 text-green-500 transition-all scale-100 rotate-0 ${enableNotifications ? "" : "scale-0! -rotate-90!"}`}
-                  />
-                  <CameraOffIcon
-                    className={`absolute size-5 text-gray-500 transition-all scale-100 rotate-0 ${enableNotifications ? "scale-0! rotate-90!" : ""}`}
-                  />
-                </ItemMedia>
-                <ItemContent>
-                  <ItemTitle>Capture Suggestions</ItemTitle>
-                </ItemContent>
-                <ItemActions>
-                  <Switch
-                    className="data-[state=unchecked]:bg-gray-400 dark:data-[state=unchecked]:bg-gray-700"
-                    checked={enableNotifications}
-                    onClick={() => {
-                      setEnableNotifications(!enableNotifications);
-                    }}
-                  />
-                </ItemActions>
-              </Item>
-              <SettingsItemSeperator />
-              <Item
-                variant="muted"
-                size="sm"
-                className={`group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl rounded-t-none
-              ${!enableNotifications ? "opacity-65 pointer-events-none" : ""}`}
-                asChild
-              >
-                <button
-                  onClick={() =>
-                    navigate("/settings/notifications/duration", {
-                      viewTransition: true,
-                    })
-                  }
-                  disabled={!enableNotifications}
-                  draggable={false}
-                >
-                  <ItemMedia variant="icon">
-                    <TimerIcon className="size-5 text-orange-500" />
-                  </ItemMedia>
-                  <ItemContent>
-                    <ItemTitle>Delay</ItemTitle>
-                  </ItemContent>
-                  <ItemActions>
-                    <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
-                  </ItemActions>
-                </button>
-              </Item>
-              //Add website exclusions of notifications setting
-            </section>*/}
           <section id="general-settings">
             <Label htmlFor="" className="text-sm ml-2 mb-0.5">
               <HeroCogIcon className="size-3.5 text-gray-400" /> General
