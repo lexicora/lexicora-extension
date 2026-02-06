@@ -1,11 +1,11 @@
-import { defineConfig } from "wxt";
+import { defineConfig, UserManifest } from "wxt";
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   srcDir: "src",
   manifest: ({ browser, manifestVersion, mode, command }) => {
-    return {
+    const manifestBase: UserManifest = {
       name: "Lexicora Extension",
       description:
         "A browser extension for the Lexicora platform and services.",
@@ -23,5 +23,21 @@ export default defineConfig({
       ],
       //host_permissions: ["<all_urls>"], //* NOTE: Not needed, activeTab should be enough
     };
+
+    let userManifest: UserManifest = manifestBase;
+
+    // Firefox-specific settings
+    if (browser === "firefox") {
+      userManifest = {
+        ...manifestBase,
+        browser_specific_settings: {
+          gecko: {
+            id: "{d7fed14a-3919-4383-892e-dcc1a7b53988}",
+          },
+        },
+      };
+    }
+
+    return userManifest;
   },
 });
