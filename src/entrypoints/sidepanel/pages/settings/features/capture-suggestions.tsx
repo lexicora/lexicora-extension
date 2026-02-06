@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
-  capturePromptStorage,
-  capturePromptDelayMultiplierStorage,
+  captureSuggestionStorage,
+  captureSuggestionDelayMultiplierStorage,
 } from "@/lib/utils/storage/settings";
 import { useAppStorage } from "@/hooks/use-app-storage";
 import { useNavigate } from "react-router-dom";
@@ -26,9 +26,9 @@ import {
 
 function CaptureSuggestionsSettingsPage() {
   const navigate = useNavigate();
-  const [enabled, setEnabled] = useAppStorage(capturePromptStorage);
+  const [enabled, setEnabled] = useAppStorage(captureSuggestionStorage);
   const [delayMultiplier, setDelayMultiplier] = useAppStorage(
-    capturePromptDelayMultiplierStorage,
+    captureSuggestionDelayMultiplierStorage,
   );
 
   const currentDelay = delayMultiplier || 2;
@@ -127,6 +127,7 @@ function CaptureSuggestionsSettingsPage() {
                     step={1}
                     value={[currentDelay]}
                     onValueChange={(v) => setDelayMultiplier(v[0])}
+                    disabled={!enabled}
                   />
                   <div className="flex justify-between mt-2 px-0.5">
                     <span className="text-[10px] text-muted-foreground font-medium">

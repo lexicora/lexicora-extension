@@ -1,29 +1,20 @@
-import { useState } from "react";
-import "./Settings.css";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Item,
   ItemActions,
   ItemContent,
-  ItemDescription,
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  CogIcon as HeroCogIcon,
+  InformationCircleIcon as HeroInformationCircleIcon,
+} from "@heroicons/react/16/solid";
+import { SparklesIcon } from "@heroicons/react/24/solid";
 import {
   CameraIcon,
-  CameraOffIcon,
   ChevronRightIcon,
-  CogIcon,
-  CircleQuestionMarkIcon,
-  PaletteIcon,
-  PersonStandingIcon,
-  BellDotIcon,
-  BellIcon,
-  BellOffIcon,
-  BellRingIcon,
   EllipsisIcon,
   FileTextIcon,
   HeartPlusIcon,
@@ -32,28 +23,21 @@ import {
   LifeBuoyIcon,
   LightbulbIcon,
   MessageCircleQuestionMarkIcon,
-  TimerIcon,
+  PaletteIcon,
+  PersonStandingIcon,
   Settings2Icon,
-  SunMoonIcon,
   ShieldCheckIcon,
+  SunMoonIcon,
   UserRoundIcon,
 } from "lucide-react";
-import { SparklesIcon } from "@heroicons/react/24/solid";
-import {
-  CogIcon as HeroCogIcon,
-  SparklesIcon as HeroSparklesIcon,
-  InformationCircleIcon as HeroInformationCircleIcon,
-} from "@heroicons/react/16/solid";
+import { Link } from "react-router-dom";
+import "./Settings.css";
 
-import { SettingsItemSeperator } from "@/entrypoints/sidepanel/components/ui/settings-item-seperator";
 import { SettingsItem } from "@/entrypoints/sidepanel/components/ui/settings-item";
 
 // TODO: Maybe change the style of the settings, (might too closely resemble Apple's IOS settings app)
 
 function SettingsPage() {
-  const navigate = useNavigate();
-  const [enableNotifications, setEnableNotifications] = useState(true); // Placeholder for actual state management
-
   return (
     <div className="lc-page-container select-none">
       <div className="lc-page-container-inner">

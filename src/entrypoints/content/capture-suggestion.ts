@@ -4,11 +4,11 @@ import {
   createShadowRootUi,
   type ShadowRootContentScriptUi,
 } from "wxt/utils/content-script-ui/shadow-root"; // #imports works too or even omitting the entire import statement for this is possible (globally imported by wxt itself)
+import { ContentScriptContext } from "wxt/utils/content-script-context";
 import "@fontsource/wix-madefor-text/400.css";
 import "@fontsource/wix-madefor-text/500.css";
 
-// TODO: Maybe rename to setupCaptureSuggestion
-export async function setupCapturePrompt(ctx: any) {
+export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
   // TODO: Let user enable/disable via extension settings
   // TODO: Make timing configurable via extension settings
   const TIMER_MS = import.meta.env.DEV ? 2000 : 120_000; // 2 minutes in production, 2 seconds in dev

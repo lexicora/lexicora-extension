@@ -42,6 +42,7 @@ export function SettingsItem({
         variant="muted"
         size={size}
         className={`group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl ${roundingClass} ${disabled ? "opacity-65 grayscale-30 pointer-events-none" : ""}`}
+        tabIndex={disabled ? -1 : 0}
         asChild
       >
         <Link to={to} draggable={false} viewTransition>

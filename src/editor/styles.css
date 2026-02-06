@@ -50,7 +50,7 @@
     /*Border color*/
     --bn-border: 1px solid var(--color-border); /*Editor background color*/
     /*--bn-colors-editor-background: #0c1019; /*was: #0f141f*/
-    --bn-colors-editor-background: #1c2026; /*was: #d1d1d1 in neutral theme */
+    --bn-colors-editor-background: #1c2026; /*was: #d1d1d1 in neutral theme, Maybe adjust later to a more blueish tone*/
 
     /*Editor text color*/
     --bn-colors-editor-text: #d2d2d2; /*originally: #cfcfcf*/

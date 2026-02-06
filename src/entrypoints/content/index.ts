@@ -1,7 +1,7 @@
 import { onMessage } from "webext-bridge/content-script";
 import { MSG } from "@/types/messaging";
 import { getSelectionPageArticle, getSelectionPageData } from "./selection";
-import { setupCapturePrompt } from "./capture-prompt";
+import { setupCaptureSuggestion } from "./capture-suggestion";
 
 export default defineContentScript({
   //matches: ['*://*.google.com/*'],
@@ -23,7 +23,7 @@ export default defineContentScript({
     //* NOTE (feature parity discrepancy): Not supported on Firefox due to quicker loss of the direct user context action.
     //* NOTE: The messaging in Firefox does not support opening the sidebar from here due to context loss.
     if (!import.meta.env.FIREFOX) {
-      setupCapturePrompt(ctx);
+      setupCaptureSuggestion(ctx);
     }
   },
 });

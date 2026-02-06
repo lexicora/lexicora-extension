@@ -7,7 +7,11 @@
 
 html {
     overflow-x: hidden;
+    scroll-padding-top: 58px;
+    scroll-padding-bottom: 58px;
 }
+/*Account for TopBar height. was: 60px*/
+/*Account for BottomNavigation height. was: 60px (opt out on a page level)*/
 
 #lc-body {
     margin-right: 0 !important;
@@ -28,9 +32,7 @@ body[data-scroll-locked] {
     padding-right: calc(var(--lc-scrollbar-offset) + 2px);
     /*margin-inline: auto;*/
     margin-top: 58px; /*Account for TopBar height. was: 60px*/
-    scroll-padding-top: 58px; /*Account for TopBar height. was: 60px*/
     margin-bottom: 58px; /*Account for BottomNavigation height. was: 60px (opt out on a page level)*/
-    scroll-padding-bottom: 58px; /*Account for BottomNavigation height. was: 60px (opt out on a page level)*/
     /*inset-inline: 0;*/
 }
 
