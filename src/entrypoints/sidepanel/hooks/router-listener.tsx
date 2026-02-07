@@ -8,10 +8,10 @@ export function RouterListener() {
   const location = useLocation();
   const { sendMessage, onMessage } = useSidePanelMessaging();
 
-  const pushEnabledRef = useRef(false);
+  const [pushEnabled, setPushEnabled] = useState(false);
 
   useEffect(() => {
-    if (!pushEnabledRef.current) return;
+    if (!pushEnabled) return;
     // Listen only for the navigation message
     const unsubscribe = onMessage(MSG.NAVIGATE_IN_SIDEPANEL, (msg) => {
       if (!msg.data) return null;
@@ -19,7 +19,7 @@ export function RouterListener() {
       // If already on path, replace history so that navigate(-1) works as expected
       const isAlreadyOnPath = location.pathname === msg.data.path;
       navigate(msg.data.path, {
-        replace: isAlreadyOnPath,
+        replace: isAlreadyOnPath, // Replace history if already on the target path to prevent navigation loops and ensure back button works as expected
         flushSync: isAlreadyOnPath, // Ensure the navigation happens immediately to trigger specific logic in the destination component if needed
         viewTransition: true,
       });
@@ -29,10 +29,10 @@ export function RouterListener() {
     return () => {
       unsubscribe();
     };
-  }, [pushEnabledRef, location]);
+  }, [pushEnabled, location]);
 
   useEffect(() => {
-    const navigateToLocation = async () => {
+    const initNavigateToLocation = async () => {
       const path = await sendMessage(
         MSG.REQUEST_PENDING_NAVIGATION,
         null,
@@ -43,9 +43,9 @@ export function RouterListener() {
         navigate(path, { viewTransition: true });
       }
 
-      pushEnabledRef.current = true;
+      setPushEnabled(true);
     };
-    navigateToLocation();
+    initNavigateToLocation();
     // parameter: destination: "background" | "popup" | "content",
     // navigateToLocation("background");
     // navigateToLocation("content");

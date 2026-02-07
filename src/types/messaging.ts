@@ -28,6 +28,9 @@ export const MSG = {
 } as const;
 
 // Types for the messages and their payloads
+/**
+ * @deprecated Use the ProtocolMap interface in shim.d.ts for type-safe messaging instead. This type is less flexible and can lead to maintenance issues as the messaging system evolves.
+ */
 export type Message =
   // Message from a UI component or context menu click to the background script
   | {
@@ -56,4 +59,5 @@ export type Message =
     };
 
 // Helper typed send (optional)
+// Remove later: not used
 export type MaybePromise<T> = T | Promise<T>;

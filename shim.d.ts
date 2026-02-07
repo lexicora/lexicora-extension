@@ -16,6 +16,7 @@ declare module "webext-bridge" {
       { path: string },
       boolean | null
     >;
+
     // From anywhere to content-script
     [MSG.GET_PAGE_SELECTION_ARTICLE]: ProtocolWithReturn<null, Article | null>;
     [MSG.GET_PAGE_SELECTION_DATA]: ProtocolWithReturn<null, PageData | null>;
