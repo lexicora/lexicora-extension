@@ -1,7 +1,7 @@
 import { onMessage, sendMessage } from "webext-bridge/background";
-import { type Message, MSG } from "@/types/messaging";
+import { MSG } from "@/types/messaging";
 import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/types/context-menu-items";
-import { pageData } from "@/types/page-selection-data.types";
+import { PageData } from "@/types/page-selection-data.types";
 import { Readability } from "@mozilla/readability";
 import { Article } from "@/types/mozilla-article.types";
 import turndownService from "@/lib/turndown";
@@ -29,9 +29,9 @@ export function setupContextMenuActions() {
       }
       case CMI_ID.CAPTURE_SELECTION_AI_ASSISTED: {
         // @ts-ignore: Article does not satisfy JsonValue
-        const pageSelectionArticle = await sendMessage<Article>(
+        const pageSelectionArticle = await sendMessage(
           MSG.GET_PAGE_SELECTION_ARTICLE,
-          {},
+          null,
           "content-script@" + tab?.id,
         );
         if (!pageSelectionArticle) break;
@@ -62,9 +62,9 @@ export function setupContextMenuActions() {
         }
 
         // Request page selection data from content script
-        const pageSelectionData = await sendMessage<pageData | null>(
+        const pageSelectionData = await sendMessage(
           MSG.GET_PAGE_SELECTION_DATA,
-          {},
+          null,
           "content-script@" + tab?.id,
         );
 
@@ -73,7 +73,7 @@ export function setupContextMenuActions() {
           setPendingCapture(pageSelectionData);
 
           // Push logic if side panel is already open
-          const clearPendingNavigation = await sendMessage<boolean | null>(
+          const clearPendingNavigation = await sendMessage(
             MSG.NAVIGATE_IN_SIDEPANEL,
             { path: "/entries/new" },
             "side-panel@" + tab.windowId,
@@ -84,11 +84,15 @@ export function setupContextMenuActions() {
           }
 
           // Push logic if side panel is already open
-          sendMessage(
+          const clearPendingCaptureData = await sendMessage(
             MSG.SEND_PAGE_SELECTION_DATA,
             pageSelectionData, //TODO: Handle null case in sidepanel editor component.
             "side-panel@" + tab.windowId,
           ).catch(() => {});
+
+          if (clearPendingCaptureData === true) {
+            setPendingCapture(null);
+          }
         }
 
         //* INFO: Debug logs

@@ -5,6 +5,7 @@ import { setupCaptureSuggestion } from "./capture-suggestion";
 
 export default defineContentScript({
   //matches: ['*://*.google.com/*'],
+  // TODO: Maybe change to ["http://*/*", "https://*/*", "file:///*"] or similar, to not run on unsupported pages and easier acceptance in to browser web-stores
   matches: ["<all_urls>"],
   excludeMatches: import.meta.env.FIREFOX
     ? ["about:*", "https://addons.mozilla.org/*"]

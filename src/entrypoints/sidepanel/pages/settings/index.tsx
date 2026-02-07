@@ -96,14 +96,14 @@ function SettingsPage() {
             />
             {import.meta.env.FIREFOX ? (
               <SettingsItem
-                to="/settings/not-supported"
+                to="/not-supported"
                 size="sm"
                 MediaIcon={CameraIcon}
                 mediaIconColor="text-red-500"
                 itemTitle="Capture Suggestions"
                 roundingClass="rounded-t-none"
                 disabled
-                disabledReason="Not supported in Firefox"
+                disabledReason="Not supported in Firefox based browsers"
               />
             ) : (
               <SettingsItem

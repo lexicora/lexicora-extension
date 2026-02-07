@@ -1,5 +1,5 @@
 import { Readability } from "@mozilla/readability";
-import { pageData } from "@/types/page-selection-data.types";
+import { PageData } from "@/types/page-selection-data.types";
 import { Article } from "@/types/mozilla-article.types";
 import DomPurify from "dompurify";
 
@@ -44,7 +44,7 @@ export async function getSelectionPageArticle(): Promise<Article> {
  * This function is for saving the selection "as is", but with URLs resolved.
  * It preserves all tags, including images, and converts relative URLs to absolute ones.
  */
-export async function getSelectionPageData(): Promise<pageData | null> {
+export async function getSelectionPageData(): Promise<PageData | null> {
   const selection = window.getSelection();
   const pageBaseUri = document.baseURI;
   if (!selection || selection.rangeCount === 0) {

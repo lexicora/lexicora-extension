@@ -1,13 +1,13 @@
 import { onMessage } from "webext-bridge/background";
 import { MSG } from "@/types/messaging";
-import { pageData } from "@/types/page-selection-data.types";
+import { PageData } from "@/types/page-selection-data.types";
 
 // This stays private to this module (encapsulation)
-let pendingCapture: pageData | null = null;
+let pendingCapture: PageData | null = null;
 let pendingNavigation: string | null = null;
 
 // Export the setter so context-menu.ts can call it
-export const setPendingCapture = (data: pageData | null) => {
+export const setPendingCapture = (data: PageData | null) => {
   pendingCapture = data;
 };
 

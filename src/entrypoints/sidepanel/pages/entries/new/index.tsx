@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeftIcon, House } from "lucide-react";
 import { useSidePanelMessaging } from "@/entrypoints/sidepanel/providers/messaging";
 import { useEffect, useState } from "react";
-import { pageData } from "@/types/page-selection-data.types";
+import { PageData } from "@/types/page-selection-data.types";
 import { MSG } from "@/types/messaging";
 import { defaultBlockNoteConfig } from "@/types/block-note.types";
 
@@ -23,14 +23,15 @@ function NewEntryPage() {
   const navigate = useNavigate();
   const editor = useCreateBlockNote(defaultBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
   const { sendMessage, onMessage } = useSidePanelMessaging();
-  const [language, setLanguage] = useState<string>(navigator.language || "en");
-  const [promptText, setPromptText] = useState("");
-  //const [isAtBottom, setIsAtBottom] = useState(true);
   const { isAtBottom } = useScrollPos();
+  const [language, setLanguage] = useState(navigator.language || "en");
+  const [promptText, setPromptText] = useState("");
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
 
-  const updateEditorContent = (data: pageData) => {
+  //const pushEnabledRef = useRef(false); //* NOTE: This should not be necessary here
+
+  const updateEditorContent = (data: PageData) => {
     if (data.HTML) {
       setLanguage(data.language || navigator.language || "en");
       const blocks = editor.tryParseHTMLToBlocks(data.HTML);
@@ -39,29 +40,30 @@ function NewEntryPage() {
   };
 
   useEffect(() => {
+    const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
+      if (!msg.data) return null;
+
+      updateEditorContent(msg.data);
+      return true; //* NOTE: To signal to clear the pending capture data in the background or other scripts.
+    });
+
+    return () => unsubscribe();
+  }, [location]);
+
+  useEffect(() => {
     const pullData = async () => {
-      const data = await sendMessage<pageData | null>(
+      const data = await sendMessage(
         MSG.REQUEST_PENDING_DATA,
-        {},
+        null,
         "background",
       );
       if (data) {
         updateEditorContent(data);
       }
     };
+
     pullData();
-
-    const unsubscribe = onMessage<pageData>(
-      MSG.GET_PAGE_SELECTION_DATA,
-      (msg) => {
-        if (msg.data) {
-          updateEditorContent(msg.data);
-        }
-      },
-    );
-
-    return () => unsubscribe();
-  }, [editor, location]);
+  }, []);
 
   useEffect(() => {
     const footerElement = footerRef.current;
@@ -83,7 +85,7 @@ function NewEntryPage() {
   return (
     //* NOTE: Opt in for now, because of editor styles being changed
     <div id="lc-new-entry-page" className="lc-page-container mb-0! /*pr-3!*/">
-      {/*Make the inner container as tall (min-height) as the vh (but not overflowing) */}
+      {/*Make the inner container as tall (min-height) as the vh (but not overflowing) to prevent issues with editor*/}
       <div className="lc-page-container-inner">
         <header className="flex items-center /*gap-2*/ mb-4 w-full">
           <Button
@@ -91,15 +93,10 @@ function NewEntryPage() {
             size="icon"
             title="Go back"
             className="size-10 rounded-lg"
-            onClick={() => navigate(-1)} // was "/", { viewTransition: true }
+            onClick={() => navigate(-1)} // maybe change to navigate("/entries")
           >
             <ArrowLeftIcon className="size-4.5" />
           </Button>
-          {/*<Link to="/entries">
-          <Button variant="ghost" size="icon" title="Go to Entries Home">
-            <House />
-          </Button>
-        </Link>*/}
           <h1 className="flex-1 mr-10 /*mr-12*/ text-2xl font-semibold">
             New Entry
           </h1>

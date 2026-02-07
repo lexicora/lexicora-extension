@@ -19,6 +19,7 @@ import { BottomNavigation } from "./components/ui/bottom-navigation";
 // Pages
 import HomePage from "./pages/home";
 import NotFoundPage from "./pages/not-found";
+import NotSupportedPage from "./pages/not-supported";
 
 // Entries Pages
 import EntriesPage from "./pages/entries";
@@ -56,6 +57,7 @@ const router = createMemoryRouter([
     children: [
       { path: "/", element: <HomePage /> },
       { path: "*", element: <NotFoundPage /> },
+      { path: "not-supported", element: <NotSupportedPage /> },
       // Add fallback page for error display
       // Entries
       { path: "entries", element: <EntriesPage /> },
