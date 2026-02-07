@@ -18,6 +18,7 @@ import { BottomNavigation } from "./components/ui/bottom-navigation";
 
 // Pages
 import HomePage from "./pages/home";
+import ErrorPage from "./pages/error";
 import NotFoundPage from "./pages/not-found";
 import NotSupportedPage from "./pages/not-supported";
 
@@ -40,7 +41,7 @@ function RootLayout() {
   return (
     <SidePanelMessagingProvider>
       <RouterListener />
-      <ScrollRestoration /*style={{ scrollBehavior: "auto" }}*/ />
+      <ScrollRestoration />
       <ScrollObserverProvider>
         <TopBar />
         <Outlet />
@@ -54,6 +55,7 @@ const router = createMemoryRouter([
   {
     path: "/",
     element: <RootLayout />,
+    errorElement: <ErrorPage />,
     children: [
       { path: "/", element: <HomePage /> },
       { path: "*", element: <NotFoundPage /> },

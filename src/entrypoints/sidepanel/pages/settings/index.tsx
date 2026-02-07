@@ -31,7 +31,7 @@ import {
   UserRoundIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import "./Settings.css";
+import "./SettingsPage.css";
 
 import { SettingsItem } from "@/entrypoints/sidepanel/components/ui/settings-item";
 
