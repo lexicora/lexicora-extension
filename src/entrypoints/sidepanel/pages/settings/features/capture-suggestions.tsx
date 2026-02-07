@@ -50,7 +50,7 @@ function CaptureSuggestionsSettingsPage() {
             Capture Suggestions
           </h1>
         </header>
-        <main className="flex flex-col gap-6.5 w-full pt-4.5 px-1.5 mb-2.5">
+        <main className="flex flex-col gap-6.5 w-full pt-4.5 px-1.5 mb-1">
           <section>
             <Item
               variant="muted"
@@ -114,7 +114,7 @@ function CaptureSuggestionsSettingsPage() {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <TimerIcon className="size-5 text-orange-500" />
-                    <span className="text-sm font-semibold">Prompt Delay</span>
+                    <span className="text-sm font-medium">Prompt Delay</span>
                   </div>
                   <div className="text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-600 border border-orange-700/25 dark:border-orange-600/25 px-2 py-0.5 rounded-full">
                     {currentDelay} min
