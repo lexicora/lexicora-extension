@@ -40,7 +40,7 @@ function RootLayout() {
   return (
     <SidePanelMessagingProvider>
       <RouterListener />
-      <ScrollRestoration style={{ scrollBehavior: "auto" }} />
+      <ScrollRestoration /*style={{ scrollBehavior: "auto" }}*/ />
       <ScrollObserverProvider>
         <TopBar />
         <Outlet />
