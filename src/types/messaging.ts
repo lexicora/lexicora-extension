@@ -1,5 +1,8 @@
 // Shared message type constants and TS types
 // [destination]/[action] - This convention helps to quickly identify the flow of messages and their purpose, improving maintainability and readability.
+/**
+ * Collection of Message identifiers, to be used for messaging within the browser extension.
+ */
 export const MSG = {
   // From anywhere to background
   SAVE_SELECTION_TO_MARKDOWN: "background/SAVE_SELECTION_TO_MARKDOWN",
@@ -26,38 +29,3 @@ export const MSG = {
   REQUEST_PENDING_NAVIGATION: "background/REQUEST_PENDING_NAVIGATION",
   //REQUEST_SIDEPANEL_STATE: "sidepanel/REQUEST_SIDEPANEL_STATE",
 } as const;
-
-// Types for the messages and their payloads
-/**
- * @deprecated Use the ProtocolMap interface in shim.d.ts for type-safe messaging instead. This type is less flexible and can lead to maintenance issues as the messaging system evolves.
- */
-export type Message =
-  // Message from a UI component or context menu click to the background script
-  | {
-      type: typeof MSG.SAVE_SELECTION_TO_MARKDOWN;
-      payload: { selectionText: string };
-    }
-  | { type: typeof MSG.SAVE_PAGE_TO_MARKDOWN }
-  | { type: typeof MSG.TRIGGER_AUTO_CAPTURE_NOTIFICATION }
-
-  // Message from background to content script to request data
-  | { type: typeof MSG.GET_PAGE_SELECTION_ARTICLE }
-  | { type: typeof MSG.GET_PAGE_SELECTION_DATA }
-  | { type: typeof MSG.GET_PAGE_SELECTION_DATA_AS_IS }
-  | { type: typeof MSG.GET_PAGE_SELECTION_DATA_AI_ASSISTED }
-  | { type: typeof MSG.GET_PAGE_HTML }
-  | { type: typeof MSG.REQUEST_PENDING_DATA }
-  | { type: typeof MSG.REQUEST_PENDING_NAVIGATION }
-
-  // Message from background to sidepanel with the requested data
-  | {
-      type: typeof MSG.SEND_PAGE_SELECTION_DATA;
-      payload: {
-        data: string;
-        format: "article" | "raw" | "ai-assisted" | "html";
-      };
-    };
-
-// Helper typed send (optional)
-// Remove later: not used
-export type MaybePromise<T> = T | Promise<T>;
