@@ -23,7 +23,7 @@ function NewEntryPage() {
   const navigate = useNavigate();
   const editor = useCreateBlockNote(defaultBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
   const { sendMessage, onMessage } = useSidePanelMessaging();
-  const { isAtBottom } = useScrollPos();
+  const { isAtBottom, isAtTop } = useScrollPos();
   const [language, setLanguage] = useState(navigator.language || "en");
   const [promptText, setPromptText] = useState("");
   const footerRef = useRef<HTMLElement>(null);

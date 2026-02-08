@@ -43,6 +43,43 @@
     backdrop-filter: blur(6px);
 }
 
+.lc-page-title-styled-bg {
+    box-shadow: inset 0 36px 9px -9px
+        color-mix(in srgb, var(--background), transparent 60%);
+}
+
+.dark .lc-page-title-styled-bg {
+    box-shadow: inset 0 36px 9px -9px
+        color-mix(in srgb, var(--background), transparent 30%);
+}
+
+.lc-page-title-styled-bg::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    /*background-color: hsl(var(--background) / 0.8);*/
+    -webkit-mask: linear-gradient(black, black, transparent);
+    mask: linear-gradient(black, black, transparent);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+
+    opacity: 1;
+    will-change: opacity;
+    transition: opacity 0.3s ease;
+}
+
+.lc-page-title-styled-bg-none,
+.dark .lc-page-title-styled-bg-none {
+    box-shadow: none;
+}
+.lc-page-title-styled-bg-none::before {
+    opacity: 0;
+}
+
 /*Second optional shadow, to make backdrop even darker (if necessary)
 MAYBE: Change selector to different class entirely for this, since it is "opt in"
 Should be implemented separately in scoped styles, with a new css class/selector (to manually enable) or

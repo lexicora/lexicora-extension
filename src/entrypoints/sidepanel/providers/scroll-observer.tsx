@@ -23,7 +23,7 @@ interface ScrollProviderProps {
 
 export function ScrollObserverProvider({ children }: ScrollProviderProps) {
   const [scrollState, setScrollState] = useState<ScrollState>({
-    isAtTop: true,
+    isAtTop: true, //typeof window !== "undefined" ? window.scrollY < 10 : true
     isAtBottom: false,
   });
 

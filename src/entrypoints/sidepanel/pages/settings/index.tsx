@@ -31,16 +31,39 @@ import {
   UserRoundIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useScrollPos } from "@/entrypoints/sidepanel/providers/scroll-observer";
 import "./SettingsPage.css";
 
 import { SettingsItem } from "@/entrypoints/sidepanel/components/ui/settings-item";
 
 function SettingsPage() {
+  const { isAtTop } = useScrollPos();
   return (
-    <div className="lc-page-container select-none">
+    <div className="lc-page-container pt-0! select-none">
       <div className="lc-page-container-inner">
-        <header className="mb-4 mt-1">
-          <h1 className="text-2xl font-semibold">Settings</h1>
+        <header className="flex flex-col w-full mb-4">
+          {/* 1. Sticky Navigation Bar (Small Title) */}
+          <div
+            className={`lc-page-title-styled-bg fixed top-14.5 z-20 w-full h-10 pt-1 flex items-center justify-center shrink-0
+                      transition-none
+                      ${isAtTop ? "lc-page-title-styled-bg-none" : ""}`}
+          >
+            <span
+              className={`pr-3 text-sm font-semibold transition-opacity duration-200
+                        ${isAtTop ? "opacity-0" : "opacity-100"}`}
+            >
+              Settings
+            </span>
+          </div>
+
+          {/* 2. Large Title (Scrolls away) */}
+          <div className="mt-4">
+            <h1
+              className={`text-2xl font-semibold transition-opacity duration-300 ${isAtTop ? "opacity-100" : "opacity-0"} /*tracking-tight*/`}
+            >
+              Settings
+            </h1>
+          </div>
         </header>
         <main className="flex flex-col gap-6 w-full px-1.5">
           <section id="account-settings">
