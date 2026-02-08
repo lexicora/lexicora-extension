@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useScrollPos } from "@/entrypoints/sidepanel/providers/scroll-observer";
+import { cn } from "@/lib/utils";
 import "./SettingsPage.css";
 
 import { SettingsItem } from "@/entrypoints/sidepanel/components/ui/settings-item";
@@ -42,24 +43,25 @@ function SettingsPage() {
     <div className="lc-page-container pt-0! select-none">
       <div className="lc-page-container-inner">
         <header className="flex flex-col w-full mb-4">
-          {/* 1. Sticky Navigation Bar (Small Title) */}
+          {/*Sticky Navigation Bar (Small Title) (maybe make a bit taller)*/}
           <div
-            className={`lc-page-title-styled-bg fixed top-14.5 z-20 w-full h-10 pt-1 flex items-center justify-center shrink-0
-                      transition-none
-                      ${isAtTop ? "lc-page-title-styled-bg-none" : ""}`}
+            className={cn(
+              "lc-page-title-styled-bg z-30 fixed top-14.75 left-0 w-full h-10 pt-0 flex items-center justify-center shrink-0",
+              isAtTop ? "lc-page-title-styled-bg-none" : "",
+            )}
           >
             <span
-              className={`pr-3 text-sm font-semibold transition-opacity duration-200
-                        ${isAtTop ? "opacity-0" : "opacity-100"}`}
+              className={`pl-3 text-base font-semibold transition-all duration-300 active-view-transition:transition-none /*active-view-transition:duration-200*/
+                        ${isAtTop ? "opacity-0 translate-y-4 blur-xs" : "opacity-100 translate-y-0 blur-0"}`}
             >
               Settings
             </span>
           </div>
 
-          {/* 2. Large Title (Scrolls away) */}
+          {/*Large Title*/}
           <div className="mt-4">
             <h1
-              className={`text-2xl font-semibold transition-opacity duration-300 ${isAtTop ? "opacity-100" : "opacity-0"} /*tracking-tight*/`}
+              className={`text-2xl font-semibold transition-opacity duration-200 ${isAtTop ? "opacity-100" : "opacity-0"} /*tracking-tight*/`}
             >
               Settings
             </h1>

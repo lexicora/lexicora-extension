@@ -46,6 +46,7 @@ function CaptureSuggestionsSettingsPage() {
           >
             <ArrowLeftIcon className="size-4.5" />
           </Button>
+          {/*Maybe in sub-pages like this change the default font size to text-xl from text-2xl */}
           <h1 className="flex-1 mr-10 text-2xl font-semibold">
             Capture Suggestions
           </h1>

@@ -44,13 +44,13 @@
 }
 
 .lc-page-title-styled-bg {
-    box-shadow: inset 0 36px 9px -9px
-        color-mix(in srgb, var(--background), transparent 60%);
+    box-shadow: inset 0 40px 10px -10px
+        color-mix(in srgb, var(--background), transparent 55%);
 }
 
 .dark .lc-page-title-styled-bg {
-    box-shadow: inset 0 36px 9px -9px
-        color-mix(in srgb, var(--background), transparent 30%);
+    box-shadow: inset 0 40px 10px -10px
+        color-mix(in srgb, var(--background), transparent 25%);
 }
 
 .lc-page-title-styled-bg::before {
@@ -65,16 +65,15 @@
     -webkit-mask: linear-gradient(black, black, transparent);
     mask: linear-gradient(black, black, transparent);
     -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-
+    backdrop-filter: blur(6px); /*TODO: Adjust blur intensity as needed */
     opacity: 1;
-    will-change: opacity;
-    transition: opacity 0.3s ease;
+    /*will-change: opacity;
+    transition: opacity 0.3s ease;*/
 }
 
 .lc-page-title-styled-bg-none,
 .dark .lc-page-title-styled-bg-none {
-    box-shadow: none;
+    box-shadow: none !important;
 }
 .lc-page-title-styled-bg-none::before {
     opacity: 0;
