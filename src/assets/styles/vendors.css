@@ -43,44 +43,6 @@
     backdrop-filter: blur(6px);
 }
 
-/*Used with the PageHeader component (maybe put in to component css file (potentially a model.css file))*/
-.lc-page-header-styled-bg {
-    box-shadow: inset 0 44px 11px -11px
-        color-mix(in srgb, var(--background), transparent 50%);
-}
-
-.dark .lc-page-header-styled-bg {
-    box-shadow: inset 0 44px 11px -11px
-        color-mix(in srgb, var(--background), transparent 50%);
-}
-
-.lc-page-header-styled-bg::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    -webkit-mask: linear-gradient(black, black, transparent);
-    mask: linear-gradient(black, black, transparent);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px); /*TODO: Adjust blur intensity as needed */
-    opacity: 1;
-    /*will-change: opacity;
-    transition: opacity 0.3s ease;*/
-}
-
-.lc-page-header-styled-bg-none,
-.dark .lc-page-header-styled-bg-none {
-    box-shadow: none !important;
-    pointer-events: none;
-}
-.lc-page-header-styled-bg-none::before {
-    opacity: 0;
-    pointer-events: none;
-}
-
 /*Second optional shadow, to make backdrop even darker (if necessary)
 MAYBE: Change selector to different class entirely for this, since it is "opt in"
 Should be implemented separately in scoped styles, with a new css class/selector (to manually enable) or

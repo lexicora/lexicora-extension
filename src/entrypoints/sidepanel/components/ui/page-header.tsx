@@ -1,3 +1,4 @@
+import styles from "./page-header.module.css";
 import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -73,8 +74,9 @@ export function PageHeader({
     >
       <div
         className={cn(
-          "lc-page-header-styled-bg z-29 fixed top-14.75 left-0 w-full h-11 pt-0 flex justify-center shrink-0",
-          isAtTop ? "lc-page-header-styled-bg-none pointer-events-none" : "",
+          styles.styledBackground,
+          "z-29 fixed top-14.75 left-0 w-full h-11 pt-0 flex justify-center shrink-0",
+          isAtTop ? styles.styledBackgroundNone : "",
         )}
       >
         {goBackButton ? (
