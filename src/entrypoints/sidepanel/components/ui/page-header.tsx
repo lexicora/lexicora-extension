@@ -74,8 +74,8 @@ export function PageHeader({
       {/* --- STICKY TOP BAR --- */}
       <div
         className={cn(
-          "lc-page-title-styled-bg z-29 fixed top-14.75 left-0 w-full h-11 pt-0 flex justify-center shrink-0 /*transition-none*/",
-          isAtTop ? "lc-page-title-styled-bg-none pointer-events-none" : "",
+          "lc-page-header-styled-bg z-29 fixed top-14.75 left-0 w-full h-11 pt-0 flex justify-center shrink-0 /*transition-none*/",
+          isAtTop ? "lc-page-header-styled-bg-none pointer-events-none" : "",
         )}
       >
         {goBackButton ? (

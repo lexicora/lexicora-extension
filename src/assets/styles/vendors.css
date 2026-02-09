@@ -43,17 +43,18 @@
     backdrop-filter: blur(6px);
 }
 
-.lc-page-title-styled-bg {
+/*Used with the PageHeader component*/
+.lc-page-header-styled-bg {
     box-shadow: inset 0 44px 11px -11px
         color-mix(in srgb, var(--background), transparent 50%);
 }
 
-.dark .lc-page-title-styled-bg {
+.dark .lc-page-header-styled-bg {
     box-shadow: inset 0 44px 11px -11px
         color-mix(in srgb, var(--background), transparent 50%);
 }
 
-.lc-page-title-styled-bg::before {
+.lc-page-header-styled-bg::before {
     content: "";
     position: absolute;
     top: 0;
@@ -61,7 +62,6 @@
     width: 100%;
     height: 100%;
     z-index: -1;
-    /*background-color: hsl(var(--background) / 0.8);*/
     -webkit-mask: linear-gradient(black, black, transparent);
     mask: linear-gradient(black, black, transparent);
     -webkit-backdrop-filter: blur(4px);
@@ -71,12 +71,12 @@
     transition: opacity 0.3s ease;*/
 }
 
-.lc-page-title-styled-bg-none,
-.dark .lc-page-title-styled-bg-none {
+.lc-page-header-styled-bg-none,
+.dark .lc-page-header-styled-bg-none {
     box-shadow: none !important;
     pointer-events: none;
 }
-.lc-page-title-styled-bg-none::before {
+.lc-page-header-styled-bg-none::before {
     opacity: 0;
     pointer-events: none;
 }
