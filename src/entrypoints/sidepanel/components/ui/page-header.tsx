@@ -73,7 +73,7 @@ export function PageHeader({
     >
       <div
         className={cn(
-          "lc-page-header-styled-bg z-29 fixed top-14.75 left-0 w-full h-11 pt-0 flex justify-center shrink-0 /*transition-none*/",
+          "lc-page-header-styled-bg z-29 fixed top-14.75 left-0 w-full h-11 pt-0 flex justify-center shrink-0",
           isAtTop ? "lc-page-header-styled-bg-none pointer-events-none" : "",
         )}
       >
@@ -119,7 +119,7 @@ export function PageHeader({
         <div
           className={cn(
             "flex items-center transition-opacity duration-300",
-            isAtTop ? "opacity-100" : "opacity-0",
+            isAtTop ? "opacity-100 duration-300" : "opacity-0 duration-100",
           )}
         >
           <Button
@@ -146,7 +146,7 @@ export function PageHeader({
           <h1
             className={cn(
               "text-2xl font-semibold transition-opacity duration-300",
-              isAtTop ? "opacity-100" : "opacity-0",
+              isAtTop ? "opacity-100 duration-300" : "opacity-0 duration-100",
               isLeftAligned ? "text-left" : "text-center",
             )}
           >
