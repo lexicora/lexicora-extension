@@ -17,6 +17,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/entrypoints/sidepanel/components/ui/page-header";
 import {
   ArrowLeftIcon,
   CameraIcon,
@@ -36,21 +37,7 @@ function CaptureSuggestionsSettingsPage() {
   return (
     <div className="lc-page-container select-none">
       <div className="lc-page-container-inner">
-        <header className="flex items-center mb-4 w-full">
-          <Button
-            variant="ghost"
-            size="icon"
-            title="Go back"
-            className="shrink-0 size-10 rounded-lg"
-            onClick={() => navigate(-1)}
-          >
-            <ArrowLeftIcon className="size-4.5" />
-          </Button>
-          {/*Maybe in sub-pages like this change the default font size to text-xl from text-2xl */}
-          <h1 className="flex-1 mr-10 text-2xl font-semibold">
-            Capture Suggestions
-          </h1>
-        </header>
+        <PageHeader title="Capture Suggestions" goBackButton />
         <main className="flex flex-col gap-6.5 w-full pt-4.5 px-1.5 mb-1">
           <section>
             <Item

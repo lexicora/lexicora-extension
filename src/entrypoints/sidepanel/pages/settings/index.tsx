@@ -31,50 +31,16 @@ import {
   UserRoundIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useScrollPos } from "@/entrypoints/sidepanel/providers/scroll-observer";
-import { cn } from "@/lib/utils";
 import "./SettingsPage.css";
 
 import { SettingsItem } from "@/entrypoints/sidepanel/components/ui/settings-item";
+import { PageHeader } from "../../components/ui/page-header";
 
 function SettingsPage() {
-  const { isAtTop } = useScrollPos();
   return (
     <div className="lc-page-container pt-0! select-none">
       <div className="lc-page-container-inner">
-        <header className="flex flex-col w-full mb-4">
-          {/*Sticky Navigation Bar (Small Title) (maybe make a bit taller)*/}
-          <div
-            className={cn(
-              "lc-page-title-styled-bg z-29 fixed top-14.75 left-0 w-full h-11 pt-0 flex /*items-center*/ justify-center shrink-0",
-              isAtTop ? "lc-page-title-styled-bg-none" : "",
-            )}
-          >
-            <span
-              className={cn(
-                "pl-3 pt-1.75 text-base font-semibold transition-all duration-300 active-view-transition:transition-none /*active-view-transition:duration-200*/",
-                {
-                  "opacity-0 translate-y-3 blur-xs": isAtTop,
-                  "opacity-100 translate-y-0 blur-0": !isAtTop,
-                },
-              )}
-            >
-              Settings
-            </span>
-          </div>
-
-          {/*Large Title*/}
-          <div className="mt-4">
-            <h1
-              className={cn(
-                "text-2xl font-semibold transition-opacity duration-300",
-                isAtTop ? "opacity-100" : "opacity-0" /*tracking-tight*/,
-              )}
-            >
-              Settings
-            </h1>
-          </div>
-        </header>
+        <PageHeader title="Settings" />
         <main className="flex flex-col gap-6 w-full px-1.5">
           <section id="account-settings">
             <Label htmlFor="" className="text-sm ml-2 mb-0.5">

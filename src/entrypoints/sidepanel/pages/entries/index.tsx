@@ -5,16 +5,18 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Link } from "react-router-dom";
-
 import { PlusIcon } from "lucide-react";
+
+import { PageHeader } from "@/entrypoints/sidepanel/components/ui/page-header";
 
 function EntriesPage() {
   return (
-    <div className="lc-page-container select-none">
+    <div className="lc-page-container select-none pt-0!">
       <div className="lc-page-container-inner">
-        <header className="mb-4 mt-1">
+        {/*<header className="mb-4 mt-1">
           <h1 className="text-2xl font-semibold">Entries</h1>
-        </header>
+        </header>*/}
+        <PageHeader title="Entries" />
         <main>{/* Entries list would go here */}</main>
         <footer></footer>
         <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20">
