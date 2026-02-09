@@ -23,8 +23,8 @@ export function PageHeader({
   const handleGoBack = () => navigate(-1);
   const isLeftAligned = headerTextAlignment === "left";
 
-  // Shared animation classes for sticky elements
-  const stickyAnimClasses = {
+  // Shared animation classes for hover elements
+  const hoverAnimClasses = {
     hidden: "opacity-0 translate-y-3 blur-xs",
     visible: "opacity-100 translate-y-0 blur-0",
   };
@@ -71,7 +71,6 @@ export function PageHeader({
         isLeftAligned ? "text-left" : "text-center",
       )}
     >
-      {/* --- STICKY TOP BAR --- */}
       <div
         className={cn(
           "lc-page-header-styled-bg z-29 fixed top-14.75 left-0 w-full h-11 pt-0 flex justify-center shrink-0 /*transition-none*/",
@@ -79,7 +78,7 @@ export function PageHeader({
         )}
       >
         {goBackButton ? (
-          // Sticky Content: WITH Back Button
+          // Hover Content: WITH Back Button
           <div className="flex mt-1.25 w-full">
             <Button
               variant="ghost"
@@ -88,7 +87,7 @@ export function PageHeader({
               className={cn(
                 "not-dark:hover:bg-gray-200/75",
                 "ml-1.75 shrink-0 size-7 transition-all duration-150 active-view-transition:transition-none",
-                isAtTop ? stickyAnimClasses.hidden : stickyAnimClasses.visible,
+                isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
               )}
               onClick={handleGoBack}
             >
@@ -97,28 +96,26 @@ export function PageHeader({
             <span
               className={cn(
                 "mr-5.75 mt-0.5 w-full text-base font-semibold transition-all duration-300 active-view-transition:transition-none text-center",
-                isAtTop ? stickyAnimClasses.hidden : stickyAnimClasses.visible,
+                isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
               )}
             >
               {title}
             </span>
           </div>
         ) : (
-          // Sticky Content: SIMPLE (No Back Button)
+          // Hover Content: SIMPLE (No Back Button)
           <span
             className={cn(
               "pl-3 pt-1.75 text-base font-semibold transition-all duration-300 active-view-transition:transition-none",
-              isAtTop ? stickyAnimClasses.hidden : stickyAnimClasses.visible,
+              isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
             )}
           >
             {title}
           </span>
         )}
       </div>
-
       {goBackButton ? (
         // Large Title: WITH Back Button
-        // Note: The outer div handles the opacity transition for the whole group
         <div
           className={cn(
             "flex items-center transition-opacity duration-300",

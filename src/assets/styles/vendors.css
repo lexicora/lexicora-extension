@@ -110,20 +110,24 @@ override the standard bottom bar class*/
 }*/
 
 .green-button {
-    color: var(--lc-light-foreground-color);
-    background-color: var(--color-green-600);
+    /*color: var(--lc-light-foreground-color);
+    background-color: var(--color-green-600);*/
+    @apply text-(--lc-light-foreground-color) bg-green-600;
 }
 
 .dark .green-button {
-    background-color: var(--color-green-700);
+    /*background-color: var(--color-green-700);*/
+    @apply bg-green-700;
 }
 
 .green-button:hover {
-    background-color: var(--color-green-700);
+    /*background-color: var(--color-green-700);*/
+    @apply bg-green-700;
     /*color: */
 }
 
 .dark .green-button:hover {
-    background-color: var(--color-green-800);
+    /*background-color: var(--color-green-800);*/
+    @apply bg-green-800;
     /*color: */
 }
