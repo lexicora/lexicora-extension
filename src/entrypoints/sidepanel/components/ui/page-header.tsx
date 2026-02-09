@@ -4,21 +4,30 @@ import { useNavigate } from "react-router-dom";
 import { useScrollPos } from "@/entrypoints/sidepanel/providers/scroll-observer";
 import { cn } from "@/lib/utils";
 
+interface PageHeaderProps {
+  title: string;
+  hoverOnScroll?: boolean;
+  headerTextAlignment?: "center" | "left";
+  goBackButton?: boolean;
+}
+
 export function PageHeader({
   title,
   hoverOnScroll = true,
   headerTextAlignment = "center",
   goBackButton = false,
-}: {
-  title: string;
-  hoverOnScroll?: boolean;
-  headerTextAlignment?: "center" | "left";
-  goBackButton?: boolean;
-}) {
+}: PageHeaderProps) {
   const { isAtTop } = useScrollPos();
   const navigate = useNavigate();
 
   const handleGoBack = () => navigate(-1);
+  const isLeftAligned = headerTextAlignment === "left";
+
+  // Shared animation classes for sticky elements
+  const stickyAnimClasses = {
+    hidden: "opacity-0 translate-y-3 blur-xs",
+    visible: "opacity-100 translate-y-0 blur-0",
+  };
 
   // CASE: Static Header (No Scroll Effects)
   if (!hoverOnScroll) {
@@ -34,26 +43,33 @@ export function PageHeader({
           >
             <ArrowLeftIcon className="size-4.5" />
           </Button>
-          <h1 className="flex-1 mr-10 text-2xl font-semibold">{title}</h1>
+          <h1
+            className={cn(
+              "text-2xl font-semibold",
+              isLeftAligned ? "ml-3 text-left" : "flex-1 text-center mr-10",
+            )}
+          >
+            {title}
+          </h1>
         </header>
       );
     }
     // Simple Static
     return (
-      <header className={`mb-4 mt-1 text-${headerTextAlignment}`}>
+      <header
+        className={cn("mb-4 mt-1", isLeftAligned ? "text-left" : "text-center")}
+      >
         <h1 className="text-2xl font-semibold">{title}</h1>
       </header>
     );
   }
 
-  const stickyAnimClasses = {
-    hidden: "opacity-0 translate-y-3 blur-xs",
-    visible: "opacity-100 translate-y-0 blur-0",
-  };
-
   return (
     <header
-      className={cn("flex flex-col w-full mb-4", `text-${headerTextAlignment}`)}
+      className={cn(
+        "flex flex-col w-full mb-4",
+        isLeftAligned ? "text-left" : "text-center",
+      )}
     >
       {/* --- STICKY TOP BAR --- */}
       <div
@@ -80,7 +96,7 @@ export function PageHeader({
             </Button>
             <span
               className={cn(
-                "mr-5.75 mt-0.5 w-full text-base font-semibold transition-all duration-300 active-view-transition:transition-none",
+                "mr-5.75 mt-0.5 w-full text-base font-semibold transition-all duration-300 active-view-transition:transition-none text-center",
                 isAtTop ? stickyAnimClasses.hidden : stickyAnimClasses.visible,
               )}
             >
@@ -118,7 +134,14 @@ export function PageHeader({
           >
             <ArrowLeftIcon className="size-4.5" />
           </Button>
-          <h1 className="text-2xl font-semibold w-full mr-10">{title}</h1>
+          <h1
+            className={cn(
+              "text-2xl font-semibold",
+              isLeftAligned ? "ml-3 text-left" : "w-full text-center mr-10",
+            )}
+          >
+            {title}
+          </h1>
         </div>
       ) : (
         // Large Title: SIMPLE
@@ -127,6 +150,7 @@ export function PageHeader({
             className={cn(
               "text-2xl font-semibold transition-opacity duration-300",
               isAtTop ? "opacity-100" : "opacity-0",
+              isLeftAligned ? "text-left" : "text-center",
             )}
           >
             {title}
