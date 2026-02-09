@@ -34,14 +34,13 @@ import { Link } from "react-router-dom";
 import "./SettingsPage.css";
 
 import { SettingsItem } from "@/entrypoints/sidepanel/components/ui/settings-item";
+import { PageHeader } from "../../components/ui/page-header";
 
 function SettingsPage() {
   return (
     <div className="lc-page-container select-none">
       <div className="lc-page-container-inner">
-        <header className="mb-4 mt-1">
-          <h1 className="text-2xl font-semibold">Settings</h1>
-        </header>
+        <PageHeader title="Settings" />
         <main className="flex flex-col gap-6 w-full px-1.5">
           <section id="account-settings">
             <Label htmlFor="" className="text-sm ml-2 mb-0.5">

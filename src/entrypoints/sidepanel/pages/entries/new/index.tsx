@@ -15,6 +15,7 @@ import { defaultBlockNoteConfig } from "@/types/block-note.types";
 import { BlockNoteView } from "@/editor/BlockNoteView";
 import { useCreateBlockNote } from "@blocknote/react";
 import { useScrollPos } from "@/entrypoints/sidepanel/providers/scroll-observer";
+import { PageHeader } from "@/entrypoints/sidepanel/components/ui/page-header";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 // TODO: Add loading state while waiting for content (also use a skeleton loader for BlockNote.js editor)
 
@@ -23,7 +24,7 @@ function NewEntryPage() {
   const navigate = useNavigate();
   const editor = useCreateBlockNote(defaultBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
   const { sendMessage, onMessage } = useSidePanelMessaging();
-  const { isAtBottom } = useScrollPos();
+  const { isAtBottom, isAtTop } = useScrollPos();
   const [language, setLanguage] = useState(navigator.language || "en");
   const [promptText, setPromptText] = useState("");
   const footerRef = useRef<HTMLElement>(null);
@@ -84,23 +85,13 @@ function NewEntryPage() {
 
   return (
     //* NOTE: Opt in for now, because of editor styles being changed
-    <div id="lc-new-entry-page" className="lc-page-container mb-0! /*pr-3!*/">
+    <div
+      id="lc-new-entry-page"
+      className="lc-page-container select-none mb-0! /*pr-3!*/"
+    >
       {/*Make the inner container as tall (min-height) as the vh (but not overflowing) to prevent issues with editor*/}
       <div className="lc-page-container-inner">
-        <header className="flex items-center /*gap-2*/ mb-4 w-full">
-          <Button
-            variant="ghost"
-            size="icon"
-            title="Go back"
-            className="size-10 rounded-lg"
-            onClick={() => navigate(-1)} // maybe change to navigate("/entries")
-          >
-            <ArrowLeftIcon className="size-4.5" />
-          </Button>
-          <h1 className="flex-1 mr-10 /*mr-12*/ text-2xl font-semibold">
-            New Entry
-          </h1>
-        </header>
+        <PageHeader title="New Entry" goBackButton />
         <main>
           <section className="mx-px">
             {/*TODO: Maybe add relative and overflow-x-hidden later, when it is guaranteed to fill the entire page (height wise) */}

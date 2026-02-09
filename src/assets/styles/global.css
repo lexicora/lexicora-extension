@@ -9,6 +9,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@custom-variant active-view-transition (&:is(html:active-view-transition *));
+
 /* Data attribute variants for shadcn-ui components */
 @variant data-open (&:where([data-state="open"]));
 @variant data-closed (&:where([data-state="closed"]));

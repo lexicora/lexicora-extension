@@ -92,17 +92,20 @@ html:has(
         button.bn-button:nth-child(13)[data-state="open"]
 ) {
     overflow: hidden;
+    /*Add stuff below, to keep layout consistent, with the dropdown menus of the BlockNote.js editor*/
+    scroll-padding-top: 0 !important;
+    scrollbar-width: 0 !important;
 }
 
 /*Special case*/
-html:has(
+/*html:has(
     .bn-container[data-color-scheme]
         .bn-toolbar
         button:first-child[data-state="open"]
 ) {
     scroll-padding-top: 0 !important;
     scrollbar-width: 0 !important;
-}
+}*/
 
 .bn-container[data-color-scheme]:has(.bn-table-handle-menu) .bn-side-menu {
     display: none;
@@ -244,7 +247,7 @@ html:has(
     [data-radix-popper-content-wrapper]
     .bn-menu-dropdown.bn-drag-handle-menu
     [data-radix-menu-content].bn-color-picker-dropdown {
-    max-height: calc(100vh - 256px);
+    max-height: calc(100vh - 268px);
     margin-bottom: 160px;
     /*transform: translateY(-112px) !important;*/
 }

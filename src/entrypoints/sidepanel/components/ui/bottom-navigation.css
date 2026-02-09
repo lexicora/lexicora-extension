@@ -1,6 +1,8 @@
 /*#lc-bottom-navigation-item {
 }*/
 
+/*Maybe convert this in to a module css file*/
+
 .lc-bottom-navigation {
     backface-visibility: hidden;
     pointer-events: auto;

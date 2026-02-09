@@ -8,28 +8,21 @@ import {
 } from "@/components/ui/item";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { SettingsItemSeperator } from "@/entrypoints/sidepanel/components/ui/settings-item-seperator";
+import { PageHeader } from "@/entrypoints/sidepanel/components/ui/page-header";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
+import { useScrollPos } from "@/entrypoints/sidepanel/providers/scroll-observer";
+import { cn } from "@/lib/utils";
 
 function ThemePersonalizationSettingsPage() {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
+  const { isAtTop } = useScrollPos();
 
   return (
     <div className="lc-page-container select-none">
       <div className="lc-page-container-inner">
-        <header className="flex items-center mb-4 w-full">
-          <Button
-            variant="ghost"
-            size="icon"
-            title="Go back"
-            className="shrink-0 size-10 rounded-lg"
-            onClick={() => navigate(-1)}
-          >
-            <ArrowLeftIcon className="size-4.5" />
-          </Button>
-          <h1 className="flex-1 mr-10 text-2xl font-semibold">Theme</h1>
-        </header>
+        <PageHeader title="Theme" goBackButton />
         <main className="flex flex-col gap-6 w-full pt-4.5 px-1.5">
           <section>
             <RadioGroup value={theme} defaultValue="system" className="gap-0">

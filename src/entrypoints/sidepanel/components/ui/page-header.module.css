@@ -1,0 +1,36 @@
+.styledBackground {
+    box-shadow: inset 0 44px 11px -11px
+        color-mix(in srgb, var(--background), transparent 50%);
+}
+
+.dark .styledBackground {
+    box-shadow: inset 0 44px 11px -11px
+        color-mix(in srgb, var(--background), transparent 50%);
+}
+
+.styledBackground::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    -webkit-mask: linear-gradient(black, black, transparent);
+    mask: linear-gradient(black, black, transparent);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px); /*TODO: Adjust blur intensity as needed */
+    opacity: 1;
+    /*will-change: opacity;
+    transition: opacity 0.3s ease;*/
+}
+
+.styledBackgroundNone,
+.dark .styledBackgroundNone {
+    box-shadow: none !important;
+    pointer-events: none;
+}
+.styledBackgroundNone::before {
+    opacity: 0;
+    pointer-events: none;
+}

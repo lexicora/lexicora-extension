@@ -1,7 +1,7 @@
 /*TODO Maybe: Make module out of this*/
 html:has(#lc-new-entry-page) {
     /*For BlockNoteView (better accessibility)*/
-    scroll-padding-top: 72px;
+    scroll-padding-top: 102px; /*was: 72px, added 30px for floating page header*/
     scroll-padding-bottom: 132px;
 }
 
