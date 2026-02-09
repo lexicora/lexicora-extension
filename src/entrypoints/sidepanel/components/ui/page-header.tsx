@@ -99,7 +99,7 @@ export function PageHeader({
               size="icon"
               title="Go back"
               className={cn(
-                "not-dark:hover:bg-gray-200/75",
+                "hover:bg-gray-200 dark:hover:bg-gray-900",
                 "ml-1.75 shrink-0 size-7 transition-all duration-150 active-view-transition:transition-none",
                 isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
               )}
@@ -109,7 +109,7 @@ export function PageHeader({
             </Button>
             <span
               className={cn(
-                "mr-5.75 mt-0.5 w-full text-base font-semibold transition-all duration-300 active-view-transition:transition-none text-center",
+                "mr-[calc(var(--lc-scrollbar-offset)+23px)] mt-0.5 w-full text-base font-semibold transition-all duration-300 active-view-transition:transition-none text-center",
                 isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
               )}
             >
@@ -120,7 +120,7 @@ export function PageHeader({
           // Hover Content: SIMPLE (No Back Button)
           <span
             className={cn(
-              "pl-3 pt-1.75 text-base font-semibold transition-all duration-300 active-view-transition:transition-none",
+              "ml-3 mr-(--lc-scrollbar-offset) mt-1.75 text-base font-semibold transition-all duration-300 active-view-transition:transition-none",
               isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
             )}
           >
@@ -156,7 +156,7 @@ export function PageHeader({
         </div>
       ) : (
         // Large Title: SIMPLE
-        <div className="mt-4">
+        <div className="mt-1">
           <h1
             className={cn(
               "text-2xl font-semibold transition-opacity duration-300",
