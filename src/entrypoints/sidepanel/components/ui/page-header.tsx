@@ -99,7 +99,7 @@ export function PageHeader({
               size="icon"
               title="Go back"
               className={cn(
-                "hover:bg-gray-200 dark:hover:bg-gray-900",
+                "hover:bg-gray-200 dark:hover:bg-gray-800",
                 "ml-1.75 shrink-0 size-7 transition-all duration-150 active-view-transition:transition-none",
                 isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
               )}
