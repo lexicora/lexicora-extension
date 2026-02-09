@@ -46,13 +46,13 @@ function SettingsPage() {
           {/*Sticky Navigation Bar (Small Title) (maybe make a bit taller)*/}
           <div
             className={cn(
-              "lc-page-title-styled-bg z-30 fixed top-14.75 left-0 w-full h-10 pt-0 flex items-center justify-center shrink-0",
+              "lc-page-title-styled-bg z-29 fixed top-14.75 left-0 w-full h-11 pt-0 flex /*items-center*/ justify-center shrink-0",
               isAtTop ? "lc-page-title-styled-bg-none" : "",
             )}
           >
             <span
-              className={`pl-3 text-base font-semibold transition-all duration-300 active-view-transition:transition-none /*active-view-transition:duration-200*/
-                        ${isAtTop ? "opacity-0 translate-y-4 blur-xs" : "opacity-100 translate-y-0 blur-0"}`}
+              className={`pl-3 pt-1.75 text-base font-semibold transition-all duration-300 active-view-transition:transition-none /*active-view-transition:duration-200*/
+                        ${isAtTop ? "opacity-0 translate-y-3 blur-xs" : "opacity-100 translate-y-0 blur-0"}`}
             >
               Settings
             </span>
@@ -61,7 +61,7 @@ function SettingsPage() {
           {/*Large Title*/}
           <div className="mt-4">
             <h1
-              className={`text-2xl font-semibold transition-opacity duration-200 ${isAtTop ? "opacity-100" : "opacity-0"} /*tracking-tight*/`}
+              className={`text-2xl font-semibold transition-opacity duration-300 ${isAtTop ? "opacity-100" : "opacity-0"} /*tracking-tight*/`}
             >
               Settings
             </h1>
