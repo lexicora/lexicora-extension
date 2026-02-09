@@ -109,7 +109,7 @@ export function PageHeader({
             </Button>
             <span
               className={cn(
-                "mr-[calc(var(--lc-scrollbar-offset)+23px)] mt-0.5 w-full text-base font-semibold transition-all duration-300 active-view-transition:transition-none text-center",
+                "mr-[calc(var(--lc-scrollbar-offset)+24px)] mt-0.5 w-full text-base font-semibold transition-all duration-300 active-view-transition:transition-none text-center",
                 isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
               )}
             >
@@ -120,7 +120,7 @@ export function PageHeader({
           // Hover Content: SIMPLE (No Back Button)
           <span
             className={cn(
-              "ml-3 mr-(--lc-scrollbar-offset) mt-1.75 text-base font-semibold transition-all duration-300 active-view-transition:transition-none",
+              "ml-2.5 mr-(--lc-scrollbar-offset) mt-1.75 text-base font-semibold transition-all duration-300 active-view-transition:transition-none",
               isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
             )}
           >
