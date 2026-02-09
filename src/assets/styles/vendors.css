@@ -74,9 +74,11 @@
 .lc-page-title-styled-bg-none,
 .dark .lc-page-title-styled-bg-none {
     box-shadow: none !important;
+    pointer-events: none;
 }
 .lc-page-title-styled-bg-none::before {
     opacity: 0;
+    pointer-events: none;
 }
 
 /*Second optional shadow, to make backdrop even darker (if necessary)

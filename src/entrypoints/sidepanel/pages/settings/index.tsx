@@ -51,8 +51,13 @@ function SettingsPage() {
             )}
           >
             <span
-              className={`pl-3 pt-1.75 text-base font-semibold transition-all duration-300 active-view-transition:transition-none /*active-view-transition:duration-200*/
-                        ${isAtTop ? "opacity-0 translate-y-3 blur-xs" : "opacity-100 translate-y-0 blur-0"}`}
+              className={cn(
+                "pl-3 pt-1.75 text-base font-semibold transition-all duration-300 active-view-transition:transition-none /*active-view-transition:duration-200*/",
+                {
+                  "opacity-0 translate-y-3 blur-xs": isAtTop,
+                  "opacity-100 translate-y-0 blur-0": !isAtTop,
+                },
+              )}
             >
               Settings
             </span>
@@ -61,7 +66,10 @@ function SettingsPage() {
           {/*Large Title*/}
           <div className="mt-4">
             <h1
-              className={`text-2xl font-semibold transition-opacity duration-300 ${isAtTop ? "opacity-100" : "opacity-0"} /*tracking-tight*/`}
+              className={cn(
+                "text-2xl font-semibold transition-opacity duration-300",
+                isAtTop ? "opacity-100" : "opacity-0" /*tracking-tight*/,
+              )}
             >
               Settings
             </h1>
