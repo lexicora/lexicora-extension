@@ -10,6 +10,7 @@ interface PageHeaderProps {
   hoverOnScroll?: boolean;
   headerTextAlignment?: "center" | "left";
   goBackButton?: boolean;
+  classNameHeaderElement?: string;
 }
 
 export function PageHeader({
@@ -17,6 +18,7 @@ export function PageHeader({
   hoverOnScroll = true,
   headerTextAlignment = "center",
   goBackButton = false,
+  classNameHeaderElement,
 }: PageHeaderProps) {
   const { isAtTop } = useScrollPos();
   const navigate = useNavigate();
@@ -34,7 +36,12 @@ export function PageHeader({
   if (!hoverOnScroll) {
     if (goBackButton) {
       return (
-        <header className="flex items-center mb-4 w-full">
+        <header
+          className={cn(
+            "flex items-center mb-4 w-full",
+            classNameHeaderElement,
+          )}
+        >
           <Button
             variant="ghost"
             size="icon"
@@ -58,7 +65,11 @@ export function PageHeader({
     // Simple Static
     return (
       <header
-        className={cn("mb-4 mt-1", isLeftAligned ? "text-left" : "text-center")}
+        className={cn(
+          "mb-4 mt-1",
+          classNameHeaderElement,
+          isLeftAligned ? "text-left" : "text-center",
+        )}
       >
         <h1 className="text-2xl font-semibold">{title}</h1>
       </header>
@@ -69,6 +80,7 @@ export function PageHeader({
     <header
       className={cn(
         "flex flex-col w-full mb-4",
+        classNameHeaderElement,
         isLeftAligned ? "text-left" : "text-center",
       )}
     >
@@ -121,7 +133,7 @@ export function PageHeader({
         <div
           className={cn(
             "flex items-center transition-opacity duration-300",
-            isAtTop ? "opacity-100 duration-300" : "opacity-0 duration-100",
+            isAtTop ? "opacity-100" : "opacity-0 duration-50",
           )}
         >
           <Button
@@ -148,7 +160,7 @@ export function PageHeader({
           <h1
             className={cn(
               "text-2xl font-semibold transition-opacity duration-300",
-              isAtTop ? "opacity-100 duration-300" : "opacity-0 duration-100",
+              isAtTop ? "opacity-100" : "opacity-0 duration-50",
               isLeftAligned ? "text-left" : "text-center",
             )}
           >
