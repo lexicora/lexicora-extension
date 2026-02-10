@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeftIcon, House } from "lucide-react";
-import { useSidePanelMessaging } from "@/providers/messaging";
+import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";
 import { useEffect, useState } from "react";
 import { PageData } from "@/types/page-selection-data.types";
 import { MSG } from "@/types/messaging";

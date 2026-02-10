@@ -9,7 +9,7 @@ import {
 // Hooks, Providers and Components
 import { RouterListener } from "./hooks/router-listener";
 //import { MessageListener } from "./hooks/message-listener";
-import { SidePanelMessagingProvider } from "@/providers/messaging";
+import { SidePanelMessagingProvider } from "@/providers/sidepanel-messaging";
 import { ScrollObserverProvider } from "@/providers/scroll-observer";
 import { ThemeProvider } from "@/components/theme-provider";
 import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
