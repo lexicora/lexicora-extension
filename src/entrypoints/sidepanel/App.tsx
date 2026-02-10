@@ -7,8 +7,8 @@ import {
 } from "react-router-dom";
 
 // Hooks, Providers and Components
-import { RouterListener } from "./hooks/router-listener";
-//import { MessageListener } from "./hooks/message-listener";
+import { RouterListener } from "@/hooks/sidepanel/router-listener";
+//import { MessageListener } from "@/hooks/sidepanel/message-listener";
 import { SidePanelMessagingProvider } from "@/providers/sidepanel-messaging";
 import { ScrollObserverProvider } from "@/providers/scroll-observer";
 import { ThemeProvider } from "@/components/theme-provider";
