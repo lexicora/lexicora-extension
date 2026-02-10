@@ -128,7 +128,7 @@ export function BottomNavigation() {
             )}
           </NavLink>
         </div>
-        {/*Possible new tabs: Search page and favorites page */}
+        {/*Possible new tabs: Search page and favorites page (maybe replace settings tab with something else like favorites)*/}
       </div>
     </section>
   );

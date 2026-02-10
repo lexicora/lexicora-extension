@@ -13,8 +13,8 @@ import { SidePanelMessagingProvider } from "@/providers/sidepanel-messaging";
 import { ScrollObserverProvider } from "@/providers/scroll-observer";
 import { ThemeProvider } from "@/components/theme-provider";
 import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
-import { TopBar } from "./components/ui/top-bar";
-import { BottomNavigation } from "./components/ui/bottom-navigation";
+import { TopBar } from "@/components/top-bar";
+import { BottomNavigation } from "@/components/bottom-navigation";
 
 // Pages
 import HomePage from "./pages/home";
