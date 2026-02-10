@@ -87,8 +87,8 @@ function HomePage() {
               {/*MAYBE: Add dropdown menu of quick actions here (profile included, like maybe navigate directly to create new entry in sidepanel)*/}
               <Avatar className="size-8 ml-0.5" title="Profile">
                 <AvatarImage
-                  src="https://github.com/tgrant06.png"
-                  alt="@tgrant06"
+                  src="https://github.com/tgmaurer.png"
+                  alt="@tgmaurer"
                 />
                 <AvatarFallback>TG</AvatarFallback>
               </Avatar>

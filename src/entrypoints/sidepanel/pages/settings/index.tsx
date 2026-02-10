@@ -59,8 +59,8 @@ function SettingsPage() {
                     title="Profile"
                   >
                     <AvatarImage
-                      src="https://github.com/tgrant06.png"
-                      alt="@tgrant06"
+                      src="https://github.com/tgmaurer.png"
+                      alt="@tgmaurer"
                     />
                     <AvatarFallback>TG</AvatarFallback>
                   </Avatar>

@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ExternalLinkIcon } from "lucide-react";
@@ -13,16 +14,17 @@ export function TopBar() {
   return (
     <section
       id="lc-top-bar-item"
-      className={`lc-top-bar fixed top-0 w-full p-2.75 pr-[calc(var(--lc-scrollbar-offset)+2px)] py-[0.7rem] z-30
-          border-b bg-background/80 backdrop-blur-lg transition-shadow duration-150
-          ${isAtTop ? "shadow-none" : "shadow-md/4 dark:shadow-md/26"}`}
+      className={cn(
+        "lc-top-bar fixed top-0 w-full p-2.75 pr-[calc(var(--lc-scrollbar-offset)+2px)] py-[0.7rem] z-30 border-b bg-background/80 backdrop-blur-lg transition-shadow duration-150",
+        isAtTop ? "shadow-none" : "shadow-md/4 dark:shadow-md/26",
+      )}
     >
       <div className="flex gap-0 items-center justify-between w-full max-w-317 mx-auto inset-x-0">
         <div className="flex justify-start flex-1">
           <Avatar className="size-8 ml-0.5" title="Profile">
             <AvatarImage
-              src="https://github.com/tgrant06.png"
-              alt="@tgrant06"
+              src="https://github.com/tgmaurer.png"
+              alt="@tgmaurer"
             />
             <AvatarFallback>TG</AvatarFallback>
           </Avatar>

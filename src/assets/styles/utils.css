@@ -13,3 +13,11 @@
 .dark .scrollbar-bg-transparent {
     scrollbar-color: #535961 transparent; /*was: light-dark(#b2b2b2, #646464)*/
 }
+
+/* Manual Override: Completely Disable Transitions */
+/* Add this class to the element (or a parent) to kill all animation */
+.lc-no-transitions,
+.lc-no-transitions * {
+    transition: none !important;
+    animation: none !important;
+}

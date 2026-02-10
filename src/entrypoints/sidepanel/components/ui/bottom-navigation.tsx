@@ -1,4 +1,6 @@
-import "./bottom-navigation.css";
+import style from "./bottom-navigation.module.css";
+import { cn } from "@/lib/utils";
+
 import {
   //HomeIcon, //Home page
   RectangleStackIcon, // TODO: maybe switch to this later (for Entries page)
@@ -42,19 +44,17 @@ export function BottomNavigation() {
     <section
       id="lc-bottom-navigation-item"
       // Change px-2.75 to px-2.5 if four items are present
-      className={`lc-bottom-navigation
-          fixed bottom-0 w-full h-14.75 px-2.75 pr-[calc(var(--lc-scrollbar-offset)+1px)] z-100 select-none
-          border-t bg-background/80 backdrop-blur-lg
-          ${
-            isHidden
-              ? "lc-bottom-navigation--hidden"
-              : isNoShadowPath
-                ? "shadow-none"
-                : isAtBottom
-                  ? "shadow-none"
-                  : "shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-2px_rgba(0,0,0,0.1)]/4 dark:shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-2px_rgba(0,0,0,0.1)]/26"
-          }
-          `}
+      className={cn(
+        style.bottomNav,
+        "fixed bottom-0 w-full h-14.75 px-2.75 pr-[calc(var(--lc-scrollbar-offset)+1px)] z-100 select-none border-t bg-background/80 backdrop-blur-lg",
+        isHidden
+          ? style.bottomNavHidden
+          : isNoShadowPath
+            ? "shadow-none"
+            : isAtBottom
+              ? "shadow-none"
+              : "shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-2px_rgba(0,0,0,0.1)]/4 dark:shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-2px_rgba(0,0,0,0.1)]/26",
+      )}
     >
       <div
         className="flex items-center justify-between text-center w-full max-w-317 h-full /*max-w-7xl*/ mx-auto inset-x-0"
