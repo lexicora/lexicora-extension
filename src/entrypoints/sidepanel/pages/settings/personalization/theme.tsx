@@ -11,7 +11,7 @@ import { SettingsItemSeperator } from "@/entrypoints/sidepanel/components/ui/set
 import { PageHeader } from "@/entrypoints/sidepanel/components/ui/page-header";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
-import { useScrollPos } from "@/entrypoints/sidepanel/providers/scroll-observer";
+import { useScrollPos } from "@/providers/scroll-observer";
 import { cn } from "@/lib/utils";
 
 function ThemePersonalizationSettingsPage() {

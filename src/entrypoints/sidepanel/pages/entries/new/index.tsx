@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeftIcon, House } from "lucide-react";
-import { useSidePanelMessaging } from "@/entrypoints/sidepanel/providers/messaging";
+import { useSidePanelMessaging } from "@/providers/messaging";
 import { useEffect, useState } from "react";
 import { PageData } from "@/types/page-selection-data.types";
 import { MSG } from "@/types/messaging";
@@ -14,7 +14,7 @@ import { defaultBlockNoteConfig } from "@/types/block-note.types";
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { BlockNoteView } from "@/editor/BlockNoteView";
 import { useCreateBlockNote } from "@blocknote/react";
-import { useScrollPos } from "@/entrypoints/sidepanel/providers/scroll-observer";
+import { useScrollPos } from "@/providers/scroll-observer";
 import { PageHeader } from "@/entrypoints/sidepanel/components/ui/page-header";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 // TODO: Add loading state while waiting for content (also use a skeleton loader for BlockNote.js editor)

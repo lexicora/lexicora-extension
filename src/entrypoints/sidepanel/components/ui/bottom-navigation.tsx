@@ -18,7 +18,7 @@ import {
 } from "lucide-react"; //Candidate for Entries page 5 (solid)
 import { NavLink, useLocation, matchPath } from "react-router-dom";
 
-import { useScrollPos } from "../../providers/scroll-observer";
+import { useScrollPos } from "@/providers/scroll-observer";
 
 export function BottomNavigation() {
   const { pathname } = useLocation();

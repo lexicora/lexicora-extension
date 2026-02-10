@@ -6,7 +6,7 @@ import { ExternalLinkIcon } from "lucide-react";
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
 
-import { useScrollPos } from "../../providers/scroll-observer";
+import { useScrollPos } from "@/providers/scroll-observer";
 
 export function TopBar() {
   const { isAtTop } = useScrollPos();
