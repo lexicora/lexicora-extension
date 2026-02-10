@@ -33,7 +33,7 @@ import {
 import { Link } from "react-router-dom";
 import "./SettingsPage.css";
 
-import { SettingsItem } from "@/entrypoints/sidepanel/components/ui/settings-item";
+import { SettingsItem } from "@/components/settings";
 import { PageHeader } from "../../components/ui/page-header";
 
 function SettingsPage() {
