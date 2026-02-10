@@ -12,7 +12,7 @@ import { defaultBlockNoteConfig } from "@/types/block-note.types";
 
 // App BlockNote.js imports
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
-import { BlockNoteView } from "@/editor/BlockNoteView";
+import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { useCreateBlockNote } from "@blocknote/react";
 import { useScrollPos } from "@/providers/scroll-observer";
 import { PageHeader } from "@/entrypoints/sidepanel/components/ui/page-header";

@@ -97,6 +97,11 @@ html:has(
     scrollbar-width: 0 !important;
 }
 
+/* TODO: Maybe add no scroll to this below.
+,
+html:has(.bn-container[data-color-scheme] .bn-suggestion-menu)
+*/
+
 /*Special case*/
 /*html:has(
     .bn-container[data-color-scheme]
@@ -353,6 +358,7 @@ html:has(
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.15s ease;
+    transition-delay: 0;
     z-index: 1000;
 }*/
 
@@ -361,6 +367,17 @@ html:has(
     .bn-side-menu
     .bn-button:is(button):nth-child(2):hover::after {
     opacity: 1;
+    transition-delay: 1s;
+}
+
+.bn-container[data-color-scheme]
+    .bn-side-menu
+    .bn-button:is(button):nth-child(2):hover:active::after,
+.bn-container[data-color-scheme]
+    .bn-side-menu
+    .bn-button:is(button):nth-child(2):active::after {
+    opacity: 0;
+    transition-delay: 0s;
 }*/
 
 .bn-container[data-color-scheme].bn-shadcn .bn-side-menu {
