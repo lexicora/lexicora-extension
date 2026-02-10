@@ -17,7 +17,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { PageHeader } from "@/entrypoints/sidepanel/components/ui/page-header";
+import { PageHeader } from "@/components/page-header";
 import {
   ArrowLeftIcon,
   CameraIcon,

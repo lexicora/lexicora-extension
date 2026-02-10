@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/item";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { SettingsItemSeperator } from "@/components/settings";
-import { PageHeader } from "@/entrypoints/sidepanel/components/ui/page-header";
+import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 import { useScrollPos } from "@/providers/scroll-observer";

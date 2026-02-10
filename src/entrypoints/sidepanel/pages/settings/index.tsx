@@ -34,7 +34,7 @@ import { Link } from "react-router-dom";
 import "./SettingsPage.css";
 
 import { SettingsItem } from "@/components/settings";
-import { PageHeader } from "../../components/ui/page-header";
+import { PageHeader } from "@/components/page-header";
 
 function SettingsPage() {
   return (

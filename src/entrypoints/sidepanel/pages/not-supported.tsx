@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon } from "lucide-react";
-import { PageHeader } from "../components/ui/page-header";
+import { PageHeader } from "@/components/page-header";
 
 function NotSupportedPage() {
   const navigate = useNavigate();

@@ -7,7 +7,7 @@ import {
 import { Link } from "react-router-dom";
 import { PlusIcon } from "lucide-react";
 
-import { PageHeader } from "@/entrypoints/sidepanel/components/ui/page-header";
+import { PageHeader } from "@/components/page-header";
 
 function EntriesPage() {
   return (

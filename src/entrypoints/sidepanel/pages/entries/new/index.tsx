@@ -15,7 +15,7 @@ import { defaultBlockNoteConfig } from "@/types/block-note.types";
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { useCreateBlockNote } from "@blocknote/react";
 import { useScrollPos } from "@/providers/scroll-observer";
-import { PageHeader } from "@/entrypoints/sidepanel/components/ui/page-header";
+import { PageHeader } from "@/components/page-header";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 // TODO: Add loading state while waiting for content (also use a skeleton loader for BlockNote.js editor)
 
