@@ -1,6 +1,6 @@
 /* Base theme */
 .bn-container[data-color-scheme] {
-    --bn-font-family: var(--lc-font-sans-serif);
+    --bn-font-family: var(--lc-font-sans);
     color-scheme: normal;
     scrollbar-color: light-dark(#a0a0a0, #828282) transparent;
     /*TODO MAYBE: Update scrollbar colors (get inspired from Notion)*/
@@ -124,14 +124,14 @@ html:has(.bn-container[data-color-scheme] .bn-suggestion-menu)
 }*/
 
 .bn-default-styles {
-    /*--bn-font-family: var(--lc-font-sans-serif);*/
-    font-family: var(--lc-font-sans-serif);
+    /*--bn-font-family: var(--lc-font-sans);*/
+    font-family: var(--lc-font-sans);
 }
 
 /*maybe unnecessary*/
 .bn-container[data-color-scheme] .bn-editor {
-    /*--bn-font-family: var(--lc-font-sans-serif);*/
-    font-family: var(--lc-font-sans-serif);
+    /*--bn-font-family: var(--lc-font-sans);*/
+    font-family: var(--lc-font-sans);
 }
 
 .bn-container[data-color-scheme] .bn-editor {

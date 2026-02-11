@@ -1,19 +1,6 @@
 /* Lexicora Custom Styles and classes */
 
-/*Classes for Lexicora logos in light and dark mode*/
-
-.lc-display-light, /*has implicit .light class*/
-.dark .lc-display-dark {
-    display: block;
-}
-
-.lc-display-dark, /*has implicit .light class*/
-.dark .lc-display-light {
-    display: none;
-}
-
 /*Component styles for bottom bar background blur effect*/
-
 .lc-bottom-bar-styled-bg {
     /*box-shadow: inset 0 -26px 16px 0px var(--background);*/
     /*box-shadow: inset 0 -26px 16px 0px
@@ -70,26 +57,3 @@ override the standard bottom bar class*/
     box-shadow: inset 0 -64px 16px -16px
         color-mix(in srgb, var(--background), transparent 50%);
 }*/
-
-.green-button {
-    /*color: var(--lc-light-foreground-color);
-    background-color: var(--color-green-600);*/
-    @apply text-(--lc-light-foreground-color) bg-green-600;
-}
-
-.dark .green-button {
-    /*background-color: var(--color-green-700);*/
-    @apply bg-green-700;
-}
-
-.green-button:hover {
-    /*background-color: var(--color-green-700);*/
-    @apply bg-green-700;
-    /*color: */
-}
-
-.dark .green-button:hover {
-    /*background-color: var(--color-green-800);*/
-    @apply bg-green-800;
-    /*color: */
-}

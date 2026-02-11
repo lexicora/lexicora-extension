@@ -1,5 +1,16 @@
 /*Utilities*/
 
+/*Classes for Lexicora logos in light and dark mode*/
+.lc-display-light, /*has implicit .light class*/
+.dark .lc-display-dark {
+    display: block;
+}
+
+.lc-display-dark, /*has implicit .light class*/
+.dark .lc-display-light {
+    display: none;
+}
+
 .scrollbar-thin {
     scrollbar-width: thin;
     /*scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);*/
@@ -20,4 +31,9 @@
 .lc-no-transitions * {
     transition: none !important;
     animation: none !important;
+}
+
+.btn-green-ring {
+    @apply text-lc-light-foreground bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800
+    ring-1 ring-inset ring-black/25 dark:ring-white/30 hover:ring-black/30 dark:hover:ring-white/25;
 }

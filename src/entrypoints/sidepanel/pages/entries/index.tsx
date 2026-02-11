@@ -26,7 +26,7 @@ function EntriesPage() {
               size="icon"
               title="New Entry"
               draggable={false}
-              className="size-10 rounded-lg green-button shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)] ring-1 ring-inset ring-black/25 dark:ring-white/30 hover:ring-black/30 dark:hover:ring-white/25"
+              className="btn-green-ring size-10 rounded-lg"
               asChild
             >
               <Link to="/entries/new" viewTransition={true}>
