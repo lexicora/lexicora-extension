@@ -166,6 +166,8 @@
     --color-lc-text-monospace: var(--lc-text-color-monospace);
     --color-lc-muted-foreground-hover: var(--lc-muted-foreground-hover);
     --color-lc-light-foreground: var(--lc-light-foreground-color);
+
+    /*Maybe add --spacing-lc-scrollbar-offset*/
 }
 
 @layer base {

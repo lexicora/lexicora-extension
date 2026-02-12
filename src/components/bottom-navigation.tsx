@@ -72,7 +72,7 @@ export function BottomNavigation() {
           >
             {({ isActive }) => (
               <div
-                className={`transition-all duration-200 will-change-transform ${isActive ? "scale-100" : "text-muted-foreground group-hover:scale-110 group-hover:text-(--lc-muted-foreground-hover)"}`}
+                className={`transition-all duration-200 will-change-transform ${isActive ? "scale-100" : "text-muted-foreground group-hover:scale-110 group-hover:text-lc-muted-foreground-hover"}`}
               >
                 {isActive ? (
                   <HomeIconSolid className="size-6.5 animate-icon-pop" />
@@ -94,7 +94,7 @@ export function BottomNavigation() {
           >
             {({ isActive }) => (
               <div
-                className={`transition-all duration-200 will-change-transform ${isActive ? "scale-100" : "text-muted-foreground group-hover:scale-110 group-hover:text-(--lc-muted-foreground-hover)"}`}
+                className={`transition-all duration-200 will-change-transform ${isActive ? "scale-100" : "text-muted-foreground group-hover:scale-110 group-hover:text-lc-muted-foreground-hover"}`}
               >
                 <StretchHorizontalIcon
                   className={`size-6.5 ${isActive ? "animate-icon-pop" : ""}`}
@@ -117,7 +117,7 @@ export function BottomNavigation() {
           >
             {({ isActive }) => (
               <div
-                className={`transition-all duration-200 will-change-transform ${isActive ? "scale-100" : "text-muted-foreground group-hover:scale-110 group-hover:text-(--lc-muted-foreground-hover)"}`}
+                className={`transition-all duration-200 will-change-transform ${isActive ? "scale-100" : "text-muted-foreground group-hover:scale-110 group-hover:text-lc-muted-foreground-hover"}`}
               >
                 {isActive ? (
                   <Cog6ToothIconSolid className="size-6.5 animate-icon-pop" />

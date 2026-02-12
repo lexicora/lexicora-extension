@@ -43,7 +43,7 @@ function HomePage() {
             <a
               href="https://lexicora.com"
               target="_blank"
-              className="text-sm text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 hover:text-(--lc-muted-foreground-hover)"
+              className="text-sm text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 hover:text-lc-muted-foreground-hover"
               title="https://lexicora.com"
             >
               Visit Lexicora.com{" "}

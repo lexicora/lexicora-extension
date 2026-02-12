@@ -56,7 +56,7 @@ export function SettingsItem({
           </ItemContent>
           <ItemActions>
             {/*For external links change to the ExternalLinkIcon */}
-            <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
+            <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
           </ItemActions>
         </Link>
       </Item>
