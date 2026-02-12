@@ -9,10 +9,10 @@ import {
 // Hooks, Providers and Components
 import { RouterListener } from "@/hooks/sidepanel/router-listener";
 //import { MessageListener } from "@/hooks/sidepanel/message-listener";
+import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
 import { SidePanelMessagingProvider } from "@/providers/sidepanel-messaging";
 import { ScrollObserverProvider } from "@/providers/scroll-observer";
 import { ThemeProvider } from "@/components/theme-provider";
-import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
 import { TopBar } from "@/components/top-bar";
 import { BottomNavigation } from "@/components/bottom-navigation";
 

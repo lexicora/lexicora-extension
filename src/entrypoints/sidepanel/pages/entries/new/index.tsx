@@ -1,4 +1,5 @@
-import "./NewEntryPage.css";
+//import "./NewEntryPage.css";
+import styles from "./new-entry.module.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -16,6 +17,7 @@ import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { useCreateBlockNote } from "@blocknote/react";
 import { useScrollPos } from "@/providers/scroll-observer";
 import { PageHeader } from "@/components/page-header";
+import { cn } from "@/lib/utils";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 // TODO: Add loading state while waiting for content (also use a skeleton loader for BlockNote.js editor)
 
@@ -114,8 +116,9 @@ function NewEntryPage() {
           </section>
         </main>
         <footer
-          id="lc-new-entry-bottom-footer"
-          className="mt-10.5"
+          //id="lc-new-entry-bottom-footer"
+          //className="mt-10.5"
+          className={cn(styles.bottomFooter, "mt-10.5")}
           ref={footerRef}
         >
           <section

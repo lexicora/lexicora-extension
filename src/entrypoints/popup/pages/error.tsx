@@ -8,7 +8,7 @@ function ErrorPage() {
   console.error(error);
 
   return (
-    <div className="w-85 overflow-auto h-full p-3 pb-6">
+    <div className="w-85 overflow-auto h-full p-3 pb-6 select-none">
       <PageHeader
         title="Error"
         goBackButton={false}

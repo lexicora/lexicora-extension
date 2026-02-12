@@ -1,0 +1,19 @@
+:global(html:has(#lc-new-entry-page)) {
+    /*For BlockNoteView (better accessibility)*/
+    scroll-padding-top: 102px; /*was: 72px, added 30px for floating page header*/
+    scroll-padding-bottom: 132px;
+}
+
+.bottomFooter :global(.lc-bottom-bar-styled-bg) {
+    --shadow-main: color-mix(in srgb, var(--background), transparent 45%);
+    --shadow-secondary: color-mix(in srgb, var(--background), transparent 40%);
+
+    box-shadow:
+        inset 0 -114px 22px -22px var(--shadow-main),
+        inset 0 -64px 30px -26px var(--shadow-secondary) !important;
+}
+
+:global(.dark) .bottomFooter :global(.lc-bottom-bar-styled-bg) {
+    --shadow-main: color-mix(in srgb, var(--background), transparent 40%);
+    --shadow-secondary: color-mix(in srgb, var(--background), transparent 35%);
+}

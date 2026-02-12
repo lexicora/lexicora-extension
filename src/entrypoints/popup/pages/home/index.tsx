@@ -75,7 +75,7 @@ function HomePage() {
   }, []);
 
   return (
-    <div className="w-85 overflow-auto h-full pt-20 pb-15 px-3">
+    <div className="w-85 overflow-auto h-full pt-20 pb-15 px-3 select-none">
       <header>
         <nav
           className={`fixed top-0 left-0 w-full p-2.75 z-10

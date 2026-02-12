@@ -1,9 +1,9 @@
 import { useState } from "react";
+import styles from "./home.module.css";
 import reactLogo from "@/assets/logos/react.svg";
 import wxtLogo from "/wxt.svg";
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
-import "./HomePage.css";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -102,11 +102,8 @@ function HomePage() {
             />
           </section>
         </main>
-        <footer id="lc-home-page-bottom-footer">
-          <section
-            className="fixed bottom-14.75 left-0 h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-10
-                lc-bottom-bar-styled-bg"
-          >
+        <footer className={styles.bottomFooter}>
+          <section className="fixed bottom-14.75 left-0 h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-10 lc-bottom-bar-styled-bg">
             {/*MAYBE: Remove the animation disabling motion-reduce, because it is a very noticeable and maybe not optimal for accessibility*/}
             <div className="flex gap-0 items-center justify-between w-full max-w-314 mx-auto inset-x-0">
               <div
