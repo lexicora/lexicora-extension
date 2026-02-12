@@ -1,8 +1,6 @@
 import { useState } from "react";
 import reactLogo from "@/assets/logos/react.svg";
 import wxtLogo from "/wxt.svg";
-import lexicoraLightThemeLogo from "@/assets/logos/lexicora_inverted_bg-transparent.svg";
-import lexicoraDarkThemeLogo from "@/assets/logos/lexicora_standard_bg-transparent.svg";
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
 //import styles from "./home.module.css";
@@ -14,20 +12,21 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ModeToggle } from "@/components/mode-toggle";
 import {
   ArrowUpRightIcon,
   PanelRightIcon,
   PanelRightOpen,
   SquareArrowOutUpRight,
 } from "lucide-react";
-import { useTheme } from "@/components/theme-provider";
 
 import { MSG } from "@/types/messaging";
+import { useScrollPos } from "@/providers/scroll-observer";
+import { cn } from "@/lib/utils";
 
 function HomePage() {
   const [promptText, setPromptText] = useState("");
-  const [isAtTop, setIsAtTop] = useState(true);
+  const { isAtTop } = useScrollPos();
+  //const [isAtTop, setIsAtTop] = useState(true);
 
   // MAYBE: Force side panel to open to home page with messaging navigation implementation.
   const openSidePanel = async () => {
@@ -56,30 +55,16 @@ function HomePage() {
       document.getElementById("ai-prompt-textarea")?.focus();
       //* NOTE: Having this enabled makes the buttons below flicker, when opening the pupup
     }, 100);
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsAtTop(entry.isIntersecting);
-      },
-      {
-        root: null,
-        threshold: 0.1,
-      },
-    );
-    const target = document.querySelector("#start-of-content-sentinel");
-    if (target) {
-      observer.observe(target);
-    }
-    return () => observer.disconnect();
   }, []);
 
   return (
     <div className="w-85 overflow-auto h-full pt-20 pb-15 px-3 select-none">
       <header>
         <nav
-          className={`fixed top-0 left-0 w-full p-2.75 z-10
-          border-b bg-background/80 backdrop-blur-lg
-          transition-shadow duration-150 ${isAtTop ? "shadow-none" : "shadow-md/5 dark:shadow-md/20"}`}
+          className={cn(
+            "fixed top-0 left-0 w-full p-2.75 z-10 border-b bg-background/80 backdrop-blur-lg transition-shadow duration-150 shadow-none",
+            { "shadow-md/5 dark:shadow-md/20": !isAtTop },
+          )}
         >
           <div className="flex gap-0 items-center justify-between w-full">
             <div className="flex justify-start flex-1">
@@ -201,10 +186,7 @@ function HomePage() {
         </section>
       </main>
       <footer>
-        <section
-          className="fixed bottom-0 left-0 h-15 w-full p-3 z-10
-                lc-bottom-bar-styled-bg"
-        >
+        <section className="fixed bottom-0 left-0 h-15 w-full p-3 z-10 lc-bottom-bar-styled-bg">
           {/*MAYBE: Remove the animation disabling motion-reduce, because it is a very noticeable and maybe not optimal for accessibility*/}
           <div className="flex gap-0 items-center justify-between w-full">
             <div

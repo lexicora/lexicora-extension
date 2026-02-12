@@ -15,8 +15,8 @@ export function TopBar() {
     <section
       id="lc-top-bar-item"
       className={cn(
-        "lc-top-bar fixed top-0 w-full p-2.75 pr-[calc(var(--lc-scrollbar-offset)+2px)] py-[0.7rem] z-30 border-b bg-background/80 backdrop-blur-lg transition-shadow duration-150",
-        isAtTop ? "shadow-none" : "shadow-md/4 dark:shadow-md/26",
+        "lc-top-bar fixed top-0 w-full p-2.75 pr-[calc(var(--lc-scrollbar-offset)+2px)] py-[0.7rem] z-30 border-b bg-background/80 backdrop-blur-lg transition-shadow duration-150 shadow-none",
+        { "shadow-md/4 dark:shadow-md/26": !isAtTop },
       )}
     >
       <div className="flex gap-0 items-center justify-between w-full max-w-317 mx-auto inset-x-0">
