@@ -35,7 +35,7 @@ import "@blocknote/shadcn/style.css";
 //import "@blocknote/core/fonts/inter.css";
 import "./styles.css";
 
-import { useTheme } from "@/components/theme-provider";
+import { useTheme } from "@/providers/theme-provider";
 //import { getCustomSlashMenuItems } from "./config";
 
 export function BlockNoteView({

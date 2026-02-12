@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/item";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
+import { useTheme } from "@/providers/theme-provider";
 
 function ThemePersonalizationSettingsPage() {
   const { theme, setTheme } = useTheme();

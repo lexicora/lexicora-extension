@@ -1,7 +1,7 @@
 import "./App.css";
 import ErrorPage from "./pages/error";
 import { createMemoryRouter, RouterProvider, Outlet } from "react-router-dom";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import { ScrollObserverProvider } from "@/providers/scroll-observer";
 
 // Pages

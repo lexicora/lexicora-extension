@@ -12,7 +12,7 @@ import { RouterListener } from "@/hooks/sidepanel/router-listener";
 import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
 import { SidePanelMessagingProvider } from "@/providers/sidepanel-messaging";
 import { ScrollObserverProvider } from "@/providers/scroll-observer";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import { TopBar } from "@/components/top-bar";
 import { BottomNavigation } from "@/components/bottom-navigation";
 
