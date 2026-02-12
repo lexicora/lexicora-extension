@@ -1,11 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 
 function NotSupportedPage() {
-  const navigate = useNavigate();
-
   return (
     <div className="lc-page-container">
       <div className="lc-page-container-inner">

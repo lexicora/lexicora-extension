@@ -82,7 +82,7 @@ const router = createMemoryRouter([
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="system" /*storageKey="lexicora-ui-theme"*/>
+    <ThemeProvider defaultTheme="system">
       <RouterProvider router={router} />
     </ThemeProvider>
   );

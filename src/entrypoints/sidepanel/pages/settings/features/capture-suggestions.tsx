@@ -1,32 +1,23 @@
-import { useState } from "react";
-import {
-  captureSuggestionStorage,
-  captureSuggestionDelayMultiplierStorage,
-} from "@/lib/utils/storage/settings";
-import { useAppStorage } from "@/hooks/use-app-storage";
-import { useNavigate } from "react-router-dom";
+import { PageHeader } from "@/components/page-header";
 import {
   Item,
   ItemActions,
   ItemContent,
-  ItemMedia,
-  ItemTitle,
   ItemDescription,
   ItemHeader,
+  ItemMedia,
+  ItemTitle,
 } from "@/components/ui/item";
-import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
-import { Button } from "@/components/ui/button";
-import { PageHeader } from "@/components/page-header";
+import { Switch } from "@/components/ui/switch";
+import { useAppStorage } from "@/hooks/use-app-storage";
 import {
-  ArrowLeftIcon,
-  CameraIcon,
-  CameraOffIcon,
-  TimerIcon,
-} from "lucide-react";
+  captureSuggestionDelayMultiplierStorage,
+  captureSuggestionStorage,
+} from "@/lib/utils/storage/settings";
+import { CameraIcon, CameraOffIcon, TimerIcon } from "lucide-react";
 
 function CaptureSuggestionsSettingsPage() {
-  const navigate = useNavigate();
   const [enabled, setEnabled] = useAppStorage(captureSuggestionStorage);
   const [delayMultiplier, setDelayMultiplier] = useAppStorage(
     captureSuggestionDelayMultiplierStorage,

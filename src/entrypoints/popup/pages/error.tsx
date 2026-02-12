@@ -1,7 +1,5 @@
-import { useNavigate, useRouteError } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
+import { useRouteError } from "react-router-dom";
 
 function ErrorPage() {
   const error = useRouteError();

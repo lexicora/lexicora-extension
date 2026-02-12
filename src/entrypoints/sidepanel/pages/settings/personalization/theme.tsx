@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router-dom";
+import { PageHeader } from "@/components/page-header";
+import { SettingsItemSeperator } from "@/components/settings";
 import {
   Item,
   ItemActions,
@@ -7,17 +8,10 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { SettingsItemSeperator } from "@/components/settings";
-import { PageHeader } from "@/components/page-header";
-import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
-import { useScrollPos } from "@/providers/scroll-observer";
-import { cn } from "@/lib/utils";
+import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 
 function ThemePersonalizationSettingsPage() {
-  const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
-  const { isAtTop } = useScrollPos();
 
   return (
     <div className="lc-page-container">

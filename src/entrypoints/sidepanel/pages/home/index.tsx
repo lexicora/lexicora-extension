@@ -1,20 +1,15 @@
 import { useState } from "react";
 import styles from "./home.module.css";
-import reactLogo from "@/assets/logos/react.svg";
-import wxtLogo from "/wxt.svg";
+//import reactLogo from "@/assets/logos/react.svg";
+//import wxtLogo from "/wxt.svg";
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ModeToggle } from "@/components/mode-toggle";
-import { Link } from "react-router-dom";
-import { PlusIcon, ArrowUpRightIcon } from "lucide-react";
+import { ArrowUpRightIcon } from "lucide-react";
 
 function HomePage() {
   const [promptText, setPromptText] = useState("");
-  //const [count, setCount] = useState(0);
-
-  //const createBtn = "bg-green-600 hover:bg-green-700 text-white hover:text-gray-100";
 
   return (
     <div id="lc-home-page" className="lc-page-container">
@@ -133,47 +128,6 @@ function HomePage() {
             </div>
           </section>
         </footer>
-        {/*<div>
-        <a href="https://wxt.dev" target="_blank">
-          <img src={wxtLogo} className="logo" alt="WXT logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1 className="test-app text-3xl">WXT + React</h1>
-      <div className="card">
-        <div
-          style={{
-            display: "flex",
-            gap: "10px",
-            justifyContent: "center",
-            marginBottom: "10px",
-          }}
-        >
-          <Button onClick={() => setCount((count) => count + 1)}>
-            count is {count}
-          </Button>
-          <ModeToggle />
-        </div>
-        <div className="mb-4">
-          <Link to="/entries/new" viewTransition={true}>
-            <Button
-              variant="secondary"
-              className="green-button" //createBtn
-              size="sm"
-            >
-              <PlusIcon /> New Entry
-            </Button>
-          </Link>
-        </div>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the WXT and React logos to learn more
-      </p>*/}
       </div>
     </div>
   );
