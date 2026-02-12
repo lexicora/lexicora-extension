@@ -11,7 +11,7 @@ import { PageHeader } from "@/components/page-header";
 
 function EntriesPage() {
   return (
-    <div className="lc-page-container select-none">
+    <div className="lc-page-container">
       <div className="lc-page-container-inner">
         {/*<header className="mb-4 mt-1">
           <h1 className="text-2xl font-semibold">Entries</h1>

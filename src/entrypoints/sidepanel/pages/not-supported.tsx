@@ -7,7 +7,7 @@ function NotSupportedPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="lc-page-container select-none">
+    <div className="lc-page-container">
       <div className="lc-page-container-inner">
         <PageHeader
           title="Forbidden"

@@ -1,4 +1,5 @@
 import "./App.css";
+import ErrorPage from "./pages/error";
 import { createMemoryRouter, RouterProvider, Outlet } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -22,6 +23,7 @@ const router = createMemoryRouter([
   {
     path: "/",
     element: <RootLayout />,
+    errorElement: <ErrorPage />,
     children: [
       { path: "/", element: <HomePage /> },
       //MAYBE: Add (if not logged in pages here)
@@ -31,7 +33,7 @@ const router = createMemoryRouter([
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="system" storageKey="lexicora-ui-theme">
+    <ThemeProvider defaultTheme="system">
       <RouterProvider router={router} />
     </ThemeProvider>
   );

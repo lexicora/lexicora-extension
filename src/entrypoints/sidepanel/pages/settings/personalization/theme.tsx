@@ -20,7 +20,7 @@ function ThemePersonalizationSettingsPage() {
   const { isAtTop } = useScrollPos();
 
   return (
-    <div className="lc-page-container select-none">
+    <div className="lc-page-container">
       <div className="lc-page-container-inner">
         <PageHeader title="Theme" goBackButton />
         <main className="flex flex-col gap-6 w-full pt-4.5 px-1.5">

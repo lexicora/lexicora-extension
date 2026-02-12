@@ -38,7 +38,7 @@ import { PageHeader } from "@/components/page-header";
 
 function SettingsPage() {
   return (
-    <div className="lc-page-container select-none">
+    <div className="lc-page-container">
       <div className="lc-page-container-inner">
         <PageHeader title="Settings" />
         <main className="flex flex-col gap-6 w-full px-1.5">

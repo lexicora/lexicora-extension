@@ -4,12 +4,11 @@ import { ArrowLeftIcon } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 
 function ErrorPage() {
-  const navigate = useNavigate();
   const error = useRouteError();
   console.error(error);
 
   return (
-    <div className="lc-page-container mt-0! mb-6! select-none">
+    <div className="lc-page-container mt-0! mb-6!">
       <div className="lc-page-container-inner">
         <PageHeader
           title="Error"

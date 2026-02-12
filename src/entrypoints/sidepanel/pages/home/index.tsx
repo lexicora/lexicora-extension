@@ -17,7 +17,7 @@ function HomePage() {
   //const createBtn = "bg-green-600 hover:bg-green-700 text-white hover:text-gray-100";
 
   return (
-    <div id="lc-home-page" className="lc-page-container select-none">
+    <div id="lc-home-page" className="lc-page-container">
       <div className="lc-page-container-inner">
         <header className="mt-4">
           <span className="flex justify-center gap-3 items-baseline mb-3">

@@ -85,10 +85,7 @@ function NewEntryPage() {
 
   return (
     //* NOTE: Opt in for now, because of editor styles being changed
-    <div
-      id="lc-new-entry-page"
-      className="lc-page-container select-none mb-0! /*pr-3!*/"
-    >
+    <div id="lc-new-entry-page" className="lc-page-container mb-0! /*pr-3!*/">
       {/*Make the inner container as tall (min-height) as the vh (but not overflowing) to prevent issues with editor*/}
       <div className="lc-page-container-inner">
         <PageHeader title="New Entry" goBackButton />
