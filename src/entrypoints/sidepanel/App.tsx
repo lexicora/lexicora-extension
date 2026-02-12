@@ -24,7 +24,7 @@ import NotSupportedPage from "./pages/not-supported";
 
 // Entries Pages
 import EntriesPage from "./pages/entries";
-import NewEntryPage from "./pages/entries/new";
+import EntryCreatePage from "./pages/entries/new";
 import EntryDetailPage from "./pages/entries/[id]";
 import EntryEditPage from "./pages/entries/edit/[id]";
 
@@ -63,7 +63,7 @@ const router = createMemoryRouter([
       // Add fallback page for error display
       // Entries
       { path: "entries", element: <EntriesPage /> },
-      { path: "entries/new", element: <NewEntryPage /> },
+      { path: "entries/new", element: <EntryCreatePage /> },
       { path: "entries/:id", element: <EntryDetailPage /> },
       { path: "entries/:id/edit", element: <EntryEditPage /> },
       // Settings

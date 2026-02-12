@@ -5,7 +5,7 @@ import lexicoraLightThemeLogo from "@/assets/logos/lexicora_inverted_bg-transpar
 import lexicoraDarkThemeLogo from "@/assets/logos/lexicora_standard_bg-transparent.svg";
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
-import "./HomePage.css";
+//import styles from "./home.module.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,7 +28,6 @@ import { MSG } from "@/types/messaging";
 function HomePage() {
   const [promptText, setPromptText] = useState("");
   const [isAtTop, setIsAtTop] = useState(true);
-  //const { theme } = useTheme()
 
   // MAYBE: Force side panel to open to home page with messaging navigation implementation.
   const openSidePanel = async () => {

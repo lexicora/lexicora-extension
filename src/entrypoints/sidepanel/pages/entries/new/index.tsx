@@ -1,5 +1,5 @@
 //import "./NewEntryPage.css";
-import styles from "./new-entry.module.css";
+import styles from "./entry-create.module.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 // TODO: Add loading state while waiting for content (also use a skeleton loader for BlockNote.js editor)
 
-function NewEntryPage() {
+function EntryCreatePage() {
   const location = useLocation(); // This is used in order to trigger useEffect on location change
   const navigate = useNavigate();
   const editor = useCreateBlockNote(defaultBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
@@ -188,4 +188,4 @@ function NewEntryPage() {
   );
 }
 
-export default NewEntryPage;
+export default EntryCreatePage;

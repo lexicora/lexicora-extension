@@ -31,7 +31,7 @@ import {
   UserRoundIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import "./SettingsPage.css";
+//import styles from "./settings-page.module.css";
 
 import { SettingsItem } from "@/components/settings";
 import { PageHeader } from "@/components/page-header";
