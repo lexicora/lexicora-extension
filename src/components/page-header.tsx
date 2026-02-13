@@ -2,7 +2,7 @@ import styles from "./page-header.module.css";
 import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { useScrollPos } from "@/entrypoints/sidepanel/providers/scroll-observer";
+import { useScrollPos } from "@/providers/scroll-observer";
 import { cn } from "@/lib/utils";
 
 interface PageHeaderProps {

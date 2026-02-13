@@ -1,11 +1,9 @@
 import { useState } from "react";
 import reactLogo from "@/assets/logos/react.svg";
 import wxtLogo from "/wxt.svg";
-import lexicoraLightThemeLogo from "@/assets/logos/lexicora_inverted_bg-transparent.svg";
-import lexicoraDarkThemeLogo from "@/assets/logos/lexicora_standard_bg-transparent.svg";
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
-import "./HomePage.css";
+//import styles from "./home.module.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,21 +12,21 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ModeToggle } from "@/components/mode-toggle";
 import {
   ArrowUpRightIcon,
   PanelRightIcon,
   PanelRightOpen,
   SquareArrowOutUpRight,
 } from "lucide-react";
-import { useTheme } from "@/components/theme-provider";
 
 import { MSG } from "@/types/messaging";
+import { useScrollPos } from "@/providers/scroll-observer";
+import { cn } from "@/lib/utils";
 
 function HomePage() {
   const [promptText, setPromptText] = useState("");
-  const [isAtTop, setIsAtTop] = useState(true);
-  //const { theme } = useTheme()
+  const { isAtTop } = useScrollPos();
+  //const [isAtTop, setIsAtTop] = useState(true);
 
   // MAYBE: Force side panel to open to home page with messaging navigation implementation.
   const openSidePanel = async () => {
@@ -57,38 +55,24 @@ function HomePage() {
       document.getElementById("ai-prompt-textarea")?.focus();
       //* NOTE: Having this enabled makes the buttons below flicker, when opening the pupup
     }, 100);
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsAtTop(entry.isIntersecting);
-      },
-      {
-        root: null,
-        threshold: 0.1,
-      },
-    );
-    const target = document.querySelector("#start-of-content-sentinel");
-    if (target) {
-      observer.observe(target);
-    }
-    return () => observer.disconnect();
   }, []);
 
   return (
-    <div className="w-85 overflow-auto h-full pt-20 pb-15 px-3">
+    <div className="w-85 overflow-auto h-full pt-20 pb-15 px-3 select-none">
       <header>
         <nav
-          className={`fixed top-0 left-0 w-full p-2.75 z-10
-          border-b bg-background/80 backdrop-blur-lg
-          transition-shadow duration-150 ${isAtTop ? "shadow-none" : "shadow-md/5 dark:shadow-md/20"}`}
+          className={cn(
+            "fixed top-0 left-0 w-full p-2.75 z-10 border-b bg-background/80 backdrop-blur-lg transition-shadow duration-150 shadow-none",
+            { "shadow-md/5 dark:shadow-md/20": !isAtTop },
+          )}
         >
           <div className="flex gap-0 items-center justify-between w-full">
             <div className="flex justify-start flex-1">
               {/*MAYBE: Add dropdown menu of quick actions here (profile included, like maybe navigate directly to create new entry in sidepanel)*/}
               <Avatar className="size-8 ml-0.5" title="Profile">
                 <AvatarImage
-                  src="https://github.com/tgrant06.png"
-                  alt="@tgrant06"
+                  src="https://github.com/tgmaurer.png"
+                  alt="@tgmaurer"
                 />
                 <AvatarFallback>TG</AvatarFallback>
               </Avatar>
@@ -152,7 +136,7 @@ function HomePage() {
             <a
               href="https://lexicora.com"
               target="_blank"
-              className="text-sm text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 hover:text-(--lc-muted-foreground-hover)"
+              className="text-sm text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 hover:text-lc-muted-foreground-hover"
               title="https://lexicora.com"
             >
               Visit Lexicora.com{" "}
@@ -202,10 +186,7 @@ function HomePage() {
         </section>
       </main>
       <footer>
-        <section
-          className="fixed bottom-0 left-0 h-15 w-full p-3 z-10
-                lc-bottom-bar-styled-bg"
-        >
+        <section className="fixed bottom-0 left-0 h-15 w-full p-3 z-10 lc-bottom-bar-styled-bg">
           {/*MAYBE: Remove the animation disabling motion-reduce, because it is a very noticeable and maybe not optimal for accessibility*/}
           <div className="flex gap-0 items-center justify-between w-full">
             <div

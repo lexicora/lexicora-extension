@@ -1,23 +1,18 @@
 import { useState } from "react";
-import reactLogo from "@/assets/logos/react.svg";
-import wxtLogo from "/wxt.svg";
+import styles from "./home.module.css";
+//import reactLogo from "@/assets/logos/react.svg";
+//import wxtLogo from "/wxt.svg";
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
-import "./HomePage.css";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ModeToggle } from "@/components/mode-toggle";
-import { Link } from "react-router-dom";
-import { PlusIcon, ArrowUpRightIcon } from "lucide-react";
+import { ArrowUpRightIcon } from "lucide-react";
 
 function HomePage() {
   const [promptText, setPromptText] = useState("");
-  //const [count, setCount] = useState(0);
-
-  //const createBtn = "bg-green-600 hover:bg-green-700 text-white hover:text-gray-100";
 
   return (
-    <div id="lc-home-page" className="lc-page-container select-none">
+    <div id="lc-home-page" className="lc-page-container">
       <div className="lc-page-container-inner">
         <header className="mt-4">
           <span className="flex justify-center gap-3 items-baseline mb-3">
@@ -43,7 +38,7 @@ function HomePage() {
             <a
               href="https://lexicora.com"
               target="_blank"
-              className="text-sm text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 hover:text-(--lc-muted-foreground-hover)"
+              className="text-sm text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 hover:text-lc-muted-foreground-hover"
               title="https://lexicora.com"
             >
               Visit Lexicora.com{" "}
@@ -102,11 +97,8 @@ function HomePage() {
             />
           </section>
         </main>
-        <footer id="lc-home-page-bottom-footer">
-          <section
-            className="fixed bottom-14.75 left-0 h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-10
-                lc-bottom-bar-styled-bg"
-          >
+        <footer className={styles.bottomFooter}>
+          <section className="fixed bottom-14.75 left-0 h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-10 lc-bottom-bar-styled-bg">
             {/*MAYBE: Remove the animation disabling motion-reduce, because it is a very noticeable and maybe not optimal for accessibility*/}
             <div className="flex gap-0 items-center justify-between w-full max-w-314 mx-auto inset-x-0">
               <div
@@ -136,47 +128,6 @@ function HomePage() {
             </div>
           </section>
         </footer>
-        {/*<div>
-        <a href="https://wxt.dev" target="_blank">
-          <img src={wxtLogo} className="logo" alt="WXT logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1 className="test-app text-3xl">WXT + React</h1>
-      <div className="card">
-        <div
-          style={{
-            display: "flex",
-            gap: "10px",
-            justifyContent: "center",
-            marginBottom: "10px",
-          }}
-        >
-          <Button onClick={() => setCount((count) => count + 1)}>
-            count is {count}
-          </Button>
-          <ModeToggle />
-        </div>
-        <div className="mb-4">
-          <Link to="/entries/new" viewTransition={true}>
-            <Button
-              variant="secondary"
-              className="green-button" //createBtn
-              size="sm"
-            >
-              <PlusIcon /> New Entry
-            </Button>
-          </Link>
-        </div>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the WXT and React logos to learn more
-      </p>*/}
       </div>
     </div>
   );

@@ -31,14 +31,14 @@ import {
   UserRoundIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import "./SettingsPage.css";
+//import styles from "./settings-page.module.css";
 
-import { SettingsItem } from "@/entrypoints/sidepanel/components/ui/settings-item";
-import { PageHeader } from "../../components/ui/page-header";
+import { SettingsItem } from "@/components/settings";
+import { PageHeader } from "@/components/page-header";
 
 function SettingsPage() {
   return (
-    <div className="lc-page-container select-none">
+    <div className="lc-page-container">
       <div className="lc-page-container-inner">
         <PageHeader title="Settings" />
         <main className="flex flex-col gap-6 w-full px-1.5">
@@ -59,8 +59,8 @@ function SettingsPage() {
                     title="Profile"
                   >
                     <AvatarImage
-                      src="https://github.com/tgrant06.png"
-                      alt="@tgrant06"
+                      src="https://github.com/tgmaurer.png"
+                      alt="@tgmaurer"
                     />
                     <AvatarFallback>TG</AvatarFallback>
                   </Avatar>
@@ -75,7 +75,7 @@ function SettingsPage() {
                 </ItemDescription>*/}
                 </ItemContent>
                 <ItemActions>
-                  <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-(--lc-muted-foreground-hover)" />
+                  <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
                 </ItemActions>
               </Link>
             </Item>

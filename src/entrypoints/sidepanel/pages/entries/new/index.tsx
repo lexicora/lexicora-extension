@@ -1,10 +1,11 @@
-import "./NewEntryPage.css";
+//import "./NewEntryPage.css";
+import styles from "./entry-create.module.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeftIcon, House } from "lucide-react";
-import { useSidePanelMessaging } from "@/entrypoints/sidepanel/providers/messaging";
+import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";
 import { useEffect, useState } from "react";
 import { PageData } from "@/types/page-selection-data.types";
 import { MSG } from "@/types/messaging";
@@ -12,14 +13,15 @@ import { defaultBlockNoteConfig } from "@/types/block-note.types";
 
 // App BlockNote.js imports
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
-import { BlockNoteView } from "@/editor/BlockNoteView";
+import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { useCreateBlockNote } from "@blocknote/react";
-import { useScrollPos } from "@/entrypoints/sidepanel/providers/scroll-observer";
-import { PageHeader } from "@/entrypoints/sidepanel/components/ui/page-header";
+import { useScrollPos } from "@/providers/scroll-observer";
+import { PageHeader } from "@/components/page-header";
+import { cn } from "@/lib/utils";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 // TODO: Add loading state while waiting for content (also use a skeleton loader for BlockNote.js editor)
 
-function NewEntryPage() {
+function EntryCreatePage() {
   const location = useLocation(); // This is used in order to trigger useEffect on location change
   const navigate = useNavigate();
   const editor = useCreateBlockNote(defaultBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
@@ -85,10 +87,7 @@ function NewEntryPage() {
 
   return (
     //* NOTE: Opt in for now, because of editor styles being changed
-    <div
-      id="lc-new-entry-page"
-      className="lc-page-container select-none mb-0! /*pr-3!*/"
-    >
+    <div id="lc-new-entry-page" className="lc-page-container mb-0! /*pr-3!*/">
       {/*Make the inner container as tall (min-height) as the vh (but not overflowing) to prevent issues with editor*/}
       <div className="lc-page-container-inner">
         <PageHeader title="New Entry" goBackButton />
@@ -117,8 +116,9 @@ function NewEntryPage() {
           </section>
         </main>
         <footer
-          id="lc-new-entry-bottom-footer"
-          className="mt-10.5"
+          //id="lc-new-entry-bottom-footer"
+          //className="mt-10.5"
+          className={cn(styles.bottomFooter, "mt-10.5")}
           ref={footerRef}
         >
           <section
@@ -188,4 +188,4 @@ function NewEntryPage() {
   );
 }
 
-export default NewEntryPage;
+export default EntryCreatePage;

@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router-dom";
+import { PageHeader } from "@/components/page-header";
+import { SettingsItemSeperator } from "@/components/settings";
 import {
   Item,
   ItemActions,
@@ -7,20 +8,14 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { SettingsItemSeperator } from "@/entrypoints/sidepanel/components/ui/settings-item-seperator";
-import { PageHeader } from "@/entrypoints/sidepanel/components/ui/page-header";
-import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
-import { useScrollPos } from "@/entrypoints/sidepanel/providers/scroll-observer";
-import { cn } from "@/lib/utils";
+import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
+import { useTheme } from "@/providers/theme-provider";
 
 function ThemePersonalizationSettingsPage() {
-  const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
-  const { isAtTop } = useScrollPos();
 
   return (
-    <div className="lc-page-container select-none">
+    <div className="lc-page-container">
       <div className="lc-page-container-inner">
         <PageHeader title="Theme" goBackButton />
         <main className="flex flex-col gap-6 w-full pt-4.5 px-1.5">

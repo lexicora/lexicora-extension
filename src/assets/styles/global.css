@@ -1,9 +1,12 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@import "./vendors.css";
-@import "./animations.css";
-@import "./utils.css";
+/*@import "./base.css" layer(base);*/
+@import "./components.css" layer(components);
+@import "./utilities.css" layer(utilities);
+@import "./animations.css" layer(animations);
+
+@layer base, components, utilities, animations;
 
 @source "../../../node_modules/@blocknote/shadcn";
 
@@ -12,13 +15,13 @@
 @custom-variant active-view-transition (&:is(html:active-view-transition *));
 
 /* Data attribute variants for shadcn-ui components */
-@variant data-open (&:where([data-state="open"]));
-@variant data-closed (&:where([data-state="closed"]));
-@variant data-disabled (&:where([data-disabled], [disabled]));
-@variant data-checked (&:where([data-state="checked"]));
-@variant data-unchecked (&:where([data-state="unchecked"]));
-@variant data-horizontal (&:where([data-orientation="horizontal"]));
-@variant data-vertical (&:where([data-orientation="vertical"]));
+@custom-variant data-open (&:where([data-state="open"]));
+@custom-variant data-closed (&:where([data-state="closed"]));
+@custom-variant data-disabled (&:where([data-disabled], [disabled]));
+@custom-variant data-checked (&:where([data-state="checked"]));
+@custom-variant data-unchecked (&:where([data-state="unchecked"]));
+@custom-variant data-horizontal (&:where([data-orientation="horizontal"]));
+@custom-variant data-vertical (&:where([data-orientation="vertical"]));
 
 :root {
     --radius: 0.625rem;
@@ -57,7 +60,7 @@
 
     /*Lexicora: styles / variables / colors */
     /*MAYBE: Later set --font-mono and --font-sans to the --lc-... fonts (add other and more fallback fonts)*/
-    --lc-font-sans-serif:
+    --lc-font-sans:
         "Wix Madefor Text", system-ui, "Segoe UI", -apple-system, Avenir,
         Helvetica, Arial, sans-serif;
     --lc-font-monospace:
@@ -157,6 +160,14 @@
     --color-sidebar-ring: var(--sidebar-ring);
 
     /*Lexicora styles / variables*/
+    --font-lc-sans: var(--lc-font-sans); /*Maybe set --font-sans instead*/
+    --font-lc-monospace: var(--lc-font-monospace);
+    /*Maybe set --font-monospace instead*/
+    --color-lc-text-monospace: var(--lc-text-color-monospace);
+    --color-lc-muted-foreground-hover: var(--lc-muted-foreground-hover);
+    --color-lc-light-foreground: var(--lc-light-foreground-color);
+
+    /*Maybe add --spacing-lc-scrollbar-offset*/
 }
 
 @layer base {
@@ -174,6 +185,7 @@
     html:active-view-transition {
         scroll-behavior: auto !important;
     }
+    /*default app view transition*/
     ::view-transition-old(root),
     ::view-transition-new(root) {
         animation-duration: 0.15s;
@@ -263,7 +275,7 @@
 body {
     /*font-family:
         "Wix Madefor Text", system-ui, Avenir, Helvetica, Arial, sans-serif;*/
-    font-family: var(--lc-font-sans-serif);
+    font-family: var(--lc-font-sans);
     --webkit-font-smoothing: antialiased;
     line-height: 1.5;
     font-weight: 400;

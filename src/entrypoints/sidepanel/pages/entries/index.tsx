@@ -7,11 +7,11 @@ import {
 import { Link } from "react-router-dom";
 import { PlusIcon } from "lucide-react";
 
-import { PageHeader } from "@/entrypoints/sidepanel/components/ui/page-header";
+import { PageHeader } from "@/components/page-header";
 
 function EntriesPage() {
   return (
-    <div className="lc-page-container select-none">
+    <div className="lc-page-container">
       <div className="lc-page-container-inner">
         {/*<header className="mb-4 mt-1">
           <h1 className="text-2xl font-semibold">Entries</h1>
@@ -26,7 +26,7 @@ function EntriesPage() {
               size="icon"
               title="New Entry"
               draggable={false}
-              className="size-10 rounded-lg green-button shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)] ring-1 ring-inset ring-black/25 dark:ring-white/30 hover:ring-black/30 dark:hover:ring-white/25"
+              className="btn-green-ring size-10 rounded-lg"
               asChild
             >
               <Link to="/entries/new" viewTransition={true}>
