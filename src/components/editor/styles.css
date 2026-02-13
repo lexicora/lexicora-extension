@@ -428,12 +428,20 @@ html:has(.bn-container[data-color-scheme] .bn-suggestion-menu)
     text-decoration-line: none;
 }
 
+.bn-container[data-color-scheme]
+    .bn-code-content
+    .bn-block-content[data-content-type="codeBlock"]
+    select {
+    left: 14px;
+    padding-left: 4px;
+    /*padding-right: 50px;*/
+}
+
 .bn-container[data-color-scheme="dark"]
     .bn-code-content
     .bn-block-content[data-content-type="codeBlock"]
     select
     option {
-    margin-left: 6px;
     background-color: #232323;
     color: var(--color-foreground);
 }
