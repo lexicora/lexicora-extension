@@ -9,6 +9,16 @@ html {
     overflow-x: hidden;
     scroll-padding-top: 102px; /*was 58px, increase to account for hover-able page header*/
     scroll-padding-bottom: 64px;
+    /*&::-webkit-scrollbar-button {
+        height: 10px;
+        width: 10px;
+    }
+    &.light::-webkit-scrollbar-button {
+        background-color: #ededed;
+    }
+    &.dark::-webkit-scrollbar-button {
+        background-color: #0d111b;
+    }*/
 }
 /*Account for TopBar height. was: 60px*/
 /*Account for BottomNavigation height. was: 60px (opt out on a page level)*/

@@ -79,6 +79,7 @@
         var(--lc-max-scrollbar-width) - var(--lc-scrollbar-width)
     );
     /*Used in the default .lc-page-container and is now opt out (so set padding to pr-3! for example)*/
+    /*This prevents layout shifts from scrollbars*/
 }
 
 .dark {
@@ -194,10 +195,42 @@
     html {
         scrollbar-width: thin;
         &.light {
-            scrollbar-color: #b0b0b0 #ededed; /*was: #b2b2b2 */
+            scrollbar-color: #afafaf #ededed;
         }
         &.dark {
-            scrollbar-color: #535961 #0d111b;
+            scrollbar-color: #51575e #0d111b;
+        }
+        /*macOS scrollbar fallback, for if set to stable scrollbar*/
+        &::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        &::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+        &.light {
+            &::-webkit-scrollbar-track {
+                background-color: #ededed;
+            }
+            &::-webkit-scrollbar-thumb {
+                background-color: #afafaf;
+            }
+            &::-webkit-scrollbar-thumb:hover {
+                background-color: #5e5f61;
+            }
+        }
+        &.dark {
+            &::-webkit-scrollbar-track {
+                background-color: #0d111b;
+            }
+            &::-webkit-scrollbar-thumb {
+                background-color: #50565d;
+            }
+            &::-webkit-scrollbar-thumb:hover {
+                background-color: #868b8f;
+            }
         }
         &::selection {
             background-color: #2383e247; /*was: #3390ff66, #2383e257*/
@@ -213,53 +246,6 @@
             text-underline-offset: 2px;
         }
     }
-    /*Custom scrollbar (experimental)*/
-    /*html {
-        &::-webkit-scrollbar {
-            width: 10px;
-        }
-        &.light::-webkit-scrollbar-button {
-            height: 12px;
-            background-color: #ededed;
-        }
-        &.dark::-webkit-scrollbar-button {
-            height: 12px;
-            background-color: #0d111b;
-        }
-        &.light::-webkit-scrollbar-track {
-            background-color: transparent;
-            background-color: #ededed;
-        }
-        &.dark::-webkit-scrollbar-track {
-            background-color: transparent;
-            background-color: #0d111b;
-        }
-        &.light::-webkit-scrollbar-thumb {
-            border-radius: 10px;
-            background: #a0a0a0;
-            border: 3px solid transparent;
-            background-clip: content-box;
-        }
-        &.light::-webkit-scrollbar-thumb:hover {
-            background: #6f6f72;
-            border: 2px solid transparent;
-            background-clip: content-box;
-        }
-        &.dark::-webkit-scrollbar-thumb {
-            border-radius: 10px;
-            background: #50565d;
-            border: 3px solid transparent;
-            background-clip: content-box;
-        }
-        &.dark::-webkit-scrollbar-thumb:hover {
-            background: #83878c;
-            border: 2px solid transparent;
-            background-clip: content-box;
-        }
-    }*/
-    /*When using this scrollbar, make sure all page content has a buffer padding,
-    that is dynamic with: pr-[calc(var(--lc-max-scrollbar-width)-var(--lc-scrollbar-width)+2px)]
-    also adjust the variables used in there, to match scrollbar width*/
     button:not(:disabled),
     [role="button"]:not(:disabled) {
         cursor: pointer;
