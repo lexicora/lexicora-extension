@@ -94,7 +94,8 @@ html:has(
     overflow: hidden;
     /*Add stuff below, to keep layout consistent, with the dropdown menus of the BlockNote.js editor*/
     scroll-padding-top: 0 !important;
-    scrollbar-width: 0 !important;
+    scroll-padding-bottom: 0 !important;
+    /*scrollbar-width: 0 !important;*/
 }
 
 /* TODO: Maybe add no scroll to this below.
