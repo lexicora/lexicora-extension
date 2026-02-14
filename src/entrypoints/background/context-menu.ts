@@ -109,11 +109,19 @@ export function setupContextMenuActions() {
         }
         break;
       }
-      case CMI_ID.CAPTURE_FROM_CLIPBOARD: {
-        // Todo: Implement saving from clipboard (maybe scrap this)
-        console.log("Save from Clipboard not implemented yet.");
+      case CMI_ID.CAPTURE_PAGE_AI_ASSISTED: {
+        console.log("AI-Assisted page capture not implemented yet.");
         break;
       }
+      case CMI_ID.CAPTURE_PAGE_AS_IS: {
+        console.log("Page capture not implemented yet.");
+        break;
+      }
+      // case CMI_ID.CAPTURE_FROM_CLIPBOARD: {
+      //   // Todo: Implement saving from clipboard (maybe scrap this)
+      //   console.log("Save from Clipboard not implemented yet.");
+      //   break;
+      // }
       default: {
         console.warn("Unknown context menu item clicked:", info.menuItemId);
       }
