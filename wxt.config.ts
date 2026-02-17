@@ -4,6 +4,7 @@ import { defineConfig, UserManifest } from "wxt";
 export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   srcDir: "src",
+  //vite
   manifest: ({ browser, manifestVersion, mode, command }) => {
     const manifestBase: UserManifest = {
       name: "Lexicora Extension",
