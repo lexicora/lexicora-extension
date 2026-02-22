@@ -35,9 +35,9 @@ function EntryCreatePage() {
   //const pushEnabledRef = useRef(false); //* NOTE: This should not be necessary here
 
   const updateEditorContent = (data: PageData) => {
-    if (data.HTML) {
+    if (data.content) {
       setLanguage(data.language || navigator.language || "en");
-      const blocks = editor.tryParseHTMLToBlocks(data.HTML);
+      const blocks = editor.tryParseHTMLToBlocks(data.content);
       editor.replaceBlocks(editor.document, blocks);
     }
   };

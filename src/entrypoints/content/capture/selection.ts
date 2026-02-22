@@ -82,7 +82,7 @@ export async function getSelectionPageData(): Promise<PageData | null> {
 
   return {
     baseUri: pageBaseUri,
-    HTML: safeHTML,
+    content: safeHTML,
     language: document.documentElement.lang || "en",
     title: document.title || "Untitled",
     location: {

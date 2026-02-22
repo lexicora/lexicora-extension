@@ -101,7 +101,7 @@ export function setupContextMenuActions() {
             "TEST: \nURL:",
             pageSelectionData?.baseUri,
             "\nSelected HTML:",
-            pageSelectionData?.HTML,
+            pageSelectionData?.content,
           );
           // Updated console log to new pageData structure
           console.log("Selected Page Data:", pageSelectionData);

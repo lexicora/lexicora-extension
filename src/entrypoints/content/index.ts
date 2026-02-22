@@ -1,6 +1,9 @@
 import { onMessage } from "webext-bridge/content-script";
 import { MSG } from "@/types/messaging";
-import { getSelectionPageArticle, getSelectionPageData } from "./selection";
+import {
+  getSelectionPageArticle,
+  getSelectionPageData,
+} from "./capture/selection";
 import { setupCaptureSuggestion } from "./capture-suggestion";
 
 export default defineContentScript({
