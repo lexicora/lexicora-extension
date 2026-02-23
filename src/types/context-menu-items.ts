@@ -28,7 +28,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
     id: "separator1",
     type: "separator",
     contexts: ["all"],
-    documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
+    //documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   }, //TODO: Later add capture page option
   {
     id: CMI_ID.CAPTURE_SELECTION_AI_ASSISTED,
@@ -50,13 +50,13 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   {
     id: CMI_ID.CAPTURE_PAGE_AI_ASSISTED,
     title: "Capture Page with AI",
-    contexts: ["page", "selection"],
+    contexts: ["page", "selection"], // TODO: add all other options, so it is always visible, even if the user right clicks on a link or image for example
     documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   },
   {
     id: CMI_ID.CAPTURE_PAGE_AS_IS,
     title: "Capture Page",
-    contexts: ["page", "selection"],
+    contexts: ["page", "selection"], // TODO: add all other options, so it is always visible, even if the user right clicks on a link or image for example
     documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   },
   // {

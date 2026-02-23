@@ -197,6 +197,12 @@ export function setupContextMenuStateSync(/*menuId: string*/) {
         //enabled: !isDisabled,
         visible: !isDisabled,
       });
+      // await browser.contextMenus.update("separator1", {
+      //   visible: !isDisabled,
+      // });
+      // await browser.contextMenus.update("separator2", {
+      //   visible: !isDisabled,
+      // });
     } catch (e) {
       // Silently catch errors if the menu item hasn't been created yet
     }
