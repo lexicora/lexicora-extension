@@ -363,3 +363,5 @@ export function parseDocumentLight(doc: Document): any {}
 
 // TODO: Maybe implement later, when needed
 //export function parseDocumentToMarkdown(doc: Document): string {}
+
+// TODO: More optimizations (maximize performance) to consider: ...
