@@ -207,6 +207,7 @@ export function parseDocument(doc: Document): ParseResult {
     ".noprint",
     ".infobox",
     ".navbox",
+    ".hidden", //tailwind (maybe remove?)
     "[hidden]",
     '[style*="display: none"]',
     '[style*="display:none"]',
