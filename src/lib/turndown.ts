@@ -5,16 +5,18 @@ import TurndownService from "turndown";
  * Turndown service instance with custom options.
  */
 const turndownService = new TurndownService({
-    headingStyle: "atx",
-    hr: "---",
-    bulletListMarker: "-",
-    codeBlockStyle: "fenced",
-    fence: "```",
-    emDelimiter: "_", // maybe change to "*" later
-    strongDelimiter: "**",
-    linkStyle: "inlined",
-    //linkReferenceStyle: "full",
+  headingStyle: "atx",
+  hr: "---",
+  bulletListMarker: "-",
+  codeBlockStyle: "fenced",
+  fence: "```",
+  emDelimiter: "_", // maybe change to "*" later
+  strongDelimiter: "**",
+  linkStyle: "inlined",
+  //linkReferenceStyle: "full",
 });
+
+// add plugins if needed, for example to support tables, details/summary, etc.
 
 // Change to optimal, for example what AI models prefer
 

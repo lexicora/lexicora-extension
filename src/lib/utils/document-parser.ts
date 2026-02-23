@@ -44,6 +44,104 @@ function getLinkDensity(element: Element): number {
   return linkLength / textLength;
 }
 
+/**
+ * Helper function to normalize media and links in the document before pruning.
+ * This ensures that we have absolute URLs for images and links, and that code blocks have consistent language annotations.
+ * @param doc
+ */
+function normalizeMediaAndLinks(doc: Document) {
+  // 1. Picture / Source extraction
+  doc.querySelectorAll("picture").forEach((picture) => {
+    const img = picture.querySelector("img");
+    const sources = Array.from(picture.querySelectorAll("source"));
+
+    if (img && sources.length > 0) {
+      const bestSource = sources.find((s) => s.getAttribute("srcset"));
+      if (bestSource) {
+        const srcset = bestSource.getAttribute("srcset") || "";
+        const firstUrl = srcset.split(",")[0].trim().split(/\s+/)[0];
+        if (firstUrl) {
+          img.setAttribute("data-extracted-source", firstUrl);
+        }
+      }
+    }
+  });
+
+  // 2. Image Normalization (NATIVE BROWSER RESOLUTION)
+  doc.querySelectorAll("img").forEach((img) => {
+    // Check for lazy-load or extracted strings first
+    let bestSrcStr =
+      img.getAttribute("data-extracted-source") ||
+      img.getAttribute("data-src") ||
+      img.getAttribute("data-lazy-src");
+
+    const srcset = img.getAttribute("srcset");
+    if (srcset) {
+      const firstSrc = srcset.split(",")[0].trim().split(/\s+/)[0];
+      if (firstSrc) bestSrcStr = firstSrc;
+    }
+
+    // If we found a better source string, assign it to the DOM property.
+    // The browser will instantly and natively resolve this to an absolute URL!
+    if (bestSrcStr) {
+      img.src = bestSrcStr;
+    }
+
+    // Now, lock in the absolute URL as the explicit attribute for DOMPurify
+    if (img.src) {
+      img.setAttribute("src", img.src);
+
+      // Cleanup
+      img.removeAttribute("srcset");
+      img.removeAttribute("sizes");
+      img.removeAttribute("data-src");
+      img.removeAttribute("data-lazy-src");
+      img.removeAttribute("loading");
+    } else {
+      img.remove();
+    }
+  });
+
+  // 3. Link Normalization (NATIVE BROWSER RESOLUTION)
+  doc.querySelectorAll("a").forEach((link) => {
+    if (link.hasAttribute("href")) {
+      // link.href naturally returns the absolute, fully-resolved URL.
+      // We overwrite the attribute with this absolute value.
+      link.setAttribute("href", link.href);
+    }
+  });
+
+  // 4. Code Block Normalization
+  doc.querySelectorAll("pre, code").forEach((block) => {
+    let detectedLang =
+      block.getAttribute("data-language") ||
+      block.getAttribute("data-lang") ||
+      "";
+
+    if (!detectedLang) {
+      const className = block.getAttribute("class") || "";
+      const match = className.match(/(?:lang|language|highlight)-([a-z0-9]+)/i);
+      if (match) detectedLang = match[1];
+    }
+
+    if (!detectedLang && block.tagName === "PRE") {
+      const childCode = block.querySelector("code");
+      if (childCode) {
+        const childClass = childCode.getAttribute("class") || "";
+        const childMatch = childClass.match(
+          /(?:lang|language|highlight)-([a-z0-9]+)/i,
+        );
+        if (childMatch) detectedLang = childMatch[1];
+      }
+    }
+
+    if (detectedLang) {
+      block.setAttribute("data-language", detectedLang.toLowerCase());
+      block.removeAttribute("class");
+    }
+  });
+}
+
 export function parseDocument(doc: Document): ParseResult {
   // ==========================================
   // STEP 1: EXTRACT METADATA
@@ -72,46 +170,7 @@ export function parseDocument(doc: Document): ParseResult {
   // ==========================================
   // STEP 2: BULLETPROOF IMAGE NORMALIZATION
   // ==========================================
-  doc.querySelectorAll("img").forEach((img) => {
-    // 1. Check lazy-load attributes first, fallback to standard src
-    let bestSrc =
-      img.getAttribute("data-src") ||
-      img.getAttribute("data-lazy-src") ||
-      img.getAttribute("src") ||
-      "";
-
-    // 2. If srcset exists (common on Wikipedia), extract the highest resolution URL
-    const srcset = img.getAttribute("srcset");
-    if (srcset) {
-      // srcset format: "url1 1x, url2 2x, url3 1000w"
-      // We split by comma, grab the first chunk, and then grab the URL part
-      const firstSrc = srcset.split(",")[0].trim().split(/\s+/)[0];
-      if (firstSrc) {
-        // We prefer the srcset URL over a potentially low-res `src` placeholder
-        bestSrc = firstSrc;
-      }
-    }
-
-    // 3. Resolve the URL against the baseURI (handles //, /, and relative paths)
-    const absoluteUrl = resolveImageUrl(bestSrc, doc.baseURI);
-
-    if (absoluteUrl) {
-      // Set the resolved, absolute URL as the single source of truth
-      img.setAttribute("src", absoluteUrl);
-
-      // Strip out responsive/lazy attributes so DOMPurify doesn't get confused
-      // or try to load broken relative paths later.
-      img.removeAttribute("srcset");
-      img.removeAttribute("sizes");
-      img.removeAttribute("data-src");
-      img.removeAttribute("data-lazy-src");
-      img.removeAttribute("loading");
-    } else {
-      // If we completely failed to find a valid image source, remove the img tag
-      // so we don't end up with broken image icons in our markdown.
-      img.remove();
-    }
-  });
+  normalizeMediaAndLinks(doc);
 
   // ==========================================
   // STEP 3: AGGRESSIVE JUNK PRUNING
@@ -148,6 +207,12 @@ export function parseDocument(doc: Document): ParseResult {
     ".noprint",
     ".infobox",
     ".navbox",
+    "[hidden]",
+    '[style*="display: none"]',
+    '[style*="display:none"]',
+    '[style*="visibility: hidden"]',
+    ".visually-hidden",
+    ".sr-only", // Screen-reader only text (often duplicates visual content)
   ];
   doc.querySelectorAll(junkSelectors.join(", ")).forEach((el) => el.remove());
 
@@ -177,9 +242,16 @@ export function parseDocument(doc: Document): ParseResult {
       // that is fully hyperlinked), so we only apply this rule to blocks with some substance.
       const charCount = el.textContent?.trim().length || 0;
 
-      if (density > 0.6 && charCount > 30) {
+      // 65 was 30 before, was too aggressive
+      if (density > 0.6 && charCount > 65) {
         el.remove();
       }
+    }
+  });
+
+  doc.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li").forEach((el) => {
+    if (!el.textContent?.trim() && !el.querySelector("img")) {
+      el.remove();
     }
   });
 
@@ -202,13 +274,18 @@ export function parseDocument(doc: Document): ParseResult {
     let maxScore = 0;
 
     doc.querySelectorAll("div, section").forEach((candidate) => {
-      // We score based on paragraphs and code blocks, but we PENALIZE high link density!
       const paragraphs = candidate.querySelectorAll("p, pre, code, li").length;
       const density = getLinkDensity(candidate);
 
-      // A container filled with paragraphs but a density of 0.9 is a list of links, not an article.
-      // So we multiply the paragraph count by the inverted density (1 - 0.9 = 0.1).
-      const score = paragraphs * (1 - density);
+      // Penalize high link density
+      let score = paragraphs * (1 - density);
+
+      // PENALIZE WRAPPERS: If a div has very few direct paragraphs but tons of nested elements,
+      // it's likely a layout wrapper, not the content body.
+      const childElementCount = candidate.children.length || 1;
+      const wrapperPenalty = Math.max(1, childElementCount / 5); // Tweak the divisor as needed
+
+      score = score / wrapperPenalty;
 
       if (score > maxScore) {
         maxScore = score;
@@ -250,11 +327,13 @@ export function parseDocument(doc: Document): ParseResult {
     "tr",
     "th",
     "td",
+    "details",
+    "summary",
   ];
 
   const sanitizedContent = DomPurify.sanitize(mainContentHtml, {
     ALLOWED_TAGS: markdownEquivalentTags,
-    ALLOWED_ATTR: ["href", "src", "alt", "title"],
+    ALLOWED_ATTR: ["href", "src", "alt", "title", "open", "data-language"],
   });
 
   const tempDiv = document.createElement("div");
@@ -272,3 +351,14 @@ export function parseDocument(doc: Document): ParseResult {
     publishedTime,
   };
 }
+
+/**
+ * Parses the document, but does not prune junk
+ * @param doc
+ */
+export function parseDocumentLight(doc: Document): any {}
+// A very lightweight parser that does not prune, but apply code block normalization and image URL resolution, and extracts metadata.
+// This can be used for the AI-assisted capture, where we want to preserve as much of the original structure as possible, and let the AI figure out what to keep or discard, though the full implementation might still be better
+
+// TODO: Maybe implement later, when needed
+//export function parseDocumentToMarkdown(doc: Document): string {}
