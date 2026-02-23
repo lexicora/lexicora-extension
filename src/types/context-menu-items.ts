@@ -27,7 +27,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   {
     id: "separator1",
     type: "separator",
-    contexts: ["all"],
+    contexts: ["all"], // TODO: Figure out best solution, so submenu always appears, but does not have double lines on firefox
     //documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   }, //TODO: Later add capture page option
   {
@@ -45,7 +45,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   {
     id: "separator2",
     type: "separator",
-    contexts: ["selection"],
+    contexts: ["selection"], // TODO: Figure out best solution, so submenu always appears, but does not have double lines on firefox
   },
   {
     id: CMI_ID.CAPTURE_PAGE_AI_ASSISTED,
