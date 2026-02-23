@@ -53,7 +53,7 @@ export function setupContextMenuActions() {
       }
       case CMI_ID.CAPTURE_SELECTION_AS_IS: {
         setPendingNavigation("/entries/new");
-        // TODO: Update panel scope to tab scope if needed
+        // update panel scope to tab scope if needed
         if (import.meta.env.FIREFOX) {
           // @ts-ignore: sidebarAction is a Firefox-specific API
           browser.sidebarAction.open();
@@ -97,13 +97,6 @@ export function setupContextMenuActions() {
 
         //* INFO: Debug logs
         if (import.meta.env.DEV) {
-          console.log(
-            "TEST: \nURL:",
-            pageSelectionData?.baseUri,
-            "\nSelected HTML:",
-            pageSelectionData?.content,
-          );
-          // Updated console log to new pageData structure
           console.log("Selected Page Data:", pageSelectionData);
           //console.log("Readability article:", pageSelectionData);
         }
@@ -114,7 +107,55 @@ export function setupContextMenuActions() {
         break;
       }
       case CMI_ID.CAPTURE_PAGE_AS_IS: {
-        console.log("Page capture not implemented yet.");
+        //console.log("Page capture not implemented yet.");
+        setPendingNavigation("/entries/new");
+        // update panel scope to tab scope if needed
+        if (import.meta.env.FIREFOX) {
+          // @ts-ignore: sidebarAction is a Firefox-specific API
+          browser.sidebarAction.open();
+        } else {
+          browser.sidePanel.open({ windowId: tab.windowId });
+        }
+
+        // Request page selection data from content script
+        const pageSelectionData = await sendMessage(
+          MSG.GET_PAGE_DATA,
+          null,
+          "content-script@" + tab?.id,
+        );
+
+        if (pageSelectionData) {
+          // Store for pull logic in side panel
+          setPendingCapture(pageSelectionData);
+
+          // Push logic if side panel is already open
+          const clearPendingNavigation = await sendMessage(
+            MSG.NAVIGATE_IN_SIDEPANEL,
+            { path: "/entries/new" },
+            "side-panel@" + tab.windowId,
+          ).catch(() => {});
+
+          if (clearPendingNavigation === true) {
+            setPendingNavigation(null);
+          }
+
+          // Push logic if side panel is already open
+          const clearPendingCaptureData = await sendMessage(
+            MSG.SEND_PAGE_SELECTION_DATA,
+            pageSelectionData, //TODO: Handle null case in sidepanel editor component.
+            "side-panel@" + tab.windowId,
+          ).catch(() => {});
+
+          if (clearPendingCaptureData === true) {
+            setPendingCapture(null);
+          }
+        }
+
+        //* INFO: Debug logs
+        if (import.meta.env.DEV) {
+          console.log("Page Data:", pageSelectionData);
+          //console.log("Readability article:", pageSelectionData);
+        }
         break;
       }
       // case CMI_ID.CAPTURE_FROM_CLIPBOARD: {
@@ -145,6 +186,14 @@ export function setupContextMenuStateSync(/*menuId: string*/) {
         visible: !isDisabled,
       });
       await browser.contextMenus.update(CMI_ID.CAPTURE_SELECTION_AS_IS, {
+        //enabled: !isDisabled,
+        visible: !isDisabled,
+      });
+      await browser.contextMenus.update(CMI_ID.CAPTURE_PAGE_AI_ASSISTED, {
+        //enabled: !isDisabled,
+        visible: !isDisabled,
+      });
+      await browser.contextMenus.update(CMI_ID.CAPTURE_PAGE_AS_IS, {
         //enabled: !isDisabled,
         visible: !isDisabled,
       });

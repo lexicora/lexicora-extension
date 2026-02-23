@@ -20,6 +20,7 @@ declare module "webext-bridge" {
     // From anywhere to content-script
     [MSG.GET_PAGE_SELECTION_ARTICLE]: ProtocolWithReturn<null, Article | null>;
     [MSG.GET_PAGE_SELECTION_DATA]: ProtocolWithReturn<null, PageData | null>;
+    [MSG.GET_PAGE_DATA]: ProtocolWithReturn<null, PageData | null>;
 
     // From side-panel to background
     [MSG.REQUEST_PENDING_DATA]: ProtocolWithReturn<null, PageData | null>;

@@ -20,7 +20,7 @@ export type PageData = {
     excerpt?: NonNullableArticle["excerpt"];
     byline?: NonNullableArticle["byline"];
     dir?: NonNullableArticle["dir"];
-    siteName?: NonNullableArticle["siteName"];
+    siteName?: NonNullableArticle["siteName"]; // Maybe remove (redundant with location.origin)
     publishedTime?: NonNullableArticle["publishedTime"];
   };
   //Todo: Add more fields if needed
