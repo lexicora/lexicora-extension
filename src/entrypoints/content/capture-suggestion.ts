@@ -12,6 +12,11 @@ import {
 import "@fontsource/wix-madefor-text/400.css";
 import "@fontsource/wix-madefor-text/500.css";
 
+const UNSUPPORTED_URL_REGEX =
+  /\.pdf(\?|$)|chrome\.google\.com\/webstore|chromewebstore\.google\.com|addons\.mozilla\.org/i;
+
+const isUnsupportedUrl = () => UNSUPPORTED_URL_REGEX.test(location.href);
+
 export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
   const BASE_DELAY_MS = 60_000; // Base delay of 1 minute, multiplied by the user-configurable multiplier
 
@@ -30,6 +35,9 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
     }
     const styles = `
       :host {
+        all: initial;
+        /*display: block;*/
+        font-size: 16px;
         /* DEFAULT (DARK MODE) - Matches .dark in global.css */
         --lexicora-fg: #ffffff;
         --lexicora-bg: oklch(0.19 0.034 264.665); /*was:(0.21) oklch(0.1296 0.0274 261.69)*/
@@ -39,8 +47,8 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
         --lexicora-text-primary: oklch(0.985 0.002 247.839);
         --lexicora-text-secondary: oklch(0.707 0.022 261.325);
 
-        --lexicora-radius: 0.625rem;
-        --lexicora-font-sans: "Wix Madefor Text", system-ui, "Segoe UI", -apple-system, Avenir, Helvetica, Arial, sans-serif
+        --lexicora-radius: 0.625em;
+        --lexicora-font-sans: "Wix Madefor Text", system-ui, "Segoe UI", -apple-system, Avenir, Helvetica, Arial, sans-serif;
       }
 
       /* LIGHT MODE OVERRIDES - Matches :root in global.css */
@@ -76,6 +84,7 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
         background-color: var(--lexicora-bg);
         border: 1px solid var(--lexicora-border);
         border-radius: var(--lexicora-radius);
+        /*corner-shape: superellipse(1.2);*/
         box-shadow:
           0 8px 13px -4px rgba(0, 0, 0, 0.3),
           0 4px 6px -5px rgba(0, 0, 0, 0.1),
@@ -128,7 +137,7 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
         color: var(--lexicora-fg);
         margin: 0;
         line-height: 1.2;
-        letter-spacing: 0.01rem;
+        letter-spacing: 0.01em;
       }
 
       .lexicora-desc {
@@ -399,6 +408,8 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
   const startTimer = async (checkSidePanelState = true) => {
     clearTimeout(timer);
 
+    if (isUnsupportedUrl()) return;
+
     const isEnabled = await captureSuggestionStorage.getValue();
     if (!isEnabled) return;
 
@@ -407,6 +418,7 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
         MSG.CHECK_SIDEPANEL_OPEN,
         null,
         "background",
+        { timeout: 1000 }, // Short timeout since this is just an optimization and should not block the prompt from showing
       ).catch(() => false);
       if (isOpen) return; // Do not show if side panel is open
     }
@@ -418,7 +430,7 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
 
     timer = setTimeout(() => {
       //* MAYBE: Double-check side panel state before showing prompt to avoid race where user opens side panel while timer is counting down
-      if (!document.hidden) mountUi();
+      if (!document.hidden && !isUnsupportedUrl()) mountUi();
     }, dynamicDelay);
   };
 
@@ -444,8 +456,67 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
 
   startTimer();
 
-  document.addEventListener("visibilitychange", () => {
+  ctx.addEventListener(document, "visibilitychange", () => {
     if (document.hidden) clearTimeout(timer);
     else startTimer();
+  });
+
+  // Helper to cleanly reset everything on navigation
+  const handleNavigation = () => {
+    if (ui) {
+      ui.remove();
+      ui = null;
+    }
+    startTimer();
+  };
+
+  // 3. Handle Modern Back/Forward (Chromium Navigation API)
+  // @ts-expect-error: The Navigation API is Chromium-only
+  const nav = window.navigation;
+  if (nav) {
+    ctx.addEventListener(nav, "navigate", (e: any) => {
+      // 'traverse' natively catches Mouse 4/5 and Alt+Arrow history movements
+      if (
+        e.navigationType === "traverse" ||
+        e.navigationType === "push" ||
+        e.navigationType === "replace"
+      ) {
+        handleNavigation();
+      }
+    });
+  }
+
+  // 4. Handle Legacy/Standard Back/Forward (History API)
+  ctx.addEventListener(window, "popstate", handleNavigation);
+
+  // 5. Handle Hard Cache Restores (Wikipedia Back Button fix)
+  ctx.addEventListener(window, "pageshow", (e) => {
+    // e.persisted is true ONLY if the page was unfrozen from the bfcache
+    if ((e as PageTransitionEvent).persisted) {
+      handleNavigation();
+    }
+    //console.log("fn executed");
+  });
+
+  // Clean up before the page freezes into the back/forward cache
+  ctx.addEventListener(window, "pagehide", () => {
+    clearTimeout(timer);
+    if (ui) {
+      ui.remove();
+      ui = null;
+    }
+  });
+
+  // --- EXTENSION LIFECYCLE CLEANUP ---
+  // Crucial for when the extension updates or is reloaded while the page is open
+  ctx.onInvalidated(() => {
+    clearTimeout(timer);
+    clearTimeout(autoHideTimeout);
+
+    // Removing the UI automatically triggers our onRemove cleanup (removing global drag listeners)
+    if (ui) {
+      ui.remove();
+      ui = null;
+    }
   });
 }
