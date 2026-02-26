@@ -11,22 +11,23 @@ export interface ParseResult {
   publishedTime: string | null;
 }
 
-/**
- * Helper to safely resolve any image URL against the document's base URI
- */
-function resolveImageUrl(url: string, baseURI: string): string | null {
-  if (!url) return null;
-  const cleanUrl = url.trim();
-  if (!cleanUrl) return null;
+// A quick conceptual look at the future architecture
+// function parsePage(doc: Document, url: string): ParseResult {
+//   const hostname = new URL(url).hostname;
 
-  try {
-    // This correctly handles relative ('/foo'), protocol-relative ('//foo'),
-    // and absolute ('https://foo') URLs
-    return new URL(cleanUrl, baseURI).href;
-  } catch (e) {
-    return null; // Invalid URL structure
-  }
-}
+//   if (hostname.includes("wikipedia.org")) {
+//     return parseWikipedia(doc);
+//   }
+//   if (hostname.includes("chatgpt.com")) {
+//     return parseChatGPT(doc);
+//   }
+//   if (hostname.includes("stackoverflow.com")) {
+//     return parseStackOverflow(doc);
+//   }
+
+//   // The 99% fallback
+//   return parseDocument(doc);
+// }
 
 /**
  * Calculates the ratio of link text to total text within a DOM node.
@@ -50,6 +51,20 @@ function getLinkDensity(element: Element): number {
  * @param doc
  */
 function normalizeMediaAndLinks(doc: Document) {
+  // 0. Rescue images from <noscript> tags (e.g., Medium, Substack)
+  doc.querySelectorAll("noscript").forEach((noscript) => {
+    const html = noscript.textContent || noscript.innerHTML;
+    if (html.includes("<img")) {
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = html;
+      const hiddenImage = tempDiv.querySelector("img");
+      if (hiddenImage) {
+        // Replace the noscript tag with the actual image so it gets processed
+        noscript.replaceWith(hiddenImage);
+      }
+    }
+  });
+
   // 1. Picture / Source extraction
   doc.querySelectorAll("picture").forEach((picture) => {
     const img = picture.querySelector("img");
@@ -143,9 +158,7 @@ function normalizeMediaAndLinks(doc: Document) {
 }
 
 export function parseDocument(doc: Document): ParseResult {
-  // ==========================================
   // STEP 1: EXTRACT METADATA
-  // ==========================================
   const title =
     doc.title ||
     doc.querySelector('meta[property="og:title"]')?.getAttribute("content") ||
@@ -157,7 +170,10 @@ export function parseDocument(doc: Document): ParseResult {
       ?.getAttribute("content") ||
     null;
   const byline =
-    doc.querySelector('meta[name="author"]')?.getAttribute("content") || null;
+    doc.querySelector('meta[name="author"]')?.getAttribute("content") ||
+    doc.querySelector('[itemprop="author"]')?.textContent?.trim() || // Schema.org fallback
+    doc.querySelector(".author-name, .byline")?.textContent?.trim() || // Common class fallback
+    null;
   const siteName =
     doc
       .querySelector('meta[property="og:site_name"]')
@@ -165,16 +181,15 @@ export function parseDocument(doc: Document): ParseResult {
   const publishedTime =
     doc
       .querySelector('meta[property="article:published_time"]')
-      ?.getAttribute("content") || null;
+      ?.getAttribute("content") ||
+    doc.querySelector("time[datetime]")?.getAttribute("datetime") || // HTML5 <time> fallback
+    doc.querySelector('[itemprop="datePublished"]')?.getAttribute("content") ||
+    null;
 
-  // ==========================================
   // STEP 2: BULLETPROOF IMAGE NORMALIZATION
-  // ==========================================
   normalizeMediaAndLinks(doc);
 
-  // ==========================================
   // STEP 3: AGGRESSIVE JUNK PRUNING
-  // ==========================================
   const junkSelectors = [
     "nav",
     "footer",
@@ -207,13 +222,14 @@ export function parseDocument(doc: Document): ParseResult {
     ".noprint",
     ".infobox",
     ".navbox",
-    ".hidden", //tailwind (maybe remove?)
+    ".hidden", //tailwind
     "[hidden]",
     '[style*="display: none"]',
     '[style*="display:none"]',
     '[style*="visibility: hidden"]',
     ".visually-hidden",
     ".sr-only", // Screen-reader only text (often duplicates visual content)
+    // No aria-hidden, because content might not be hidden visually.
   ];
   doc.querySelectorAll(junkSelectors.join(", ")).forEach((el) => el.remove());
 
@@ -256,9 +272,7 @@ export function parseDocument(doc: Document): ParseResult {
     }
   });
 
-  // ==========================================
   // STEP 4: LOCATE MAIN CONTENT
-  // ==========================================
   let mainContentHtml = "";
 
   const semanticContainers = Array.from(
@@ -296,9 +310,7 @@ export function parseDocument(doc: Document): ParseResult {
     mainContentHtml = bestNode.innerHTML;
   }
 
-  // ==========================================
   // STEP 5: ENFORCE MARKDOWN EQUIVALENCY
-  // ==========================================
   const markdownEquivalentTags = [
     "h1",
     "h2",
