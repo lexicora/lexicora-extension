@@ -28,7 +28,7 @@ declare module "webext-bridge" {
 
     // From anywhere to background
     [MSG.OPEN_SIDEPANEL]: null;
-    [MSG.CHECK_SIDEPANEL_OPEN]: ProtocolWithReturn<null, boolean>;
+    //[MSG.CHECK_SIDEPANEL_OPEN]: ProtocolWithReturn<null, boolean>;
 
     // to specify the return type of the message,
     // use the `ProtocolWithReturn` type wrapper

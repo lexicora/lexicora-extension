@@ -26,3 +26,13 @@ export const captureSuggestionDelayMultiplierStorage =
   storage.defineItem<number>("sync:settings-capture-suggestion-delay", {
     fallback: 5,
   });
+
+/**
+ * Tracks if the Lexicora side panel is currently open.
+ * Uses 'session:' storage because it is transient runtime state (stored in RAM),
+ * incredibly fast, doesn't wake the background script to read, and resets when the browser closes.
+ */
+export const sidePanelStateStorage = storage.defineItem<boolean>(
+  "session:app-state-sidepanel-open",
+  { fallback: false },
+);

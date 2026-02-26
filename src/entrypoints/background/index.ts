@@ -5,6 +5,7 @@ import {
   setupContextMenuStateSync,
 } from "./context-menu";
 import { setupMessagingHandlers } from "./messaging-handler";
+import { setupPortHandlers } from "./port-handler";
 
 export default defineBackground(() => {
   //console.log("Hello background!", { id: browser.runtime.id });
@@ -37,4 +38,10 @@ export default defineBackground(() => {
 
   // Messaging handlers
   setupMessagingHandlers();
+
+  // Port handlers
+  //* NOTE: Feature parity discrepancy: Firefox does not support stuff related to the unsupported capture suggestions feature.
+  if (!import.meta.env.FIREFOX) {
+    setupPortHandlers();
+  }
 });
