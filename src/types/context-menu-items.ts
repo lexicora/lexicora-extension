@@ -27,9 +27,8 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   {
     id: "separator1",
     type: "separator",
-    contexts: ["all"], // TODO: Figure out best solution, so submenu always appears, but does not have double lines on firefox
-    //documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
-  }, //TODO: Later add capture page option
+    contexts: ["selection"],
+  },
   {
     id: CMI_ID.CAPTURE_SELECTION_AI_ASSISTED,
     title: "Capture Selection with AI",
@@ -45,18 +44,18 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   {
     id: "separator2",
     type: "separator",
-    contexts: ["selection"], // TODO: Figure out best solution, so submenu always appears, but does not have double lines on firefox
+    contexts: ["page", "selection", "link", "image", "video", "audio", "frame"],
   },
   {
     id: CMI_ID.CAPTURE_PAGE_AI_ASSISTED,
     title: "Capture Page with AI",
-    contexts: ["page", "selection"], // TODO: add all other options, so it is always visible, even if the user right clicks on a link or image for example
+    contexts: ["page", "selection", "link", "image", "video", "audio", "frame"],
     documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   },
   {
     id: CMI_ID.CAPTURE_PAGE_AS_IS,
     title: "Capture Page",
-    contexts: ["page", "selection"], // TODO: add all other options, so it is always visible, even if the user right clicks on a link or image for example
+    contexts: ["page", "selection", "link", "image", "video", "audio", "frame"],
     documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   },
   // {
