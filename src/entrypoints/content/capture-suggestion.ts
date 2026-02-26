@@ -416,12 +416,6 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
     if (!isEnabled) return;
 
     if (checkSidePanelState) {
-      // const isOpen = await sendMessage(
-      //   MSG.CHECK_SIDEPANEL_OPEN,
-      //   null,
-      //   "background",
-      //   { timeout: 1000 }, // Short timeout since this is just an optimization and should not block the prompt from showing
-      // ).catch(() => false);
       const isOpen = await sidePanelStateStorage.getValue();
       if (isOpen) return; // Do not show if side panel is open
     }
@@ -498,7 +492,6 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
     if ((e as PageTransitionEvent).persisted) {
       handleNavigation();
     }
-    //console.log("fn executed");
   });
 
   // Clean up before the page freezes into the back/forward cache
@@ -510,7 +503,7 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
     }
   });
 
-  // --- EXTENSION LIFECYCLE CLEANUP ---
+  // Extension lifecycle cleanup
   // Crucial for when the extension updates or is reloaded while the page is open
   ctx.onInvalidated(() => {
     clearTimeout(timer);

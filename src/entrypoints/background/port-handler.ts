@@ -4,6 +4,7 @@ import { sidePanelStateStorage } from "@/lib/utils/storage/settings";
  * Sets up message handlers for pending data and navigation requests
  */
 export function setupPortHandlers() {
+  // maybe remove this check, because feature is not supported in firefox anyway.
   if (import.meta.env.CHROME) {
     // Set access level on chrome to allow getting storage items
     browser.storage.session.setAccessLevel({

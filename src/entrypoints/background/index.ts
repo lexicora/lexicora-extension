@@ -40,5 +40,8 @@ export default defineBackground(() => {
   setupMessagingHandlers();
 
   // Port handlers
-  setupPortHandlers();
+  //* NOTE: Feature parity discrepancy: Firefox does not support stuff related to the unsupported capture suggestions feature.
+  if (!import.meta.env.FIREFOX) {
+    setupPortHandlers();
+  }
 });

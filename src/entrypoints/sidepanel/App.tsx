@@ -38,7 +38,10 @@ import CaptureSuggestionsSettingsPage from "./pages/settings/features/capture-su
 
 function RootLayout() {
   useMouseNavigation();
-  useSidePanelConnection();
+  //* NOTE: Feature parity discrepancy: Firefox does not support stuff related to the unsupported capture suggestions feature.
+  if (!import.meta.env.FIREFOX) {
+    useSidePanelConnection();
+  }
 
   return (
     <SidePanelMessagingProvider>
