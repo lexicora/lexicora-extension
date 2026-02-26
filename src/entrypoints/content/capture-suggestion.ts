@@ -8,9 +8,11 @@ import { ContentScriptContext } from "wxt/utils/content-script-context";
 import {
   captureSuggestionStorage,
   captureSuggestionDelayMultiplierStorage,
+  sidePanelStateStorage,
 } from "@/lib/utils/storage/settings";
 import "@fontsource/wix-madefor-text/400.css";
 import "@fontsource/wix-madefor-text/500.css";
+// TODO: Look in to different font handling, so sites blocking this import still have this font.
 
 const UNSUPPORTED_URL_REGEX =
   /\.pdf(\?|$)|chrome\.google\.com\/webstore|chromewebstore\.google\.com|addons\.mozilla\.org/i;
@@ -414,12 +416,13 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
     if (!isEnabled) return;
 
     if (checkSidePanelState) {
-      const isOpen = await sendMessage(
-        MSG.CHECK_SIDEPANEL_OPEN,
-        null,
-        "background",
-        { timeout: 1000 }, // Short timeout since this is just an optimization and should not block the prompt from showing
-      ).catch(() => false);
+      // const isOpen = await sendMessage(
+      //   MSG.CHECK_SIDEPANEL_OPEN,
+      //   null,
+      //   "background",
+      //   { timeout: 1000 }, // Short timeout since this is just an optimization and should not block the prompt from showing
+      // ).catch(() => false);
+      const isOpen = await sidePanelStateStorage.getValue();
       if (isOpen) return; // Do not show if side panel is open
     }
 

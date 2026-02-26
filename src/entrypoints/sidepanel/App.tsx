@@ -10,6 +10,7 @@ import {
 import { RouterListener } from "@/hooks/sidepanel/router-listener";
 //import { MessageListener } from "@/hooks/sidepanel/message-listener";
 import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
+import { useSidePanelConnection } from "@/hooks/sidepanel/use-sidepanel-connection";
 import { SidePanelMessagingProvider } from "@/providers/sidepanel-messaging";
 import { ScrollObserverProvider } from "@/providers/scroll-observer";
 import { ThemeProvider } from "@/providers/theme-provider";
@@ -37,6 +38,7 @@ import CaptureSuggestionsSettingsPage from "./pages/settings/features/capture-su
 
 function RootLayout() {
   useMouseNavigation();
+  useSidePanelConnection();
 
   return (
     <SidePanelMessagingProvider>
