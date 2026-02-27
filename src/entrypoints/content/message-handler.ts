@@ -1,5 +1,5 @@
 import { onMessage } from "webext-bridge/content-script";
-import { MSG } from "@/types/messaging";
+import { MSG } from "@/constants/messaging";
 import { getSelectionPageData } from "./capture/selection";
 import { getPageData } from "./capture/page";
 

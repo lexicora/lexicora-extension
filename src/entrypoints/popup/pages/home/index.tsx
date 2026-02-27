@@ -19,7 +19,7 @@ import {
   SquareArrowOutUpRight,
 } from "lucide-react";
 
-import { MSG } from "@/types/messaging";
+import { MSG } from "@/constants/messaging";
 import { useScrollPos } from "@/providers/scroll-observer";
 import { cn } from "@/lib/utils";
 

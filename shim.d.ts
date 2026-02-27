@@ -1,5 +1,5 @@
 import { ProtocolWithReturn } from "webext-bridge";
-import { MSG } from "@/types/messaging";
+import { MSG } from "@/constants/messaging";
 import type { PageData } from "@/types/page-data.types";
 import { Article } from "@/types/mozilla-article.types";
 

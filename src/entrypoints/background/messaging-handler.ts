@@ -1,5 +1,5 @@
 import { onMessage } from "webext-bridge/background";
-import { MSG } from "@/types/messaging";
+import { MSG } from "@/constants/messaging";
 import { PageData } from "@/types/page-data.types";
 
 // This stays private to this module (encapsulation)

@@ -8,8 +8,8 @@ import { ArrowLeftIcon, House } from "lucide-react";
 import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";
 import { useEffect, useState } from "react";
 import { PageData } from "@/types/page-data.types";
-import { MSG } from "@/types/messaging";
-import { defaultBlockNoteConfig } from "@/types/block-note.types";
+import { MSG } from "@/constants/messaging";
+import { defaultBlockNoteConfig } from "@/constants/block-note";
 
 // App BlockNote.js imports
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
@@ -105,6 +105,7 @@ function EntryCreatePage() {
               >
                 Captured Content
               </Label>
+              {/*TODO: maybe add max width of maybe around 1000px or so */}
               <BlockNoteView
                 editor={editor}
                 className=""

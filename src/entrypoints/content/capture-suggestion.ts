@@ -1,5 +1,5 @@
 import { sendMessage } from "webext-bridge/content-script";
-import { MSG } from "@/types/messaging";
+import { MSG } from "@/constants/messaging";
 import {
   createShadowRootUi,
   type ShadowRootContentScriptUi,

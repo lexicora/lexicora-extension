@@ -1,6 +1,6 @@
 import { onMessage, sendMessage } from "webext-bridge/background";
-import { MSG } from "@/types/messaging";
-import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/types/context-menu-items";
+import { MSG } from "@/constants/messaging";
+import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/constants/context-menu-items";
 import { PageData } from "@/types/page-data.types";
 import { Readability } from "@mozilla/readability";
 import { Article } from "@/types/mozilla-article.types";

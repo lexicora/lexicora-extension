@@ -1,4 +1,4 @@
-import { MSG } from "@/types/messaging";
+import { MSG } from "@/constants/messaging";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";
