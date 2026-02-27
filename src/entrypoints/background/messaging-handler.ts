@@ -1,6 +1,7 @@
 import { onMessage } from "webext-bridge/background";
 import { MSG } from "@/constants/messaging";
 import { PageData } from "@/types/page-data.types";
+import { handleCaptureRequest } from "./capture-request";
 
 // This stays private to this module (encapsulation)
 let pendingCapture: PageData | null = null;
@@ -40,6 +41,11 @@ export function setupMessagingHandlers() {
       browser.sidePanel.open({ tabId: sender.tabId });
     }
   });
+
+  // TODO: Later change to pass the windowId
+  onMessage(MSG.REQUEST_PAGE_CAPTURE, async ({ sender, data }) =>
+    handleCaptureRequest(sender, data),
+  );
 
   // onMessage(MSG.CHECK_SIDEPANEL_OPEN, async ({ sender }) => {
   //   //const tab = await browser.tabs.get(sender.tabId);

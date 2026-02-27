@@ -7,6 +7,7 @@ import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.sv
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { sendMessage } from "webext-bridge/popup";
 import {
   Tooltip,
   TooltipContent,
@@ -29,7 +30,7 @@ function HomePage() {
   //const [isAtTop, setIsAtTop] = useState(true);
 
   // MAYBE: Force side panel to open to home page with messaging navigation implementation.
-  const openSidePanel = async () => {
+  const openSidePanel = async (closeWindow: boolean) => {
     if (import.meta.env.FIREFOX) {
       // @ts-ignore: sidebarAction is a Firefox-specific API
       await browser.sidebarAction.open();
@@ -45,6 +46,25 @@ function HomePage() {
     // sendMessage(MSG.NAVIGATE_IN_SIDEPANEL, { path: "/" }, "popup").catch(
     //   () => {},
     // );
+    if (closeWindow) window.close();
+  };
+
+  const capturePage = async () => {
+    openSidePanel(false);
+    // Send in case side-panel is already open.
+    const windowId = await browser.windows.getCurrent().then((win) => win.id);
+    const clearPendingNav = await sendMessage(
+      MSG.NAVIGATE_IN_SIDEPANEL,
+      { path: "/entries/new" },
+      "side-panel@" + windowId,
+      { timeout: 1 },
+    ).catch(() => {});
+    const clearPendingNavResolved = clearPendingNav === true;
+    sendMessage(
+      MSG.REQUEST_PAGE_CAPTURE,
+      clearPendingNavResolved,
+      "background",
+    ).catch(() => {});
     window.close();
   };
 
@@ -100,7 +120,7 @@ function HomePage() {
             </div>
             <div className="flex justify-end flex-1">
               <Button
-                onClick={openSidePanel}
+                onClick={() => openSidePanel(true)}
                 variant="ghost"
                 size="icon"
                 title="Open Side Panel"
@@ -201,6 +221,7 @@ function HomePage() {
                 title="Capture page"
                 className="w-full hover:bg-secondary hover:brightness-90 overflow-hidden /*active:brightness-80*/"
                 disabled={promptText.trimEnd() !== ""}
+                onClick={capturePage}
               >
                 Capture
               </Button>

@@ -28,6 +28,7 @@ declare module "webext-bridge" {
 
     // From anywhere to background
     [MSG.OPEN_SIDEPANEL]: null;
+    [MSG.REQUEST_PAGE_CAPTURE]: boolean; //TODO: Change to windowId in new to be implemented implementation
     //[MSG.CHECK_SIDEPANEL_OPEN]: ProtocolWithReturn<null, boolean>;
 
     // to specify the return type of the message,
