@@ -1,6 +1,6 @@
 import { ProtocolWithReturn } from "webext-bridge";
 import { MSG } from "@/types/messaging";
-import type { PageData } from "@/types/page-selection-data.types";
+import type { PageData } from "@/types/page-data.types";
 import { Article } from "@/types/mozilla-article.types";
 
 // TODO IMPORTANT: Enforce type safety for messaging system

@@ -1,6 +1,6 @@
 import { onMessage } from "webext-bridge/background";
 import { MSG } from "@/types/messaging";
-import { PageData } from "@/types/page-selection-data.types";
+import { PageData } from "@/types/page-data.types";
 
 // This stays private to this module (encapsulation)
 let pendingCapture: PageData | null = null;

@@ -161,6 +161,7 @@ function normalizeMediaAndLinks(root: Document | Element) {
  * The main parsing function that extracts metadata, normalizes media, prunes junk, and locates the main content.
  * It returns a structured ParseResult object containing the cleaned HTML content and metadata.
  * @param doc The Document object to parse. This should be a clone of the original document to avoid mutating the live page, especially since we do aggressive pruning.
+ * @returns A ParseResult object containing the cleaned HTML content and metadata.
  */
 export function parseDocument(doc: Document): ParseResult {
   // STEP 1: EXTRACT METADATA
@@ -385,8 +386,8 @@ export function getSelectionAsElement(): HTMLElement | null {
   const container = document.createElement("div");
   container.appendChild(range.cloneContents());
 
-  // If they just clicked and didn't highlight actual content
-  if (!container.innerHTML.trim()) {
+  // If they just clicked and didn't highlight actual content (had .trim())
+  if (!container.innerHTML) {
     return null;
   }
 
@@ -437,6 +438,9 @@ export function parseSnippet(snippet: Element, doc: Document): ParseResult {
     "td",
     "details",
     "summary",
+    // Exceptions
+    "div",
+    "span",
   ];
 
   const sanitizedContent = DomPurify.sanitize(snippet.innerHTML, {

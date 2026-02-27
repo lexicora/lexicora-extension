@@ -1,11 +1,10 @@
 import { onMessage, sendMessage } from "webext-bridge/background";
 import { MSG } from "@/types/messaging";
 import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/types/context-menu-items";
-import { PageData } from "@/types/page-selection-data.types";
+import { PageData } from "@/types/page-data.types";
 import { Readability } from "@mozilla/readability";
 import { Article } from "@/types/mozilla-article.types";
 import turndownService from "@/lib/turndown";
-import { Braces } from "lucide-react";
 import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
 
 // TODO: Add messages for users (if exceptions occur, e.g., no selection made)

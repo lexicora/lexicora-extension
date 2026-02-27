@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeftIcon, House } from "lucide-react";
 import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";
 import { useEffect, useState } from "react";
-import { PageData } from "@/types/page-selection-data.types";
+import { PageData } from "@/types/page-data.types";
 import { MSG } from "@/types/messaging";
 import { defaultBlockNoteConfig } from "@/types/block-note.types";
 

@@ -1,90 +1,27 @@
-import { Readability } from "@mozilla/readability";
-import { PageData } from "@/types/page-selection-data.types";
-import { Article } from "@/types/mozilla-article.types";
-import DomPurify from "dompurify";
+import { PageData } from "@/types/page-data.types";
+import {
+  getSelectionAsElement,
+  parseSnippet,
+} from "@/lib/utils/document-parser";
 
+// TODO: Maybe make this function not return a nullable type, so Promise<PageData>.
 /**
- * This function is for when you want Readability to clean up the content,
- * which is ideal for AI processing. It may strip images.
- */
-export async function getSelectionPageArticle(): Promise<Article> {
-  const selection = window.getSelection();
-  if (!selection || selection.rangeCount === 0) return null;
-
-  const range = selection.getRangeAt(0);
-  const container = document.createElement("div");
-  container.appendChild(range.cloneContents());
-  const selectionHtml = container.innerHTML;
-
-  if (!selectionHtml) return null;
-
-  // Use the browser's native DOMParser
-  const doc = new DOMParser().parseFromString(selectionHtml, "text/html");
-
-  // Set the base URI to resolve relative links correctly
-  const base = doc.createElement("base");
-  base.href = document.baseURI;
-  doc.head.appendChild(base);
-  //Todo: Add more data to head and html like: HTML lang, meta charset, title, etc.
-
-  const reader = new Readability(doc);
-  const article = reader.parse();
-  //Todo: Add siteName or URL to article if needed
-
-  if (article && article.content) {
-    // Sanitize the content HTML string (article.content) before it's returned
-    // and eventually passed to BlockNote's parser.
-    article.content = DomPurify.sanitize(article.content);
-  }
-  // Return the fully parsed article object
-  return article;
-}
-
-/**
- * This function is for saving the selection "as is", but with URLs resolved.
- * It preserves all tags, including images, and converts relative URLs to absolute ones.
+ * This function captures the selected content and metadata, and returns it as a structured object.
+ * It uses a custom parsing approach that preserves more of the original HTML structure, which is ideal for "as-is" saving.
+ * @returns A Promise that resolves to a PageData object containing the selected content, metadata, and other relevant information, or null if the selection cannot be parsed.
  */
 export async function getSelectionPageData(): Promise<PageData | null> {
-  const selection = window.getSelection();
-  const pageBaseUri = document.baseURI;
-  if (!selection || selection.rangeCount === 0) {
-    //return { pageBaseUri, pageHTML: "" };
-    return null;
-  }
+  const selectionElement = getSelectionAsElement();
+  if (!selectionElement) return null;
 
-  const range = selection.getRangeAt(0);
-  const container = document.createElement("div");
-  container.appendChild(range.cloneContents());
-
-  if (!container.innerHTML) {
-    return null;
-  }
-
-  // Resolve relative URLs for links and images
-  const links = container.querySelectorAll("a");
-  links.forEach((link) => {
-    // The 'link.href' property automatically returns the absolute URL
-    link.setAttribute("href", link.href);
-  });
-
-  const images = container.querySelectorAll("img");
-  images.forEach((image) => {
-    // The 'image.src' property automatically returns the absolute URL
-    image.setAttribute("src", image.src);
-  });
-
-  // Sanitize the HTML to prevent XSS attacks
-  const safeHTML = DomPurify.sanitize(container.innerHTML);
-  // container.innerHTML = DomPurify.sanitize(container.innerHTML, {
-  //   ADD_TAGS: ["iframe"], // Example: allow iframes if needed
-  //   ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"], // Example: allow iframe attributes
-  // });
+  const parsedSnippet = parseSnippet(selectionElement, document);
 
   return {
-    baseUri: pageBaseUri,
-    content: safeHTML,
-    language: document.documentElement.lang || "en",
-    title: document.title || "Untitled",
+    baseUri: document.baseURI,
+    content: parsedSnippet.content || "",
+    textContent: parsedSnippet.textContent,
+    lang: document.documentElement.lang || "en",
+    title: parsedSnippet.title, // || "Untitled",
     location: {
       href: window.location.href,
       origin: window.location.origin,
@@ -92,6 +29,14 @@ export async function getSelectionPageData(): Promise<PageData | null> {
       search: window.location.search,
       hash: window.location.hash,
     },
-    //Todo: Add more fields if needed
+    metadata: {
+      length: parsedSnippet.length,
+      excerpt: parsedSnippet.excerpt,
+      byline: parsedSnippet.byline,
+      siteName: parsedSnippet.siteName,
+      publishedTime: parsedSnippet.publishedTime,
+      dir: document.documentElement.dir || null,
+    },
+    //TODO: Add more fields if needed
   };
 }
