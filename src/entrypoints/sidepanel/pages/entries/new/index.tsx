@@ -31,12 +31,13 @@ function EntryCreatePage() {
   const [promptText, setPromptText] = useState("");
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
+  const aiPromptTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   //const pushEnabledRef = useRef(false); //* NOTE: This should not be necessary here
 
   const updateEditorContent = (data: PageData) => {
     if (data.content) {
-      setLanguage(data.language || navigator.language || "en");
+      setLanguage(data.lang || navigator.language || "en");
       const blocks = editor.tryParseHTMLToBlocks(data.content);
       editor.replaceBlocks(editor.document, blocks);
     }
@@ -130,6 +131,7 @@ function EntryCreatePage() {
             <div className="pb-3 px-px /*mx-px*/ max-w-314 mx-auto inset-x-0 /*mt-1*/">
               <Textarea
                 id="ai-prompt-textarea"
+                ref={aiPromptTextareaRef}
                 //rows={4}
                 maxLength={500}
                 placeholder="Type your desired AI prompt here."
@@ -142,6 +144,10 @@ function EntryCreatePage() {
                 value={promptText}
                 onChange={(e) => setPromptText(e.target.value)}
                 onKeyDown={(e) => {
+                  if (e.key === "Escape") {
+                    e.preventDefault();
+                    aiPromptTextareaRef.current?.blur();
+                  }
                   // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
                   if (e.ctrlKey && e.key === "Enter") {
                     // Maybe change it to Ctrl/Cmd + Enter?
