@@ -1,5 +1,5 @@
 import { setupMessagingHandlers } from "./message-handler";
-import { setupCaptureSuggestion } from "./capture-suggestion";
+import { setupCaptureSuggestion } from "./capture/suggestion";
 
 export default defineContentScript({
   //matches: ['*://*.google.com/*'],
