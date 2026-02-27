@@ -32,6 +32,13 @@ export default defineBackground(() => {
     }
   });
 
+  if (import.meta.env.CHROME) {
+    // Set access level on chrome to allow getting storage items from the content-script context.
+    browser.storage.session.setAccessLevel({
+      accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS",
+    });
+  }
+
   // Context menu action/click handler
   setupContextMenuActions();
   setupContextMenuStateSync();
