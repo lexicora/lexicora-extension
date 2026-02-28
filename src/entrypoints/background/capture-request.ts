@@ -25,6 +25,7 @@ export async function handleCaptureRequest(
       { path: "/entries/new" },
       "side-panel@" + tabData.windowId,
     ).catch(() => false);
+    // Will fail silently if side-panel is not open yet, which is expected
 
     if (clearPendingNavigation === true) {
       setPendingNavigation(null);
