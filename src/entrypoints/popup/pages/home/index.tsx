@@ -51,20 +51,14 @@ function HomePage() {
 
   const capturePage = async () => {
     openSidePanel(false);
-    // Send in case side-panel is already open.
-    const windowId = await browser.windows.getCurrent().then((win) => win.id);
-    const clearPendingNav = await sendMessage(
-      MSG.NAVIGATE_IN_SIDEPANEL,
-      { path: "/entries/new" },
-      "side-panel@" + windowId,
-      { timeout: 1 },
-    ).catch(() => {});
-    const clearPendingNavResolved = clearPendingNav === true;
-    sendMessage(
-      MSG.REQUEST_PAGE_CAPTURE,
-      clearPendingNavResolved,
-      "background",
-    ).catch(() => {});
+    //const windowId = await browser.windows.getCurrent().then((win) => win.id);
+    const [tab] = await browser.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+    sendMessage(MSG.REQUEST_PAGE_CAPTURE, tab.windowId, "background").catch(
+      () => {},
+    );
     window.close();
   };
 

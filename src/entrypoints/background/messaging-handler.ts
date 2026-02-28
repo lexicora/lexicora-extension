@@ -44,7 +44,7 @@ export function setupMessagingHandlers() {
 
   // TODO: Later change to pass the windowId
   onMessage(MSG.REQUEST_PAGE_CAPTURE, async ({ sender, data }) =>
-    handleCaptureRequest(sender, data),
+    handleCaptureRequest(sender.context, data),
   );
 
   // onMessage(MSG.CHECK_SIDEPANEL_OPEN, async ({ sender }) => {

@@ -51,7 +51,7 @@ export function setupContextMenuActions() {
         break;
       }
       case CMI_ID.CAPTURE_SELECTION_AS_IS: {
-        setPendingNavigation("/entries/new");
+        setPendingNavigation("/entries/new"); // Maybe put this below opening the sidepanel
         // update panel scope to tab scope if needed
         if (import.meta.env.FIREFOX) {
           // @ts-ignore: sidebarAction is a Firefox-specific API
@@ -72,6 +72,7 @@ export function setupContextMenuActions() {
           setPendingCapture(pageSelectionData);
 
           // Push logic if side panel is already open
+          // TODO: Maybe move this right after calling the opening of the sidepanel.
           const clearPendingNavigation = await sendMessage(
             MSG.NAVIGATE_IN_SIDEPANEL,
             { path: "/entries/new" },

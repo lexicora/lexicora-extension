@@ -18,13 +18,23 @@ interface Endpoint {
 }
 
 export async function handleCaptureRequest(
-  sender: Endpoint,
-  clearPendingNavigation: boolean,
+  senderContext: RuntimeContext,
+  windowId: number,
 ) {
-  if (sender.context === "popup") {
+  if (senderContext === "popup") {
     setPendingNavigation("/entries/new");
-    if (clearPendingNavigation === true) setPendingNavigation(null);
-    // TODO: Change implementation, to call the navigation from here, like commented out code.
+  }
+
+  //TODO: Handle capture request from content script or other contexts if needed in the future.
+
+  const clearPendingNavigation = await sendMessage(
+    MSG.NAVIGATE_IN_SIDEPANEL,
+    { path: "/entries/new" },
+    "side-panel@" + windowId,
+  ).catch(() => false);
+
+  if (clearPendingNavigation === true) {
+    setPendingNavigation(null);
   }
   // setTimeout(async () => {
   //   if (sender.context !== "popup") return;
