@@ -426,7 +426,7 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
       : multiplier * BASE_DELAY_MS;
 
     timer = setTimeout(() => {
-      //* MAYBE: Double-check side panel state before showing prompt to avoid race where user opens side panel while timer is counting down
+      // TODO MAYBE: Double-check side panel state before showing prompt to avoid race where user opens side panel while timer is counting down
       if (!document.hidden && !isUnsupportedUrl()) mountUi();
     }, dynamicDelay);
   };

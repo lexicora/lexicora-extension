@@ -39,21 +39,20 @@ export async function handleCaptureRequest(
     "content-script@" + tabData.tabId,
   );
 
-  if (pageSelectionData) {
-    // Store for pull logic in side panel
-    setPendingCapture(pageSelectionData);
+  if (!pageSelectionData) return;
 
-    // Push logic if side panel is already open
-    const clearPendingCaptureData = await sendMessage(
-      MSG.SEND_PAGE_SELECTION_DATA,
-      pageSelectionData, //TODO: Handle null case in sidepanel editor component.
-      "side-panel@" + tabData.windowId,
-    ).catch(() => {});
+  // Store for pull logic in side panel
+  setPendingCapture(pageSelectionData);
 
-    if (clearPendingCaptureData === true) {
-      setPendingCapture(null);
-    }
+  // Push logic if side panel is already open
+  const clearPendingCaptureData = await sendMessage(
+    MSG.SEND_PAGE_SELECTION_DATA,
+    pageSelectionData, //TODO: Handle null case in sidepanel editor component.
+    "side-panel@" + tabData.windowId,
+  ).catch(() => {});
+
+  if (clearPendingCaptureData === true) {
+    setPendingCapture(null);
   }
-
   //TODO: Handle capture request from content script or other contexts if needed in the future.
 }

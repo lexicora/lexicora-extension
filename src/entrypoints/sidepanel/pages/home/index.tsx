@@ -7,9 +7,30 @@ import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.sv
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowUpRightIcon } from "lucide-react";
+import { MSG } from "@/constants/messaging";
+import type { TabData } from "@/types/tab-data.types";
+import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
+  const { sendMessage } = useSidePanelMessaging();
+  const navigate = useNavigate();
   const [promptText, setPromptText] = useState("");
+
+  const capturePage = async () => {
+    const [tab] = await browser.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+    const tabData: TabData = {
+      tabId: tab.id,
+      windowId: tab.windowId,
+    };
+    sendMessage(MSG.REQUEST_PAGE_CAPTURE, tabData, "background").catch(
+      () => {},
+    );
+    navigate("/entries/new", { viewTransition: true });
+  };
 
   return (
     <div id="lc-home-page" className="lc-page-container">
@@ -113,6 +134,7 @@ function HomePage() {
                   title="Capture page"
                   className="w-full hover:bg-secondary hover:brightness-90 overflow-hidden /*active:brightness-80*/"
                   disabled={promptText.trimEnd() !== ""}
+                  onClick={capturePage}
                 >
                   Capture
                 </Button>
