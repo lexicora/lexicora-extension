@@ -107,7 +107,6 @@ export function setupContextMenuActions() {
         break;
       }
       case CMI_ID.CAPTURE_PAGE_AS_IS: {
-        //console.log("Page capture not implemented yet.");
         setPendingNavigation("/entries/new");
         // update panel scope to tab scope if needed
         if (import.meta.env.FIREFOX) {

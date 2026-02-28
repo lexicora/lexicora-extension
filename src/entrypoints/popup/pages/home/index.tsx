@@ -23,6 +23,7 @@ import {
 import { MSG } from "@/constants/messaging";
 import { useScrollPos } from "@/providers/scroll-observer";
 import { cn } from "@/lib/utils";
+import type { TabData } from "@/types/tab-data.types";
 
 function HomePage() {
   const [promptText, setPromptText] = useState("");
@@ -56,7 +57,11 @@ function HomePage() {
       active: true,
       currentWindow: true,
     });
-    sendMessage(MSG.REQUEST_PAGE_CAPTURE, tab.windowId, "background").catch(
+    const tabData: TabData = {
+      tabId: tab.id,
+      windowId: tab.windowId,
+    };
+    sendMessage(MSG.REQUEST_PAGE_CAPTURE, tabData, "background").catch(
       () => {},
     );
     window.close();
@@ -179,7 +184,7 @@ function HomePage() {
             placeholder="Type your desired AI prompt here."
             // Adjust default height to either 6 rows (min-h-40.5) or 5 rows (min-h-34.5)
             className="field-sizing-content resize-y /*min-h-40.5*/ min-h-34.5 /*max-h-300*/ ml-px w-[calc(100%-2px)] scrollbar-thin
-            transition-colors duration-150 focus-visible:ring-0"
+            transition-colors duration-150 focus-visible:ring-0 /*not-dark:border-gray-300*/ /*shadow-none*/"
             maxLength={1000}
             value={promptText}
             onChange={(e) => {
@@ -200,7 +205,7 @@ function HomePage() {
         </section>
       </main>
       <footer>
-        <section className="fixed bottom-0 left-0 h-15 w-full p-3 z-10 lc-bottom-bar-styled-bg">
+        <section className="fixed bottom-0 left-0 h-15 w-full p-3 pt-2.75 z-10 lc-bottom-bar-styled-bg">
           {/*MAYBE: Remove the animation disabling motion-reduce, because it is a very noticeable and maybe not optimal for accessibility*/}
           <div className="flex gap-0 items-center justify-between w-full">
             <div

@@ -2,6 +2,7 @@ import { ProtocolWithReturn } from "webext-bridge";
 import { MSG } from "@/constants/messaging";
 import type { PageData } from "@/types/page-data.types";
 import { Article } from "@/types/mozilla-article.types";
+import type { TabData } from "@/types/tab-data.types";
 
 // TODO IMPORTANT: Enforce type safety for messaging system
 
@@ -28,7 +29,7 @@ declare module "webext-bridge" {
 
     // From anywhere to background
     [MSG.OPEN_SIDEPANEL]: null;
-    [MSG.REQUEST_PAGE_CAPTURE]: number;
+    [MSG.REQUEST_PAGE_CAPTURE]: TabData;
     //[MSG.CHECK_SIDEPANEL_OPEN]: ProtocolWithReturn<null, boolean>;
 
     // to specify the return type of the message,
