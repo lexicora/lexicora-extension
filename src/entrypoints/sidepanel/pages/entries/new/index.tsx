@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeftIcon, House } from "lucide-react";
 import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";
+import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
 import { useEffect, useState } from "react";
 import { PageData } from "@/types/page-data.types";
 import { MSG } from "@/constants/messaging";
@@ -23,7 +24,6 @@ import { cn } from "@/lib/utils";
 
 function EntryCreatePage() {
   const location = useLocation(); // This is used in order to trigger useEffect on location change
-  const navigate = useNavigate();
   const editor = useCreateBlockNote(defaultBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
   const { sendMessage, onMessage } = useSidePanelMessaging();
   const { isAtBottom, isAtTop } = useScrollPos();
@@ -32,42 +32,82 @@ function EntryCreatePage() {
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
   const aiPromptTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const lastContentRef = useRef<string | null>(null);
+  const capturedData = useCaptureData();
 
-  //const pushEnabledRef = useRef(false); //* NOTE: This should not be necessary here
+  // const updateEditorContent = useCallback(
+  //   (data: PageData, hasContentChanged: boolean) => {
+  //     // 1. ALWAYS update lightweight metadata (language, title, url, etc.)
+  //     setLanguage(data.lang || navigator.language || "en");
+  //     // e.g., setTitle(data.title);
 
-  const updateEditorContent = (data: PageData) => {
-    if (data.content) {
-      setLanguage(data.lang || navigator.language || "en");
-      const blocks = editor.tryParseHTMLToBlocks(data.content);
+  //     // 2. ONLY update the heavy editor DOM if the HTML actually changed
+  //     if (hasContentChanged && data.content) {
+  //       const blocks = editor.tryParseHTMLToBlocks(data.content);
+  //       editor.replaceBlocks(editor.document, blocks);
+  //     }
+  //   },
+  //   [editor],
+  // );
+
+  // // Hook up the custom hook
+  // useCaptureData(updateEditorContent);
+
+  // const updateEditorContent = (data: PageData) => {
+  //   if (data.content && data.content !== lastContentRef.current) {
+  //     lastContentRef.current = data.content;
+  //     setLanguage(data.lang || navigator.language || "en");
+  //     const blocks = editor.tryParseHTMLToBlocks(data.content);
+  //     editor.replaceBlocks(editor.document, blocks);
+  //   }
+  // };
+
+  useEffect(() => {
+    // Whenever the hook gives us genuinely new data, we update the editor.
+    if (capturedData?.content) {
+      setLanguage(capturedData.lang || navigator.language || "en");
+      const blocks = editor.tryParseHTMLToBlocks(capturedData.content);
       editor.replaceBlocks(editor.document, blocks);
     }
-  };
+  }, [capturedData, editor]); // MAYBE: Change to empty dependency array.
 
-  useEffect(() => {
-    const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
-      if (!msg.data) return null;
+  // Other implementation of the code above.
+  // const updateEditorContent = useCallback((data: PageData) => {
+  //     if (data.content) {
+  //       setLanguage(data.lang || navigator.language || "en");
+  //       const blocks = editor.tryParseHTMLToBlocks(data.content);
+  //       editor.replaceBlocks(editor.document, blocks);
+  //     }
+  //   }, [editor]);
 
-      updateEditorContent(msg.data);
-      return true; //* NOTE: To signal to clear the pending capture data in the background or other scripts.
-    });
+  //   // 2. Pass it to the hook
+  //   useCaptureData(updateEditorContent);
 
-    return () => unsubscribe();
-  }, [location]);
+  // useEffect(() => {
+  //   const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
+  //     if (!msg.data) return null;
 
-  useEffect(() => {
-    const pullData = async () => {
-      const data = await sendMessage(
-        MSG.REQUEST_PENDING_DATA,
-        null,
-        "background",
-      );
-      if (data) {
-        updateEditorContent(data);
-      }
-    };
+  //     updateEditorContent(msg.data);
+  //     return true; //* NOTE: To signal to clear the pending capture data in the background or other scripts.
+  //   });
 
-    pullData();
-  }, []);
+  //   return () => unsubscribe();
+  // }, [location]);
+
+  // useEffect(() => {
+  //   const pullData = async () => {
+  //     const data = await sendMessage(
+  //       MSG.REQUEST_PENDING_DATA,
+  //       null,
+  //       "background",
+  //     );
+  //     if (data) {
+  //       updateEditorContent(data);
+  //     }
+  //   };
+
+  //   pullData();
+  // }, []);
 
   useEffect(() => {
     const footerElement = footerRef.current;
@@ -114,6 +154,26 @@ function EntryCreatePage() {
                 //ref={editorContainerRef.current}
                 //editable={false}
               />
+              {/* Conditional Rendering for Loading State */}
+              {/*{!capturedData ? (
+                // --- SKELETON LOADER ---
+                <div className="p-4 space-y-4 animate-pulse">
+                  <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-5/6"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-4/5"></div>
+                </div>
+              ) : (
+                // --- ACTUAL EDITOR ---
+                <BlockNoteView
+                  editor={editor}
+                  className="animate-in fade-in duration-300" // Optional: gives a nice soft fade when it appears
+                  lang={language}
+                  id="lc-blocknote-view-new-entry"
+                />
+              )}*/}
             </div>
           </section>
         </main>
