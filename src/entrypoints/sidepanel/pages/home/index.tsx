@@ -18,6 +18,7 @@ function HomePage() {
   const [promptText, setPromptText] = useState("");
 
   const capturePage = async () => {
+    //const windowId = await browser.windows.getCurrent().then((win) => win.id);
     const [tab] = await browser.tabs.query({
       active: true,
       currentWindow: true,
