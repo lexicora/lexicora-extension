@@ -16,10 +16,10 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
-    "@blocknote/code-block": "^0.46.2",
-    "@blocknote/core": "^0.46.2",
-    "@blocknote/react": "^0.46.2",
-    "@blocknote/shadcn": "^0.46.2",
+    "@blocknote/code-block": "^0.47.1",
+    "@blocknote/core": "^0.47.1",
+    "@blocknote/react": "^0.47.1",
+    "@blocknote/shadcn": "^0.47.1",
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@fontsource/wix-madefor-text": "^5.2.8",
     "@heroicons/react": "^2.2.0",

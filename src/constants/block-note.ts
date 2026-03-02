@@ -6,6 +6,7 @@ import {
 import { codeBlockOptions } from "@blocknote/code-block";
 
 codeBlockOptions.defaultLanguage = "text";
+// MAYBE: Order languages, by letters.
 // const codeBlockConfig = {
 //   ...codeBlockOptions,
 //   // MAYBE: Make default language configurable from outside
