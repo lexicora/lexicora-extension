@@ -10,6 +10,11 @@ export function RouterListener() {
 
   const [pushEnabled, setPushEnabled] = useState(false);
 
+  const pathToSetIsCapturePending = [
+    "/entries/new",
+    /*"/entries/[id]"*/
+  ].includes(location.pathname);
+
   useEffect(() => {
     if (!pushEnabled) return;
     // Listen only for the navigation message
@@ -22,7 +27,7 @@ export function RouterListener() {
         replace: isAlreadyOnPath, // Replace history if already on the target path to prevent navigation loops and ensure back button works as expected
         flushSync: isAlreadyOnPath, // Ensure the navigation happens immediately to trigger specific logic in the destination component if needed
         viewTransition: true,
-        state: { isCapturePending: true },
+        state: { isCapturePending: pathToSetIsCapturePending },
       });
       return true; //* NOTE: To signal to clear the location of pending navigation in the background or other scripts.
     });
@@ -44,7 +49,7 @@ export function RouterListener() {
         navigate(path, {
           // MAYBE: Use replace logic like above instead of returning early.
           viewTransition: true,
-          state: { isCapturePending: true },
+          state: { isCapturePending: pathToSetIsCapturePending },
         });
       }
 

@@ -24,14 +24,12 @@ function EntryCreatePage() {
   const { isAtBottom } = useScrollPos();
   const [language, setLanguage] = useState(navigator.language || "en");
   const [promptText, setPromptText] = useState("");
-  const [contentLabel, setContentLabel] = useState("Content");
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
   const aiPromptTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const runOnceRef = useRef(false); // MAYBE: Remove later
 
   const isAutoCaptureNav = location.state?.isCapturePending === true;
-  const showSkeleton = isAutoCaptureNav && !capturedData;
+  const showSkeleton = isAutoCaptureNav && !capturedData; // TODO: Adjust, so this is set to false, not when the data is available, but when the content is in the editor
 
   useEffect(() => {
     // Whenever the hook gives us genuinely new data, we update the editor.
@@ -42,17 +40,6 @@ function EntryCreatePage() {
       //editor.insertBlocks()
     }
   }, [capturedData, editor]); // MAYBE: Change to empty dependency array.
-
-  useEffect(() => {
-    if (
-      !runOnceRef.current &&
-      capturedData &&
-      location.state?.isCapturePending
-    ) {
-      setContentLabel("Captured Content");
-      runOnceRef.current = true;
-    }
-  }, [capturedData /*, location.state*/]);
 
   // Clear the router state once the data has successfully arrived
   useEffect(() => {
@@ -102,7 +89,7 @@ function EntryCreatePage() {
                 }}
                 className="text-sm ml-2 mb-0.5"
               >
-                {contentLabel}
+                Content
               </Label>
               <div className="relative">
                 {/*Unused css classes for div className="relative overflow-x-hidden min-h-[55vh] mt-1" */}

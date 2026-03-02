@@ -9,18 +9,15 @@ import { ArrowUpRightIcon, PanelRightIcon } from "lucide-react";
 import { sendMessage } from "webext-bridge/popup";
 
 import { MSG } from "@/constants/messaging";
-import {
-  UNSUPPORTED_URL_REGEX,
-  SUPPORTED_URL_REGEX,
-} from "@/constants/support-capture-sites";
+import { useTabSupport } from "@/hooks/use-tab-support";
 import { cn } from "@/lib/utils";
 import { useScrollPos } from "@/providers/scroll-observer";
 import type { TabData } from "@/types/tab-data.types";
 
 function HomePage() {
-  const [promptText, setPromptText] = useState("");
-  const [isSupported, setIsSupported] = useState(true);
   const { isAtTop } = useScrollPos();
+  const { isSupported, activeTab } = useTabSupport();
+  const [promptText, setPromptText] = useState("");
 
   // MAYBE: Force side panel to open to home page with messaging navigation implementation.
   const openSidePanel = async (closeWindow: boolean) => {
@@ -28,13 +25,16 @@ function HomePage() {
       // @ts-ignore: sidebarAction is a Firefox-specific API
       await browser.sidebarAction.open();
     } else {
-      const [tab] = await browser.tabs.query({
-        active: true,
-        currentWindow: true,
-      });
-      //const windowId = await browser.windows.getCurrent().then((win) => win.id);
-      if (!tab) return;
-      await browser.sidePanel.open({ windowId: tab.windowId });
+      let windowId = activeTab?.windowId;
+      if (!windowId) {
+        const [tab] = await browser.tabs.query({
+          active: true,
+          currentWindow: true,
+        });
+        windowId = tab?.windowId;
+      }
+      if (!windowId) return;
+      await browser.sidePanel.open({ windowId: windowId });
     }
     // sendMessage(MSG.NAVIGATE_IN_SIDEPANEL, { path: "/" }, "popup").catch(
     //   () => {},
@@ -43,40 +43,28 @@ function HomePage() {
   };
 
   const capturePage = async () => {
+    if (!isSupported) return;
     openSidePanel(false);
-    //const windowId = await browser.windows.getCurrent().then((win) => win.id);
-    const [tab] = await browser.tabs.query({
-      active: true,
-      currentWindow: true,
-    });
+    let finalTab = activeTab;
+    if (!finalTab?.id || !finalTab?.windowId) {
+      const [queriedTab] = await browser.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+      finalTab = queriedTab;
+    }
+    if (!finalTab?.id || !finalTab?.windowId) return; // This should never happen, but just in case to prevent errors in messaging handler.
     const tabData: TabData = {
-      tabId: tab.id,
-      windowId: tab.windowId,
+      tabId: finalTab.id,
+      windowId: finalTab.windowId,
+      //title: finalTab.title,
+      //url: finalTab.url,
     };
     sendMessage(MSG.REQUEST_PAGE_CAPTURE, tabData, "background").catch(
       () => {},
     );
     window.close();
   };
-
-  useEffect(() => {
-    const checkSupport = async () => {
-      const [tab] = await browser.tabs.query({
-        active: true,
-        currentWindow: true,
-      });
-      if (!tab?.url) return;
-
-      const url = tab.url;
-      // It's supported if it matches the Protocol regex AND doesn't match the Blacklist regex
-      const isValidProtocol = SUPPORTED_URL_REGEX.test(url);
-      const isBlacklisted = UNSUPPORTED_URL_REGEX.test(url);
-
-      setIsSupported(isValidProtocol && !isBlacklisted);
-    };
-
-    checkSupport();
-  }, []);
 
   useEffect(() => {
     // Focus the textarea on component mount, for better UX
@@ -239,7 +227,7 @@ function HomePage() {
                     : "You are currently on a unsupported page for capturing."
                 }
                 className={cn(
-                  "w-full hover:bg-secondary hover:brightness-90 overflow-hidden disabled:pointer-events-auto disabled:cursor-not-allowed /*active:brightness-80*/",
+                  "w-full hover:bg-secondary hover:brightness-90 overflow-hidden disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:brightness-100 /*active:brightness-80*/",
                   {
                     "disabled:pointer-events-none": promptText.trimEnd() !== "",
                   },
@@ -257,7 +245,7 @@ function HomePage() {
                     ? "Capture page with AI"
                     : "You are currently on a unsupported page for capturing."
                 }
-                className="w-full hover:bg-primary hover:brightness-90 disabled:pointer-events-auto disabled:cursor-not-allowed /*active:brightness-80*/"
+                className="w-full hover:bg-primary hover:brightness-90 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:brightness-100 /*active:brightness-80*/"
                 disabled={!isSupported}
               >
                 Capture with AI

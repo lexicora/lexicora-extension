@@ -7,29 +7,37 @@ import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.sv
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowUpRightIcon } from "lucide-react";
-import {
-  UNSUPPORTED_URL_REGEX,
-  SUPPORTED_URL_REGEX,
-} from "@/constants/support-capture-sites";
+import { useTabSupport } from "@/hooks/use-tab-support";
 import { MSG } from "@/constants/messaging";
 import type { TabData } from "@/types/tab-data.types";
 import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";
 import { useNavigate } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 function HomePage() {
   const { sendMessage } = useSidePanelMessaging();
   const navigate = useNavigate();
+  const { isSupported, activeTab } = useTabSupport();
   const [promptText, setPromptText] = useState("");
 
   const capturePage = async () => {
-    //const windowId = await browser.windows.getCurrent().then((win) => win.id);
-    const [tab] = await browser.tabs.query({
-      active: true,
-      currentWindow: true,
-    });
+    if (!isSupported) return;
+    let finalTab = activeTab;
+    if (!finalTab?.id || !finalTab?.windowId) {
+      const [queriedTab] = await browser.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+      finalTab = queriedTab;
+    }
+    if (!finalTab?.id || !finalTab?.windowId) return;
+    // const [tab] = await browser.tabs.query({
+    //   active: true,
+    //   currentWindow: true,
+    // });
     const tabData: TabData = {
-      tabId: tab.id,
-      windowId: tab.windowId,
+      tabId: finalTab.id,
+      windowId: finalTab.windowId,
     };
     sendMessage(MSG.REQUEST_PAGE_CAPTURE, tabData, "background").catch(
       () => {},
@@ -108,6 +116,12 @@ function HomePage() {
               className="field-sizing-content resize-y min-h-[max(138px,calc(100vh-478px))] /*min-h-34.5*/ /*max-h-300*/ w-[calc(100%-2px)] max-w-313.5 mx-auto scrollbar-thin
             transition-colors duration-150 focus-visible:ring-0"
               maxLength={1000}
+              disabled={!isSupported}
+              title={
+                isSupported
+                  ? ""
+                  : "You are currently on a unsupported page for capturing."
+              }
               value={promptText}
               onChange={(e) => {
                 setPromptText(e.target.value);
@@ -139,9 +153,19 @@ function HomePage() {
               >
                 <Button
                   variant="secondary"
-                  title="Capture page"
-                  className="w-full hover:bg-secondary hover:brightness-90 overflow-hidden /*active:brightness-80*/"
-                  disabled={promptText.trimEnd() !== ""}
+                  title={
+                    isSupported
+                      ? "Capture page"
+                      : "You are currently on a unsupported page for capturing."
+                  }
+                  className={cn(
+                    "w-full hover:bg-secondary hover:brightness-90 overflow-hidden disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:brightness-100 /*active:brightness-80*/",
+                    {
+                      "disabled:pointer-events-none":
+                        promptText.trimEnd() !== "",
+                    },
+                  )}
+                  disabled={promptText.trimEnd() !== "" || !isSupported}
                   onClick={capturePage}
                 >
                   Capture
@@ -149,8 +173,13 @@ function HomePage() {
               </div>
               <div className="flex justify-end flex-1">
                 <Button
-                  title="Capture page with AI"
-                  className="w-full hover:bg-primary hover:brightness-90 /*active:brightness-80*/"
+                  title={
+                    isSupported
+                      ? "Capture page with AI"
+                      : "You are currently on a unsupported page for capturing."
+                  }
+                  className="w-full hover:bg-primary hover:brightness-90 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:brightness-100 /*active:brightness-80*/"
+                  disabled={!isSupported}
                 >
                   Capture with AI
                 </Button>
