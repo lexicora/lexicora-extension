@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 
 function EntryCreatePage() {
   const location = useLocation(); // This is used in order to trigger useEffect on location change
+  const navigate = useNavigate();
   const editor = useCreateBlockNote(defaultBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
   const { sendMessage, onMessage } = useSidePanelMessaging();
   const { isAtBottom, isAtTop } = useScrollPos();
@@ -38,33 +39,6 @@ function EntryCreatePage() {
   const isAutoCaptureNav = location.state?.isCapturePending === true;
   const showSkeleton = isAutoCaptureNav && !capturedData;
 
-  // const updateEditorContent = useCallback(
-  //   (data: PageData, hasContentChanged: boolean) => {
-  //     // 1. ALWAYS update lightweight metadata (language, title, url, etc.)
-  //     setLanguage(data.lang || navigator.language || "en");
-  //     // e.g., setTitle(data.title);
-
-  //     // 2. ONLY update the heavy editor DOM if the HTML actually changed
-  //     if (hasContentChanged && data.content) {
-  //       const blocks = editor.tryParseHTMLToBlocks(data.content);
-  //       editor.replaceBlocks(editor.document, blocks);
-  //     }
-  //   },
-  //   [editor],
-  // );
-
-  // // Hook up the custom hook
-  // useCaptureData(updateEditorContent);
-
-  // const updateEditorContent = (data: PageData) => {
-  //   if (data.content && data.content !== lastContentRef.current) {
-  //     lastContentRef.current = data.content;
-  //     setLanguage(data.lang || navigator.language || "en");
-  //     const blocks = editor.tryParseHTMLToBlocks(data.content);
-  //     editor.replaceBlocks(editor.document, blocks);
-  //   }
-  // };
-
   useEffect(() => {
     // Whenever the hook gives us genuinely new data, we update the editor.
     if (capturedData?.content) {
@@ -74,17 +48,19 @@ function EntryCreatePage() {
     }
   }, [capturedData, editor]); // MAYBE: Change to empty dependency array.
 
-  // Other implementation of the code above.
-  // const updateEditorContent = useCallback((data: PageData) => {
-  //     if (data.content) {
-  //       setLanguage(data.lang || navigator.language || "en");
-  //       const blocks = editor.tryParseHTMLToBlocks(data.content);
-  //       editor.replaceBlocks(editor.document, blocks);
-  //     }
-  //   }, [editor]);
-
-  //   // 2. Pass it to the hook
-  //   useCaptureData(updateEditorContent);
+  // Clear the router state once the data has successfully arrived
+  useEffect(() => {
+    if (capturedData && location.state?.isCapturePending) {
+      const transitionDuration = 200;
+      const cleanupTimer = setTimeout(() => {
+        navigate(location.pathname, {
+          replace: true,
+          state: {},
+        });
+      }, transitionDuration);
+      return () => clearTimeout(cleanupTimer);
+    }
+  }, [capturedData, location.state, navigate, location.pathname]);
 
   // useEffect(() => {
   //   const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
@@ -146,11 +122,7 @@ function EntryCreatePage() {
                 }}
                 className="text-sm ml-2 mb-0.5"
               >
-                {
-                  isAutoCaptureNav
-                    ? "Captured Content"
-                    : "Entry Content" /*MAYBE: Change to just content later */
-                }
+                Content
               </Label>
               <div className="relative /*overflow-x-hidden*/ /*min-h-[55vh]*/ mt-1">
                 {/* --- SKELETON LOADER OVERLAY --- */}
