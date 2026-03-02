@@ -125,7 +125,7 @@ function EntryCreatePage() {
                 Content
               </Label>
               <div className="relative /*overflow-x-hidden*/ /*min-h-[55vh]*/ mt-1">
-                {/* --- SKELETON LOADER OVERLAY --- */}
+                {/* --- SKELETON LOADER OVERLAY (update to shadcn-ui component later)--- */}
                 {showSkeleton && (
                   <div className="absolute inset-0 z-10 p-2 space-y-4 animate-pulse">
                     <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-3/4"></div>
