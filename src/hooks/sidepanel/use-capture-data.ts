@@ -12,10 +12,10 @@ export function useCaptureData() {
 
   useEffect(() => {
     // Core logic to safely update data only if it is genuinely new
-    const handleIncomingData = (data: PageData /*| null*/) => {
-      if (!data.content) return; // check might be unnecessary, since below might take care of it.
+    const handleIncomingData = (data: PageData) => {
+      if (!data.content) return;
 
-      // MAYBE: On long pages, trim a part so only a fraction (still sufficient), gets compared for deduplication.
+      // TODO MAYBE: On long pages, trim a part so only a fraction (still sufficient), gets compared for deduplication.
       if (data.content !== lastProcessedContent.current) {
         lastProcessedContent.current = data.content;
         setCapturedData(data);
