@@ -33,10 +33,8 @@ export function useTabSupport() {
   }, []);
 
   useEffect(() => {
-    // Initial check
     checkUrlSupport();
 
-    // Listeners for persistence
     const handleActivated = () => checkUrlSupport();
 
     // _tabId is unused but required as the first positional argument

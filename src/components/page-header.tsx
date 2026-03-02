@@ -3,6 +3,7 @@ import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useScrollPos } from "@/providers/scroll-observer";
+import { startTransition } from "react";
 import { cn } from "@/lib/utils";
 
 interface PageHeaderProps {
@@ -11,6 +12,7 @@ interface PageHeaderProps {
   headerTextAlignment?: "center" | "left";
   goBackButton?: boolean;
   classNameHeaderElement?: string;
+  heavyTeardown?: boolean;
 }
 
 export function PageHeader({
@@ -19,11 +21,21 @@ export function PageHeader({
   headerTextAlignment = "center",
   goBackButton = false,
   classNameHeaderElement,
+  heavyTeardown = false,
 }: PageHeaderProps) {
   const { isAtTop } = useScrollPos();
   const navigate = useNavigate();
 
-  const handleGoBack = () => navigate(-1);
+  const handleGoBack = () => {
+    if (heavyTeardown) {
+      // Use the trick ONLY when we know the DOM is massive
+      setTimeout(() => navigate(-1), 0);
+    } else {
+      // Normal, synchronous, React-friendly navigation
+      navigate(-1);
+    }
+  };
+  //const handleGoBack = () => navigate(-1);
   const isLeftAligned = headerTextAlignment === "left";
 
   // Shared animation classes for hover elements

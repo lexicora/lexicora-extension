@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { defaultBlockNoteConfig } from "@/constants/block-note";
 import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
@@ -14,7 +14,6 @@ import { cn } from "@/lib/utils";
 import { useScrollPos } from "@/providers/scroll-observer";
 import { useCreateBlockNote } from "@blocknote/react";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
-// TODO: Add loading state while waiting for content (also use a skeleton (to be improved later) loader for BlockNote.js editor)
 
 function EntryCreatePage() {
   const location = useLocation(); // This is used in order to trigger useEffect on location change
@@ -24,22 +23,29 @@ function EntryCreatePage() {
   const { isAtBottom } = useScrollPos();
   const [language, setLanguage] = useState(navigator.language || "en");
   const [promptText, setPromptText] = useState("");
+  //const [isEditorReady, setIsEditorReady] = useState(false); // other approach with requestAnimation frame contrary to useLayoutEffect
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
   const aiPromptTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   const isAutoCaptureNav = location.state?.isCapturePending === true;
-  const showSkeleton = isAutoCaptureNav && !capturedData; // TODO: Adjust, so this is set to false, not when the data is available, but when the content is in the editor
+  const showSkeleton = isAutoCaptureNav && !capturedData;
+  //const showSkeleton = isAutoCaptureNav && (!capturedData || !isEditorReady); // other approach with requestAnimation frame contrary to useLayoutEffect
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Whenever the hook gives us genuinely new data, we update the editor.
     if (capturedData?.content) {
       setLanguage(capturedData.lang || navigator.language || "en");
       const blocks = editor.tryParseHTMLToBlocks(capturedData.content);
       editor.replaceBlocks(editor.document, blocks);
       //editor.insertBlocks()
+
+      // other approach with requestAnimation frame contrary to useLayoutEffect
+      // requestAnimationFrame(() => {
+      //   setIsEditorReady(true);
+      // });
     }
-  }, [capturedData, editor]); // MAYBE: Change to empty dependency array.
+  }, [capturedData, editor]);
 
   // Clear the router state once the data has successfully arrived
   useEffect(() => {
@@ -77,7 +83,7 @@ function EntryCreatePage() {
     <div id="lc-new-entry-page" className="lc-page-container mb-0! /*pr-3!*/">
       {/*Make the inner container as tall (min-height) as the vh (but not overflowing) to prevent issues with editor*/}
       <div className="lc-page-container-inner">
-        <PageHeader title="New Entry" goBackButton />
+        <PageHeader title="New Entry" goBackButton heavyTeardown={true} />
         <main>
           <section className="mx-px">
             {/*TODO: Maybe add relative and overflow-x-hidden later, when it is guaranteed to fill the entire page (height wise) */}
