@@ -1,34 +1,21 @@
-import { useState } from "react";
-import reactLogo from "@/assets/logos/react.svg";
-import wxtLogo from "/wxt.svg";
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
+import { useState } from "react";
 //import styles from "./home.module.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { ArrowUpRightIcon, PanelRightIcon } from "lucide-react";
 import { sendMessage } from "webext-bridge/popup";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  ArrowUpRightIcon,
-  PanelRightIcon,
-  PanelRightOpen,
-  SquareArrowOutUpRight,
-} from "lucide-react";
 
 import { MSG } from "@/constants/messaging";
-import { useScrollPos } from "@/providers/scroll-observer";
 import { cn } from "@/lib/utils";
+import { useScrollPos } from "@/providers/scroll-observer";
 import type { TabData } from "@/types/tab-data.types";
 
 function HomePage() {
   const [promptText, setPromptText] = useState("");
   const { isAtTop } = useScrollPos();
-  //const [isAtTop, setIsAtTop] = useState(true);
 
   // MAYBE: Force side panel to open to home page with messaging navigation implementation.
   const openSidePanel = async (closeWindow: boolean) => {

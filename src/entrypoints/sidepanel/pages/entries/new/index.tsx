@@ -1,39 +1,31 @@
-//import "./NewEntryPage.css";
 import styles from "./entry-create.module.css";
-import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeftIcon, House } from "lucide-react";
-import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";
+import { defaultBlockNoteConfig } from "@/constants/block-note";
 import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
 import { useEffect, useState } from "react";
-import { PageData } from "@/types/page-data.types";
-import { MSG } from "@/constants/messaging";
-import { defaultBlockNoteConfig } from "@/constants/block-note";
+import { useLocation, useNavigate } from "react-router-dom";
 
-// App BlockNote.js imports
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
-import { useCreateBlockNote } from "@blocknote/react";
-import { useScrollPos } from "@/providers/scroll-observer";
 import { PageHeader } from "@/components/page-header";
 import { cn } from "@/lib/utils";
+import { useScrollPos } from "@/providers/scroll-observer";
+import { useCreateBlockNote } from "@blocknote/react";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
-// TODO: Add loading state while waiting for content (also use a skeleton loader for BlockNote.js editor)
+// TODO: Add loading state while waiting for content (also use a skeleton (to be improved later) loader for BlockNote.js editor)
 
 function EntryCreatePage() {
   const location = useLocation(); // This is used in order to trigger useEffect on location change
   const navigate = useNavigate();
   const editor = useCreateBlockNote(defaultBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
-  const { sendMessage, onMessage } = useSidePanelMessaging();
-  const { isAtBottom, isAtTop } = useScrollPos();
+  const { isAtBottom } = useScrollPos();
   const [language, setLanguage] = useState(navigator.language || "en");
   const [promptText, setPromptText] = useState("");
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
   const aiPromptTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const lastContentRef = useRef<string | null>(null);
   const capturedData = useCaptureData();
 
   const isAutoCaptureNav = location.state?.isCapturePending === true;
@@ -61,32 +53,6 @@ function EntryCreatePage() {
       return () => clearTimeout(cleanupTimer);
     }
   }, [capturedData, location.state, navigate, location.pathname]);
-
-  // useEffect(() => {
-  //   const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
-  //     if (!msg.data) return null;
-
-  //     updateEditorContent(msg.data);
-  //     return true; //* NOTE: To signal to clear the pending capture data in the background or other scripts.
-  //   });
-
-  //   return () => unsubscribe();
-  // }, [location]);
-
-  // useEffect(() => {
-  //   const pullData = async () => {
-  //     const data = await sendMessage(
-  //       MSG.REQUEST_PENDING_DATA,
-  //       null,
-  //       "background",
-  //     );
-  //     if (data) {
-  //       updateEditorContent(data);
-  //     }
-  //   };
-
-  //   pullData();
-  // }, []);
 
   useEffect(() => {
     const footerElement = footerRef.current;
@@ -146,22 +112,17 @@ function EntryCreatePage() {
                       : "opacity-100",
                   )}
                 >
+                  {/*TODO: maybe add max width of maybe around 1000px or so */}
                   <BlockNoteView
                     editor={editor}
                     lang={language}
                     id="lc-blocknote-view-new-entry"
+                    //className=""
+                    //editable={false}
                   />
                 </div>
               </div>
               {/*TODO: maybe add max width of maybe around 1000px or so */}
-              {/*<BlockNoteView
-                editor={editor}
-                className=""
-                lang={language}
-                id="lc-blocknote-view-new-entry"
-                //ref={editorContainerRef.current}
-                //editable={false}
-              />*/}
             </div>
           </section>
         </main>

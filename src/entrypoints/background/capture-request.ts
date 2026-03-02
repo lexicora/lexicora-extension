@@ -42,7 +42,7 @@ export async function handleCaptureRequest(
   if (!pageSelectionData) return;
 
   // Store for pull logic in side panel
-  setPendingCapture(pageSelectionData);
+  setPendingCapture(pageSelectionData); //MAYBE: disable when the senderContext is the side-panel (already open so pull logic is irrelevant).
 
   // Push logic if side panel is already open
   const clearPendingCaptureData = await sendMessage(

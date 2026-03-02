@@ -11,8 +11,7 @@ export function useCaptureData() {
   const lastProcessedContent = useRef<string | null>(null);
 
   useEffect(() => {
-    // 1. Core logic to safely update data only if it is genuinely new
-    // data should not be null
+    // Core logic to safely update data only if it is genuinely new
     const handleIncomingData = (data: PageData /*| null*/) => {
       if (!data.content) return; // check might be unnecessary, since below might take care of it.
 
@@ -22,14 +21,14 @@ export function useCaptureData() {
       }
     };
 
-    // 2. Push Listener: Catches data if the Side Panel is already open
+    // Push Listener: Catches data if the Side Panel is already open
     const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
       if (!msg.data) return null;
       handleIncomingData(msg.data);
       return true; // Signal to background to clear its pending data
     });
 
-    // 3. Pull Logic: Fetches data if the Side Panel was just opened
+    // Pull Logic: Fetches data if the Side Panel was just opened
     const pullData = async () => {
       const pendingData = await sendMessage(
         MSG.REQUEST_PENDING_DATA,
