@@ -10,12 +10,10 @@ import {
   captureSuggestionDelayMultiplierStorage,
   sidePanelStateStorage,
 } from "@/lib/utils/storage/settings";
+import { UNSUPPORTED_URL_REGEX } from "@/constants/support-capture-sites";
 import "@fontsource/wix-madefor-text/400.css";
 import "@fontsource/wix-madefor-text/500.css";
 // TODO: Look in to different font handling, so sites blocking this import still have this font.
-
-const UNSUPPORTED_URL_REGEX =
-  /\.pdf(\?|$)|chrome\.google\.com\/webstore|chromewebstore\.google\.com|addons\.mozilla\.org/i;
 
 const isUnsupportedUrl = () => UNSUPPORTED_URL_REGEX.test(location.href);
 

@@ -7,6 +7,10 @@ import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.sv
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowUpRightIcon } from "lucide-react";
+import {
+  UNSUPPORTED_URL_REGEX,
+  SUPPORTED_URL_REGEX,
+} from "@/constants/support-capture-sites";
 import { MSG } from "@/constants/messaging";
 import type { TabData } from "@/types/tab-data.types";
 import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";

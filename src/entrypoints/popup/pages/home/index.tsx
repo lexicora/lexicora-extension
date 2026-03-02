@@ -1,6 +1,6 @@
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 //import styles from "./home.module.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -9,12 +9,17 @@ import { ArrowUpRightIcon, PanelRightIcon } from "lucide-react";
 import { sendMessage } from "webext-bridge/popup";
 
 import { MSG } from "@/constants/messaging";
+import {
+  UNSUPPORTED_URL_REGEX,
+  SUPPORTED_URL_REGEX,
+} from "@/constants/support-capture-sites";
 import { cn } from "@/lib/utils";
 import { useScrollPos } from "@/providers/scroll-observer";
 import type { TabData } from "@/types/tab-data.types";
 
 function HomePage() {
   const [promptText, setPromptText] = useState("");
+  const [isSupported, setIsSupported] = useState(true);
   const { isAtTop } = useScrollPos();
 
   // MAYBE: Force side panel to open to home page with messaging navigation implementation.
@@ -54,7 +59,25 @@ function HomePage() {
     window.close();
   };
 
-  // Handle scroll top detection
+  useEffect(() => {
+    const checkSupport = async () => {
+      const [tab] = await browser.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+      if (!tab?.url) return;
+
+      const url = tab.url;
+      // It's supported if it matches the Protocol regex AND doesn't match the Blacklist regex
+      const isValidProtocol = SUPPORTED_URL_REGEX.test(url);
+      const isBlacklisted = UNSUPPORTED_URL_REGEX.test(url);
+
+      setIsSupported(isValidProtocol && !isBlacklisted);
+    };
+
+    checkSupport();
+  }, []);
+
   useEffect(() => {
     // Focus the textarea on component mount, for better UX
     setTimeout(() => {
@@ -173,6 +196,12 @@ function HomePage() {
             className="field-sizing-content resize-y /*min-h-40.5*/ min-h-34.5 /*max-h-300*/ ml-px w-[calc(100%-2px)] scrollbar-thin
             transition-colors duration-150 focus-visible:ring-0 /*not-dark:border-gray-300*/ /*shadow-none*/"
             maxLength={1000}
+            disabled={!isSupported}
+            title={
+              isSupported
+                ? ""
+                : "You are currently on a unsupported page for capturing."
+            }
             value={promptText}
             onChange={(e) => {
               setPromptText(e.target.value);
@@ -204,9 +233,18 @@ function HomePage() {
             >
               <Button
                 variant="secondary"
-                title="Capture page"
-                className="w-full hover:bg-secondary hover:brightness-90 overflow-hidden /*active:brightness-80*/"
-                disabled={promptText.trimEnd() !== ""}
+                title={
+                  isSupported
+                    ? "Capture page"
+                    : "You are currently on a unsupported page for capturing."
+                }
+                className={cn(
+                  "w-full hover:bg-secondary hover:brightness-90 overflow-hidden disabled:pointer-events-auto disabled:cursor-not-allowed /*active:brightness-80*/",
+                  {
+                    "disabled:pointer-events-none": promptText.trimEnd() !== "",
+                  },
+                )}
+                disabled={promptText.trimEnd() !== "" || !isSupported}
                 onClick={capturePage}
               >
                 Capture
@@ -214,8 +252,13 @@ function HomePage() {
             </div>
             <div className="flex justify-end flex-1">
               <Button
-                title="Capture page with AI"
-                className="w-full hover:bg-primary hover:brightness-90 /*active:brightness-80*/"
+                title={
+                  isSupported
+                    ? "Capture page with AI"
+                    : "You are currently on a unsupported page for capturing."
+                }
+                className="w-full hover:bg-primary hover:brightness-90 disabled:pointer-events-auto disabled:cursor-not-allowed /*active:brightness-80*/"
+                disabled={!isSupported}
               >
                 Capture with AI
               </Button>

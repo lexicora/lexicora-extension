@@ -2,17 +2,12 @@ import { onMessage, sendMessage } from "webext-bridge/background";
 import { MSG } from "@/constants/messaging";
 import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/constants/context-menu-items";
 import { PageData } from "@/types/page-data.types";
-import { Readability } from "@mozilla/readability";
 import { Article } from "@/types/mozilla-article.types";
 import turndownService from "@/lib/turndown";
 import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
+import { UNSUPPORTED_URL_REGEX } from "@/constants/support-capture-sites";
 
 // TODO: Add messages for users (if exceptions occur, e.g., no selection made)
-
-//const UNSUPPORTED_URL_REGEX = /\.pdf(\?|$)/i; // Currently excludes: *.pdf*
-const UNSUPPORTED_URL_REGEX =
-  /\.pdf(\?|$)|chrome\.google\.com\/webstore|chromewebstore\.google\.com|addons\.mozilla\.org/i;
-//const UNSUPPORTED_URL_REGEX = /\.pdf(\?|$)|^(about|chrome|edge|browser|resource):/i;
 
 /**
  * Handles context menu item clicks and actions.
