@@ -37,3 +37,21 @@
     @apply text-lc-light-foreground bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800
     ring-1 ring-inset ring-black/25 dark:ring-white/30 hover:ring-black/30 dark:hover:ring-white/25;
 }
+
+.transition-transform-opacity-blur {
+    will-change: transform, translate, opacity, filter;
+    transition-property: transform, translate, opacity, filter;
+    transition-timing-function: var(
+        --tw-ease,
+        var(--default-transition-timing-function)
+            /* cubic-bezier(0.4, 0, 0.2, 1) */
+    );
+    transition-duration: var(
+        --tw-duration,
+        var(--default-transition-duration) /* 150ms */
+    );
+}
+
+.will-change-opacity {
+    will-change: opacity;
+}

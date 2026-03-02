@@ -1,72 +1,72 @@
-//import "./NewEntryPage.css";
 import styles from "./entry-create.module.css";
-import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeftIcon, House } from "lucide-react";
-import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";
+import { defaultBlockNoteConfig } from "@/constants/block-note";
+import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
 import { useEffect, useState } from "react";
-import { PageData } from "@/types/page-selection-data.types";
-import { MSG } from "@/types/messaging";
-import { defaultBlockNoteConfig } from "@/types/block-note.types";
+import { useLocation, useNavigate } from "react-router-dom";
 
-// App BlockNote.js imports
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
-import { useCreateBlockNote } from "@blocknote/react";
-import { useScrollPos } from "@/providers/scroll-observer";
 import { PageHeader } from "@/components/page-header";
 import { cn } from "@/lib/utils";
+import { useScrollPos } from "@/providers/scroll-observer";
+import { useCreateBlockNote } from "@blocknote/react";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
-// TODO: Add loading state while waiting for content (also use a skeleton loader for BlockNote.js editor)
+// TODO: Add loading state while waiting for content (also use a skeleton (to be improved later) loader for BlockNote.js editor)
 
 function EntryCreatePage() {
   const location = useLocation(); // This is used in order to trigger useEffect on location change
   const navigate = useNavigate();
   const editor = useCreateBlockNote(defaultBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
-  const { sendMessage, onMessage } = useSidePanelMessaging();
-  const { isAtBottom, isAtTop } = useScrollPos();
+  const capturedData = useCaptureData();
+  const { isAtBottom } = useScrollPos();
   const [language, setLanguage] = useState(navigator.language || "en");
   const [promptText, setPromptText] = useState("");
+  const [contentLabel, setContentLabel] = useState("Content");
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
+  const aiPromptTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const runOnceRef = useRef(false); // MAYBE: Remove later
 
-  //const pushEnabledRef = useRef(false); //* NOTE: This should not be necessary here
+  const isAutoCaptureNav = location.state?.isCapturePending === true;
+  const showSkeleton = isAutoCaptureNav && !capturedData;
 
-  const updateEditorContent = (data: PageData) => {
-    if (data.HTML) {
-      setLanguage(data.language || navigator.language || "en");
-      const blocks = editor.tryParseHTMLToBlocks(data.HTML);
+  useEffect(() => {
+    // Whenever the hook gives us genuinely new data, we update the editor.
+    if (capturedData?.content) {
+      setLanguage(capturedData.lang || navigator.language || "en");
+      const blocks = editor.tryParseHTMLToBlocks(capturedData.content);
       editor.replaceBlocks(editor.document, blocks);
+      //editor.insertBlocks()
     }
-  };
+  }, [capturedData, editor]); // MAYBE: Change to empty dependency array.
 
   useEffect(() => {
-    const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
-      if (!msg.data) return null;
+    if (
+      !runOnceRef.current &&
+      capturedData &&
+      location.state?.isCapturePending
+    ) {
+      setContentLabel("Captured Content");
+      runOnceRef.current = true;
+    }
+  }, [capturedData /*, location.state*/]);
 
-      updateEditorContent(msg.data);
-      return true; //* NOTE: To signal to clear the pending capture data in the background or other scripts.
-    });
-
-    return () => unsubscribe();
-  }, [location]);
-
+  // Clear the router state once the data has successfully arrived
   useEffect(() => {
-    const pullData = async () => {
-      const data = await sendMessage(
-        MSG.REQUEST_PENDING_DATA,
-        null,
-        "background",
-      );
-      if (data) {
-        updateEditorContent(data);
-      }
-    };
-
-    pullData();
-  }, []);
+    if (capturedData && location.state?.isCapturePending) {
+      const transitionDuration = 200;
+      const cleanupTimer = setTimeout(() => {
+        navigate(location.pathname, {
+          replace: true,
+          state: {},
+        });
+      }, transitionDuration);
+      return () => clearTimeout(cleanupTimer);
+    }
+  }, [capturedData, location.state, navigate, location.pathname]);
 
   useEffect(() => {
     const footerElement = footerRef.current;
@@ -102,16 +102,42 @@ function EntryCreatePage() {
                 }}
                 className="text-sm ml-2 mb-0.5"
               >
-                Captured Content
+                {contentLabel}
               </Label>
-              <BlockNoteView
-                editor={editor}
-                className=""
-                lang={language}
-                id="lc-blocknote-view-new-entry"
-                //ref={editorContainerRef.current}
-                //editable={false}
-              />
+              <div className="relative">
+                {/*Unused css classes for div className="relative overflow-x-hidden min-h-[55vh] mt-1" */}
+                {/* --- SKELETON LOADER OVERLAY (update to shadcn-ui component later)--- */}
+                {showSkeleton && (
+                  <div className="absolute inset-0 z-10 p-2 space-y-4 animate-pulse">
+                    <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-5/6"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-4/5"></div>
+                  </div>
+                )}
+                {/* --- ACTUAL EDITOR --- */}
+                {/* It is ALWAYS mounted to prevent the Floating UI crash. We just hide it visually until ready. */}
+                <div
+                  className={cn(
+                    "transition-opacity duration-150", //MAYBE: Reduce duration a bit more, dont use will-change-opacity, because editor ui elements are covered by top and bottom ui.
+                    showSkeleton
+                      ? "opacity-0 pointer-events-none"
+                      : "opacity-100",
+                  )}
+                >
+                  {/*TODO: maybe add max width of maybe around 1000px or so */}
+                  <BlockNoteView
+                    editor={editor}
+                    lang={language}
+                    id="lc-blocknote-view-new-entry"
+                    //className=""
+                    //editable={false}
+                  />
+                </div>
+              </div>
+              {/*TODO: maybe add max width of maybe around 1000px or so */}
             </div>
           </section>
         </main>
@@ -130,6 +156,7 @@ function EntryCreatePage() {
             <div className="pb-3 px-px /*mx-px*/ max-w-314 mx-auto inset-x-0 /*mt-1*/">
               <Textarea
                 id="ai-prompt-textarea"
+                ref={aiPromptTextareaRef}
                 //rows={4}
                 maxLength={500}
                 placeholder="Type your desired AI prompt here."
@@ -142,6 +169,10 @@ function EntryCreatePage() {
                 value={promptText}
                 onChange={(e) => setPromptText(e.target.value)}
                 onKeyDown={(e) => {
+                  if (e.key === "Escape") {
+                    e.preventDefault();
+                    aiPromptTextareaRef.current?.blur();
+                  }
                   // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
                   if (e.ctrlKey && e.key === "Enter") {
                     // Maybe change it to Ctrl/Cmd + Enter?

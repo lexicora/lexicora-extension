@@ -1,35 +1,24 @@
-import { useState } from "react";
-import reactLogo from "@/assets/logos/react.svg";
-import wxtLogo from "/wxt.svg";
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
+import { useState } from "react";
 //import styles from "./home.module.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  ArrowUpRightIcon,
-  PanelRightIcon,
-  PanelRightOpen,
-  SquareArrowOutUpRight,
-} from "lucide-react";
+import { ArrowUpRightIcon, PanelRightIcon } from "lucide-react";
+import { sendMessage } from "webext-bridge/popup";
 
-import { MSG } from "@/types/messaging";
-import { useScrollPos } from "@/providers/scroll-observer";
+import { MSG } from "@/constants/messaging";
 import { cn } from "@/lib/utils";
+import { useScrollPos } from "@/providers/scroll-observer";
+import type { TabData } from "@/types/tab-data.types";
 
 function HomePage() {
   const [promptText, setPromptText] = useState("");
   const { isAtTop } = useScrollPos();
-  //const [isAtTop, setIsAtTop] = useState(true);
 
   // MAYBE: Force side panel to open to home page with messaging navigation implementation.
-  const openSidePanel = async () => {
+  const openSidePanel = async (closeWindow: boolean) => {
     if (import.meta.env.FIREFOX) {
       // @ts-ignore: sidebarAction is a Firefox-specific API
       await browser.sidebarAction.open();
@@ -45,6 +34,23 @@ function HomePage() {
     // sendMessage(MSG.NAVIGATE_IN_SIDEPANEL, { path: "/" }, "popup").catch(
     //   () => {},
     // );
+    if (closeWindow) window.close();
+  };
+
+  const capturePage = async () => {
+    openSidePanel(false);
+    //const windowId = await browser.windows.getCurrent().then((win) => win.id);
+    const [tab] = await browser.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+    const tabData: TabData = {
+      tabId: tab.id,
+      windowId: tab.windowId,
+    };
+    sendMessage(MSG.REQUEST_PAGE_CAPTURE, tabData, "background").catch(
+      () => {},
+    );
     window.close();
   };
 
@@ -100,7 +106,7 @@ function HomePage() {
             </div>
             <div className="flex justify-end flex-1">
               <Button
-                onClick={openSidePanel}
+                onClick={() => openSidePanel(true)}
                 variant="ghost"
                 size="icon"
                 title="Open Side Panel"
@@ -165,7 +171,7 @@ function HomePage() {
             placeholder="Type your desired AI prompt here."
             // Adjust default height to either 6 rows (min-h-40.5) or 5 rows (min-h-34.5)
             className="field-sizing-content resize-y /*min-h-40.5*/ min-h-34.5 /*max-h-300*/ ml-px w-[calc(100%-2px)] scrollbar-thin
-            transition-colors duration-150 focus-visible:ring-0"
+            transition-colors duration-150 focus-visible:ring-0 /*not-dark:border-gray-300*/ /*shadow-none*/"
             maxLength={1000}
             value={promptText}
             onChange={(e) => {
@@ -186,7 +192,7 @@ function HomePage() {
         </section>
       </main>
       <footer>
-        <section className="fixed bottom-0 left-0 h-15 w-full p-3 z-10 lc-bottom-bar-styled-bg">
+        <section className="fixed bottom-0 left-0 h-15 w-full p-3 pt-2.75 z-10 lc-bottom-bar-styled-bg">
           {/*MAYBE: Remove the animation disabling motion-reduce, because it is a very noticeable and maybe not optimal for accessibility*/}
           <div className="flex gap-0 items-center justify-between w-full">
             <div
@@ -201,6 +207,7 @@ function HomePage() {
                 title="Capture page"
                 className="w-full hover:bg-secondary hover:brightness-90 overflow-hidden /*active:brightness-80*/"
                 disabled={promptText.trimEnd() !== ""}
+                onClick={capturePage}
               >
                 Capture
               </Button>

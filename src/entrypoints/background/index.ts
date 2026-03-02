@@ -1,10 +1,11 @@
-import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/types/context-menu-items";
-import { PageData } from "@/types/page-selection-data.types";
+import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/constants/context-menu-items";
+import { PageData } from "@/types/page-data.types";
 import {
   setupContextMenuActions,
   setupContextMenuStateSync,
 } from "./context-menu";
 import { setupMessagingHandlers } from "./messaging-handler";
+import { setupPortHandlers } from "./port-handler";
 
 export default defineBackground(() => {
   //console.log("Hello background!", { id: browser.runtime.id });
@@ -31,10 +32,23 @@ export default defineBackground(() => {
     }
   });
 
+  if (import.meta.env.CHROME) {
+    // Set access level on chrome to allow getting storage items from the content-script context.
+    browser.storage.session.setAccessLevel({
+      accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS",
+    });
+  }
+
   // Context menu action/click handler
   setupContextMenuActions();
   setupContextMenuStateSync();
 
   // Messaging handlers
   setupMessagingHandlers();
+
+  // Port handlers
+  //* NOTE: Feature parity discrepancy: Firefox does not support stuff related to the unsupported capture suggestions feature.
+  if (!import.meta.env.FIREFOX) {
+    setupPortHandlers();
+  }
 });

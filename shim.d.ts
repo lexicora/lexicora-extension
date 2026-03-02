@@ -1,7 +1,8 @@
 import { ProtocolWithReturn } from "webext-bridge";
-import { MSG } from "@/types/messaging";
-import type { PageData } from "@/types/page-selection-data.types";
+import { MSG } from "@/constants/messaging";
+import type { PageData } from "@/types/page-data.types";
 import { Article } from "@/types/mozilla-article.types";
+import type { TabData } from "@/types/tab-data.types";
 
 // TODO IMPORTANT: Enforce type safety for messaging system
 
@@ -20,6 +21,7 @@ declare module "webext-bridge" {
     // From anywhere to content-script
     [MSG.GET_PAGE_SELECTION_ARTICLE]: ProtocolWithReturn<null, Article | null>;
     [MSG.GET_PAGE_SELECTION_DATA]: ProtocolWithReturn<null, PageData | null>;
+    [MSG.GET_PAGE_DATA]: ProtocolWithReturn<null, PageData | null>;
 
     // From side-panel to background
     [MSG.REQUEST_PENDING_DATA]: ProtocolWithReturn<null, PageData | null>;
@@ -27,7 +29,8 @@ declare module "webext-bridge" {
 
     // From anywhere to background
     [MSG.OPEN_SIDEPANEL]: null;
-    [MSG.CHECK_SIDEPANEL_OPEN]: ProtocolWithReturn<null, boolean>;
+    [MSG.REQUEST_PAGE_CAPTURE]: TabData;
+    //[MSG.CHECK_SIDEPANEL_OPEN]: ProtocolWithReturn<null, boolean>;
 
     // to specify the return type of the message,
     // use the `ProtocolWithReturn` type wrapper

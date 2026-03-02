@@ -113,6 +113,7 @@ function SettingsPage() {
                 itemTitle="Capture Suggestions"
                 roundingClass="rounded-t-none"
               />
+              //Add reminder feature, that reminds the user if he already has an entry with the same URL of the current page.
             )}
           </section>
           <section id="personalization-settings">
