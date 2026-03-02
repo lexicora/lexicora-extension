@@ -35,6 +35,9 @@ function EntryCreatePage() {
   const lastContentRef = useRef<string | null>(null);
   const capturedData = useCaptureData();
 
+  const isAutoCaptureNav = location.state?.isCapturePending === true;
+  const showSkeleton = isAutoCaptureNav && !capturedData;
+
   // const updateEditorContent = useCallback(
   //   (data: PageData, hasContentChanged: boolean) => {
   //     // 1. ALWAYS update lightweight metadata (language, title, url, etc.)
@@ -143,37 +146,50 @@ function EntryCreatePage() {
                 }}
                 className="text-sm ml-2 mb-0.5"
               >
-                Captured Content
+                {
+                  isAutoCaptureNav
+                    ? "Captured Content"
+                    : "Entry Content" /*MAYBE: Change to just content later */
+                }
               </Label>
+              <div className="relative /*overflow-x-hidden*/ /*min-h-[55vh]*/ mt-1">
+                {/* --- SKELETON LOADER OVERLAY --- */}
+                {showSkeleton && (
+                  <div className="absolute inset-0 z-10 p-2 space-y-4 animate-pulse">
+                    <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-5/6"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-4/5"></div>
+                  </div>
+                )}
+                {/* --- ACTUAL EDITOR --- */}
+                {/* It is ALWAYS mounted to prevent the Floating UI crash. We just hide it visually until ready. */}
+                <div
+                  className={cn(
+                    "will-change-opacity transition-opacity duration-150", //MAYBE: Reduce duration a bit more
+                    showSkeleton
+                      ? "opacity-0 pointer-events-none"
+                      : "opacity-100",
+                  )}
+                >
+                  <BlockNoteView
+                    editor={editor}
+                    lang={language}
+                    id="lc-blocknote-view-new-entry"
+                  />
+                </div>
+              </div>
               {/*TODO: maybe add max width of maybe around 1000px or so */}
-              <BlockNoteView
+              {/*<BlockNoteView
                 editor={editor}
                 className=""
                 lang={language}
                 id="lc-blocknote-view-new-entry"
                 //ref={editorContainerRef.current}
                 //editable={false}
-              />
-              {/* Conditional Rendering for Loading State */}
-              {/*{!capturedData ? (
-                // --- SKELETON LOADER ---
-                <div className="p-4 space-y-4 animate-pulse">
-                  <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-3/4"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-5/6"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-4/5"></div>
-                </div>
-              ) : (
-                // --- ACTUAL EDITOR ---
-                <BlockNoteView
-                  editor={editor}
-                  className="animate-in fade-in duration-300" // Optional: gives a nice soft fade when it appears
-                  lang={language}
-                  id="lc-blocknote-view-new-entry"
-                />
-              )}*/}
+              />*/}
             </div>
           </section>
         </main>
