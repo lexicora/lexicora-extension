@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeftIcon, House } from "lucide-react";
 import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";
+import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
 import { useEffect, useState } from "react";
 import { PageData } from "@/types/page-data.types";
 import { MSG } from "@/constants/messaging";
@@ -32,42 +33,60 @@ function EntryCreatePage() {
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
   const aiPromptTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const lastContentRef = useRef<string | null>(null);
+  const capturedData = useCaptureData();
 
-  //const pushEnabledRef = useRef(false); //* NOTE: This should not be necessary here
+  const isAutoCaptureNav = location.state?.isCapturePending === true;
+  const showSkeleton = isAutoCaptureNav && !capturedData;
 
-  const updateEditorContent = (data: PageData) => {
-    if (data.content) {
-      setLanguage(data.lang || navigator.language || "en");
-      const blocks = editor.tryParseHTMLToBlocks(data.content);
+  useEffect(() => {
+    // Whenever the hook gives us genuinely new data, we update the editor.
+    if (capturedData?.content) {
+      setLanguage(capturedData.lang || navigator.language || "en");
+      const blocks = editor.tryParseHTMLToBlocks(capturedData.content);
       editor.replaceBlocks(editor.document, blocks);
     }
-  };
+  }, [capturedData, editor]); // MAYBE: Change to empty dependency array.
 
+  // Clear the router state once the data has successfully arrived
   useEffect(() => {
-    const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
-      if (!msg.data) return null;
+    if (capturedData && location.state?.isCapturePending) {
+      const transitionDuration = 200;
+      const cleanupTimer = setTimeout(() => {
+        navigate(location.pathname, {
+          replace: true,
+          state: {},
+        });
+      }, transitionDuration);
+      return () => clearTimeout(cleanupTimer);
+    }
+  }, [capturedData, location.state, navigate, location.pathname]);
 
-      updateEditorContent(msg.data);
-      return true; //* NOTE: To signal to clear the pending capture data in the background or other scripts.
-    });
+  // useEffect(() => {
+  //   const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
+  //     if (!msg.data) return null;
 
-    return () => unsubscribe();
-  }, [location]);
+  //     updateEditorContent(msg.data);
+  //     return true; //* NOTE: To signal to clear the pending capture data in the background or other scripts.
+  //   });
 
-  useEffect(() => {
-    const pullData = async () => {
-      const data = await sendMessage(
-        MSG.REQUEST_PENDING_DATA,
-        null,
-        "background",
-      );
-      if (data) {
-        updateEditorContent(data);
-      }
-    };
+  //   return () => unsubscribe();
+  // }, [location]);
 
-    pullData();
-  }, []);
+  // useEffect(() => {
+  //   const pullData = async () => {
+  //     const data = await sendMessage(
+  //       MSG.REQUEST_PENDING_DATA,
+  //       null,
+  //       "background",
+  //     );
+  //     if (data) {
+  //       updateEditorContent(data);
+  //     }
+  //   };
+
+  //   pullData();
+  // }, []);
 
   useEffect(() => {
     const footerElement = footerRef.current;
@@ -103,17 +122,46 @@ function EntryCreatePage() {
                 }}
                 className="text-sm ml-2 mb-0.5"
               >
-                Captured Content
+                Content
               </Label>
+              <div className="relative /*overflow-x-hidden*/ /*min-h-[55vh]*/ mt-1">
+                {/* --- SKELETON LOADER OVERLAY (update to shadcn-ui component later)--- */}
+                {showSkeleton && (
+                  <div className="absolute inset-0 z-10 p-2 space-y-4 animate-pulse">
+                    <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-5/6"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-4/5"></div>
+                  </div>
+                )}
+                {/* --- ACTUAL EDITOR --- */}
+                {/* It is ALWAYS mounted to prevent the Floating UI crash. We just hide it visually until ready. */}
+                <div
+                  className={cn(
+                    "will-change-opacity transition-opacity duration-150", //MAYBE: Reduce duration a bit more
+                    showSkeleton
+                      ? "opacity-0 pointer-events-none"
+                      : "opacity-100",
+                  )}
+                >
+                  <BlockNoteView
+                    editor={editor}
+                    lang={language}
+                    id="lc-blocknote-view-new-entry"
+                  />
+                </div>
+              </div>
               {/*TODO: maybe add max width of maybe around 1000px or so */}
-              <BlockNoteView
+              {/*<BlockNoteView
                 editor={editor}
                 className=""
                 lang={language}
                 id="lc-blocknote-view-new-entry"
                 //ref={editorContainerRef.current}
                 //editable={false}
-              />
+              />*/}
             </div>
           </section>
         </main>
