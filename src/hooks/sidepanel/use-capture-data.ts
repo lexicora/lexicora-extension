@@ -15,6 +15,7 @@ export function useCaptureData() {
     const handleIncomingData = (data: PageData /*| null*/) => {
       if (!data.content) return; // check might be unnecessary, since below might take care of it.
 
+      // MAYBE: On long pages, trim a part so only a fraction (still sufficient), gets compared for deduplication.
       if (data.content !== lastProcessedContent.current) {
         lastProcessedContent.current = data.content;
         setCapturedData(data);

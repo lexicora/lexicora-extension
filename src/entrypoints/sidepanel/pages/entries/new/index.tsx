@@ -20,13 +20,15 @@ function EntryCreatePage() {
   const location = useLocation(); // This is used in order to trigger useEffect on location change
   const navigate = useNavigate();
   const editor = useCreateBlockNote(defaultBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
+  const capturedData = useCaptureData();
   const { isAtBottom } = useScrollPos();
   const [language, setLanguage] = useState(navigator.language || "en");
   const [promptText, setPromptText] = useState("");
+  const [contentLabel, setContentLabel] = useState("Content");
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
   const aiPromptTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const capturedData = useCaptureData();
+  const runOnceRef = useRef(false); // MAYBE: Remove later
 
   const isAutoCaptureNav = location.state?.isCapturePending === true;
   const showSkeleton = isAutoCaptureNav && !capturedData;
@@ -37,8 +39,20 @@ function EntryCreatePage() {
       setLanguage(capturedData.lang || navigator.language || "en");
       const blocks = editor.tryParseHTMLToBlocks(capturedData.content);
       editor.replaceBlocks(editor.document, blocks);
+      //editor.insertBlocks()
     }
   }, [capturedData, editor]); // MAYBE: Change to empty dependency array.
+
+  useEffect(() => {
+    if (
+      !runOnceRef.current &&
+      capturedData &&
+      location.state?.isCapturePending
+    ) {
+      setContentLabel("Captured Content");
+      runOnceRef.current = true;
+    }
+  }, [capturedData /*, location.state*/]);
 
   // Clear the router state once the data has successfully arrived
   useEffect(() => {
@@ -88,9 +102,10 @@ function EntryCreatePage() {
                 }}
                 className="text-sm ml-2 mb-0.5"
               >
-                Content
+                {contentLabel}
               </Label>
-              <div className="relative /*overflow-x-hidden*/ /*min-h-[55vh]*/ mt-1">
+              <div className="relative">
+                {/*Unused css classes for div className="relative overflow-x-hidden min-h-[55vh] mt-1" */}
                 {/* --- SKELETON LOADER OVERLAY (update to shadcn-ui component later)--- */}
                 {showSkeleton && (
                   <div className="absolute inset-0 z-10 p-2 space-y-4 animate-pulse">
@@ -106,7 +121,7 @@ function EntryCreatePage() {
                 {/* It is ALWAYS mounted to prevent the Floating UI crash. We just hide it visually until ready. */}
                 <div
                   className={cn(
-                    "will-change-opacity transition-opacity duration-150", //MAYBE: Reduce duration a bit more
+                    "transition-opacity duration-150", //MAYBE: Reduce duration a bit more, dont use will-change-opacity, because editor ui elements are covered by top and bottom ui.
                     showSkeleton
                       ? "opacity-0 pointer-events-none"
                       : "opacity-100",

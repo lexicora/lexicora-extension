@@ -30,7 +30,10 @@ function HomePage() {
     sendMessage(MSG.REQUEST_PAGE_CAPTURE, tabData, "background").catch(
       () => {},
     );
-    navigate("/entries/new", { viewTransition: true });
+    navigate("/entries/new", {
+      viewTransition: true,
+      state: { isCapturePending: true },
+    });
   };
 
   return (

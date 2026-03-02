@@ -195,11 +195,11 @@ export function parseDocument(doc: Document): ParseResult {
   // STEP 2: BULLETPROOF IMAGE NORMALIZATION
   normalizeMediaAndLinks(doc);
 
-  // STEP 3: AGGRESSIVE JUNK PRUNING
+  // STEP 3: AGGRESSIVE JUNK PRUNING / TODO MAYBE: Make configurable for other pages, some of them might have useful stuff in the header/footer/aside for example.
   const junkSelectors = [
     "nav",
     "footer",
-    "header",
+    "header", // MAYBE: leave this one in.
     "aside",
     "script",
     "style",
