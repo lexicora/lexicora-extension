@@ -42,8 +42,8 @@
     "radix-ui": "^1.4.3",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-hook-form": "^7.71.1",
-    "react-router-dom": "^7.13.0",
+    "react-hook-form": "^7.71.2",
+    "react-router-dom": "^7.13.1",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18",
     "turndown": "^7.2.2",
@@ -52,7 +52,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@types/react": "^19.2.13",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/react-router-dom": "^5.3.3",
     "@types/turndown": "^5.0.6",
