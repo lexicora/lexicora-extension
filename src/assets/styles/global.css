@@ -15,6 +15,7 @@
 @custom-variant active-view-transition (&:is(html:active-view-transition *));
 
 /* Data attribute variants for shadcn-ui components */
+@custom-variant data-active (&:where([data-state="active"]));
 @custom-variant data-open (&:where([data-state="open"]));
 @custom-variant data-closed (&:where([data-state="closed"]));
 @custom-variant data-disabled (&:where([data-disabled], [disabled]));
