@@ -3,11 +3,11 @@ import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useScrollPos } from "@/providers/scroll-observer";
-import { startTransition } from "react";
 import { cn } from "@/lib/utils";
 
 interface PageHeaderProps {
   title: string;
+  children?: React.ReactNode; // Added children for custom UI
   hoverOnScroll?: boolean;
   headerTextAlignment?: "center" | "left";
   goBackButton?: boolean;
@@ -17,6 +17,7 @@ interface PageHeaderProps {
 
 export function PageHeader({
   title,
+  children,
   hoverOnScroll = true,
   headerTextAlignment = "center",
   goBackButton = false,
@@ -28,17 +29,14 @@ export function PageHeader({
 
   const handleGoBack = () => {
     if (heavyTeardown) {
-      // Use the trick ONLY when we know the DOM is massive
       setTimeout(() => navigate(-1), 0);
     } else {
-      // Normal, synchronous, React-friendly navigation
       navigate(-1);
     }
   };
-  //const handleGoBack = () => navigate(-1);
+
   const isLeftAligned = headerTextAlignment === "left";
 
-  // Shared animation classes for hover elements
   const hoverAnimClasses = {
     hidden: "opacity-0 translate-y-3 blur-xs",
     visible: "opacity-100 translate-y-0 blur-0",
@@ -71,6 +69,8 @@ export function PageHeader({
           >
             {title}
           </h1>
+          {/* Children rendered at the end of the flex container */}
+          {children}
         </header>
       );
     }
@@ -78,12 +78,14 @@ export function PageHeader({
     return (
       <header
         className={cn(
-          "mb-4 mt-1",
+          "mb-4 mt-1", // (had:  flex items-center justify-between) Assuming you might want flex here if you pass children, but relying on your own classes
           classNameHeaderElement,
           isLeftAligned ? "text-left" : "text-center",
         )}
       >
         <h1 className="text-2xl font-semibold">{title}</h1>
+        {/* Children rendered alongside the title */}
+        {children}
       </header>
     );
   }
@@ -104,7 +106,6 @@ export function PageHeader({
         )}
       >
         {goBackButton ? (
-          // Hover Content: WITH Back Button
           <div className="flex mt-1.25 w-full">
             <Button
               variant="ghost"
@@ -120,8 +121,9 @@ export function PageHeader({
               <ArrowLeftIcon className="size-4" />
             </Button>
             <span
+              // was 25px, now 1.5625em
               className={cn(
-                "mr-[calc(var(--lc-scrollbar-offset)+24px)] mt-0.5 w-full text-base font-semibold transition-transform-opacity-blur duration-300 active-view-transition:transition-none text-center",
+                "mr-[calc(var(--lc-scrollbar-offset)+1.5625em)] mt-0.5 w-full text-base font-semibold transition-transform-opacity-blur duration-300 active-view-transition:transition-none text-center",
                 isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
               )}
             >
@@ -129,7 +131,6 @@ export function PageHeader({
             </span>
           </div>
         ) : (
-          // Hover Content: SIMPLE (No Back Button)
           <span
             className={cn(
               "ml-2.5 mr-(--lc-scrollbar-offset) mt-1.75 text-base font-semibold transition-transform-opacity-blur duration-300 active-view-transition:transition-none",
@@ -140,6 +141,7 @@ export function PageHeader({
           </span>
         )}
       </div>
+
       {goBackButton ? (
         // Large Title: WITH Back Button
         <div
@@ -167,7 +169,7 @@ export function PageHeader({
           </h1>
         </div>
       ) : (
-        // Large Title: SIMPLE
+        // Large Title: SIMPLE, had css classes:  flex items-center justify-between
         <div className="mt-1">
           <h1
             className={cn(
@@ -180,6 +182,8 @@ export function PageHeader({
           </h1>
         </div>
       )}
+      {/* Children rendered next to the simple title */}
+      {children}
     </header>
   );
 }
