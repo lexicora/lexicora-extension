@@ -19,6 +19,7 @@ function HomePage() {
   const navigate = useNavigate();
   const { isSupported, activeTab } = useTabSupport();
   const [promptText, setPromptText] = useState("");
+  const aiPromptTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   const capturePage = async () => {
     if (!isSupported) return;
@@ -111,6 +112,7 @@ function HomePage() {
           <section className="mt-5">
             <Textarea
               id="ai-prompt-textarea"
+              ref={aiPromptTextareaRef}
               placeholder="Type your desired AI prompt here."
               // Adjust default height to full height minus top and bottom bars and content above
               className="field-sizing-content resize-y min-h-[max(138px,calc(100vh-478px))] /*min-h-34.5*/ /*max-h-300*/ w-[calc(100%-2px)] max-w-313.5 mx-auto scrollbar-thin
@@ -128,6 +130,10 @@ function HomePage() {
                 // Makes sure shadow disappears
               }} // 4. Update state on every keystroke
               onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  e.preventDefault();
+                  aiPromptTextareaRef.current?.blur();
+                }
                 // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
                 if (e.ctrlKey && e.key === "Enter") {
                   // Submit AI prompt logic here

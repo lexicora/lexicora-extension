@@ -546,4 +546,6 @@ html:has(
     border-top: 1px solid #75757c;
 }
 
+/*TODO: Maybe change colors of links in editor.*/
+
 /*TODO: overhaul and make all selectors more consistent, to avoid inconsistent behavior*/
