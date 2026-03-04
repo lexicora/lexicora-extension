@@ -42,6 +42,7 @@ function EntriesPage() {
                 className="mx-2 my-4 flex items-center justify-center"
               >
                 <Toggle
+                  title="Favorites"
                   variant="outline"
                   className="shrink-0 transition-colors min-w-7.5 size-7.5"
                 >
