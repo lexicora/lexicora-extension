@@ -106,7 +106,7 @@ export function PageHeader({
         )}
       >
         {goBackButton ? (
-          <div className="flex mt-1.25 w-full">
+          <div className="flex mt-1.25 w-full max-w-317.25">
             <Button
               variant="ghost"
               size="icon"
@@ -123,7 +123,7 @@ export function PageHeader({
             <span
               // was 25px, now 1.5625em
               className={cn(
-                "mr-[calc(var(--lc-scrollbar-offset)+1.5625em)] mt-0.5 w-full text-base font-semibold transition-transform-opacity-blur duration-300 active-view-transition:transition-none text-center",
+                "mr-[calc(var(--lc-scrollbar-offset)+1.5625em)] mt-0.5 w-full max-w-301.75 text-base font-semibold transition-transform-opacity-blur duration-300 active-view-transition:transition-none text-center",
                 isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
               )}
             >
