@@ -23,6 +23,7 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
   let ui: ShadowRootContentScriptUi<void> | null = null;
   let timer: ReturnType<typeof setTimeout>;
   let autoHideTimeout: ReturnType<typeof setTimeout>;
+  let timerGeneration = 0;
 
   let onDragMove: ((e: MouseEvent) => void) | null = null;
   let onDragEnd: (() => void) | null = null;
@@ -407,18 +408,23 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
   // Timer logic
   const startTimer = async (checkSidePanelState = true) => {
     clearTimeout(timer);
+    const currentGen = ++timerGeneration; // Increment and lock current generation
 
     if (isUnsupportedUrl()) return;
 
     const isEnabled = await captureSuggestionStorage.getValue();
+    if (currentGen !== timerGeneration) return; // Abort if a newer startTimer call occurred during await
     if (!isEnabled) return;
 
     if (checkSidePanelState) {
       const isOpen = await sidePanelStateStorage.getValue();
+      if (currentGen !== timerGeneration) return; // Abort if a newer startTimer call occurred
       if (isOpen) return; // Do not show if side panel is open
     }
 
     const multiplier = await captureSuggestionDelayMultiplierStorage.getValue();
+    if (currentGen !== timerGeneration) return; // Abort if a newer startTimer call occurred
+
     const dynamicDelay = import.meta.env.DEV
       ? multiplier * 1000
       : multiplier * BASE_DELAY_MS;
@@ -458,6 +464,9 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
 
   // Helper to cleanly reset everything on navigation
   const handleNavigation = () => {
+    clearTimeout(timer);
+    timerGeneration++; // Invalidate any pending async timer generations
+
     if (ui) {
       ui.remove();
       ui = null;
