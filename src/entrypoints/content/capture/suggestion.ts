@@ -240,7 +240,7 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
         };
 
         const capture = () => {
-          sendMessage(MSG.OPEN_SIDEPANEL, null, "background");
+          browser.runtime.sendMessage({ type: MSG.OPEN_SIDEPANEL });
           close();
         };
 

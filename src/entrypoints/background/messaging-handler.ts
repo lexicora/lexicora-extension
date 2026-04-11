@@ -32,13 +32,16 @@ export function setupMessagingHandlers() {
     return path;
   });
 
-  onMessage(MSG.OPEN_SIDEPANEL, ({ sender }) => {
-    if (import.meta.env.FIREFOX) {
-      // NOTE (feature parity discrepancy): Not supported on Firefox due to quicker loss of the direct user context action.
-      // @ts-ignore: Firefox specific API
-      //browser.sidebarAction.open();
-    } else {
-      browser.sidePanel.open({ tabId: sender.tabId });
+  // Handle native browser messages (safely bypasses bfcache port limits)
+  browser.runtime.onMessage.addListener((message, sender) => {
+    if (message.type === MSG.OPEN_SIDEPANEL) {
+      if (import.meta.env.FIREFOX) {
+        // NOTE (feature parity discrepancy): Not supported on Firefox due to quicker loss of the direct user context action.
+        // @ts-ignore: Firefox specific API
+        //browser.sidebarAction.open();
+      } else if (sender.tab?.id) {
+        browser.sidePanel.open({ tabId: sender.tab.id });
+      }
     }
   });
 
