@@ -8,11 +8,21 @@ export function setupPortHandlers() {
     if (port.name === "lexicora-sidepanel") {
       // Panel opened
       sidePanelStateStorage.setValue(true);
+    }
+
+    port.onDisconnect.addListener(() => {
+      // Read the error to suppress the "Unchecked runtime.lastError" warning
+      const _error = browser.runtime.lastError;
+
+      // Optional: Log it for debugging, but just evaluating it suppresses the unchecked warning
+      // if (error && error.message?.includes("back/forward cache")) {
+      //   // Ignore normally
+      // }
 
       // Panel closed
-      port.onDisconnect.addListener(() => {
+      if (port.name === "lexicora-sidepanel") {
         sidePanelStateStorage.setValue(false);
-      });
-    }
+      }
+    });
   });
 }
