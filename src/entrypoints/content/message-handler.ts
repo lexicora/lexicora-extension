@@ -8,6 +8,15 @@ import { getPageData } from "./capture/page";
  */
 export function setupMessagingHandlers() {
   //* Background script requests
-  onMessage(MSG.GET_PAGE_SELECTION_DATA, getSelectionPageData);
-  onMessage(MSG.GET_PAGE_DATA, getPageData);
+  browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    switch (message.type) {
+      case MSG.GET_PAGE_SELECTION_DATA:
+        Promise.resolve(getSelectionPageData()).then(sendResponse);
+        return true; // Return true to indicate an asynchronous response
+        
+      case MSG.GET_PAGE_DATA:
+        Promise.resolve(getPageData()).then(sendResponse);
+        return true; // Return true to indicate an asynchronous response
+    }
+  });
 }

@@ -32,12 +32,8 @@ export async function handleCaptureRequest(
     }
   }
 
-  // Request page selection data from content script
-  const pageSelectionData = await sendMessage(
-    MSG.GET_PAGE_DATA,
-    null,
-    "content-script@" + tabData.tabId,
-  );
+  // Request page selection data from content script (maybe query tab, if the tab.id is null, realistically it should never be null here)
+  const pageSelectionData = await browser.tabs.sendMessage(tabData.tabId ?? 0, { type: MSG.GET_PAGE_DATA }).catch(() => null);
 
   if (!pageSelectionData) return;
 

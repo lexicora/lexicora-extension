@@ -466,7 +466,6 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
   };
 
   // 3. Handle Modern Back/Forward (Chromium Navigation API)
-  // @ts-expect-error: The Navigation API is Chromium-only
   const nav = window.navigation;
   if (nav) {
     ctx.addEventListener(nav, "navigate", (e: any) => {
