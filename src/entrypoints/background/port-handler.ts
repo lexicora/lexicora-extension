@@ -11,8 +11,9 @@ export function setupPortHandlers() {
     }
 
     port.onDisconnect.addListener(() => {
+      // Use this below if needed to suppress the "Unchecked runtime.lastError" message in the console.
       // Read the error to suppress the "Unchecked runtime.lastError" warning
-      const _error = browser.runtime.lastError;
+      //const _error = browser.runtime.lastError;
 
       // Optional: Log it for debugging, but just evaluating it suppresses the unchecked warning
       // if (error && error.message?.includes("back/forward cache")) {
