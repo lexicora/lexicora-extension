@@ -23,12 +23,14 @@ export function RouterListener() {
 
       // If already on path, replace history so that navigate(-1) works as expected
       const isAlreadyOnPath = location.pathname === msg.data.path;
+      const isCapturePending = pathToSetIsCapturePending.includes(msg.data.path);
       navigate(msg.data.path, {
         replace: isAlreadyOnPath, // Replace history if already on the target path to prevent navigation loops and ensure back button works as expected
         flushSync: isAlreadyOnPath, // Ensure the navigation happens immediately to trigger specific logic in the destination component if needed
         viewTransition: true,
+        preventScrollReset: isAlreadyOnPath, // Prevent scroll reset if already on the target path
         state: {
-          isCapturePending: pathToSetIsCapturePending.includes(msg.data.path),
+          isCapturePending: isCapturePending,
         },
       });
       return true; //* NOTE: To signal to clear the location of pending navigation in the background or other scripts.

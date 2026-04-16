@@ -15,11 +15,9 @@ export function useCaptureData() {
     const handleIncomingData = (data: PageData) => {
       if (data.content == null) return;
 
-      // TODO MAYBE: On long pages, trim a part so only a fraction (still sufficient), gets compared for deduplication.
-      if (data.content !== lastProcessedContent.current) {
-        lastProcessedContent.current = data.content;
-        setCapturedData(data);
-      }
+      // Disable strict content deduplication so repeat triggers 
+      // of identical payloads (like full page captures) still go through.
+      setCapturedData(data);
     };
 
     // Push Listener: Catches data if the Side Panel is already open

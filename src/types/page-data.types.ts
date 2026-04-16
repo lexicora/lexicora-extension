@@ -28,6 +28,9 @@ export type PageData = {
     publishedTime: string | null;
     dir?: string | null; // Text direction (e.g., "ltr", "rtl", "auto")
   };
+  misc: {
+    replaceEditorContent: boolean; // Whether to replace the editor content with the parsed content
+  };
   // Optional fields populated by mozilla readability parsing, that are not already included in the above fields
   // mozArticle?: {
   //   textContent?: NonNullableArticle["content"];

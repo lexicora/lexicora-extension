@@ -31,6 +31,10 @@ export async function getPageData(): Promise<PageData | null> {
       publishedTime: parsedPage.publishedTime,
       dir: documentClone.documentElement.dir || null,
     },
+    misc: {
+      // TODO: Implement a setting, where the user can decide whether to replace the editor content with the parsed content, or to append it.
+      replaceEditorContent: true, // true, because page is being captured, though maybe change this later to false, to be consistent with capturing selections
+    },
     //TODO: Add more fields if needed
   };
 }

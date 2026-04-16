@@ -37,6 +37,11 @@ export async function getSelectionPageData(): Promise<PageData | null> {
       publishedTime: parsedSnippet.publishedTime,
       dir: document.documentElement.dir || null,
     },
+    misc: {
+      // TODO: Implement a setting, where the user can decide whether to replace the editor content with the parsed content, or to append it.
+      // For selections, it might make more sense to append the content to the editor, rather than replacing it, since users might want to capture multiple selections from the same page.
+      replaceEditorContent: false,
+    },
     //TODO: Add more fields if needed
   };
 }

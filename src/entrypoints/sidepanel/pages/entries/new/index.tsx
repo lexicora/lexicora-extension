@@ -33,17 +33,24 @@ function EntryCreatePage() {
   //const showSkeleton = isAutoCaptureNav && (!capturedData || !isEditorReady); // other approach with requestAnimation frame contrary to useLayoutEffect
 
   useLayoutEffect(() => {
-    // Whenever the hook gives us genuinely new data, we update the editor.
     if (capturedData?.content) {
       setLanguage(capturedData.lang || navigator.language || "en");
       const blocks = editor.tryParseHTMLToBlocks(capturedData.content);
-      editor.replaceBlocks(editor.document, blocks);
-      //editor.insertBlocks()
+      if (capturedData.misc.replaceEditorContent) {
+        editor.replaceBlocks(editor.document, blocks);
+        return;
+      }
+      const currentBlocks = editor.document;
+      const isEmpty = currentBlocks.length === 1 && 
+                      currentBlocks[0].type === "paragraph" && 
+                      (!currentBlocks[0].content || currentBlocks[0].content.length === 0) &&
+                      (!currentBlocks[0].children || currentBlocks[0].children.length === 0);
 
-      // other approach with requestAnimation frame contrary to useLayoutEffect
-      // requestAnimationFrame(() => {
-      //   setIsEditorReady(true);
-      // });
+      if (isEmpty) {
+        editor.replaceBlocks(currentBlocks, blocks);
+      } else {
+        editor.insertBlocks(blocks, currentBlocks[currentBlocks.length - 1].id, "after"); // currentBlocks[0].id, would work too.
+      }
     }
   }, [capturedData, editor]);
 
@@ -54,9 +61,11 @@ function EntryCreatePage() {
       const cleanupTimer = setTimeout(() => {
         navigate(location.pathname, {
           replace: true,
+          preventScrollReset: !capturedData.misc.replaceEditorContent,
           state: {},
         });
       }, transitionDuration);
+      if (capturedData.misc.replaceEditorContent) window.scrollTo({ top: 0 });
       return () => clearTimeout(cleanupTimer);
     }
   }, [capturedData, location.state, navigate, location.pathname]);
