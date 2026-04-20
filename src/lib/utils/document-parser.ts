@@ -135,14 +135,12 @@ function normalizeMediaAndLinks(root: Document | Element) {
       block.getAttribute("data-lang") ||
       "";
 
-    // 1. Check for language class on the block itself
     if (!detectedLang) {
       const className = block.getAttribute("class") || "";
       const match = className.match(/(?:lang|language|highlight)-([a-z0-9]+)/i);
       if (match) detectedLang = match[1];
     }
 
-    // 2. If it is a PRE block, look deeper for the language and fix the structure
     if (block.tagName === "PRE") {
       const childCode = block.querySelector("code");
 
@@ -182,7 +180,7 @@ function normalizeMediaAndLinks(root: Document | Element) {
       }
     }
 
-    // 3. Lock in the data attribute and clean up
+    // Lock in the data attribute and clean up
     if (detectedLang) {
       block.setAttribute("data-language", detectedLang.toLowerCase());
       // Optional: clean up the class attribute so DOMPurify doesn't have to deal with it
