@@ -1,5 +1,5 @@
 /* Base theme */
-.bn-container[data-color-scheme] {
+.bn-root[data-color-scheme] {
     --bn-font-family: var(--lc-font-sans);
     color-scheme: normal;
     scrollbar-color: light-dark(#5252526a, #ffffff66) transparent;
@@ -7,7 +7,7 @@
 }
 
 /* Changes for dark mode */
-.bn-container[data-color-scheme="dark"] {
+.bn-root[data-color-scheme="dark"] {
     color-scheme: dark;
 
     /*Highlighting colors*/
@@ -56,7 +56,7 @@
     --bn-colors-editor-text: #d2d2d2; /*originally: #cfcfcf*/
 }
 
-.bn-container[data-color-scheme="light"] {
+.bn-root[data-color-scheme="light"] {
     color-scheme: light;
     /*Editor text color*/
     /*TODO: Maybe add a subtile blue hue to it.*/
@@ -65,29 +65,29 @@
 
 /*Prevent scrolling, when certain stuff is present (also use layout shift mitigator technique to avoid disappearing scrollbar)*/
 html:has(
-    .bn-container[data-color-scheme]
+    .bn-root[data-color-scheme]
         .bn-side-menu
         [data-radix-popper-content-wrapper]
         .bn-menu-dropdown.bn-drag-handle-menu
 ),
 html:has(
-    .bn-container[data-color-scheme]
+    .bn-root[data-color-scheme]
         [data-floating-ui-focusable]
         [data-radix-popper-content-wrapper]
         .bn-table-handle-menu
 ),
 html:has(
-    .bn-container[data-color-scheme]
+    .bn-root[data-color-scheme]
         .bn-toolbar
         button:first-child[data-state="open"]
 ),
 html:has(
-    .bn-container[data-color-scheme]
+    .bn-root[data-color-scheme]
         .bn-toolbar
         button.bn-button:nth-child(10)[data-state="open"]
 ),
 html:has(
-    .bn-container[data-color-scheme]
+    .bn-root[data-color-scheme]
         .bn-toolbar
         button.bn-button:nth-child(13)[data-state="open"]
 ) {
@@ -98,14 +98,14 @@ html:has(
     /*scrollbar-width: 0 !important;*/
 }
 
-.bn-container[data-color-scheme]:has(.bn-table-handle-menu) .bn-side-menu {
+.bn-root[data-color-scheme]:has(.bn-table-handle-menu) .bn-side-menu {
     display: none;
 }
 
 /*TODO: Clean file up and make selectors more consistent*/
 
 /* Changes for light mode */
-/*.bn-container[data-color-scheme="light"] {
+/*.bn-root[data-color-scheme="light"] {
     --bn-colors-editor-background: #fefefe;
 }*/
 
@@ -115,12 +115,12 @@ html:has(
 }
 
 /*maybe unnecessary*/
-.bn-container[data-color-scheme] .bn-editor {
+.bn-root[data-color-scheme] .bn-editor {
     /*--bn-font-family: var(--lc-font-sans);*/
     font-family: var(--lc-font-sans);
 }
 
-.bn-container[data-color-scheme] .bn-editor {
+.bn-root[data-color-scheme] .bn-editor {
     padding-top: 8px;
     padding-bottom: 8px;
     padding-inline-start: 50px; /*TODO: Maybe increase to 52px later*/
@@ -130,12 +130,12 @@ html:has(
     border: 1px solid var(--color-border);
 }
 
-.bn-container[data-color-scheme] .bn-editor[contenteditable="false"] {
+.bn-root[data-color-scheme] .bn-editor[contenteditable="false"] {
     padding-inline: 8px !important;
     padding-top: 0px;
 }
 
-.bn-container[data-color-scheme].bn-shadcn
+.bn-root[data-color-scheme].bn-shadcn
     .bn-side-menu
     .bn-menu-dropdown.bn-drag-handle-menu {
     /*display: flex;
@@ -147,7 +147,7 @@ html:has(
 
 /*TODO: Maybe enable later*/
 /*without margin-left: 24px above, set to 48px in the translate() function below*/
-/*.bn-container[data-color-scheme]
+/*.bn-root[data-color-scheme]
     .bn-side-menu
     [data-radix-popper-content-wrapper]:has(
         .bn-menu-dropdown.bn-drag-handle-menu
@@ -155,14 +155,14 @@ html:has(
     transform: translate(24px, 0) !important;
 }*/
 
-.bn-container[data-color-scheme].bn-shadcn
+.bn-root[data-color-scheme].bn-shadcn
     .bn-side-menu
     .bn-menu-dropdown.bn-drag-handle-menu
     div[role="menuitem"]:first-child {
     color: #ff645e;
 }
 
-.bn-container[data-color-scheme="light"].bn-shadcn
+.bn-root[data-color-scheme="light"].bn-shadcn
     .bn-side-menu
     .bn-menu-dropdown.bn-drag-handle-menu
     div[role="menuitem"]:first-child:hover {
@@ -170,7 +170,7 @@ html:has(
     background-color: oklch(from var(--color-destructive) l c h / 0.15);
 }
 
-.bn-container[data-color-scheme="dark"].bn-shadcn
+.bn-root[data-color-scheme="dark"].bn-shadcn
     .bn-side-menu
     .bn-menu-dropdown.bn-drag-handle-menu
     div[role="menuitem"]:first-child:hover {
@@ -180,13 +180,13 @@ html:has(
 
 /*TODO: Maybe enable later*/
 /*Offset table menu, for better accessibility*/
-/*.bn-container[data-color-scheme]
+/*.bn-root[data-color-scheme]
     [data-floating-ui-focusable]
     [data-radix-popper-content-wrapper]:has(.bn-table-handle-menu) {
     transform: translate(24px, -5px) !important;
 }*/
 
-/*.bn-container[data-color-scheme]
+/*.bn-root[data-color-scheme]
     .bn-editor[contenteditable="true"]
     .bn-block-group {
     padding-left: 2px;
@@ -198,16 +198,16 @@ html:has(
     display: none !important;
 }*/
 
-/*.bn-container:has(.bn-editor[contenteditable="false"])
+/*.bn-root:has(.bn-editor[contenteditable="false"])
     [data-floating-ui-focusable] {
     display: none !important;
 }*/
 
-/*.bn-container[data-color-scheme] .bn-suggestion-menu {
+/*.bn-root[data-color-scheme] .bn-suggestion-menu {
     --bn-ui-base-z-index: 1000;
 }*/
 /*.bn-shadcn [data-floating-ui-focusable]*/
-/*.bn-container[data-color-scheme]
+/*.bn-root[data-color-scheme]
     .bn-toolbar
     [data-radix-popper-content-wrapper]
     [data-radix-menu-content].bn-color-picker-dropdown {
@@ -217,7 +217,7 @@ html:has(
     /*transform: translateY(-112px) !important;
 }*/
 
-/*.bn-container[data-color-scheme]
+/*.bn-root[data-color-scheme]
     .bn-toolbar
     [data-radix-popper-content-wrapper]:has(
         [data-radix-menu-content].bn-color-picker-dropdown
@@ -226,14 +226,14 @@ html:has(
 }*/
 
 /*TODO: Fix the toolbar Text formatter dropdown like this below.*/
-.bn-container[data-color-scheme]
+.bn-root[data-color-scheme]
     .bn-toolbar
     [data-radix-popper-content-wrapper]
     [data-radix-menu-content].bn-color-picker-dropdown {
     height: 50vh;
 }
 
-.bn-container[data-color-scheme]
+.bn-root[data-color-scheme]
     .bn-side-menu
     [data-radix-popper-content-wrapper]
     .bn-menu-dropdown.bn-drag-handle-menu
@@ -244,7 +244,7 @@ html:has(
 }
 
 /*Moved to a different and moe optimal selector above (see line: 85)*/
-/*.bn-container[data-color-scheme]
+/*.bn-root[data-color-scheme]
     .bn-side-menu
     [data-radix-popper-content-wrapper]
     [data-radix-menu-content]:not(.bn-color-picker-dropdown) {
@@ -252,23 +252,20 @@ html:has(
     /*margin-bottom: 100px;
 }*/
 
-.bn-container[data-color-scheme] .bn-toolbar {
+.bn-root[data-color-scheme] .bn-toolbar {
     /*Make space for scrollbar maybe change to calc(100vw - 10px) (or width of scrollbar)*/
     max-width: 97vw;
 }
 
-.bn-container[data-color-scheme]:has(.bn-editor[contenteditable="false"])
+.bn-root[data-color-scheme]:has(.bn-editor[contenteditable="false"])
     .bn-toolbar {
     display: none !important;
 }
 
 /*Should affect link and image related input fields*/
 /*bn-formatting-toolbar*/
-.bn-container[data-color-scheme]
-    .bn-toolbar
-    .bn-text-input
-    input[data-slot="input"],
-.bn-container[data-color-scheme]
+.bn-root[data-color-scheme] .bn-toolbar .bn-text-input input[data-slot="input"],
+.bn-root[data-color-scheme]
     .bn-toolbar.bn-formatting-toolbar
     input[data-slot="input"]:not([data-test="embed-input"]) {
     border-radius: calc(0.25em + 1px);
@@ -276,55 +273,53 @@ html:has(
 }
 
 /*Place lower for accessibility*/
-.bn-container[data-color-scheme] .bn-toolbar.bn-link-toolbar {
+.bn-root[data-color-scheme] .bn-toolbar.bn-link-toolbar {
     margin-bottom: -10px;
 }
 
-.bn-container[data-color-scheme] .bn-table-handle:is(button) {
+.bn-root[data-color-scheme] .bn-table-handle:is(button) {
     padding-inline: 0;
     width: 20px;
     background-color: light-dark(#ededed, #2e343d);
 }
 
-.bn-container[data-color-scheme] .bn-table-handle:is(button):hover {
+.bn-root[data-color-scheme] .bn-table-handle:is(button):hover {
     background-color: light-dark(#bfbfbf, #414b59);
 }
 
-.bn-container[data-color-scheme].bn-shadcn .bn-side-menu .bn-button:is(button) {
+.bn-root[data-color-scheme].bn-shadcn .bn-side-menu .bn-button:is(button) {
     height: 24px;
     width: 24px;
     border-radius: 6px;
 }
 
-/*Same as: .bn-container button.bn-button:hover */
-.bn-container[data-color-scheme].bn-shadcn
+/*Same as: .bn-root button.bn-button:hover */
+.bn-root[data-color-scheme].bn-shadcn
     .bn-side-menu
     .bn-button:is(button):hover {
     background-color: light-dark(#ededed, #2e343d);
 }
 
-.bn-container[data-color-scheme].bn-shadcn .bn-side-menu .bn-button:is(button) {
+.bn-root[data-color-scheme].bn-shadcn .bn-side-menu .bn-button:is(button) {
     &[aria-expanded="true"] {
         background-color: light-dark(#d4d4d4, #3a3f4a);
     }
 }
 
-.bn-container[data-color-scheme]
+.bn-root[data-color-scheme]
     .bn-side-menu
     .bn-button:is(button)[aria-label="Open block menu"] {
     cursor: grab;
 }
 
 /*This selector is targets the same element as the selector above*/
-.bn-container[data-color-scheme]
-    .bn-side-menu
-    .bn-button:is(button):nth-child(2) {
+.bn-root[data-color-scheme] .bn-side-menu .bn-button:is(button):nth-child(2) {
     width: 22px;
     position: relative;
 }
 
 /* Tooltip */
-/*.bn-container[data-color-scheme]
+/*.bn-root[data-color-scheme]
     .bn-side-menu
     .bn-button:is(button):nth-child(2)::after {
     content: "Click/Drag";
@@ -349,40 +344,40 @@ html:has(
 }*/
 
 /* Show on hover*/
-/*.bn-container[data-color-scheme]
+/*.bn-root[data-color-scheme]
     .bn-side-menu
     .bn-button:is(button):nth-child(2):hover::after {
     opacity: 1;
     transition-delay: 1s;
 }
 
-.bn-container[data-color-scheme]
+.bn-root[data-color-scheme]
     .bn-side-menu
     .bn-button:is(button):nth-child(2):hover:active::after,
-.bn-container[data-color-scheme]
+.bn-root[data-color-scheme]
     .bn-side-menu
     .bn-button:is(button):nth-child(2):active::after {
     opacity: 0;
     transition-delay: 0s;
 }*/
 
-.bn-container[data-color-scheme].bn-shadcn .bn-side-menu {
+.bn-root[data-color-scheme].bn-shadcn .bn-side-menu {
     margin-right: 2px; /*Incrased distance to block content slightly*/
 }
 
-/*.bn-container .bn-button:is(button)[aria-label="Open block menu"]:active {
+/*.bn-root .bn-button:is(button)[aria-label="Open block menu"]:active {
     cursor: grabbing;
 }
-.bn-container .bn-button:is(button)[aria-label="Open block menu"]:active:hover {
+.bn-root .bn-button:is(button)[aria-label="Open block menu"]:active:hover {
     cursor: grabbing;
 }*/
 
-.bn-container[data-color-scheme] .bn-panel {
+.bn-root[data-color-scheme] .bn-panel {
     border: 1px solid var(--color-border);
     max-width: 85vw;
 }
 
-.bn-container[data-color-scheme] .bn-extend-button-add-remove-rows {
+.bn-root[data-color-scheme] .bn-extend-button-add-remove-rows {
     max-height: 18px; /*width: ; of .bn-extend-button-add-remove-columns*/
     padding-inline: 0; /*Was 0px*/
     border: 1px solid var(--color-border);
@@ -391,7 +386,7 @@ html:has(
     /*max-width: 70vw;*/
 }
 
-.bn-container[data-color-scheme] .bn-extend-button-add-remove-columns {
+.bn-root[data-color-scheme] .bn-extend-button-add-remove-columns {
     max-width: 18px; /*Height of .bn-extend-button-add-remove-rows*/
     padding-inline: 0; /*Was 6px*/
     border: 1px solid var(--color-border);
@@ -399,22 +394,22 @@ html:has(
     /*TODO: Prevent too much overflow*/
 }
 
-.bn-container[data-color-scheme="dark"] .bn-extend-button-add-remove-rows,
-.bn-container[data-color-scheme="dark"] .bn-extend-button-add-remove-columns {
+.bn-root[data-color-scheme="dark"] .bn-extend-button-add-remove-rows,
+.bn-root[data-color-scheme="dark"] .bn-extend-button-add-remove-columns {
     background-color: #181c20;
     border-color: #32363b;
 }
 /*MAYBE: add hover states to above*/
 
-.bn-container[data-color-scheme] .bn-editor code::spelling-error,
-.bn-container[data-color-scheme] .bn-editor pre::spelling-error,
-.bn-container[data-color-scheme] .bn-editor code::grammar-error,
-.bn-container[data-color-scheme] .bn-editor pre::grammar-error {
+.bn-root[data-color-scheme] .bn-editor code::spelling-error,
+.bn-root[data-color-scheme] .bn-editor pre::spelling-error,
+.bn-root[data-color-scheme] .bn-editor code::grammar-error,
+.bn-root[data-color-scheme] .bn-editor pre::grammar-error {
     text-decoration: none;
     text-decoration-line: none;
 }
 
-.bn-container[data-color-scheme]
+.bn-root[data-color-scheme]
     .bn-code-content
     .bn-block-content[data-content-type="codeBlock"]
     select {
@@ -423,7 +418,7 @@ html:has(
     /*padding-right: 50px;*/
 }
 
-.bn-container[data-color-scheme="dark"]
+.bn-root[data-color-scheme="dark"]
     .bn-code-content
     .bn-block-content[data-content-type="codeBlock"]
     select
@@ -432,12 +427,12 @@ html:has(
     color: var(--color-foreground);
 }
 
-.bn-container[data-color-scheme] .bn-toggle-button {
+.bn-root[data-color-scheme] .bn-toggle-button {
     will-change: background-color;
     transition: background-color 0.1s ease-in-out;
 }
 
-.bn-container[data-color-scheme="dark"] .bn-toggle-button:hover {
+.bn-root[data-color-scheme="dark"] .bn-toggle-button:hover {
     background-color: #272b33;
 }
 
@@ -458,7 +453,7 @@ html:has(
     font-weight: 400; /*Hevier font for better readability, due to different display in light mode*/
 }
 
-.bn-container[data-color-scheme="dark"]
+.bn-root[data-color-scheme="dark"]
     .bn-block-content:not([data-content-type="codeBlock"])
     :not(pre)
     code {
@@ -471,22 +466,26 @@ html:has(
     font-size: 14px; /*MAYBE: Adjust later*/
     font-weight: 300;
     /*line-height: 1.2;*/
+    white-space: pre;
+    /*&.bn-inline-content {
+        white-space: pre;
+    }*/
 }
 
-.bn-container[data-color-scheme="dark"]
+.bn-root[data-color-scheme="dark"]
     .bn-block-content[data-content-type="codeBlock"] {
     /*border: 1px solid var(--color-border);*/
     background-color: #111116; /*was: #101015*/
     scrollbar-color: #ffffff66 transparent;
 }
 
-.bn-container[data-color-scheme="light"]
+.bn-root[data-color-scheme="light"]
     .bn-block-content[data-content-type="codeBlock"] {
     background-color: #202020;
     scrollbar-color: #ffffff76 transparent;
 }
 
-/*.bn-container[data-color-scheme]
+/*.bn-root[data-color-scheme]
     .bn-block-content[data-content-type="codeBlock"] {
     background-color: light-dark(#202020, #111116);
 }*/
@@ -496,10 +495,10 @@ html:has(
 }
 
 /*Light mode still has default border color*/
-.bn-container[data-color-scheme="dark"]
+.bn-root[data-color-scheme="dark"]
     .bn-block-content[data-content-type="table"]
     th,
-.bn-container[data-color-scheme="dark"]
+.bn-root[data-color-scheme="dark"]
     .bn-block-content[data-content-type="table"]
     td {
     border: 1px inset #353a40 !important;
@@ -507,14 +506,14 @@ html:has(
     border-spacing: 0;*/
 }
 
-.bn-container[data-color-scheme]
+.bn-root[data-color-scheme]
     .bn-table-content
     .bn-block-content[data-content-type="table"]
     .tableWrapper {
     margin-right: 5px;
 }
 
-/*.bn-container[data-color-scheme]
+/*.bn-root[data-color-scheme]
     .bn-table-content
     .bn-block-content[data-content-type="table"]
     .tableWrapper
@@ -523,7 +522,7 @@ html:has(
     margin-right: 100px;
 }*/
 
-/*.bn-container:has(.bn-editor[contenteditable="true"])
+/*.bn-root:has(.bn-editor[contenteditable="true"])
     .bn-block-content[data-content-type="table"]
     table {
     max-width: 85vw;
@@ -533,14 +532,14 @@ html:has(
     border-color: var(--color-border);
 }*/
 
-.bn-container[data-color-scheme="dark"]
+.bn-root[data-color-scheme="dark"]
     .bn-block-content[data-content-type="quote"]
     blockquote {
     color: #b0b0b2;
     border-left: 2px solid #75757c;
 }
 
-.bn-container[data-color-scheme="dark"]
+.bn-root[data-color-scheme="dark"]
     .bn-block-content[data-content-type="divider"]
     hr {
     border-top: 1px solid #75757c;
