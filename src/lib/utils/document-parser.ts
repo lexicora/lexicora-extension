@@ -1,3 +1,5 @@
+// document-parser.ts v0.1.0
+
 import DomPurify from "dompurify";
 
 export interface ParseResult {
@@ -133,25 +135,57 @@ function normalizeMediaAndLinks(root: Document | Element) {
       block.getAttribute("data-lang") ||
       "";
 
+    // 1. Check for language class on the block itself
     if (!detectedLang) {
       const className = block.getAttribute("class") || "";
       const match = className.match(/(?:lang|language|highlight)-([a-z0-9]+)/i);
       if (match) detectedLang = match[1];
     }
 
-    if (!detectedLang && block.tagName === "PRE") {
+    // 2. If it is a PRE block, look deeper for the language and fix the structure
+    if (block.tagName === "PRE") {
       const childCode = block.querySelector("code");
-      if (childCode) {
+
+      // Check the child <code> tag for classes
+      if (!detectedLang && childCode) {
         const childClass = childCode.getAttribute("class") || "";
         const childMatch = childClass.match(
           /(?:lang|language|highlight)-([a-z0-9]+)/i,
         );
         if (childMatch) detectedLang = childMatch[1];
       }
+
+      // Check child <span> tags for classes (Crucial for sites that don't use <code>)
+      if (!detectedLang) {
+        const childSpans = block.querySelectorAll("span");
+        for (const span of Array.from(childSpans)) {
+          const spanClass = span.getAttribute("class") || "";
+          const spanMatch = spanClass.match(
+            /(?:lang|language|highlight)-([a-z0-9]+)/i,
+          );
+          if (spanMatch) {
+            detectedLang = spanMatch[1];
+            break; // Stop looking once we find a valid language
+          }
+        }
+      }
+
+      // STRUCTURAL FIX: Ensure the <pre> has exactly one <code> wrapper
+      // If it doesn't have a <code> tag, we wrap all its contents in one.
+      if (!childCode) {
+        const codeWrapper = document.createElement("code");
+        // Move all existing children (spans, text nodes) inside the new <code> wrapper
+        while (block.firstChild) {
+          codeWrapper.appendChild(block.firstChild);
+        }
+        block.appendChild(codeWrapper);
+      }
     }
 
+    // 3. Lock in the data attribute and clean up
     if (detectedLang) {
       block.setAttribute("data-language", detectedLang.toLowerCase());
+      // Optional: clean up the class attribute so DOMPurify doesn't have to deal with it
       block.removeAttribute("class");
     }
   });
