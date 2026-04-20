@@ -1,3 +1,5 @@
+// document-parser.ts v0.1.0
+
 import DomPurify from "dompurify";
 
 export interface ParseResult {
