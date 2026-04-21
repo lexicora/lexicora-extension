@@ -43,6 +43,12 @@ export function setupMessagingHandlers() {
     }
   });
 
+  // TODO: Later change to pass the windowId
+  onMessage(MSG.REQUEST_PAGE_CAPTURE, async ({ sender, data }) =>
+    handleCaptureRequest(sender.context, data),
+  );
+
+  // Native messaging, not needed for this currently
   // Handle native browser messages (safely bypasses bfcache port limits)
   // browser.runtime.onMessage.addListener((message, sender) => {
   //   if (message.type === MSG.OPEN_SIDEPANEL) {
@@ -55,9 +61,4 @@ export function setupMessagingHandlers() {
   //     }
   //   }
   // });
-
-  // TODO: Later change to pass the windowId
-  onMessage(MSG.REQUEST_PAGE_CAPTURE, async ({ sender, data }) =>
-    handleCaptureRequest(sender.context, data),
-  );
 }

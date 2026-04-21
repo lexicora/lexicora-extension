@@ -57,12 +57,10 @@ export function setupContextMenuActions() {
         }
 
         // Request page selection data from content script (maybe query tab, if the tab.id is null, realistically it should never be null here)
-        //const pageSelectionData = await browser.tabs.sendMessage(tab.id ?? 0, { type: MSG.GET_PAGE_SELECTION_DATA }).catch(() => null);
-        const pageSelectionData = await sendMessageCore(
-          MSG.GET_PAGE_SELECTION_DATA,
-          null,
-          tab?.id,
-        );
+        const pageSelectionData = await browser.tabs
+          .sendMessage(tab.id ?? 0, { type: MSG.GET_PAGE_SELECTION_DATA })
+          .catch(() => null); // Native messaging (faster than below)
+        //const pageSelectionData = await sendMessageCore(MSG.GET_PAGE_SELECTION_DATA, null, tab?.id);
 
         if (pageSelectionData) {
           // Store for pull logic in side panel
@@ -114,12 +112,10 @@ export function setupContextMenuActions() {
         }
 
         // Request page selection data from content script (maybe query tab, if the tab.id is null, realistically it should never be null here)
-        //const pageSelectionData = await browser.tabs.sendMessage(tab.id ?? 0, { type: MSG.GET_PAGE_DATA }).catch(() => null);
-        const pageSelectionData = await sendMessageCore(
-          MSG.GET_PAGE_DATA,
-          null,
-          tab?.id,
-        );
+        const pageSelectionData = await browser.tabs
+          .sendMessage(tab.id ?? 0, { type: MSG.GET_PAGE_DATA })
+          .catch(() => null); // Native messaging (faster than below)
+        //const pageSelectionData = await sendMessageCore(MSG.GET_PAGE_DATA, null, tab?.id);
 
         if (pageSelectionData) {
           // Store for pull logic in side panel
