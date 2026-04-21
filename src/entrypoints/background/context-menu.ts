@@ -72,7 +72,7 @@ export function setupContextMenuActions() {
             MSG.NAVIGATE_IN_SIDEPANEL,
             { path: "/entries/new" },
             "side-panel@" + tab.windowId,
-          ).catch(() => {});
+          ).catch(() => null);
 
           if (clearPendingNavigation === true) {
             setPendingNavigation(null);
@@ -83,7 +83,7 @@ export function setupContextMenuActions() {
             MSG.SEND_PAGE_SELECTION_DATA,
             pageSelectionData, //TODO: Handle null case in sidepanel editor component.
             "side-panel@" + tab.windowId,
-          ).catch(() => {});
+          ).catch(() => null);
 
           if (clearPendingCaptureData === true) {
             setPendingCapture(null);
@@ -126,7 +126,7 @@ export function setupContextMenuActions() {
             MSG.NAVIGATE_IN_SIDEPANEL,
             { path: "/entries/new" },
             "side-panel@" + tab.windowId,
-          ).catch(() => {});
+          ).catch(() => null);
 
           if (clearPendingNavigation === true) {
             setPendingNavigation(null);
@@ -137,7 +137,7 @@ export function setupContextMenuActions() {
             MSG.SEND_PAGE_SELECTION_DATA,
             pageSelectionData, //TODO: Handle null case in sidepanel editor component.
             "side-panel@" + tab.windowId,
-          ).catch(() => {});
+          ).catch(() => null);
 
           if (clearPendingCaptureData === true) {
             setPendingCapture(null);

@@ -61,7 +61,7 @@ function HomePage() {
       //url: finalTab.url,
     };
     sendMessage(MSG.REQUEST_PAGE_CAPTURE, tabData, "background").catch(
-      () => {},
+      () => null,
     );
     window.close();
   };

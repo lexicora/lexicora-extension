@@ -41,7 +41,7 @@ function HomePage() {
       windowId: finalTab.windowId,
     };
     sendMessage(MSG.REQUEST_PAGE_CAPTURE, tabData, "background").catch(
-      () => {},
+      () => null,
     );
     navigate("/entries/new", {
       viewTransition: true,

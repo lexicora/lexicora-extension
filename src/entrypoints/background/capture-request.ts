@@ -49,7 +49,7 @@ export async function handleCaptureRequest(
     MSG.SEND_PAGE_SELECTION_DATA,
     pageSelectionData, //TODO: Handle null case in sidepanel editor component.
     "side-panel@" + tabData.windowId,
-  ).catch(() => {});
+  ).catch(() => null);
 
   if (clearPendingCaptureData === true) {
     setPendingCapture(null);

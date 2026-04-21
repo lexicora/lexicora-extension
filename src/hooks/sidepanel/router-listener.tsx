@@ -23,7 +23,9 @@ export function RouterListener() {
 
       // If already on path, replace history so that navigate(-1) works as expected
       const isAlreadyOnPath = location.pathname === msg.data.path;
-      const isCapturePending = pathToSetIsCapturePending.includes(msg.data.path);
+      const isCapturePending = pathToSetIsCapturePending.includes(
+        msg.data.path,
+      );
       navigate(msg.data.path, {
         replace: isAlreadyOnPath, // Replace history if already on the target path to prevent navigation loops and ensure back button works as expected
         flushSync: isAlreadyOnPath, // Ensure the navigation happens immediately to trigger specific logic in the destination component if needed
@@ -47,7 +49,7 @@ export function RouterListener() {
         MSG.REQUEST_PENDING_NAVIGATION,
         null,
         "background", //destination,
-      ).catch(() => {});
+      ).catch(() => null);
       if (path) {
         if (path === location.pathname) return;
         navigate(path, {

@@ -3,6 +3,8 @@ import { getSidePanel } from "webext-bridge/side-panel";
 
 type SidePanelBridge = ReturnType<typeof getSidePanel>;
 type SidePanelMessagingContextType = SidePanelBridge | null;
+//* NOTE: If windowId is needed in the future switch to the below type/code
+//type SidePanelMessagingContextType = (SidePanelBridge & { windowId: number | string }) | null;
 
 const SidePanelMessagingContext =
   createContext<SidePanelMessagingContextType>(null);
@@ -22,7 +24,7 @@ export function SidePanelMessagingProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [sidePanel, setSidePanel] =
+  const [contextValue, setContextValue] =
     useState<SidePanelMessagingContextType>(null);
 
   useEffect(() => {
@@ -37,29 +39,34 @@ export function SidePanelMessagingProvider({
           .then((win) => win.id);
 
         if (windowId) {
-          setSidePanel(getSidePanel(windowId));
+          setContextValue(getSidePanel(windowId));
+          //* NOTE: If windowId is needed in the future switch to the below type/code
+          //setContextValue({ ...getSidePanel(windowId), windowId });
         } else {
           // Fallback for contexts where a tab might not be active,
-          // though less ideal.
-          setSidePanel(getSidePanel("")); // 0 works too
+          setContextValue(getSidePanel("")); // 0 works too
+          //* NOTE: If windowId is needed in the future switch to the below type/code
+          //setContextValue({ ...getSidePanel(""), windowId: "" }); // 0 works too
         }
       } catch (error) {
         console.error("Failed to initialize side panel messaging:", error);
         // Fallback if tabs query fails
-        setSidePanel(getSidePanel("")); // 0 works too
+        setContextValue(getSidePanel("")); // 0 works too
+        //* NOTE: If windowId is needed in the future switch to the below type/code
+        //setContextValue({ ...getSidePanel(""), windowId: "" }); // 0 works too
       }
     };
 
     initSidePanel();
   }, []);
 
-  if (!sidePanel) {
+  if (!contextValue) {
     // You can render a loading spinner here if you'd like
     return null;
   }
 
   return (
-    <SidePanelMessagingContext.Provider value={sidePanel}>
+    <SidePanelMessagingContext.Provider value={contextValue}>
       {children}
     </SidePanelMessagingContext.Provider>
   );
