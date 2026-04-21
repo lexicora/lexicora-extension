@@ -2,7 +2,7 @@ import styles from "./entry-create.module.css";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { defaultBlockNoteConfig } from "@/constants/block-note";
+import { appBlockNoteConfig } from "@/components/editor/config";
 import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
 import { useEffect, useState, useLayoutEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -18,7 +18,7 @@ import { useCreateBlockNote } from "@blocknote/react";
 function EntryCreatePage() {
   const location = useLocation(); // This is used in order to trigger useEffect on location change
   const navigate = useNavigate();
-  const editor = useCreateBlockNote(defaultBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
+  const editor = useCreateBlockNote(appBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
   const capturedData = useCaptureData();
   const { isAtBottom } = useScrollPos();
   const [language, setLanguage] = useState(navigator.language || "en");
@@ -41,15 +41,20 @@ function EntryCreatePage() {
         return;
       }
       const currentBlocks = editor.document;
-      const isEmpty = currentBlocks.length === 1 && 
-                      currentBlocks[0].type === "paragraph" && 
-                      (!currentBlocks[0].content || currentBlocks[0].content.length === 0) &&
-                      (!currentBlocks[0].children || currentBlocks[0].children.length === 0);
+      const isEmpty =
+        currentBlocks.length === 1 &&
+        currentBlocks[0].type === "paragraph" &&
+        (!currentBlocks[0].content || currentBlocks[0].content.length === 0) &&
+        (!currentBlocks[0].children || currentBlocks[0].children.length === 0);
 
       if (isEmpty) {
         editor.replaceBlocks(currentBlocks, blocks);
       } else {
-        editor.insertBlocks(blocks, currentBlocks[currentBlocks.length - 1].id, "after"); // currentBlocks[0].id, would work too.
+        editor.insertBlocks(
+          blocks,
+          currentBlocks[currentBlocks.length - 1].id,
+          "after",
+        ); // currentBlocks[0].id, would work too.
       }
     }
   }, [capturedData, editor]);
