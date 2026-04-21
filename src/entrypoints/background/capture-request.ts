@@ -1,5 +1,6 @@
 import { MSG } from "@/constants/messaging";
 import { sendMessage } from "webext-bridge/background";
+import { sendMessageCore } from "@/lib/messaging";
 import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
 import { TabData } from "@/types/tab-data.types";
 
@@ -33,7 +34,10 @@ export async function handleCaptureRequest(
   }
 
   // Request page selection data from content script (maybe query tab, if the tab.id is null, realistically it should never be null here)
-  const pageSelectionData = await browser.tabs.sendMessage(tabData.tabId ?? 0, { type: MSG.GET_PAGE_DATA }).catch(() => null);
+  const pageSelectionData = await browser.tabs
+    .sendMessage(tabData.tabId ?? 0, { type: MSG.GET_PAGE_DATA })
+    .catch(() => null); // Native messaging (faster than below)
+  //const pageSelectionData = await sendMessageCore(MSG.GET_PAGE_DATA, null, tabData?.tabId,);
 
   if (!pageSelectionData) return;
 

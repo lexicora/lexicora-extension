@@ -1,4 +1,5 @@
 import { onMessage } from "webext-bridge/background";
+import { onMessageCore } from "@/lib/messaging";
 import { MSG } from "@/constants/messaging";
 import { PageData } from "@/types/page-data.types";
 import { handleCaptureRequest } from "./capture-request";
@@ -32,16 +33,13 @@ export function setupMessagingHandlers() {
     return path;
   });
 
-  // Handle native browser messages (safely bypasses bfcache port limits)
-  browser.runtime.onMessage.addListener((message, sender) => {
-    if (message.type === MSG.OPEN_SIDEPANEL) {
-      if (import.meta.env.FIREFOX) {
-        // NOTE (feature parity discrepancy): Not supported on Firefox due to quicker loss of the direct user context action.
-        // @ts-ignore: Firefox specific API
-        //browser.sidebarAction.open();
-      } else if (sender.tab?.id) {
-        browser.sidePanel.open({ tabId: sender.tab.id });
-      }
+  onMessageCore(MSG.OPEN_SIDEPANEL, (/*message.*/ { sender }) => {
+    if (import.meta.env.FIREFOX) {
+      // NOTE (feature parity discrepancy): Not supported on Firefox due to quicker loss of the direct user context action.
+      // @ts-ignore: Firefox specific API
+      //browser.sidebarAction.open();
+    } else if (sender.tab?.id) {
+      browser.sidePanel.open({ tabId: sender.tab.id });
     }
   });
 
@@ -49,4 +47,18 @@ export function setupMessagingHandlers() {
   onMessage(MSG.REQUEST_PAGE_CAPTURE, async ({ sender, data }) =>
     handleCaptureRequest(sender.context, data),
   );
+
+  // Native messaging, not needed for this currently
+  // Handle native browser messages (safely bypasses bfcache port limits)
+  // browser.runtime.onMessage.addListener((message, sender) => {
+  //   if (message.type === MSG.OPEN_SIDEPANEL) {
+  //     if (import.meta.env.FIREFOX) {
+  //       // NOTE (feature parity discrepancy): Not supported on Firefox due to quicker loss of the direct user context action.
+  //       // @ts-ignore: Firefox specific API
+  //       //browser.sidebarAction.open();
+  //     } else if (sender.tab?.id) {
+  //       browser.sidePanel.open({ tabId: sender.tab.id });
+  //     }
+  //   }
+  // });
 }
