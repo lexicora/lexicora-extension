@@ -1,14 +1,14 @@
-import { createRxDatabase, addRxPlugin } from 'rxdb';
-import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
-import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
+import { createRxDatabase, addRxPlugin } from "rxdb";
+import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
+import { RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
 
 // Schemas
-import { topicSchema } from './schemas/topic';
-import { entrySchema } from './schemas/entry';
-import { blockSchema } from './schemas/block';
+import { topicSchema } from "./schemas/topic";
+import { entrySchema } from "./schemas/entry";
+import { blockSchema } from "./schemas/block";
 
 // Add plugins
-if (import.meta.env?.DEV) {
+if (import.meta.env.DEV) {
   addRxPlugin(RxDBDevModePlugin);
 }
 
