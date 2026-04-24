@@ -4,8 +4,6 @@ import type { PageData } from "@/types/page-data.types";
 import { Article } from "@/types/mozilla-article.types";
 import type { TabData } from "@/types/tab-data.types";
 
-// TODO IMPORTANT: Enforce type safety for messaging system
-
 declare module "webext-bridge" {
   export interface ProtocolMap {
     // From anywhere to side-panel

@@ -8,14 +8,14 @@ export function useCaptureData() {
   const { sendMessage, onMessage } = useSidePanelMessaging();
 
   // The deduplicator ref: protects the editor from double-renders
-  const lastProcessedContent = useRef<string | null>(null);
+  //const lastProcessedContent = useRef<string | null>(null);
 
   useEffect(() => {
     // Core logic to safely update data only if it is genuinely new
     const handleIncomingData = (data: PageData) => {
       if (data.content == null) return;
 
-      // Disable strict content deduplication so repeat triggers 
+      // Disable strict content deduplication so repeat triggers
       // of identical payloads (like full page captures) still go through.
       setCapturedData(data);
     };
