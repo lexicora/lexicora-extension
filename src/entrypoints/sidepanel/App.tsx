@@ -18,19 +18,19 @@ import { TopBar } from "@/components/top-bar";
 import { BottomNavigation } from "@/components/bottom-navigation";
 
 // Pages
-import HomePage from "./pages/home";
+import HomePage from "./pages/home/home";
 import ErrorPage from "./pages/error";
 import NotFoundPage from "./pages/not-found";
 import NotSupportedPage from "./pages/not-supported";
 
 // Entries Pages
-import EntriesPage from "./pages/entries";
-import EntryCreatePage from "./pages/entries/new";
-import EntryDetailPage from "./pages/entries/[id]";
-import EntryEditPage from "./pages/entries/edit/[id]";
+import EntriesPage from "./pages/entries/entries";
+import EntryCreatePage from "./pages/entries/new/entry-create";
+import EntryDetailPage from "./pages/entries/[id]/entry-detail";
+import EntryEditPage from "./pages/entries/edit/[id]/entry-edit";
 
 // Settings Pages
-import SettingsPage from "./pages/settings";
+import SettingsPage from "./pages/settings/settings";
 // Sub-settings pages
 import ThemePersonalizationSettingsPage from "./pages/settings/personalization/theme";
 import CaptureSuggestionsSettingsPage from "./pages/settings/features/capture-suggestions";

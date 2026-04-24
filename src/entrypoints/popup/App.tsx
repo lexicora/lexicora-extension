@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { ScrollObserverProvider } from "@/providers/scroll-observer";
 
 // Pages
-import HomePage from "./pages/home";
+import HomePage from "./pages/home/home";
 
 function RootLayout() {
   return (
