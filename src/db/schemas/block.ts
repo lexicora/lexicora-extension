@@ -1,5 +1,5 @@
 import { ExtractDocumentTypeFromTypedRxJsonSchema, toTypedRxJsonSchema } from 'rxdb';
-import { uuidSchema, uuidWithNilDefault } from './common';
+import { blockTypes, uuidSchema, uuidWithNilDefault } from './common';
 
 const blockSchemaLiteral = {
   title: 'block schema',
@@ -13,7 +13,7 @@ const blockSchemaLiteral = {
     entryId: uuidSchema,
     parentBlockId: uuidSchema, // Optional FK link to the parent block within the same entry
     order: { type: 'number' },
-    type: { type: 'string' },
+    type: { type: 'string', enum: blockTypes },
     propsJson: { 
       type: 'object',
       additionalProperties: true
