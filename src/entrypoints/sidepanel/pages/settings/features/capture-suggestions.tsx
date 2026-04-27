@@ -76,7 +76,7 @@ function CaptureSuggestionsSettingsPage() {
               <ItemActions>
                 <Switch
                   className="data-[state=unchecked]:bg-gray-400 dark:data-[state=unchecked]:bg-gray-700"
-                  checked={enabled}
+                  checked={enabled ?? false}
                 />
               </ItemActions>
             </Item>
