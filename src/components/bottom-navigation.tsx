@@ -27,6 +27,8 @@ export function BottomNavigation() {
   const hiddenPatterns = [
     "entries/new",
     "/entries/:id/edit", // Matches /entries/123/edit
+    "/topics/new",
+    "/topics/:id/edit",
   ];
 
   // Check if current path matches any of our hidden patterns

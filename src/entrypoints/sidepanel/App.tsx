@@ -29,6 +29,12 @@ import EntryCreatePage from "./pages/entries/new/entry-create";
 import EntryDetailPage from "./pages/entries/[id]/entry-detail";
 import EntryEditPage from "./pages/entries/edit/[id]/entry-edit";
 
+// Topic Pages
+//* INFO: TopicsPage not necessary right now
+import TopicCreatePage from "./pages/topics/new/topic-create";
+import TopicDetailPage from "./pages/topics/[id]/topic-detail";
+import TopicEditPage from "./pages/topics/edit/[id]/topic-edit";
+
 // Settings Pages
 import SettingsPage from "./pages/settings/settings";
 // Sub-settings pages
@@ -71,6 +77,10 @@ const router = createMemoryRouter([
       { path: "entries/new", element: <EntryCreatePage /> },
       { path: "entries/:id", element: <EntryDetailPage /> },
       { path: "entries/:id/edit", element: <EntryEditPage /> },
+      // Topics
+      { path: "topics/new", element: <TopicCreatePage /> },
+      { path: "topics/:id", element: <TopicDetailPage /> },
+      { path: "topics/:id/edit", element: <TopicEditPage /> },
       // Settings
       { path: "settings", element: <SettingsPage /> },
       {

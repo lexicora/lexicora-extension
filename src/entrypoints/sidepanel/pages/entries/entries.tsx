@@ -4,12 +4,28 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toggle } from "@/components/ui/toggle";
-import { PlusIcon, SearchIcon, StarIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import {
+  FileTextIcon,
+  FolderIcon,
+  PlusIcon,
+  SearchIcon,
+  StarIcon,
+} from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
 import { PageHeader } from "@/components/page-header";
+import {
+  DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
 
 function EntriesPage() {
+  const navigate = useNavigate();
+
   return (
     <div className="lc-page-container">
       <div className="lc-page-container-inner">
@@ -78,7 +94,44 @@ function EntriesPage() {
         <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20">
           <div className="shrink-0 flex items-center justify-end max-w-315 mx-auto inset-x-0">
             {/*MAYBE: Make smaller and also maybe a bit darker */}
-            <Button
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  size="icon"
+                  title="Create..."
+                  draggable={false}
+                  className="btn-green-ring size-10 rounded-lg shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)]"
+                >
+                  <PlusIcon className="size-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="top" align="end" className="min-w-23">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="select-none py-1">
+                    New...
+                  </DropdownMenuLabel>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() =>
+                      navigate("/topics/new", { viewTransition: true })
+                    }
+                  >
+                    <FolderIcon className="mr-2 size-4" />
+                    <span>Topic</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() =>
+                      navigate("/entries/new", { viewTransition: true })
+                    }
+                  >
+                    <FileTextIcon className="mr-2 size-4" />
+                    <span>Entry</span>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            {/*<Button
               size="icon"
               title="New Entry"
               draggable={false}
@@ -89,7 +142,7 @@ function EntriesPage() {
                 <PlusIcon className="size-5" />
               </Link>
             </Button>
-            {/*<Tooltip>
+            <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   size="icon"
