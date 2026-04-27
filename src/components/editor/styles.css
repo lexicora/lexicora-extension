@@ -234,6 +234,21 @@ html:has(
 }
 
 .bn-root[data-color-scheme]
+    [data-floating-ui-focusable]
+    [data-radix-popper-content-wrapper]
+    .bn-table-handle-menu
+    [data-radix-menu-content].bn-color-picker-dropdown {
+    margin-bottom: 110px;
+    margin-top: 1px;
+}
+
+/*.bn-root[data-color-scheme]
+    [data-floating-ui-focusable]
+    [data-radix-popper-content-wrapper] {
+    margin-bottom: 30px;
+}*/
+
+.bn-root[data-color-scheme]
     .bn-side-menu
     [data-radix-popper-content-wrapper]
     .bn-menu-dropdown.bn-drag-handle-menu

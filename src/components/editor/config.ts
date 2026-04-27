@@ -22,6 +22,8 @@ export const appBlockNoteConfig = {
   }),
   tables: {
     headers: true, // MAYBE TODO: Add more customization options for tables later
+    cellBackgroundColor: true,
+    //cellTextColor: true,
   },
   domAttributes: {
     // Adds a class to all `blockContainer` elements.
