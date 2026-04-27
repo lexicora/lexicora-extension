@@ -1,6 +1,7 @@
 import { createRxDatabase, addRxPlugin } from "rxdb";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
+import { wrappedValidateAjvStorage } from "rxdb/plugins/validate-ajv";
 
 // Schemas
 import { topicSchema } from "./schemas/topic";
@@ -14,9 +15,12 @@ if (import.meta.env.DEV) {
 
 // Helper function to initialize the db
 export async function initializeDb() {
+  const baseStorage = getRxStorageDexie();
+  const storage = wrappedValidateAjvStorage({ storage: baseStorage });
+
   const db = await createRxDatabase({
-    name: 'lexicoradb', // name of the database
-    storage: getRxStorageDexie(),
+    name: "lexicoradb", // name of the database
+    storage: storage,
     multiInstance: true, // true by default - highly important for extensions crossing contexts
     ignoreDuplicate: true,
   });
@@ -39,3 +43,5 @@ export const getDb = () => {
   }
   return dbPromise;
 };
+
+// TODO: Later implement Supabase sync plugin here.
