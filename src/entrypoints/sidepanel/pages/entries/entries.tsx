@@ -105,7 +105,7 @@ function EntriesPage() {
                   <PlusIcon className="size-5" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent side="top" align="end" className="min-w-23">
+              <DropdownMenuContent side="top" align="end" className="min-w-21">
                 <DropdownMenuGroup>
                   <DropdownMenuLabel className="select-none py-1">
                     New...
@@ -116,7 +116,7 @@ function EntriesPage() {
                       navigate("/topics/new", { viewTransition: true })
                     }
                   >
-                    <FolderIcon className="mr-2 size-4" />
+                    <FolderIcon className="mr-0 size-4" />
                     <span>Topic</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
@@ -125,7 +125,7 @@ function EntriesPage() {
                       navigate("/entries/new", { viewTransition: true })
                     }
                   >
-                    <FileTextIcon className="mr-2 size-4" />
+                    <FileTextIcon className="mr-0 size-4" />
                     <span>Entry</span>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
