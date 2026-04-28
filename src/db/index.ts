@@ -1,28 +1,28 @@
 import { createRxDatabase, addRxPlugin } from "rxdb";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
-import { RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
-import { wrappedValidateAjvStorage } from "rxdb/plugins/validate-ajv";
+import { disableWarnings, RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
 
 // Schemas
 import { topicSchema } from "./schemas/topic";
 import { entrySchema } from "./schemas/entry";
 import { blockSchema } from "./schemas/block";
+import { filterConsole } from "@/lib/utils/filter-console";
 
 // Add plugins
-if (import.meta.env.DEV) {
-  addRxPlugin(RxDBDevModePlugin);
-}
+// if (import.meta.env.DEV) {
+//   disableWarnings();
+//   addRxPlugin(RxDBDevModePlugin);
+// }
 
 // Helper function to initialize the db
 export async function initializeDb() {
-  const baseStorage = getRxStorageDexie();
-  const storage = wrappedValidateAjvStorage({ storage: baseStorage });
+  filterConsole();
 
   const db = await createRxDatabase({
     name: "lexicoradb", // name of the database
-    storage: storage,
+    storage: getRxStorageDexie(),
     multiInstance: true, // true by default - highly important for extensions crossing contexts
-    ignoreDuplicate: true,
+    ignoreDuplicate: false, // true is only allowed in development.
   });
 
   // Add the collections

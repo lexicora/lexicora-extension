@@ -24,8 +24,8 @@ const blockSchemaLiteral = {
       additionalProperties: true 
     }
   },
-  required: ['id', 'entryId', 'order', 'type', 'propsJson'],
-  indexes: ['id', 'entryId', 'parentBlockId', 'userId']
+  required: ['id', 'userId', 'entryId', 'order', 'type', 'propsJson'],
+  indexes: ['entryId', 'userId']
 } as const;
 
 export const blockSchema = toTypedRxJsonSchema(blockSchemaLiteral);

@@ -21,7 +21,7 @@ const topicSchemaLiteral = {
     createdAt: { type: 'string', format: 'date-time' },
     updatedAt: { type: 'string', format: 'date-time' }
   },
-  required: ['id', 'userId', 'name', 'tags', 'isFavorite', 'createdAt'],
+  required: ['userId', 'name', 'tags', 'isFavorite', 'createdAt'],
   indexes: ['userId']
 } as const;
 

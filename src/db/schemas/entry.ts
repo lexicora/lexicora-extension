@@ -43,7 +43,7 @@ const entrySchemaLiteral = {
     'originUrl', 
     'createdAt'
   ],
-  indexes: ['id', 'topicId', 'userId']
+  indexes: ['topicId', 'userId']
 } as const;
 
 export const entrySchema = toTypedRxJsonSchema(entrySchemaLiteral);
