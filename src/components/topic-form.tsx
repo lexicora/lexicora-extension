@@ -67,6 +67,18 @@ export function TopicForm({
       </div>
 
       <div className="flex flex-col gap-3">
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          id="description"
+          placeholder="A brief description of this topic"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows={3}
+          className="resize-none"
+        />
+      </div>
+
+      <div className="flex flex-col gap-3">
         <Label htmlFor="tags">Tags (comma-separated)</Label>
         <Input
           id="tags"
@@ -77,18 +89,6 @@ export function TopicForm({
         <span className="text-xs text-muted-foreground">
           Maximum of 10 tags allowed.
         </span>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <Label htmlFor="description">Description</Label>
-        <Textarea
-          id="description"
-          placeholder="A brief description of this topic"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows={3}
-          className="resize-none"
-        />
       </div>
 
       <div className="flex items-center space-x-2 pt-2">
