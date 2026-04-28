@@ -1,10 +1,10 @@
 :global(html:has(#lc-new-topic-page)) {
-    /*For BlockNoteView (better accessibility)*/
-    scroll-padding-top: 102px; /*was: 72px, added 30px for floating page header*/
-    scroll-padding-bottom: 132px;
+  /*For BlockNoteView (better accessibility)*/
+  scroll-padding-top: 102px; /*was: 72px, added 30px for floating page header*/
+  scroll-padding-bottom: 132px;
 }
 
-.bottomFooter :global(.lc-bottom-bar-styled-bg) {
+/* .bottomFooter :global(.lc-bottom-bar-styled-bg) {
     --shadow-main: color-mix(in srgb, var(--background), transparent 45%);
     --shadow-secondary: color-mix(in srgb, var(--background), transparent 40%);
 
@@ -16,4 +16,4 @@
 :global(.dark) .bottomFooter :global(.lc-bottom-bar-styled-bg) {
     --shadow-main: color-mix(in srgb, var(--background), transparent 40%);
     --shadow-secondary: color-mix(in srgb, var(--background), transparent 35%);
-}
+} */
