@@ -4,6 +4,21 @@ import { defineConfig, UserManifest } from "wxt";
 export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   srcDir: "src",
+  // vite: () => ({
+  //   plugins: [
+  //     {
+  //       name: "remove-zod-eval",
+  //       transform(code: string, id: string) {
+  //         if (id.includes("zod")) {
+  //           return code.replace(
+  //             /new Function\(""\)/g,
+  //             '(() => { throw new Error("eval not allowed") })()',
+  //           );
+  //         }
+  //       },
+  //     },
+  //   ],
+  // }),
   //vite
   manifest: ({ browser, manifestVersion, mode, command }) => {
     const manifestBase: UserManifest = {
