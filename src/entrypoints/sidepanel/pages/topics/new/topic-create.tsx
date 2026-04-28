@@ -1,17 +1,46 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import styles from "./topic-create.module.css";
 
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { PageHeader } from "@/components/page-header";
+import { TopicForm, type TopicFormData } from "@/components/topic-form";
+import { getDb } from "@/db";
+import { useNavigate } from "react-router-dom";
+import { uuidv7 } from "uuidv7";
 import { cn } from "@/lib/utils";
 import { useScrollPos } from "@/providers/scroll-observer";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 
 function TopicCreatePage() {
+  const navigate = useNavigate();
   const { isAtBottom } = useScrollPos();
   const [promptText, setPromptText] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+
+  const handleCreateTopic = async (data: TopicFormData) => {
+    try {
+      setIsCreating(true);
+      const db = await getDb();
+      const newDoc = await db.topics.insert({
+        id: uuidv7(),
+        name: data.name,
+        description: data.description,
+        tags: data.tags,
+        isFavorite: data.isFavorite,
+        createdAt: new Date().toISOString(),
+      });
+      // Navigate to the newly created topic, or topics list
+      navigate(`/topics/${newDoc.id}`);
+    } catch (err) {
+      console.error("Failed to create topic:", err);
+      // TODO: toast notification
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
   //const [isEditorReady, setIsEditorReady] = useState(false); // other approach with requestAnimation frame contrary to useLayoutEffect
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
@@ -40,8 +69,10 @@ function TopicCreatePage() {
       {/*Make the inner container as tall (min-height) as the vh (but not overflowing) to prevent issues with editor*/}
       <div className="lc-page-container-inner">
         <PageHeader title="New Topic" goBackButton />
-        <main>
-          <section className="mx-px"></section>
+        <main className="flex-1 px-0.5 max-w-2xl mx-auto w-full">
+          <section className="mx-px">
+            <TopicForm onSubmit={handleCreateTopic} isLoading={isCreating} />
+          </section>
         </main>
         <footer
           //id="lc-new-entry-bottom-footer"
