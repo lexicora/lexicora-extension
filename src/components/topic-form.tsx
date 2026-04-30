@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Toggle } from "@/components/ui/toggle";
 import { cn } from "@/lib/utils";
 import {
   Field,
@@ -11,6 +12,7 @@ import {
   FieldDescription,
   FieldError,
 } from "@/components/ui/field";
+import { StarIcon } from "lucide-react";
 
 const formSchema = z.object({
   name: z
@@ -18,13 +20,7 @@ const formSchema = z.object({
     .trim()
     .min(5, "Topic name must be at least 5 characters.")
     .max(50, "Topic name must be less than 50 characters."),
-  description: z
-    .string()
-    .trim()
-    .min(20, "Description must be at least 20 characters.")
-    .max(500)
-    .optional()
-    .or(z.literal("")),
+  description: z.string().trim().max(500).optional().or(z.literal("")),
   tags: z.string(),
   isFavorite: z.boolean(),
 });
@@ -43,41 +39,6 @@ interface TopicFormProps {
   initialData?: Partial<TopicFormData>;
   onSubmit: (data: TopicFormData) => void | Promise<void>;
   isLoading?: boolean;
-}
-
-function FavoriteToggle({
-  value,
-  onChange,
-}: {
-  value: boolean;
-  onChange: (val: boolean) => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={() => onChange(!value)}
-      className={cn(
-        "flex w-fit items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-md border",
-        value
-          ? "bg-primary/5 border-primary/30 text-primary hover:bg-primary/10 dark:bg-primary/10 dark:border-primary/20"
-          : "bg-transparent border-input hover:bg-accent hover:text-accent-foreground text-muted-foreground",
-      )}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill={value ? "currentColor" : "none"}
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className={cn("w-5 h-5", value && "text-yellow-500 fill-yellow-500")}
-      >
-        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-      </svg>
-      {value ? "Favorited" : "Mark as Favorite"}
-    </button>
-  );
 }
 
 export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
@@ -167,15 +128,38 @@ export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
           <FieldDescription>Maximum of 10 tags allowed.</FieldDescription>
           {errors.tags && <FieldError errors={[errors.tags]} />}
         </Field>
-
         <Field>
-          <Controller
-            control={control}
-            name="isFavorite"
-            render={({ field }) => (
-              <FavoriteToggle value={field.value} onChange={field.onChange} />
-            )}
-          />
+          <div className="flex items-center justify-center">
+            <Controller
+              control={control}
+              name="isFavorite"
+              render={({ field }) => (
+                <Toggle
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  pressed={field.value}
+                  onPressedChange={field.onChange}
+                  title="Mark as Favorite"
+                  className={cn(
+                    "transition-colors",
+                    // field.value
+                    //   ? "bg-primary/5 hover:bg-primary/10 border-primary/30 text-primary dark:bg-primary/10 dark:hover:bg-primary/20 dark:border-primary/20"
+                    //   : "text-muted-foreground",
+                  )}
+                >
+                  <StarIcon
+                    fill={field.value ? "currentColor" : "none"}
+                    className={cn(
+                      "size-4",
+                      field.value && "text-yellow-500 fill-yellow-500",
+                    )}
+                  />
+                  Favorite
+                </Toggle>
+              )}
+            />
+          </div>
         </Field>
       </FieldGroup>
     </form>

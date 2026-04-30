@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useEffect, useState, useRef } from "react";
-import styles from "./topic-create.module.css";
+//import styles from "./topic-create.module.css";
+import "./topic-create.module.css";
 
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { PageHeader } from "@/components/page-header";
@@ -38,27 +39,6 @@ function TopicCreatePage() {
     }
   };
 
-  //const [isEditorReady, setIsEditorReady] = useState(false); // other approach with requestAnimation frame contrary to useLayoutEffect
-  const footerRef = useRef<HTMLElement>(null);
-  const footerContentRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const footerElement = footerRef.current;
-    const footerContentElement = footerContentRef.current;
-
-    if (!footerElement || !footerContentElement) {
-      return;
-    }
-
-    const resizeObserver = new ResizeObserver(() => {
-      footerElement.style.height = `${footerContentElement.offsetHeight}px`;
-    });
-
-    resizeObserver.observe(footerContentElement);
-
-    return () => resizeObserver.disconnect();
-  }, []);
-
   return (
     //* NOTE: Opt in for now, because of editor styles being changed
     <div id="lc-new-topic-page" className="lc-page-container mb-0! /*pr-3!*/">
@@ -74,11 +54,8 @@ function TopicCreatePage() {
             />
           </section>
         </main>
-        <footer className={cn(styles.bottomFooter, "mt-10.5")} ref={footerRef}>
-          <section
-            ref={footerContentRef}
-            className="fixed bottom-0 left-0 min-h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-30 lc-bottom-bar-styled-bg"
-          >
+        <footer className="mt-7">
+          <section className="fixed bottom-0 left-0 min-h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-30 lc-bottom-bar-styled-bg">
             <div className="flex items-center justify-center w-full max-w-2xl mx-auto inset-x-0">
               <Button
                 type="submit"
