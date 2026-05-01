@@ -91,6 +91,22 @@ export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
           {errors.name && <FieldError errors={[errors.name]} />}
         </Field>
 
+        <Field data-invalid={!!errors.tags}>
+          <Label
+            htmlFor="tags"
+            className={cn(errors.tags && "text-destructive")}
+          >
+            Tags (comma-separated)
+          </Label>
+          <Input
+            id="tags"
+            placeholder="e.g. documentation, ideas (max 10 allowed)"
+            aria-invalid={!!errors.tags}
+            {...register("tags")}
+          />
+          {errors.tags && <FieldError errors={[errors.tags]} />}
+        </Field>
+
         <Field data-invalid={!!errors.description}>
           <Label
             htmlFor="description"
@@ -102,32 +118,13 @@ export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
             id="description"
             placeholder="A brief description of this topic"
             rows={3}
-            className="resize-none"
+            className="resize-y"
             aria-invalid={!!errors.description}
             {...register("description")}
           />
-          <FieldDescription>
-            A short paragraph describing what this topic is about.
-          </FieldDescription>
           {errors.description && <FieldError errors={[errors.description]} />}
         </Field>
 
-        <Field data-invalid={!!errors.tags}>
-          <Label
-            htmlFor="tags"
-            className={cn(errors.tags && "text-destructive")}
-          >
-            Tags (comma-separated)
-          </Label>
-          <Input
-            id="tags"
-            placeholder="e.g. documentation, ideas, work"
-            aria-invalid={!!errors.tags}
-            {...register("tags")}
-          />
-          <FieldDescription>Maximum of 10 tags allowed.</FieldDescription>
-          {errors.tags && <FieldError errors={[errors.tags]} />}
-        </Field>
         <Field>
           <div className="flex items-center justify-center">
             <Controller
