@@ -8,6 +8,7 @@ import { entrySchema } from "./schemas/entry";
 import { blockSchema } from "./schemas/block";
 import { filterConsole } from "@/lib/utils/filter-console";
 
+// TODO: For testing always add same test data on db init.
 // Add plugins
 // if (import.meta.env.DEV) {
 //   disableWarnings();
