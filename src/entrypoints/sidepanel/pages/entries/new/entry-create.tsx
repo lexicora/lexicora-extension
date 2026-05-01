@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { appBlockNoteConfig } from "@/components/editor/config";
 import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
-import { useEffect, useState, useLayoutEffect } from "react";
+import { useEffect, useState, useLayoutEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
@@ -13,6 +13,11 @@ import { PageHeader } from "@/components/page-header";
 import { cn } from "@/lib/utils";
 import { useScrollPos } from "@/providers/scroll-observer";
 import { useCreateBlockNote } from "@blocknote/react";
+
+import { EntryForm, type EntryFormData } from "@/components/entry-form";
+import { getDb } from "@/db";
+import { type TopicDocType } from "@/db/schemas/topic";
+import { uuidv7 } from "uuidv7";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 
 function EntryCreatePage() {
@@ -27,10 +32,59 @@ function EntryCreatePage() {
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
   const aiPromptTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const [topics, setTopics] = useState<TopicDocType[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    let sub: any;
+    getDb().then((db) => {
+      sub = db.topics.find().$.subscribe((results) => {
+        setTopics(results.map((r) => r.toJSON() as TopicDocType));
+      });
+    });
+    return () => {
+      if (sub) sub.unsubscribe();
+    };
+  }, []);
 
   const isAutoCaptureNav = location.state?.isCapturePending === true;
   const showSkeleton = isAutoCaptureNav && !capturedData;
   //const showSkeleton = isAutoCaptureNav && (!capturedData || !isEditorReady); // other approach with requestAnimation frame contrary to useLayoutEffect
+
+  const handleEntrySubmit = async (data: EntryFormData) => {
+    setIsSaving(true);
+    try {
+      const db = await getDb();
+      const entryId = uuidv7();
+
+      const newEntryDoc = {
+        id: entryId,
+        topicId: data.topicId,
+        title: data.title,
+        description: data.description,
+        tags: data.tags,
+        isFavorite: data.isFavorite,
+        languageCode: data.languageCode,
+        url: data.url,
+        originUrl: data.originUrl,
+        siteName: data.siteName,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        // Potentially other fields can go here based on EntryDocType schema
+      };
+
+      await db.entries.insert(newEntryDoc);
+      // Wait for blocks to be saved later with BlockNote JSON parsing?
+      const mainBlocks = await editor.document;
+      // Iterate mainBlocks and save to db.blocks or whatever mechanism is used
+
+      navigate("/entries"); // or wherever appropriate
+    } catch (e) {
+      console.error("Failed to save entry:", e);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   useLayoutEffect(() => {
     if (capturedData?.content) {
@@ -102,12 +156,28 @@ function EntryCreatePage() {
           <section className="mx-px">
             {/*TODO: Maybe add relative and overflow-x-hidden later, when it is guaranteed to fill the entire page (height wise) */}
             <div className="text-start">
+              <EntryForm
+                id="entry-create-form"
+                topics={topics}
+                initialData={{
+                  title: capturedData?.title || "",
+                  url: capturedData?.location?.href || "",
+                  originUrl: capturedData?.location?.origin || "",
+                  siteName: capturedData?.metadata?.siteName || "",
+                  languageCode:
+                    capturedData?.lang || navigator.language || "en",
+                  description: capturedData?.metadata?.excerpt || "",
+                }}
+                onSubmit={handleEntrySubmit}
+                isLoading={isSaving}
+              />
+
               <Label
                 htmlFor="lc-blocknote-view-new-entry"
                 onClick={() => {
                   editor.focus();
                 }}
-                className="text-sm ml-2 mb-0.5"
+                className="text-sm ml-2 mb-0.5 mt-4"
               >
                 Content
               </Label>
@@ -202,12 +272,14 @@ function EntryCreatePage() {
                 }`}
               >
                 <Button
+                  form="entry-create-form"
+                  type="submit"
                   variant="secondary"
                   title="Save Entry"
                   className="w-full overflow-hidden hover:bg-secondary hover:brightness-90 /*active:brightness-80*/"
-                  disabled={promptText.trimEnd() !== ""}
+                  disabled={promptText.trimEnd() !== "" || isSaving}
                 >
-                  Save Entry
+                  {isSaving ? "Saving..." : "Save Entry"}
                 </Button>
               </div>
               <div className="flex justify-end flex-1">
