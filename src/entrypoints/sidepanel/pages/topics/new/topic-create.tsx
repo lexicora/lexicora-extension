@@ -60,7 +60,6 @@ function TopicCreatePage() {
               <Button
                 type="submit"
                 form="topic-create-form"
-                title="Save Topic"
                 className="w-full"
                 disabled={isCreating}
               >

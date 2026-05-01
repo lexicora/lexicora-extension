@@ -143,9 +143,9 @@ export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
                   title="Mark as Favorite"
                   className={cn(
                     "transition-colors",
-                    // field.value
-                    //   ? "bg-primary/5 hover:bg-primary/10 border-primary/30 text-primary dark:bg-primary/10 dark:hover:bg-primary/20 dark:border-primary/20"
-                    //   : "text-muted-foreground",
+                    field.value
+                      ? "bg-lc-muted-foreground-hover text-primary"
+                      : "text-muted-foreground",
                   )}
                 >
                   <StarIcon
