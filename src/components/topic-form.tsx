@@ -75,10 +75,10 @@ export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
   return (
     <form id={id} onSubmit={handleSubmit(onValidSubmit)} className="py-4">
       <FieldGroup>
-        <Field data-invalid={!!errors.name}>
+        <Field data-invalid={!!errors.name} className="gap-2">
           <Label
             htmlFor="name"
-            className={cn(errors.name && "text-destructive")}
+            className={cn("ml-1", errors.name && "text-destructive")}
           >
             Name
           </Label>
@@ -91,10 +91,10 @@ export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
           {errors.name && <FieldError errors={[errors.name]} />}
         </Field>
 
-        <Field data-invalid={!!errors.tags}>
+        <Field data-invalid={!!errors.tags} className="gap-2">
           <Label
             htmlFor="tags"
-            className={cn(errors.tags && "text-destructive")}
+            className={cn("ml-1", errors.tags && "text-destructive")}
           >
             Tags (comma-separated)
           </Label>
@@ -107,10 +107,10 @@ export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
           {errors.tags && <FieldError errors={[errors.tags]} />}
         </Field>
 
-        <Field data-invalid={!!errors.description}>
+        <Field data-invalid={!!errors.description} className="gap-2">
           <Label
             htmlFor="description"
-            className={cn(errors.description && "text-destructive")}
+            className={cn("ml-1", errors.description && "text-destructive")}
           >
             Description
           </Label>
@@ -118,7 +118,7 @@ export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
             id="description"
             placeholder="A brief description of this topic"
             rows={3}
-            className="resize-y"
+            className="resize-y min-h-24 max-h-96"
             aria-invalid={!!errors.description}
             {...register("description")}
           />
