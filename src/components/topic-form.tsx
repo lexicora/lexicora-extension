@@ -3,6 +3,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroupTextarea,
+} from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 import { Toggle } from "@/components/ui/toggle";
 import { cn } from "@/lib/utils";
@@ -46,6 +52,7 @@ export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema), // Applying the zodResolver
@@ -72,8 +79,10 @@ export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
     });
   };
 
+  const currentDescription = watch("description") || "";
+
   return (
-    <form id={id} onSubmit={handleSubmit(onValidSubmit)} className="py-4">
+    <form id={id} onSubmit={handleSubmit(onValidSubmit)} className="py-3.5">
       <FieldGroup>
         <Field data-invalid={!!errors.name} className="gap-2">
           <Label
@@ -114,14 +123,21 @@ export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
           >
             Description
           </Label>
-          <Textarea
-            id="description"
-            placeholder="A brief description of this topic"
-            rows={3}
-            className="resize-y min-h-24 max-h-96"
-            aria-invalid={!!errors.description}
-            {...register("description")}
-          />
+          <InputGroup>
+            <InputGroupTextarea
+              id="description"
+              placeholder="Description of this topic"
+              rows={4}
+              className="min-h-24 max-h-94 resize-none scrollbar-thin scrollbar-bg-transparent"
+              aria-invalid={!!errors.description}
+              {...register("description")}
+            />
+            <InputGroupAddon align="block-end">
+              <InputGroupText className="tabular-nums ml-auto text-sm">
+                {currentDescription.length}/500 characters
+              </InputGroupText>
+            </InputGroupAddon>
+          </InputGroup>
           {errors.description && <FieldError errors={[errors.description]} />}
         </Field>
 
