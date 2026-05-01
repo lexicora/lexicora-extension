@@ -161,7 +161,13 @@ export function EntryForm({
             control={control}
             name="topicId"
             render={({ field }) => (
-              <Combobox onOpenChange={() => {}}>
+              <Combobox
+                items={topics}
+                itemToStringValue={(topic) => topic.name}
+                itemToStringLabel={(topic) => topic.name}
+                value={topics.find((t) => t.id === field.value) || null}
+                onValueChange={(val) => field.onChange(val?.id || "")}
+              >
                 <div className="relative w-full">
                   <ComboboxInput
                     placeholder="Search or select a topic..."
@@ -170,20 +176,14 @@ export function EntryForm({
                   />
                 </div>
                 <ComboboxContent className="z-50 w-[--radix-popover-trigger-width]">
+                  <ComboboxEmpty>No topics found.</ComboboxEmpty>
+                  {/*TODO: Add option to topic if topic with input name doesn't exist */}
                   <ComboboxList>
-                    {topics.length === 0 && (
-                      <ComboboxEmpty>No topics found.</ComboboxEmpty>
-                    )}
-                    {topics.map((topic) => (
-                      <ComboboxItem
-                        key={topic.id}
-                        value={topic.id}
-                        onSelect={() => field.onChange(topic.id)}
-                        className="m-1 max-w-[calc(100%-8px)]"
-                      >
+                    {(topic) => (
+                      <ComboboxItem key={topic.id} value={topic}>
                         {topic.name}
                       </ComboboxItem>
-                    ))}
+                    )}
                   </ComboboxList>
                 </ComboboxContent>
               </Combobox>
@@ -191,7 +191,7 @@ export function EntryForm({
           />
           {errors.topicId && <FieldError errors={[errors.topicId]} />}
 
-          {/* Debug/Fallback representation of selected topic name */}
+          {/* Debug/Fallback representation of selected topic name (remove later)*/}
           {watchTopicId && topics.some((t) => t.id === watchTopicId) && (
             <div className="text-xs text-muted-foreground mt-1">
               Selected: {topics.find((t) => t.id === watchTopicId)?.name}
