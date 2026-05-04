@@ -171,6 +171,7 @@ export function EntryForm({
   const watchTopicId = watch("topicId");
   const currentDescription = watch("description") || "";
 
+  // TODO: Implement create new topic
   return (
     <form
       id={id}
