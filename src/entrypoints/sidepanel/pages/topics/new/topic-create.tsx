@@ -5,7 +5,7 @@ import "./topic-create.module.css";
 
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { PageHeader } from "@/components/page-header";
-import { TopicForm, type TopicFormData } from "@/components/topic-form";
+import { TopicForm, type TopicFormData } from "@/components/forms/topic-form";
 import { getDb } from "@/db";
 import { useNavigate } from "react-router-dom";
 import { uuidv7 } from "uuidv7";

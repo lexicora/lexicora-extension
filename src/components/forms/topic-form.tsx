@@ -87,7 +87,10 @@ export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
         <Field data-invalid={!!errors.name} className="gap-2">
           <Label
             htmlFor="name"
-            className={cn("ml-1", errors.name && "text-destructive")}
+            className={cn(
+              "font-semibold ml-1",
+              errors.name && "text-destructive",
+            )}
           >
             Name
           </Label>
@@ -105,7 +108,8 @@ export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
             htmlFor="tags"
             className={cn("ml-1", errors.tags && "text-destructive")}
           >
-            Tags (comma-separated)
+            Tags{" "}
+            <span className="text-muted-foreground">(comma-separated)</span>
           </Label>
           <Input
             id="tags"
