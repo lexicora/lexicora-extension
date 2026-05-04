@@ -94,7 +94,7 @@ function EntryCreatePage() {
     if (capturedData?.content) {
       setLanguage(capturedData.lang || navigator.language || "en");
       const blocks = editor.tryParseHTMLToBlocks(capturedData.content);
-      if (capturedData.misc.replaceEditorContent) {
+      if (capturedData.misc.overrideExisting) {
         editor.replaceBlocks(editor.document, blocks);
         return;
       }
@@ -124,11 +124,11 @@ function EntryCreatePage() {
       const cleanupTimer = setTimeout(() => {
         navigate(location.pathname, {
           replace: true,
-          preventScrollReset: !capturedData.misc.replaceEditorContent,
+          preventScrollReset: !capturedData.misc.overrideExisting,
           state: {},
         });
       }, transitionDuration);
-      if (capturedData.misc.replaceEditorContent) window.scrollTo({ top: 0 });
+      if (capturedData.misc.overrideExisting) window.scrollTo({ top: 0 });
       return () => clearTimeout(cleanupTimer);
     }
   }, [capturedData, location.state, navigate, location.pathname]);
@@ -163,6 +163,7 @@ function EntryCreatePage() {
               <EntryForm
                 id="entry-create-form"
                 topics={topics}
+                overrideExisting={capturedData?.misc?.overrideExisting ?? true}
                 initialData={{
                   title: capturedData?.title || "",
                   faviconUrl: capturedData?.metadata?.faviconUrl || "",

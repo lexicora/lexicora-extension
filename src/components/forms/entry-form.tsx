@@ -1,4 +1,5 @@
 import { useForm, Controller } from "react-hook-form";
+import { useEffect, useRef } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
@@ -77,6 +78,7 @@ export interface EntryFormData {
 interface EntryFormProps {
   id?: string;
   initialData?: Partial<EntryFormData>;
+  overrideExisting?: boolean;
   topics: TopicDocType[];
   onSubmit: (data: EntryFormData) => void | Promise<void>;
   isLoading?: boolean;
@@ -85,6 +87,7 @@ interface EntryFormProps {
 export function EntryForm({
   id,
   initialData,
+  overrideExisting = true,
   topics,
   onSubmit,
   isLoading,
@@ -94,11 +97,12 @@ export function EntryForm({
     handleSubmit,
     control,
     setValue,
+    getValues,
     watch,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema), // Applying the zodResolver
-    values: {
+    defaultValues: {
       title: initialData?.title || "",
       topicId: initialData?.topicId || "",
       description: initialData?.description || "",
@@ -110,6 +114,39 @@ export function EntryForm({
       isFavorite: initialData?.isFavorite || false,
     },
   });
+
+  const prevInitialDataId = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!initialData) return;
+
+    // Simple hash/stringification to avoid infinite loops if initialData object reference changes but content doesn't.
+    // If performance is an issue, a more granular check or passing individual values could be done.
+    const currentDataId = JSON.stringify(initialData);
+    if (prevInitialDataId.current === currentDataId) return;
+    prevInitialDataId.current = currentDataId;
+
+    const updateField = (name: keyof FormValues, newValue: any) => {
+      if (newValue === undefined || newValue === null) return;
+      if (overrideExisting || !getValues(name)) {
+        setValue(name, newValue, { shouldValidate: true, shouldDirty: true });
+      }
+    };
+
+    updateField("title", initialData.title);
+    updateField("topicId", initialData.topicId);
+    updateField("description", initialData.description);
+    if (initialData.tags && initialData.tags.length > 0) {
+      updateField("tags", initialData.tags.join(", "));
+    } else if (initialData.tags !== undefined) {
+      updateField("tags", ""); // fallback for empty array
+    }
+    updateField("faviconUrl", initialData.faviconUrl);
+    updateField("url", initialData.url);
+    updateField("siteName", initialData.siteName);
+    updateField("languageCode", initialData.languageCode);
+    updateField("isFavorite", initialData.isFavorite);
+  }, [initialData, overrideExisting, setValue, getValues]);
 
   const onValidSubmit = (data: FormValues) => {
     const tagsArray = data.tags

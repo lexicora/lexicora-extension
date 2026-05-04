@@ -31,7 +31,7 @@ export type PageData = {
     dir?: string | null; // Text direction (e.g., "ltr", "rtl", "auto")
   };
   misc: {
-    replaceEditorContent: boolean; // Whether to replace the editor content with the parsed content
+    overrideExisting: boolean; // Whether to replace the existing editor content and form data with the parsed content
   };
   // Optional fields populated by mozilla readability parsing, that are not already included in the above fields
   // mozArticle?: {
