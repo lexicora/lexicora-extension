@@ -11,6 +11,7 @@ export interface ParseResult {
   byline: string | null;
   siteName: string | null;
   publishedTime: string | null;
+  faviconUrl: string | null;
 }
 
 // A quick conceptual look at the future architecture
@@ -224,6 +225,26 @@ export function parseDocument(doc: Document): ParseResult {
     doc.querySelector('[itemprop="datePublished"]')?.getAttribute("content") ||
     null;
 
+  let faviconUrl =
+    doc.querySelector('link[rel="icon"]')?.getAttribute("href") ||
+    doc.querySelector('link[rel="shortcut icon"]')?.getAttribute("href") ||
+    doc.querySelector('link[rel="apple-touch-icon"]')?.getAttribute("href") ||
+    null;
+
+  if (faviconUrl) {
+    try {
+      faviconUrl = new URL(faviconUrl, doc.baseURI).href;
+    } catch (e) {
+      faviconUrl = null;
+    }
+  } else {
+    try {
+      faviconUrl = new URL("/favicon.ico", doc.baseURI).href;
+    } catch (e) {
+      faviconUrl = null;
+    }
+  }
+
   // STEP 2: BULLETPROOF IMAGE NORMALIZATION
   normalizeMediaAndLinks(doc);
 
@@ -400,6 +421,7 @@ export function parseDocument(doc: Document): ParseResult {
     byline,
     siteName,
     publishedTime,
+    faviconUrl,
   };
 }
 
@@ -513,6 +535,26 @@ export function parseSnippet(snippet: Element, doc: Document): ParseResult {
     doc.querySelector('[itemprop="datePublished"]')?.getAttribute("content") ||
     null;
 
+  let faviconUrl =
+    doc.querySelector('link[rel="icon"]')?.getAttribute("href") ||
+    doc.querySelector('link[rel="shortcut icon"]')?.getAttribute("href") ||
+    doc.querySelector('link[rel="apple-touch-icon"]')?.getAttribute("href") ||
+    null;
+
+  if (faviconUrl) {
+    try {
+      faviconUrl = new URL(faviconUrl, doc.baseURI).href;
+    } catch (e) {
+      faviconUrl = null;
+    }
+  } else {
+    try {
+      faviconUrl = new URL("/favicon.ico", doc.baseURI).href;
+    } catch (e) {
+      faviconUrl = null;
+    }
+  }
+
   return {
     content: sanitizedContent,
     textContent: textContent,
@@ -522,6 +564,7 @@ export function parseSnippet(snippet: Element, doc: Document): ParseResult {
     byline,
     siteName,
     publishedTime,
+    faviconUrl,
   };
 }
 

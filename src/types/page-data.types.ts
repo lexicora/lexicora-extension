@@ -27,6 +27,7 @@ export type PageData = {
     byline: string | null;
     siteName: string | null;
     publishedTime: string | null;
+    faviconUrl?: string | null;
     dir?: string | null; // Text direction (e.g., "ltr", "rtl", "auto")
   };
   misc: {

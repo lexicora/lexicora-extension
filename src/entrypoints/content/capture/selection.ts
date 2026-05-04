@@ -36,6 +36,7 @@ export async function getSelectionPageData(): Promise<PageData | null> {
       byline: parsedSnippet.byline,
       siteName: parsedSnippet.siteName,
       publishedTime: parsedSnippet.publishedTime,
+      faviconUrl: parsedSnippet.faviconUrl,
       dir: document.documentElement.dir || null,
     },
     misc: {
