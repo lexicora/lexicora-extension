@@ -18,6 +18,7 @@ import { EntryForm, type EntryFormData } from "@/components/forms/entry-form";
 import { getDb } from "@/db";
 import { type TopicDocType } from "@/db/schemas/topic";
 import { uuidv7 } from "uuidv7";
+import { da } from "zod/v4/locales";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 
 function EntryCreatePage() {
@@ -65,9 +66,12 @@ function EntryCreatePage() {
         tags: data.tags,
         isFavorite: data.isFavorite,
         languageCode: data.languageCode,
-        url: data.url,
-        originUrl: data.originUrl,
         siteName: data.siteName,
+        faviconUrl: data.faviconUrl,
+        url: data.url,
+        hostnameUrl: "", // TODO: Extract hostname from url
+        pathnameUrl: "", // TODO: Extract pathname from url
+        searchUrl: "", // TODO: Extract search part from url
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         // Potentially other fields can go here based on EntryDocType schema
@@ -162,7 +166,6 @@ function EntryCreatePage() {
                 initialData={{
                   title: capturedData?.title || "",
                   url: capturedData?.location?.href || "",
-                  originUrl: capturedData?.location?.origin || "",
                   siteName: capturedData?.metadata?.siteName || "",
                   languageCode:
                     capturedData?.lang || navigator.language || "en",

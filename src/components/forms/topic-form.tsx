@@ -19,6 +19,7 @@ import {
   FieldError,
 } from "@/components/ui/field";
 import { StarIcon } from "lucide-react";
+import { Button } from "../ui/button";
 
 const formSchema = z.object({
   name: z
@@ -26,7 +27,12 @@ const formSchema = z.object({
     .trim()
     .min(5, "Topic name must be at least 5 characters.")
     .max(50, "Topic name must be less than 50 characters."),
-  description: z.string().trim().max(500).optional().or(z.literal("")),
+  description: z
+    .string()
+    .trim()
+    .max(500, "Description is too long.")
+    .optional()
+    .or(z.literal("")),
   tags: z.string(),
   isFavorite: z.boolean(),
 });
@@ -47,7 +53,11 @@ interface TopicFormProps {
   isLoading?: boolean;
 }
 
-export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
+export function TopicForm({
+  id,
+  initialData,
+  onSubmit /*, isLoading*/,
+}: TopicFormProps) {
   const {
     register,
     handleSubmit,
@@ -99,6 +109,7 @@ export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
             placeholder="Topic Name"
             aria-invalid={!!errors.name}
             {...register("name")}
+            className="text-base!"
           />
           {errors.name && <FieldError errors={[errors.name]} />}
         </Field>
@@ -178,6 +189,9 @@ export function TopicForm({ id, initialData, onSubmit }: TopicFormProps) {
             />
           </div>
         </Field>
+        {/* <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? "Saving..." : "Save Topic"}
+        </Button> */}
       </FieldGroup>
     </form>
   );
