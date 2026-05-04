@@ -1,105 +1,103 @@
 /* Base theme */
 .bn-root[data-color-scheme] {
-    --bn-font-family: var(--lc-font-sans);
-    color-scheme: normal;
-    scrollbar-color: light-dark(#5252526a, #ffffff66) transparent;
-    /*TODO MAYBE: Update scrollbar colors (get inspired from Notion)*/
+  --bn-font-family: var(--lc-font-sans);
+  color-scheme: normal;
+  scrollbar-color: light-dark(#5252526a, #ffffff66) transparent;
+  /*TODO MAYBE: Update scrollbar colors (get inspired from Notion)*/
 }
 
 /* Changes for dark mode */
 .bn-root[data-color-scheme="dark"] {
-    color-scheme: dark;
+  color-scheme: dark;
 
-    /*Highlighting colors*/
-    /* Gray: Silvery text on a subtle slate background */
-    --bn-colors-highlights-gray-text: #bdbdbd;
-    --bn-colors-highlights-gray-background: #353a45;
+  /* Highlighting colors */
+  /* Gray: Silvery text on a cool slate background */
+  --bn-colors-highlights-gray-text: #bdbdbd;
+  --bn-colors-highlights-gray-background: #2b303b;
 
-    /* Brown: Sand/Beige text on a deep espresso background */
-    --bn-colors-highlights-brown-text: #d4a88c;
-    --bn-colors-highlights-brown-background: #4a362d;
+  /* Brown: Sand/Beige text on a deep espresso background */
+  --bn-colors-highlights-brown-text: #d4a88c;
+  --bn-colors-highlights-brown-background: #3f2d25;
 
-    /* Red: Soft Coral text on a deep maroon background */
-    --bn-colors-highlights-red-text: #ff8282;
-    --bn-colors-highlights-red-background: #5c2b2b;
+  /* Red: Soft Coral text on a deep maroon background */
+  --bn-colors-highlights-red-text: #ff8282;
+  --bn-colors-highlights-red-background: #4d2325;
 
-    /* Orange: Peachy-Amber text on a burnt umber background */
-    --bn-colors-highlights-orange-text: #ffab70;
-    --bn-colors-highlights-orange-background: #664024;
+  /* Orange: Peachy-Amber text on a burnt umber background */
+  --bn-colors-highlights-orange-text: #ffab70;
+  --bn-colors-highlights-orange-background: #54331e;
 
-    /* Yellow: Gold text (not neon) on a dark olive background */
-    --bn-colors-highlights-yellow-text: #ffd666;
-    --bn-colors-highlights-yellow-background: #5c4d1f;
+  /* Yellow: Gold text on a dark olive background */
+  --bn-colors-highlights-yellow-text: #ffd666;
+  --bn-colors-highlights-yellow-background: #4a3e1a;
 
-    /* Green: Mint/Sage text on a deep forest background */
-    --bn-colors-highlights-green-text: #69cf85;
-    --bn-colors-highlights-green-background: #264730;
+  /* Green: Mint/Sage text on a deep forest background */
+  --bn-colors-highlights-green-text: #69cf85;
+  --bn-colors-highlights-green-background: #1e3827;
 
-    /* Blue: Sky blue text on a deep navy background */
-    --bn-colors-highlights-blue-text: #6ec1ff;
-    --bn-colors-highlights-blue-background: #204a69;
+  /* Blue: Sky blue text on a deep navy background */
+  --bn-colors-highlights-blue-text: #6ec1ff;
+  --bn-colors-highlights-blue-background: #1a3b54;
 
-    /* Purple: Lavender text on a deep plum background */
-    --bn-colors-highlights-purple-text: #bd93f9;
-    --bn-colors-highlights-purple-background: #442f63;
+  /* Purple: Lavender text on a deep plum background */
+  --bn-colors-highlights-purple-text: #bd93f9;
+  --bn-colors-highlights-purple-background: #372554;
 
-    /* Pink: Rose text on a dark magenta background */
-    --bn-colors-highlights-pink-text: #ff7acd;
-    --bn-colors-highlights-pink-background: #5c2646;
+  /* Pink: Rose text on a dark magenta background */
+  --bn-colors-highlights-pink-text: #ff7acd;
+  --bn-colors-highlights-pink-background: #4d1f3b;
 
-    /*Border color*/
-    --bn-border: 1px solid var(--color-border); /*Editor background color*/
-    /*--bn-colors-editor-background: #0c1019; /*was: #0f141f*/
-    --bn-colors-editor-background: #1c2026; /*was: #d1d1d1 in neutral theme, Maybe adjust later to a more blueish tone*/
+  /*Border color*/
+  --bn-border: 1px solid var(--color-border); /*Editor background color*/
+  /*--bn-colors-editor-background: #0c1019; /*was: #0f141f*/
+  --bn-colors-editor-background: #151921; /*was: #d1d1d1 in neutral theme, Maybe adjust later to a more blueish tone*/
 
-    /*Editor text color*/
-    --bn-colors-editor-text: #d2d2d2; /*originally: #cfcfcf*/
+  /*Editor text color*/
+  --bn-colors-editor-text: #d2d2d2; /*originally: #cfcfcf*/
 }
 
 .bn-root[data-color-scheme="light"] {
-    color-scheme: light;
-    /*Editor text color*/
-    /*TODO: Maybe add a subtile blue hue to it.*/
-    --bn-colors-editor-text: #3e3e3e; /*was #3f3f3f then 3d3d3d*/
+  color-scheme: light;
+  /*Editor text color*/
+  /*TODO: Maybe add a subtile blue hue to it.*/
+  --bn-colors-editor-text: #3e3e3e; /*was #3f3f3f then 3d3d3d*/
 }
 
 /*Prevent scrolling, when certain stuff is present (also use layout shift mitigator technique to avoid disappearing scrollbar)*/
 html:has(
-    .bn-root[data-color-scheme]
-        .bn-side-menu
-        [data-radix-popper-content-wrapper]
-        .bn-menu-dropdown.bn-drag-handle-menu
+  .bn-root[data-color-scheme]
+    .bn-side-menu
+    [data-radix-popper-content-wrapper]
+    .bn-menu-dropdown.bn-drag-handle-menu
 ),
 html:has(
-    .bn-root[data-color-scheme]
-        [data-floating-ui-focusable]
-        [data-radix-popper-content-wrapper]
-        .bn-table-handle-menu
+  .bn-root[data-color-scheme]
+    [data-floating-ui-focusable]
+    [data-radix-popper-content-wrapper]
+    .bn-table-handle-menu
 ),
 html:has(
-    .bn-root[data-color-scheme]
-        .bn-toolbar
-        button:first-child[data-state="open"]
+  .bn-root[data-color-scheme] .bn-toolbar button:first-child[data-state="open"]
 ),
 html:has(
-    .bn-root[data-color-scheme]
-        .bn-toolbar
-        button.bn-button:nth-child(10)[data-state="open"]
+  .bn-root[data-color-scheme]
+    .bn-toolbar
+    button.bn-button:nth-child(10)[data-state="open"]
 ),
 html:has(
-    .bn-root[data-color-scheme]
-        .bn-toolbar
-        button.bn-button:nth-child(13)[data-state="open"]
+  .bn-root[data-color-scheme]
+    .bn-toolbar
+    button.bn-button:nth-child(13)[data-state="open"]
 ) {
-    overflow: hidden;
-    /*Add stuff below, to keep layout consistent, with the dropdown menus of the BlockNote.js editor*/
-    scroll-padding-top: 0 !important;
-    scroll-padding-bottom: 0 !important;
-    /*scrollbar-width: 0 !important;*/
+  overflow: hidden;
+  /*Add stuff below, to keep layout consistent, with the dropdown menus of the BlockNote.js editor*/
+  scroll-padding-top: 0 !important;
+  scroll-padding-bottom: 0 !important;
+  /*scrollbar-width: 0 !important;*/
 }
 
 .bn-root[data-color-scheme]:has(.bn-table-handle-menu) .bn-side-menu {
-    display: none;
+  display: none;
 }
 
 /*TODO: Clean file up and make selectors more consistent*/
@@ -110,39 +108,42 @@ html:has(
 }*/
 
 .bn-default-styles {
-    /*--bn-font-family: var(--lc-font-sans);*/
-    font-family: var(--lc-font-sans);
+  /*--bn-font-family: var(--lc-font-sans);*/
+  font-family: var(--lc-font-sans);
 }
 
 /*maybe unnecessary*/
 .bn-root[data-color-scheme] .bn-editor {
-    /*--bn-font-family: var(--lc-font-sans);*/
-    font-family: var(--lc-font-sans);
+  /*--bn-font-family: var(--lc-font-sans);*/
+  font-family: var(--lc-font-sans);
 }
 
 .bn-root[data-color-scheme] .bn-editor {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    padding-inline-start: 50px; /*TODO: Maybe increase to 52px later*/
-    padding-inline-end: 8px !important;
-    /*TODO: Maybe revert inline padding to default if enough space is available*/
-    min-height: 100px;
-    border: 1px solid var(--color-border);
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-inline-start: 50px; /*TODO: Maybe increase to 52px later*/
+  padding-inline-end: 8px !important;
+  /*TODO: Maybe revert inline padding to default if enough space is available*/
+  min-height: 200px;
+  border: 1px solid var(--input); /*was: var(--input)*/
+  box-shadow:
+    0 1px 2px 0 rgba(0, 0, 0, 0.05),
+    0 1px 3px 0 rgba(0, 0, 0, 0.05);
 }
 
 .bn-root[data-color-scheme] .bn-editor[contenteditable="false"] {
-    padding-inline: 8px !important;
-    padding-top: 0px;
+  padding-inline: 8px !important;
+  padding-top: 0px;
 }
 
 .bn-root[data-color-scheme].bn-shadcn
-    .bn-side-menu
-    .bn-menu-dropdown.bn-drag-handle-menu {
-    /*display: flex;
+  .bn-side-menu
+  .bn-menu-dropdown.bn-drag-handle-menu {
+  /*display: flex;
     flex-direction: column-reverse;*/
-    /*Color picker above delete*/
-    margin-left: 24px;
-    margin-bottom: 112px;
+  /*Color picker above delete*/
+  margin-left: 24px;
+  margin-bottom: 112px;
 }
 
 /*TODO: Maybe enable later*/
@@ -156,26 +157,26 @@ html:has(
 }*/
 
 .bn-root[data-color-scheme].bn-shadcn
-    .bn-side-menu
-    .bn-menu-dropdown.bn-drag-handle-menu
-    div[role="menuitem"]:first-child {
-    color: #ff645e;
+  .bn-side-menu
+  .bn-menu-dropdown.bn-drag-handle-menu
+  div[role="menuitem"]:first-child {
+  color: #ff645e;
 }
 
 .bn-root[data-color-scheme="light"].bn-shadcn
-    .bn-side-menu
-    .bn-menu-dropdown.bn-drag-handle-menu
-    div[role="menuitem"]:first-child:hover {
-    /*color: var(--color-destructive);*/
-    background-color: oklch(from var(--color-destructive) l c h / 0.15);
+  .bn-side-menu
+  .bn-menu-dropdown.bn-drag-handle-menu
+  div[role="menuitem"]:first-child:hover {
+  /*color: var(--color-destructive);*/
+  background-color: oklch(from var(--color-destructive) l c h / 0.15);
 }
 
 .bn-root[data-color-scheme="dark"].bn-shadcn
-    .bn-side-menu
-    .bn-menu-dropdown.bn-drag-handle-menu
-    div[role="menuitem"]:first-child:hover {
-    color: var(--color-destructive);
-    background-color: oklch(from var(--color-destructive) l c h / 0.25);
+  .bn-side-menu
+  .bn-menu-dropdown.bn-drag-handle-menu
+  div[role="menuitem"]:first-child:hover {
+  color: var(--color-destructive);
+  background-color: oklch(from var(--color-destructive) l c h / 0.25);
 }
 
 /*TODO: Maybe enable later*/
@@ -227,19 +228,19 @@ html:has(
 
 /*TODO: Fix the toolbar Text formatter dropdown like this below.*/
 .bn-root[data-color-scheme]
-    .bn-toolbar
-    [data-radix-popper-content-wrapper]
-    [data-radix-menu-content].bn-color-picker-dropdown {
-    height: 50vh;
+  .bn-toolbar
+  [data-radix-popper-content-wrapper]
+  [data-radix-menu-content].bn-color-picker-dropdown {
+  height: 50vh;
 }
 
 .bn-root[data-color-scheme]
-    [data-floating-ui-focusable]
-    [data-radix-popper-content-wrapper]
-    .bn-table-handle-menu
-    [data-radix-menu-content].bn-color-picker-dropdown {
-    margin-bottom: 110px;
-    margin-top: 1px;
+  [data-floating-ui-focusable]
+  [data-radix-popper-content-wrapper]
+  .bn-table-handle-menu
+  [data-radix-menu-content].bn-color-picker-dropdown {
+  margin-bottom: 110px;
+  margin-top: 1px;
 }
 
 /*.bn-root[data-color-scheme]
@@ -249,13 +250,13 @@ html:has(
 }*/
 
 .bn-root[data-color-scheme]
-    .bn-side-menu
-    [data-radix-popper-content-wrapper]
-    .bn-menu-dropdown.bn-drag-handle-menu
-    [data-radix-menu-content].bn-color-picker-dropdown {
-    max-height: calc(100vh - 268px);
-    margin-bottom: 160px;
-    /*transform: translateY(-112px) !important;*/
+  .bn-side-menu
+  [data-radix-popper-content-wrapper]
+  .bn-menu-dropdown.bn-drag-handle-menu
+  [data-radix-menu-content].bn-color-picker-dropdown {
+  max-height: calc(100vh - 268px);
+  margin-bottom: 160px;
+  /*transform: translateY(-112px) !important;*/
 }
 
 /*Moved to a different and moe optimal selector above (see line: 85)*/
@@ -268,69 +269,69 @@ html:has(
 }*/
 
 .bn-root[data-color-scheme] .bn-toolbar {
-    /*Make space for scrollbar maybe change to calc(100vw - 10px) (or width of scrollbar)*/
-    max-width: 97vw;
+  /*Make space for scrollbar maybe change to calc(100vw - 10px) (or width of scrollbar)*/
+  max-width: 97vw;
 }
 
 .bn-root[data-color-scheme]:has(.bn-editor[contenteditable="false"])
-    .bn-toolbar {
-    display: none !important;
+  .bn-toolbar {
+  display: none !important;
 }
 
 /*Should affect link and image related input fields*/
 /*bn-formatting-toolbar*/
 .bn-root[data-color-scheme] .bn-toolbar .bn-text-input input[data-slot="input"],
 .bn-root[data-color-scheme]
-    .bn-toolbar.bn-formatting-toolbar
-    input[data-slot="input"]:not([data-test="embed-input"]) {
-    border-radius: calc(0.25em + 1px);
-    padding-inline: calc(0.25em + 1px);
+  .bn-toolbar.bn-formatting-toolbar
+  input[data-slot="input"]:not([data-test="embed-input"]) {
+  border-radius: calc(0.25em + 1px);
+  padding-inline: calc(0.25em + 1px);
 }
 
 /*Place lower for accessibility*/
 .bn-root[data-color-scheme] .bn-toolbar.bn-link-toolbar {
-    margin-bottom: -10px;
+  margin-bottom: -10px;
 }
 
 .bn-root[data-color-scheme] .bn-table-handle:is(button) {
-    padding-inline: 0;
-    width: 20px;
-    background-color: light-dark(#ededed, #2e343d);
+  padding-inline: 0;
+  width: 20px;
+  background-color: light-dark(#ededed, #262b36);
 }
 
 .bn-root[data-color-scheme] .bn-table-handle:is(button):hover {
-    background-color: light-dark(#bfbfbf, #414b59);
+  background-color: light-dark(#bfbfbf, #333a47);
 }
 
 .bn-root[data-color-scheme].bn-shadcn .bn-side-menu .bn-button:is(button) {
-    height: 24px;
-    width: 24px;
-    border-radius: 6px;
+  height: 24px;
+  width: 24px;
+  border-radius: 6px;
 }
 
 /*Same as: .bn-root button.bn-button:hover */
 .bn-root[data-color-scheme].bn-shadcn
-    .bn-side-menu
-    .bn-button:is(button):hover {
-    background-color: light-dark(#ededed, #2e343d);
+  .bn-side-menu
+  .bn-button:is(button):hover {
+  background-color: light-dark(#ededed, #262b36);
 }
 
 .bn-root[data-color-scheme].bn-shadcn .bn-side-menu .bn-button:is(button) {
-    &[aria-expanded="true"] {
-        background-color: light-dark(#d4d4d4, #3a3f4a);
-    }
+  &[aria-expanded="true"] {
+    background-color: light-dark(#d4d4d4, #2e3442);
+  }
 }
 
 .bn-root[data-color-scheme]
-    .bn-side-menu
-    .bn-button:is(button)[aria-label="Open block menu"] {
-    cursor: grab;
+  .bn-side-menu
+  .bn-button:is(button)[aria-label="Open block menu"] {
+  cursor: grab;
 }
 
 /*This selector is targets the same element as the selector above*/
 .bn-root[data-color-scheme] .bn-side-menu .bn-button:is(button):nth-child(2) {
-    width: 22px;
-    position: relative;
+  width: 22px;
+  position: relative;
 }
 
 /* Tooltip */
@@ -377,7 +378,7 @@ html:has(
 }*/
 
 .bn-root[data-color-scheme].bn-shadcn .bn-side-menu {
-    margin-right: 2px; /*Incrased distance to block content slightly*/
+  margin-right: 2px; /*Incrased distance to block content slightly*/
 }
 
 /*.bn-root .bn-button:is(button)[aria-label="Open block menu"]:active {
@@ -388,31 +389,31 @@ html:has(
 }*/
 
 .bn-root[data-color-scheme] .bn-panel {
-    border: 1px solid var(--color-border);
-    max-width: 85vw;
+  border: 1px solid var(--color-border);
+  max-width: 85vw;
 }
 
 .bn-root[data-color-scheme] .bn-extend-button-add-remove-rows {
-    max-height: 18px; /*width: ; of .bn-extend-button-add-remove-columns*/
-    padding-inline: 0; /*Was 0px*/
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    /*TODO: Prevent too much overflow*/
-    /*max-width: 70vw;*/
+  max-height: 18px; /*width: ; of .bn-extend-button-add-remove-columns*/
+  padding-inline: 0; /*Was 0px*/
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  /*TODO: Prevent too much overflow*/
+  /*max-width: 70vw;*/
 }
 
 .bn-root[data-color-scheme] .bn-extend-button-add-remove-columns {
-    max-width: 18px; /*Height of .bn-extend-button-add-remove-rows*/
-    padding-inline: 0; /*Was 6px*/
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    /*TODO: Prevent too much overflow*/
+  max-width: 18px; /*Height of .bn-extend-button-add-remove-rows*/
+  padding-inline: 0; /*Was 6px*/
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  /*TODO: Prevent too much overflow*/
 }
 
 .bn-root[data-color-scheme="dark"] .bn-extend-button-add-remove-rows,
 .bn-root[data-color-scheme="dark"] .bn-extend-button-add-remove-columns {
-    background-color: #181c20;
-    border-color: #32363b;
+  background-color: #10141c;
+  border-color: #282e3b;
 }
 /*MAYBE: add hover states to above*/
 
@@ -420,84 +421,84 @@ html:has(
 .bn-root[data-color-scheme] .bn-editor pre::spelling-error,
 .bn-root[data-color-scheme] .bn-editor code::grammar-error,
 .bn-root[data-color-scheme] .bn-editor pre::grammar-error {
-    text-decoration: none;
-    text-decoration-line: none;
+  text-decoration: none;
+  text-decoration-line: none;
 }
 
 .bn-root[data-color-scheme]
-    .bn-code-content
-    .bn-block-content[data-content-type="codeBlock"]
-    select {
-    left: 14px;
-    padding-left: 4px;
-    /*padding-right: 50px;*/
+  .bn-code-content
+  .bn-block-content[data-content-type="codeBlock"]
+  select {
+  left: 14px;
+  padding-left: 4px;
+  /*padding-right: 50px;*/
 }
 
 .bn-root[data-color-scheme="dark"]
-    .bn-code-content
-    .bn-block-content[data-content-type="codeBlock"]
-    select
-    option {
-    background-color: #232323;
-    color: var(--color-foreground);
+  .bn-code-content
+  .bn-block-content[data-content-type="codeBlock"]
+  select
+  option {
+  background-color: #232323;
+  color: var(--color-foreground);
 }
 
 .bn-root[data-color-scheme] .bn-toggle-button {
-    will-change: background-color;
-    transition: background-color 0.1s ease-in-out;
+  will-change: background-color;
+  transition: background-color 0.1s ease-in-out;
 }
 
 .bn-root[data-color-scheme="dark"] .bn-toggle-button:hover {
-    background-color: #272b33;
+  background-color: #202530;
 }
 
 /*.bn-code-content and .bn-table-content can be replaced by bn-block or unified in to .bn-block-custom*/
 /* * NOTE: Custom Styles for BlockNote*/
 .bn-code-content
-    .bn-block-content:not([data-content-type="codeBlock"])
-    :not(pre)
-    code {
-    background-color: light-dark(#00000012, #ffffff12);
-    font-variant-ligatures: none; /*Maybe add ligatures later*/
-    color: var(--lc-text-color-monospace);
-    /*border-radius: 4px;*/
-    border-radius: calc(0.1em + 3px);
-    padding: 0.1rem 0.28em 0.1rem; /*Shorthand definition*/
-    font-family: var(--lc-font-monospace);
-    font-size: calc(1em - 2px); /*MAYBE: Adjust later*/
-    font-weight: 400; /*Hevier font for better readability, due to different display in light mode*/
+  .bn-block-content:not([data-content-type="codeBlock"])
+  :not(pre)
+  code {
+  background-color: light-dark(#00000012, #ffffff12);
+  font-variant-ligatures: none; /*Maybe add ligatures later*/
+  color: var(--lc-text-color-monospace);
+  /*border-radius: 4px;*/
+  border-radius: calc(0.1em + 3px);
+  padding: 0.1rem 0.28em 0.1rem; /*Shorthand definition*/
+  font-family: var(--lc-font-monospace);
+  font-size: calc(1em - 2px); /*MAYBE: Adjust later*/
+  font-weight: 400; /*Hevier font for better readability, due to different display in light mode*/
 }
 
 .bn-root[data-color-scheme="dark"]
-    .bn-block-content:not([data-content-type="codeBlock"])
-    :not(pre)
-    code {
-    font-weight: 300 !important;
+  .bn-block-content:not([data-content-type="codeBlock"])
+  :not(pre)
+  code {
+  font-weight: 300 !important;
 }
 
 .bn-code-content .bn-block-content[data-content-type="codeBlock"] pre code {
-    font-family: var(--lc-font-monospace);
-    font-variant-ligatures: none; /*Maybe add ligatures later*/
-    font-size: 14px; /*MAYBE: Adjust later*/
-    font-weight: 300;
-    /*line-height: 1.2;*/
-    white-space: pre;
-    /*&.bn-inline-content {
+  font-family: var(--lc-font-monospace);
+  font-variant-ligatures: none; /*Maybe add ligatures later*/
+  font-size: 14px; /*MAYBE: Adjust later*/
+  font-weight: 300;
+  /*line-height: 1.2;*/
+  white-space: pre;
+  /*&.bn-inline-content {
         white-space: pre;
     }*/
 }
 
 .bn-root[data-color-scheme="dark"]
-    .bn-block-content[data-content-type="codeBlock"] {
-    /*border: 1px solid var(--color-border);*/
-    background-color: #111116; /*was: #101015*/
-    scrollbar-color: #ffffff66 transparent;
+  .bn-block-content[data-content-type="codeBlock"] {
+  /*border: 1px solid var(--color-border);*/
+  background-color: #0e0e12; /*was: #101015*/
+  scrollbar-color: #ffffff66 transparent;
 }
 
 .bn-root[data-color-scheme="light"]
-    .bn-block-content[data-content-type="codeBlock"] {
-    background-color: #202020;
-    scrollbar-color: #ffffff76 transparent;
+  .bn-block-content[data-content-type="codeBlock"] {
+  background-color: #202020;
+  scrollbar-color: #ffffff76 transparent;
 }
 
 /*.bn-root[data-color-scheme]
@@ -506,26 +507,26 @@ html:has(
 }*/
 
 .bn-table-content .bn-block-content[data-content-type="table"] th {
-    background-color: light-dark(#00000009, #ffffff09);
+  background-color: light-dark(#00000009, #dddddf09);
 }
 
 /*Light mode still has default border color*/
 .bn-root[data-color-scheme="dark"]
-    .bn-block-content[data-content-type="table"]
-    th,
+  .bn-block-content[data-content-type="table"]
+  th,
 .bn-root[data-color-scheme="dark"]
-    .bn-block-content[data-content-type="table"]
-    td {
-    border: 1px inset #353a40 !important;
-    /*border-collapse: collapse;
+  .bn-block-content[data-content-type="table"]
+  td {
+  border: 1px inset #2a303d !important;
+  /*border-collapse: collapse;
     border-spacing: 0;*/
 }
 
 .bn-root[data-color-scheme]
-    .bn-table-content
-    .bn-block-content[data-content-type="table"]
-    .tableWrapper {
-    margin-right: 5px;
+  .bn-table-content
+  .bn-block-content[data-content-type="table"]
+  .tableWrapper {
+  margin-right: 5px;
 }
 
 /*.bn-root[data-color-scheme]
@@ -548,16 +549,16 @@ html:has(
 }*/
 
 .bn-root[data-color-scheme="dark"]
-    .bn-block-content[data-content-type="quote"]
-    blockquote {
-    color: #b0b0b2;
-    border-left: 2px solid #75757c;
+  .bn-block-content[data-content-type="quote"]
+  blockquote {
+  color: #b0b0b2;
+  border-left: 2px solid #5a6270;
 }
 
 .bn-root[data-color-scheme="dark"]
-    .bn-block-content[data-content-type="divider"]
-    hr {
-    border-top: 1px solid #75757c;
+  .bn-block-content[data-content-type="divider"]
+  hr {
+  border-top: 1px solid #5a6270;
 }
 
 /*TODO: Maybe change colors of links in editor.*/
