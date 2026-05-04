@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { Toggle } from "@/components/ui/toggle";
 import { cn } from "@/lib/utils";
 import {
@@ -30,6 +31,13 @@ import {
 } from "@/components/ui/combobox";
 import { TopicDocType } from "@/db/schemas/topic";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroupTextarea,
+} from "../ui/input-group";
 
 const formSchema = z.object({
   title: z
@@ -38,10 +46,15 @@ const formSchema = z.object({
     .min(1, "Title is required.")
     .max(255, "Title is too long."),
   topicId: z.string().trim().min(36, "A topic must be selected."),
-  description: z.string().trim().max(500).optional().or(z.literal("")),
+  description: z
+    .string()
+    .trim()
+    .max(500, "Description is too long.")
+    .optional()
+    .or(z.literal("")),
   tags: z.string(),
-  url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
-  originUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  faviconUrl: z.url("Must be a valid URL").optional().or(z.literal("")),
+  url: z.url("Must be a valid URL").optional().or(z.literal("")),
   siteName: z.string().trim().max(100).optional().or(z.literal("")),
   languageCode: z.string().trim().max(10).optional().or(z.literal("")),
   isFavorite: z.boolean(),
@@ -54,8 +67,8 @@ export interface EntryFormData {
   topicId: string;
   description: string;
   tags: string[];
+  faviconUrl: string;
   url: string;
-  originUrl: string;
   siteName: string;
   languageCode: string;
   isFavorite: boolean;
@@ -90,8 +103,8 @@ export function EntryForm({
       topicId: initialData?.topicId || "",
       description: initialData?.description || "",
       tags: initialData?.tags?.join(", ") || "",
+      faviconUrl: initialData?.faviconUrl || "",
       url: initialData?.url || "",
-      originUrl: initialData?.originUrl || "",
       siteName: initialData?.siteName || "",
       languageCode: initialData?.languageCode || navigator.language || "en",
       isFavorite: initialData?.isFavorite || false,
@@ -110,8 +123,8 @@ export function EntryForm({
       topicId: data.topicId,
       description: data.description || "",
       tags: tagsArray,
+      faviconUrl: data.faviconUrl || "",
       url: data.url || "",
-      originUrl: data.originUrl || "",
       siteName: data.siteName || "",
       languageCode: data.languageCode || "",
       isFavorite: data.isFavorite,
@@ -119,6 +132,7 @@ export function EntryForm({
   };
 
   const watchTopicId = watch("topicId");
+  const currentDescription = watch("description") || "";
 
   return (
     <form
@@ -193,7 +207,7 @@ export function EntryForm({
             placeholder="Entry Title"
             aria-invalid={!!errors.title}
             {...register("title")}
-            className="text-base py-2"
+            className="text-base! py-2"
           />
           {errors.title && <FieldError errors={[errors.title]} />}
         </Field>
@@ -212,26 +226,6 @@ export function EntryForm({
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-4 pt-4">
-            <Field data-invalid={!!errors.description} className="gap-2">
-              <Label
-                htmlFor="description"
-                className={cn("ml-1", errors.description && "text-destructive")}
-              >
-                Description
-              </Label>
-              <Textarea
-                id="description"
-                placeholder="A brief description of this entry"
-                rows={2}
-                className="resize-y"
-                aria-invalid={!!errors.description}
-                {...register("description")}
-              />
-              {errors.description && (
-                <FieldError errors={[errors.description]} />
-              )}
-            </Field>
-
             <Field data-invalid={!!errors.tags} className="gap-2">
               <Label
                 htmlFor="tags"
@@ -248,7 +242,33 @@ export function EntryForm({
               />
               {errors.tags && <FieldError errors={[errors.tags]} />}
             </Field>
-
+            <Field data-invalid={!!errors.description} className="gap-2">
+              <Label
+                htmlFor="description"
+                className={cn("ml-1", errors.description && "text-destructive")}
+              >
+                Description
+              </Label>
+              <InputGroup>
+                <InputGroupTextarea
+                  id="description"
+                  placeholder="A brief description of this entry"
+                  rows={3}
+                  className="min-h-16 max-h-48 resize-none scrollbar-thin scrollbar-bg-transparent"
+                  aria-invalid={!!errors.description}
+                  {...register("description")}
+                />
+                <InputGroupAddon align="block-end">
+                  <InputGroupText className="tabular-nums ml-auto text-sm">
+                    {currentDescription.length}/500 characters
+                  </InputGroupText>
+                </InputGroupAddon>
+              </InputGroup>
+              {errors.description && (
+                <FieldError errors={[errors.description]} />
+              )}
+            </Field>
+            <Separator className="max-w-200 mx-auto mb-6 mt-7" />
             <div className="grid grid-cols-2 gap-4">
               <Field data-invalid={!!errors.siteName} className="gap-2">
                 <Label
@@ -287,7 +307,6 @@ export function EntryForm({
                 )}
               </Field>
             </div>
-
             <Field data-invalid={!!errors.url} className="gap-2">
               <Label
                 htmlFor="url"
@@ -297,27 +316,46 @@ export function EntryForm({
               </Label>
               <Input
                 id="url"
-                placeholder="e.g. https://example.com"
+                placeholder="e.g. https://example.com/path"
                 aria-invalid={!!errors.url}
                 {...register("url")}
               />
               {errors.url && <FieldError errors={[errors.url]} />}
             </Field>
 
-            <Field data-invalid={!!errors.originUrl} className="gap-2">
+            <Field data-invalid={!!errors.faviconUrl} className="gap-2">
               <Label
-                htmlFor="originUrl"
-                className={cn("ml-1", errors.originUrl && "text-destructive")}
+                htmlFor="faviconUrl"
+                className={cn("ml-1", errors.faviconUrl && "text-destructive")}
               >
-                Origin URL
+                Favicon URL
               </Label>
-              <Input
-                id="originUrl"
-                placeholder="e.g. https://example.com/source"
-                aria-invalid={!!errors.originUrl}
-                {...register("originUrl")}
-              />
-              {errors.originUrl && <FieldError errors={[errors.originUrl]} />}
+              <div className="flex items-end gap-3">
+                <Avatar
+                  className="flex shrink-0 size-8 my-0.5"
+                  onClick={() => document.getElementById("faviconUrl")?.focus()}
+                >
+                  <AvatarImage
+                    className="rounded-md"
+                    src={watch("faviconUrl") || undefined}
+                    alt="Favicon"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src =
+                        "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cmVjdCB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9IiNlZWVlZWUiIHJ4PSIyIiByeT0iMiIvPjwvc3ZnPg==";
+                    }}
+                  />
+                  <AvatarFallback />
+                </Avatar>
+                <Input
+                  id="faviconUrl"
+                  placeholder="e.g. https://example.com/favicon.ico"
+                  aria-invalid={!!errors.faviconUrl}
+                  {...register("faviconUrl")}
+                />
+                {errors.faviconUrl && (
+                  <FieldError errors={[errors.faviconUrl]} />
+                )}
+              </div>
             </Field>
 
             <Field className="mb-2">
