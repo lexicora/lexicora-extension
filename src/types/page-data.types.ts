@@ -15,6 +15,7 @@ export type PageData = {
   location: {
     href: string;
     origin: string;
+    hostname: string;
     pathname: string;
     search: string;
     hash: string;
