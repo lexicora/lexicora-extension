@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { useScrollPos } from "@/providers/scroll-observer";
 import { useCreateBlockNote } from "@blocknote/react";
 
-import { EntryForm, type EntryFormData } from "@/components/entry-form";
+import { EntryForm, type EntryFormData } from "@/components/forms/entry-form";
 import { getDb } from "@/db";
 import { type TopicDocType } from "@/db/schemas/topic";
 import { uuidv7 } from "uuidv7";
@@ -177,7 +177,7 @@ function EntryCreatePage() {
                 onClick={() => {
                   editor.focus();
                 }}
-                className="text-sm ml-2 mb-0.5 mt-4"
+                className="text-sm ml-1 mb-1 mt-0"
               >
                 Content
               </Label>

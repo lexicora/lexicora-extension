@@ -124,34 +124,14 @@ export function EntryForm({
     <form
       id={id}
       onSubmit={handleSubmit(onValidSubmit)}
-      className="py-4 space-y-4"
+      className="py-3.5 space-y-4"
     >
-      <FieldGroup className="space-y-4">
-        <Field data-invalid={!!errors.title}>
-          <Label
-            htmlFor="title"
-            className={cn(
-              "text-lg font-semibold",
-              errors.title && "text-destructive",
-            )}
-          >
-            Title
-          </Label>
-          <Input
-            id="title"
-            placeholder="Entry Title"
-            aria-invalid={!!errors.title}
-            {...register("title")}
-            className="text-lg py-6"
-          />
-          {errors.title && <FieldError errors={[errors.title]} />}
-        </Field>
-
-        <Field data-invalid={!!errors.topicId}>
+      <FieldGroup className="">
+        <Field data-invalid={!!errors.topicId} className="gap-2">
           <Label
             htmlFor="topicId"
             className={cn(
-              "text-sm font-semibold",
+              "font-semibold ml-1",
               errors.topicId && "text-destructive",
             )}
           >
@@ -198,25 +178,44 @@ export function EntryForm({
             </div>
           )}
         </Field>
+        <Field data-invalid={!!errors.title} className="gap-2">
+          <Label
+            htmlFor="title"
+            className={cn(
+              "font-semibold ml-1",
+              errors.title && "text-destructive",
+            )}
+          >
+            Title
+          </Label>
+          <Input
+            id="title"
+            placeholder="Entry Title"
+            aria-invalid={!!errors.title}
+            {...register("title")}
+            className="text-base py-2"
+          />
+          {errors.title && <FieldError errors={[errors.title]} />}
+        </Field>
 
-        <Collapsible className="w-full space-y-2 pt-2">
+        <Collapsible className="w-full">
           <CollapsibleTrigger asChild>
             <Button
               variant="ghost"
               size="sm"
-              className="w-full flex justify-between p-0 hover:bg-transparent"
+              className="w-full flex justify-between py-1 px-2 dark:hover:bg-muted"
             >
               <span className="text-sm font-medium text-muted-foreground">
-                Additional metadata...
+                Additional fields & metadata...
               </span>
               <ChevronDownIcon className="h-4 w-4 text-muted-foreground" />
             </Button>
           </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-4 pt-2">
-            <Field data-invalid={!!errors.description}>
+          <CollapsibleContent className="space-y-4 pt-4">
+            <Field data-invalid={!!errors.description} className="gap-2">
               <Label
                 htmlFor="description"
-                className={cn(errors.description && "text-destructive")}
+                className={cn("ml-1", errors.description && "text-destructive")}
               >
                 Description
               </Label>
@@ -233,12 +232,13 @@ export function EntryForm({
               )}
             </Field>
 
-            <Field data-invalid={!!errors.tags}>
+            <Field data-invalid={!!errors.tags} className="gap-2">
               <Label
                 htmlFor="tags"
-                className={cn(errors.tags && "text-destructive")}
+                className={cn("ml-1", errors.tags && "text-destructive")}
               >
-                Tags (comma-separated)
+                Tags{" "}
+                <span className="text-muted-foreground">(comma-separated)</span>
               </Label>
               <Input
                 id="tags"
@@ -250,10 +250,10 @@ export function EntryForm({
             </Field>
 
             <div className="grid grid-cols-2 gap-4">
-              <Field data-invalid={!!errors.siteName}>
+              <Field data-invalid={!!errors.siteName} className="gap-2">
                 <Label
                   htmlFor="siteName"
-                  className={cn(errors.siteName && "text-destructive")}
+                  className={cn("ml-1", errors.siteName && "text-destructive")}
                 >
                   Site Name
                 </Label>
@@ -266,10 +266,13 @@ export function EntryForm({
                 {errors.siteName && <FieldError errors={[errors.siteName]} />}
               </Field>
 
-              <Field data-invalid={!!errors.languageCode}>
+              <Field data-invalid={!!errors.languageCode} className="gap-2">
                 <Label
                   htmlFor="languageCode"
-                  className={cn(errors.languageCode && "text-destructive")}
+                  className={cn(
+                    "ml-1",
+                    errors.languageCode && "text-destructive",
+                  )}
                 >
                   Language
                 </Label>
@@ -285,10 +288,10 @@ export function EntryForm({
               </Field>
             </div>
 
-            <Field data-invalid={!!errors.url}>
+            <Field data-invalid={!!errors.url} className="gap-2">
               <Label
                 htmlFor="url"
-                className={cn(errors.url && "text-destructive")}
+                className={cn("ml-1", errors.url && "text-destructive")}
               >
                 URL
               </Label>
@@ -301,10 +304,10 @@ export function EntryForm({
               {errors.url && <FieldError errors={[errors.url]} />}
             </Field>
 
-            <Field data-invalid={!!errors.originUrl}>
+            <Field data-invalid={!!errors.originUrl} className="gap-2">
               <Label
                 htmlFor="originUrl"
-                className={cn(errors.originUrl && "text-destructive")}
+                className={cn("ml-1", errors.originUrl && "text-destructive")}
               >
                 Origin URL
               </Label>
@@ -317,7 +320,7 @@ export function EntryForm({
               {errors.originUrl && <FieldError errors={[errors.originUrl]} />}
             </Field>
 
-            <Field>
+            <Field className="mb-2">
               <div className="flex items-center justify-center pt-2">
                 <Controller
                   control={control}
