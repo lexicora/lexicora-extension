@@ -98,7 +98,7 @@ export function EntryForm({
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema), // Applying the zodResolver
-    defaultValues: {
+    values: {
       title: initialData?.title || "",
       topicId: initialData?.topicId || "",
       description: initialData?.description || "",
