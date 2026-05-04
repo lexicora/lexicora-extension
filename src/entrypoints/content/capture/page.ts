@@ -19,6 +19,7 @@ export async function getPageData(): Promise<PageData | null> {
     location: {
       href: window.location.href,
       origin: window.location.origin,
+      hostname: window.location.hostname,
       pathname: window.location.pathname,
       search: window.location.search,
       hash: window.location.hash,
