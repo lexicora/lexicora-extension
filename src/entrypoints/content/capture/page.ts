@@ -30,6 +30,7 @@ export async function getPageData(): Promise<PageData | null> {
       byline: parsedPage.byline,
       siteName: parsedPage.siteName,
       publishedTime: parsedPage.publishedTime,
+      faviconUrl: parsedPage.faviconUrl,
       dir: documentClone.documentElement.dir || null,
     },
     misc: {

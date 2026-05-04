@@ -165,6 +165,7 @@ function EntryCreatePage() {
                 topics={topics}
                 initialData={{
                   title: capturedData?.title || "",
+                  faviconUrl: capturedData?.metadata?.faviconUrl || "",
                   url: capturedData?.location?.href || "",
                   siteName: capturedData?.metadata?.siteName || "",
                   languageCode:

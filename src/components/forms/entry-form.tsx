@@ -332,7 +332,7 @@ export function EntryForm({
               </Label>
               <div className="flex items-end gap-3">
                 <Avatar
-                  className="flex shrink-0 size-8 my-0.5"
+                  className="flex shrink-0 size-8.5 my-px"
                   onClick={() => document.getElementById("faviconUrl")?.focus()}
                 >
                   <AvatarImage
