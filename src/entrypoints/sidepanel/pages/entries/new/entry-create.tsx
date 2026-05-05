@@ -58,6 +58,13 @@ function EntryCreatePage() {
       const db = await getDb();
       const entryId = uuidv7();
 
+      let urlObj: URL | null = null;
+      try {
+        urlObj = new URL(data.url);
+      } catch (e) {
+        console.warn("Invalid URL for database parts:", data.url);
+      }
+
       const newEntryDoc = {
         id: entryId,
         topicId: data.topicId,
@@ -69,9 +76,9 @@ function EntryCreatePage() {
         siteName: data.siteName,
         faviconUrl: data.faviconUrl,
         url: data.url,
-        hostnameUrl: "", // TODO: Extract hostname from url
-        pathnameUrl: "", // TODO: Extract pathname from url
-        searchUrl: "", // TODO: Extract search part from url
+        hostnameUrl: urlObj?.hostname || "",
+        pathnameUrl: urlObj?.pathname || "",
+        searchUrl: urlObj?.search || "",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         // Potentially other fields can go here based on EntryDocType schema
@@ -80,7 +87,7 @@ function EntryCreatePage() {
       await db.entries.insert(newEntryDoc);
       // Wait for blocks to be saved later with BlockNote JSON parsing?
       const mainBlocks = await editor.document;
-      // Iterate mainBlocks and save to db.blocks or whatever mechanism is used
+      // TODO: Iterate mainBlocks and save to db.blocks or whatever mechanism is used
 
       navigate("/entries"); // or wherever appropriate
     } catch (e) {
