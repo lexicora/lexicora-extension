@@ -8,6 +8,8 @@ import { entrySchema } from "./schemas/entry";
 import { blockSchema } from "./schemas/block";
 import { filterConsole } from "@/lib/utils/filter-console";
 
+const isDev = import.meta.env.DEV;
+
 // TODO: For testing always add same test data on db init.
 // Add plugins
 // if (import.meta.env.DEV) {
@@ -24,7 +26,7 @@ export async function initializeDb() {
     storage: getRxStorageDexie(), // TODO: Potentially include dexie.js plugins like dexie-worker or similar in the future. (encryption is built in to RxDB)
     multiInstance: true, // true by default - highly important for extensions crossing contexts
     ignoreDuplicate: false, // true is only allowed in development.
-    //closeDuplicates: true, // automatically close duplicate instances (e.g. from hot reload) - only relevant if ignoreDuplicate is true (enable if needed)
+    closeDuplicates: isDev, // automatically close duplicate instances (e.g. from hot reload) - only relevant if ignoreDuplicate is true (enable if needed)
   });
 
   // Add the collections
