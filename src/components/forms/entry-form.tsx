@@ -1,5 +1,5 @@
 import { useForm, Controller } from "react-hook-form";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Avatar } from "radix-ui";
@@ -53,7 +53,7 @@ const formSchema = z.object({
     .trim()
     .min(1, "Title is required.")
     .max(255, "Title is too long."),
-  topicId: z.string().trim().min(36, "A topic must be selected."),
+  topicId: z.string().trim().min(1, "A topic must be selected."),
   description: z
     .string()
     .trim()
@@ -124,6 +124,7 @@ export function EntryForm({
   });
 
   const prevInitialDataId = useRef<string | null>(null);
+  const [topicInputValue, setTopicInputValue] = useState("");
 
   useEffect(() => {
     if (!initialData) return;
@@ -266,7 +267,6 @@ export function EntryForm({
     }
   };
 
-  // TODO: Implement create new topic
   return (
     <form
       id={id}
@@ -287,38 +287,76 @@ export function EntryForm({
           <Controller
             control={control}
             name="topicId"
-            render={({ field }) => (
-              <Combobox
-                items={topics}
-                itemToStringValue={(topic) => topic.name}
-                itemToStringLabel={(topic) => topic.name}
-                value={topics.find((t) => t.id === field.value) || null}
-                onValueChange={(val) => field.onChange(val?.id || "")}
-              >
-                <div className="relative w-full">
-                  <ComboboxInput
-                    placeholder="Search or select a topic..."
-                    className="w-full"
-                    aria-invalid={!!errors.topicId}
-                  />
-                </div>
-                <ComboboxContent className="z-50 w-[--radix-popover-trigger-width]">
-                  <ComboboxEmpty>No topics found.</ComboboxEmpty>
-                  {/*TODO: Add option to topic if topic with input name doesn't exist */}
-                  <ComboboxList>
-                    {(topic) => (
-                      <ComboboxItem key={topic.id} value={topic}>
-                        {topic.name}
-                      </ComboboxItem>
-                    )}
-                  </ComboboxList>
-                </ComboboxContent>
-              </Combobox>
-            )}
+            render={({ field }) => {
+              const typed = topicInputValue.trim();
+              const hasExactTopicMatch = topics.some(
+                (t) => t.name.toLowerCase() === typed.toLowerCase(),
+              );
+
+              const isCustomValue =
+                field.value && !topics.some((t) => t.id === field.value);
+
+              const comboboxItems = [
+                ...topics,
+                ...(typed && !hasExactTopicMatch
+                  ? [{ id: typed, name: `Create "${typed}"` }]
+                  : []),
+                ...(isCustomValue && field.value !== typed
+                  ? [{ id: field.value, name: field.value }]
+                  : []),
+              ];
+
+              return (
+                <Combobox
+                  items={comboboxItems}
+                  itemToStringValue={(topic) => topic.name}
+                  itemToStringLabel={(topic) =>
+                    topic.name.startsWith('Create "') ? topic.id : topic.name
+                  }
+                  value={
+                    comboboxItems.find((t) => t.id === field.value) || null
+                  }
+                  onValueChange={(val) => {
+                    field.onChange(val?.id || "");
+                    if (val?.id) setTopicInputValue("");
+                  }}
+                  inputValue={topicInputValue}
+                  onInputValueChange={(val) => setTopicInputValue(val)}
+                >
+                  <div className="relative w-full">
+                    <ComboboxInput
+                      placeholder="Search or select a topic..."
+                      className="w-full"
+                      aria-invalid={!!errors.topicId}
+                      onBlur={(e) => {
+                        if (typed && !field.value && !hasExactTopicMatch) {
+                          field.onChange(typed);
+                        }
+                      }}
+                    />
+                  </div>
+                  <ComboboxContent className="z-50 w-[--radix-popover-trigger-width]">
+                    <ComboboxEmpty>Type to create a new topic.</ComboboxEmpty>
+                    <ComboboxList>
+                      {(topic) => (
+                        <ComboboxItem key={topic.id} value={topic}>
+                          {topic.name}
+                        </ComboboxItem>
+                      )}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
+              );
+            }}
           />
           {errors.topicId && <FieldError errors={[errors.topicId]} />}
 
           {/* Debug/Fallback representation of selected topic name (remove later)*/}
+          {watchTopicId && !topics.some((t) => t.id === watchTopicId) && (
+            <div className="text-xs text-muted-foreground mt-1">
+              Selected: New topic "{watchTopicId}"
+            </div>
+          )}
           {watchTopicId && topics.some((t) => t.id === watchTopicId) && (
             <div className="text-xs text-muted-foreground mt-1">
               Selected: {topics.find((t) => t.id === watchTopicId)?.name}
