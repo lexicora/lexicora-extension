@@ -2,6 +2,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useEffect, useRef } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Avatar } from "radix-ui";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -14,7 +15,12 @@ import {
   FieldDescription,
   FieldError,
 } from "@/components/ui/field";
-import { StarIcon, ChevronDownIcon, ChevronRightIcon } from "lucide-react";
+import {
+  StarIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  RefreshCw,
+} from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -32,7 +38,8 @@ import {
 } from "@/components/ui/combobox";
 import { TopicDocType } from "@/db/schemas/topic";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+//import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useTabSupport } from "@/hooks/use-tab-support";
 import {
   InputGroup,
   InputGroupAddon,
@@ -92,6 +99,7 @@ export function EntryForm({
   onSubmit,
   isLoading,
 }: EntryFormProps) {
+  const { isSupported } = useTabSupport();
   const {
     register,
     handleSubmit,
@@ -129,7 +137,7 @@ export function EntryForm({
     const updateField = (name: keyof FormValues, newValue: any) => {
       if (newValue === undefined || newValue === null) return;
       if (overrideExisting || !getValues(name)) {
-        setValue(name, newValue, { shouldValidate: true, shouldDirty: true });
+        setValue(name, newValue, { shouldDirty: true });
       }
     };
 
@@ -170,6 +178,93 @@ export function EntryForm({
 
   const watchTopicId = watch("topicId");
   const currentDescription = watch("description") || "";
+
+  const handleFetchMetadata = async () => {
+    try {
+      const [tab] = await browser.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+      if (!tab || !tab.id) return;
+
+      const [{ result }] = await browser.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: () => {
+          let faviconUrl =
+            document.querySelector('link[rel="icon"]')?.getAttribute("href") ||
+            document
+              .querySelector('link[rel="shortcut icon"]')
+              ?.getAttribute("href") ||
+            document
+              .querySelector('link[rel="apple-touch-icon"]')
+              ?.getAttribute("href") ||
+            null;
+
+          if (faviconUrl) {
+            try {
+              faviconUrl = new URL(faviconUrl, document.baseURI).href;
+            } catch (e) {
+              faviconUrl = null;
+            }
+          } else {
+            try {
+              faviconUrl = new URL("/favicon.ico", document.baseURI).href;
+            } catch (e) {
+              faviconUrl = null;
+            }
+          }
+
+          const siteName =
+            document
+              .querySelector('meta[property="og:site_name"]')
+              ?.getAttribute("content") || null;
+          const languageCode =
+            document.documentElement.lang || navigator.language || "en";
+
+          return {
+            faviconUrl,
+            siteName,
+            hostname: document.location.hostname,
+            url: document.location.href,
+            languageCode,
+          };
+        },
+      });
+
+      if (result) {
+        setValue("faviconUrl", result.faviconUrl || "", {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
+        setValue("url", result.url || "", {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
+
+        let formattedSiteName = result.siteName;
+        // if (!formattedSiteName && result.hostname) {
+        //   const parts = result.hostname.split(".");
+        //   let domain = parts.length > 1 ? parts[parts.length - 2] : parts[0];
+        //   const commonSlds = ["co", "com", "org", "net", "gov", "edu", "ac"];
+        //   if (commonSlds.includes(domain) && parts.length >= 3) {
+        //     domain = parts[parts.length - 3];
+        //   }
+        //   formattedSiteName = domain.charAt(0).toUpperCase() + domain.slice(1);
+        // }
+
+        setValue("siteName", formattedSiteName || result.hostname || "", {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
+        setValue("languageCode", result.languageCode || "", {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
+      }
+    } catch (err) {
+      console.error("Failed to fetch metadata:", err);
+    }
+  };
 
   // TODO: Implement create new topic
   return (
@@ -369,11 +464,11 @@ export function EntryForm({
                 Favicon URL
               </Label>
               <div className="flex items-end gap-3">
-                <Avatar
+                <Avatar.Root
                   className="flex shrink-0 size-8.5 my-px"
                   onClick={() => document.getElementById("faviconUrl")?.focus()}
                 >
-                  <AvatarImage
+                  <Avatar.Image
                     className="rounded-md"
                     src={watch("faviconUrl") || undefined}
                     alt="Favicon"
@@ -382,22 +477,33 @@ export function EntryForm({
                         "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cmVjdCB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9IiNlZWVlZWUiIHJ4PSIyIiByeT0iMiIvPjwvc3ZnPg==";
                     }}
                   />
-                  <AvatarFallback />
-                </Avatar>
+                  <Avatar.Fallback delayMs={600}>
+                    <div className="bg-gray-200 dark:bg-gray-800 size-8.5 rounded-md"></div>
+                  </Avatar.Fallback>
+                </Avatar.Root>
                 <Input
                   id="faviconUrl"
                   placeholder="e.g. https://example.com/favicon.ico"
                   aria-invalid={!!errors.faviconUrl}
                   {...register("faviconUrl")}
                 />
-                {errors.faviconUrl && (
-                  <FieldError errors={[errors.faviconUrl]} />
-                )}
               </div>
+              {errors.faviconUrl && <FieldError errors={[errors.faviconUrl]} />}
             </Field>
 
             <Field className="mb-2">
-              <div className="flex items-center justify-center pt-2">
+              <div className="flex items-center justify-center gap-2 pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon-sm"
+                  title="Fetch current tab's metadata"
+                  onClick={handleFetchMetadata}
+                  className="shrink-0 text-muted-foreground disabled:cursor-not-allowed"
+                  disabled={!isSupported}
+                >
+                  <RefreshCw className="size-4" />
+                </Button>
                 <Controller
                   control={control}
                   name="isFavorite"
