@@ -1,4 +1,5 @@
-// document-parser.ts v0.1.0
+// document-parser.ts v0.2.0
+// TODO: Potentially collect an array of relevant tags.
 
 import DomPurify from "dompurify";
 

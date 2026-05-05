@@ -168,10 +168,20 @@ function EntryCreatePage() {
                   title: capturedData?.title || "",
                   faviconUrl: capturedData?.metadata?.faviconUrl || "",
                   url: capturedData?.location?.href || "",
-                  siteName: capturedData?.metadata?.siteName || "",
+                  siteName:
+                    capturedData?.metadata?.siteName ||
+                    capturedData?.location?.hostname ||
+                    "",
                   languageCode:
                     capturedData?.lang || navigator.language || "en",
                   description: capturedData?.metadata?.excerpt || "",
+                  // [
+                  //   capturedData?.metadata?.byline ? `By ${capturedData.metadata.byline}` : null,
+                  //   capturedData?.metadata?.publishedTime ? `Published: ${capturedData.metadata.publishedTime}` : null,
+                  //   capturedData?.metadata?.excerpt || null,
+                  // ]
+                  //   .filter(Boolean)
+                  //   .join("\n\n") || "",
                 }}
                 onSubmit={handleEntrySubmit}
                 isLoading={isSaving}
