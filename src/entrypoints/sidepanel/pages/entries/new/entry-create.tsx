@@ -18,7 +18,7 @@ import { EntryForm, type EntryFormData } from "@/components/forms/entry-form";
 import { getDb } from "@/db";
 import { type TopicDocType } from "@/db/schemas/topic";
 import { uuidv7 } from "uuidv7";
-import { da } from "zod/v4/locales";
+import { da, de } from "zod/v4/locales";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 
 function EntryCreatePage() {
@@ -58,6 +58,21 @@ function EntryCreatePage() {
       const db = await getDb();
       const entryId = uuidv7();
 
+      let finalTopicId = data.topicId;
+      const isExistingTopic = topics.some((t) => t.id === finalTopicId);
+
+      if (!isExistingTopic && finalTopicId) {
+        const newTopicId = uuidv7();
+        await db.topics.insert({
+          id: newTopicId,
+          name: finalTopicId,
+          //description: "",
+          createdAt: new Date().toISOString(),
+          //updatedAt: new Date().toISOString(),
+        });
+        finalTopicId = newTopicId;
+      }
+
       let urlObj: URL | null = null;
       try {
         urlObj = new URL(data.url);
@@ -67,7 +82,7 @@ function EntryCreatePage() {
 
       const newEntryDoc = {
         id: entryId,
-        topicId: data.topicId,
+        topicId: finalTopicId,
         title: data.title,
         description: data.description,
         tags: data.tags,
