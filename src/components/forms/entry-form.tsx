@@ -1,26 +1,4 @@
-import { useForm, Controller } from "react-hook-form";
-import { useEffect, useRef, useState } from "react";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Avatar } from "radix-ui";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Toggle } from "@/components/ui/toggle";
-import { cn } from "@/lib/utils";
-import {
-  Field,
-  FieldGroup,
-  FieldDescription,
-  FieldError,
-} from "@/components/ui/field";
-import {
-  StarIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  RefreshCw,
-} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
@@ -28,24 +6,32 @@ import {
 } from "@/components/ui/collapsible";
 import {
   Combobox,
-  ComboboxInput,
-  ComboboxTrigger,
   ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
   ComboboxItem,
   ComboboxList,
-  ComboboxEmpty,
-  ComboboxCollection,
 } from "@/components/ui/combobox";
-import { TopicDocType } from "@/db/schemas/topic";
-import { Button } from "@/components/ui/button";
-//import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useTabSupport } from "@/hooks/use-tab-support";
+import { Field, FieldError, FieldGroup } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
   InputGroupTextarea,
-} from "../ui/input-group";
+} from "@/components/ui/input-group";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Toggle } from "@/components/ui/toggle";
+import { TopicDocType } from "@/db/schemas/topic";
+import { useTabSupport } from "@/hooks/use-tab-support";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ChevronDownIcon, RefreshCw, StarIcon } from "lucide-react";
+import { Avatar } from "radix-ui";
+import { useEffect, useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
 
 const formSchema = z.object({
   title: z

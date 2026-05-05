@@ -1,8 +1,5 @@
-import { useForm, Controller } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   InputGroup,
   InputGroupAddon,
@@ -12,14 +9,11 @@ import {
 import { Label } from "@/components/ui/label";
 import { Toggle } from "@/components/ui/toggle";
 import { cn } from "@/lib/utils";
-import {
-  Field,
-  FieldGroup,
-  FieldDescription,
-  FieldError,
-} from "@/components/ui/field";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { StarIcon } from "lucide-react";
-import { Button } from "../ui/button";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+//import { Button } from "@/components/ui/button";
 
 const formSchema = z.object({
   name: z
@@ -27,6 +21,7 @@ const formSchema = z.object({
     .trim()
     .min(5, "Topic name must be at least 5 characters.")
     .max(50, "Topic name must be less than 50 characters."),
+  // TODO: Implement unique name validation so no topics with the same name exist.
   description: z
     .string()
     .trim()
