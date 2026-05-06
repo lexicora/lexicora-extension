@@ -17,6 +17,7 @@ import { useCreateBlockNote } from "@blocknote/react";
 import { EntryForm, type EntryFormData } from "@/components/forms/entry-form";
 import { getDb } from "@/db";
 import { type TopicDocType } from "@/db/schemas/topic";
+import { convertBlockNoteBlocks } from "@/lib/utils/block-converter";
 import { uuidv7 } from "uuidv7";
 import { da, de } from "zod/v4/locales";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
@@ -100,9 +101,17 @@ function EntryCreatePage() {
       };
 
       await db.entries.insert(newEntryDoc);
-      // Wait for blocks to be saved later with BlockNote JSON parsing?
-      const mainBlocks = await editor.document;
-      // TODO: Iterate mainBlocks and save to db.blocks or whatever mechanism is used
+      
+      const mainBlocks = editor.document;
+      const dbBlocks = convertBlockNoteBlocks(
+        mainBlocks,
+        entryId,
+        "00000000-0000-0000-0000-000000000000" // using nil UUID for userId
+      );
+
+      if (dbBlocks.length > 0) {
+        await db.blocks.bulkInsert(dbBlocks);
+      }
 
       navigate("/entries"); // or wherever appropriate
     } catch (e) {
