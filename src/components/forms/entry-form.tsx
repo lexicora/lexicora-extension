@@ -46,15 +46,29 @@ const formSchema = z.object({
     .max(1000, "Description is too long.")
     .optional()
     .or(z.literal("")),
-  tags: z.string(),
+  tags: z.string().max(550, "Tags input is too long."), // we will split and validate individual tags later
   faviconUrl: z
     .url("Must be a valid URL")
-    .max(1000)
+    .max(1000, "Favicon URL is too long.")
     .optional()
     .or(z.literal("")),
-  url: z.url("Must be a valid URL").max(2048).optional().or(z.literal("")),
-  siteName: z.string().trim().max(150).optional().or(z.literal("")),
-  languageCode: z.string().trim().max(10).optional().or(z.literal("")),
+  url: z
+    .url("Must be a valid URL")
+    .max(2048, "URL is too long.")
+    .optional()
+    .or(z.literal("")),
+  siteName: z
+    .string()
+    .trim()
+    .max(150, "Site name is too long.")
+    .optional()
+    .or(z.literal("")),
+  languageCode: z
+    .string()
+    .trim()
+    .max(10, "Language code is too long.")
+    .optional()
+    .or(z.literal("")),
   isFavorite: z.boolean(),
 });
 
@@ -116,6 +130,9 @@ export function EntryForm({
   const prevInitialDataId = useRef<string | null>(null);
   const [topicInputValue, setTopicInputValue] = useState("");
 
+  const watchTopicId = watch("topicId");
+  const currentDescription = watch("description") || "";
+
   useEffect(() => {
     if (!initialData) return;
 
@@ -166,9 +183,6 @@ export function EntryForm({
       isFavorite: data.isFavorite,
     });
   };
-
-  const watchTopicId = watch("topicId");
-  const currentDescription = watch("description") || "";
 
   const handleFetchMetadata = async () => {
     try {
@@ -275,7 +289,6 @@ export function EntryForm({
             Topic
           </Label>
           <Controller
-            // TODO: Implement functionality to select first option when key enter is pressed.
             control={control}
             name="topicId"
             render={({ field }) => {
@@ -340,7 +353,9 @@ export function EntryForm({
               );
             }}
           />
-          {errors.topicId && <FieldError errors={[errors.topicId]} />}
+          {errors.topicId && (
+            <FieldError className="text-center" errors={[errors.topicId]} />
+          )}
 
           {/* Debug/Fallback representation of selected topic name (remove later)*/}
           {watchTopicId && !topics.some((t) => t.id === watchTopicId) && (
@@ -371,7 +386,9 @@ export function EntryForm({
             {...register("title")}
             className="text-base! py-2"
           />
-          {errors.title && <FieldError errors={[errors.title]} />}
+          {errors.title && (
+            <FieldError className="text-center" errors={[errors.title]} />
+          )}
         </Field>
 
         <Collapsible className="w-full">
@@ -402,7 +419,9 @@ export function EntryForm({
                 aria-invalid={!!errors.tags}
                 {...register("tags")}
               />
-              {errors.tags && <FieldError errors={[errors.tags]} />}
+              {errors.tags && (
+                <FieldError className="text-center" errors={[errors.tags]} />
+              )}
             </Field>
             <Field data-invalid={!!errors.description} className="gap-2">
               <Label
@@ -427,7 +446,10 @@ export function EntryForm({
                 </InputGroupAddon>
               </InputGroup>
               {errors.description && (
-                <FieldError errors={[errors.description]} />
+                <FieldError
+                  className="text-center"
+                  errors={[errors.description]}
+                />
               )}
             </Field>
             <Separator className="max-w-200 mx-auto mb-6 mt-7" />
@@ -445,7 +467,12 @@ export function EntryForm({
                   aria-invalid={!!errors.siteName}
                   {...register("siteName")}
                 />
-                {errors.siteName && <FieldError errors={[errors.siteName]} />}
+                {errors.siteName && (
+                  <FieldError
+                    className="text-center"
+                    errors={[errors.siteName]}
+                  />
+                )}
               </Field>
 
               <Field data-invalid={!!errors.languageCode} className="gap-2">
@@ -465,7 +492,10 @@ export function EntryForm({
                   {...register("languageCode")}
                 />
                 {errors.languageCode && (
-                  <FieldError errors={[errors.languageCode]} />
+                  <FieldError
+                    className="text-center"
+                    errors={[errors.languageCode]}
+                  />
                 )}
               </Field>
             </div>
@@ -482,7 +512,9 @@ export function EntryForm({
                 aria-invalid={!!errors.url}
                 {...register("url")}
               />
-              {errors.url && <FieldError errors={[errors.url]} />}
+              {errors.url && (
+                <FieldError className="text-center" errors={[errors.url]} />
+              )}
             </Field>
 
             <Field data-invalid={!!errors.faviconUrl} className="gap-2">
@@ -517,7 +549,12 @@ export function EntryForm({
                   {...register("faviconUrl")}
                 />
               </div>
-              {errors.faviconUrl && <FieldError errors={[errors.faviconUrl]} />}
+              {errors.faviconUrl && (
+                <FieldError
+                  className="text-center"
+                  errors={[errors.faviconUrl]}
+                />
+              )}
             </Field>
 
             <Field className="mb-2">

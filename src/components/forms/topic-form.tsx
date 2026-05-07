@@ -13,26 +13,43 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { StarIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import { getDb } from "@/db";
 //import { Button } from "@/components/ui/button";
 
-const formSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(1, "Name is required.")
-    .max(255, "Name is too long."),
-  // TODO: Implement unique name validation so no topics with the same name exist.
-  description: z
-    .string()
-    .trim()
-    .max(1000, "Description is too long.")
-    .optional()
-    .or(z.literal("")),
-  tags: z.string(),
-  isFavorite: z.boolean(),
-});
+const createFormSchema = (currentTopicId?: string) =>
+  z.object({
+    name: z
+      .string()
+      .trim()
+      .min(1, "Name is required.")
+      .max(255, "Name is too long.")
+      .refine(async (name) => {
+        const db = await getDb();
+        const existing = await db.topics
+          .findOne({
+            selector: {
+              name: { $eq: name },
+            },
+          })
+          .exec();
 
-type FormValues = z.infer<typeof formSchema>;
+        // If topic exists and it's not the one we're currently editing
+        if (existing && existing.id !== currentTopicId) {
+          return false;
+        }
+        return true;
+      }, "A topic with this name already exists."),
+    tags: z.string().max(550, "Tags input is too long."), // we will split and validate individual tags later
+    description: z
+      .string()
+      .trim()
+      .max(1000, "Description is too long.")
+      .optional()
+      .or(z.literal("")),
+    isFavorite: z.boolean(),
+  });
+
+type FormValues = z.infer<ReturnType<typeof createFormSchema>>;
 
 export interface TopicFormData {
   name: string;
@@ -53,6 +70,8 @@ export function TopicForm({
   initialData,
   onSubmit /*, isLoading*/,
 }: TopicFormProps) {
+  const schema = createFormSchema(id);
+
   const {
     register,
     handleSubmit,
@@ -60,7 +79,7 @@ export function TopicForm({
     watch,
     formState: { errors },
   } = useForm<FormValues>({
-    resolver: zodResolver(formSchema), // Applying the zodResolver
+    resolver: zodResolver(schema), // Applying the dynamically generated zodResolver
     defaultValues: {
       name: initialData?.name || "",
       description: initialData?.description || "",
@@ -68,6 +87,8 @@ export function TopicForm({
       isFavorite: initialData?.isFavorite || false,
     },
   });
+
+  const currentDescription = watch("description") || "";
 
   const onValidSubmit = (data: FormValues) => {
     const tagsArray = data.tags
@@ -83,8 +104,6 @@ export function TopicForm({
       isFavorite: data.isFavorite,
     });
   };
-
-  const currentDescription = watch("description") || "";
 
   return (
     <form id={id} onSubmit={handleSubmit(onValidSubmit)} className="py-3.5">
@@ -106,7 +125,9 @@ export function TopicForm({
             {...register("name")}
             className="text-base!"
           />
-          {errors.name && <FieldError errors={[errors.name]} />}
+          {errors.name && (
+            <FieldError className="text-center" errors={[errors.name]} />
+          )}
         </Field>
 
         <Field data-invalid={!!errors.tags} className="gap-2">
@@ -123,7 +144,9 @@ export function TopicForm({
             aria-invalid={!!errors.tags}
             {...register("tags")}
           />
-          {errors.tags && <FieldError errors={[errors.tags]} />}
+          {errors.tags && (
+            <FieldError className="text-center" errors={[errors.tags]} />
+          )}
         </Field>
 
         <Field data-invalid={!!errors.description} className="gap-2">
@@ -148,7 +171,9 @@ export function TopicForm({
               </InputGroupText>
             </InputGroupAddon>
           </InputGroup>
-          {errors.description && <FieldError errors={[errors.description]} />}
+          {errors.description && (
+            <FieldError className="text-center" errors={[errors.description]} />
+          )}
         </Field>
 
         <Field>
