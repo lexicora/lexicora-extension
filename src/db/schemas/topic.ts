@@ -10,8 +10,8 @@ const topicSchemaLiteral = {
   properties: {
     id: uuidSchema,
     userId: uuidWithNilDefault,
-    name: { type: 'string' },
-    description: { type: 'string' },
+    name: { type: 'string', maxLength: 255 },
+    description: { type: 'string', maxLength: 1000 },
     tags: {
       type: 'array',
       maxItems: 10,
@@ -21,8 +21,8 @@ const topicSchemaLiteral = {
     createdAt: { type: 'string', format: 'date-time' },
     updatedAt: { type: 'string', format: 'date-time' }
   },
-  required: ['id', 'userId', 'name', 'tags', 'isFavorite', 'createdAt'],
-  indexes: ['userId']
+  required: ['id', 'userId', 'name', 'tags', 'isFavorite', 'createdAt', 'updatedAt'],
+  indexes: ['userId'] // TODO: Adjust compound indexes as needed based on query patterns (e.g., userId + createdAt for sorting topics for a user)
 } as const;
 
 export const topicSchema = toTypedRxJsonSchema(topicSchemaLiteral);

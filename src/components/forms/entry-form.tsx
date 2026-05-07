@@ -43,13 +43,17 @@ const formSchema = z.object({
   description: z
     .string()
     .trim()
-    .max(500, "Description is too long.")
+    .max(1000, "Description is too long.")
     .optional()
     .or(z.literal("")),
   tags: z.string(),
-  faviconUrl: z.url("Must be a valid URL").optional().or(z.literal("")),
-  url: z.url("Must be a valid URL").optional().or(z.literal("")),
-  siteName: z.string().trim().max(100).optional().or(z.literal("")),
+  faviconUrl: z
+    .url("Must be a valid URL")
+    .max(1000)
+    .optional()
+    .or(z.literal("")),
+  url: z.url("Must be a valid URL").max(2048).optional().or(z.literal("")),
+  siteName: z.string().trim().max(150).optional().or(z.literal("")),
   languageCode: z.string().trim().max(10).optional().or(z.literal("")),
   isFavorite: z.boolean(),
 });
@@ -271,6 +275,7 @@ export function EntryForm({
             Topic
           </Label>
           <Controller
+            // TODO: Implement functionality to select first option when key enter is pressed.
             control={control}
             name="topicId"
             render={({ field }) => {

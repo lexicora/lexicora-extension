@@ -28,6 +28,7 @@ function TopicCreatePage() {
         tags: data.tags,
         isFavorite: data.isFavorite,
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       });
       // Navigate to the newly created topic, or topics list
       navigate(`/topics/${newDoc.id}`);

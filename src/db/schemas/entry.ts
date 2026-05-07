@@ -11,23 +11,23 @@ const entrySchemaLiteral = {
     id: uuidSchema,
     userId: uuidWithNilDefault,
     topicId: uuidSchema,
-    title: { type: 'string' },
-    description: { type: 'string' },
+    title: { type: 'string', maxLength: 255 },
+    description: { type: 'string', maxLength: 1000 },
     tags: {
       type: 'array',
       maxItems: 10,
       items: { type: 'string', maxLength: 50 }
     },
     isFavorite: { type: 'boolean' },
-    languageCode: { type: 'string' },
-    url: { type: 'string' },
-    hostnameUrl: { type: 'string' }, // the origin Url without path, query, or fragment (hidden from user input derived from url)
-    pathnameUrl: { type: 'string' }, // represents the path only (hidden from user input derived from url)
-    searchUrl: { type: 'string' }, // search part of the url (hidden from user input derived from url)
-    faviconUrl: { type: 'string' },
+    languageCode: { type: 'string', maxLength: 10 },
+    url: { type: 'string', maxLength: 2048 },
+    hostnameUrl: { type: 'string', maxLength: 600 }, // the origin Url without path, query, or fragment (hidden from user input derived from url)
+    pathnameUrl: { type: 'string', maxLength: 700 }, // represents the path only (hidden from user input derived from url)
+    searchUrl: { type: 'string', maxLength: 700 }, // search part of the url (hidden from user input derived from url)
+    faviconUrl: { type: 'string', maxLength: 1000 }, // base64 encoded favicon might be too long, for this.
     createdAt: { type: 'string', format: 'date-time' },
     updatedAt: { type: 'string', format: 'date-time' },
-    siteName: { type: 'string' },
+    siteName: { type: 'string', maxLength: 255 },
     //excerpt: { type: 'string' }, // not needed currently, put in description for now.
     //byline: { type: 'string' }, // not needed currently, put in description for now.
     //publishedAt: { type: 'string', format: 'date-time' } //not needed currently, put in description for now.
@@ -42,13 +42,14 @@ const entrySchemaLiteral = {
     'tags', 
     'isFavorite', 
     'languageCode', 
-    // 'url', // (not strictly required)
-    // 'hostnameUrl', // (not strictly required)
-    // 'pathnameUrl', // (not strictly required)
-    // 'searchUrl', // (not strictly required)
-    'createdAt'
+    'url', // (not strictly required, empty allowed)
+    'hostnameUrl', // (not strictly required, empty allowed)
+    'pathnameUrl', // (not strictly required, empty allowed)
+    'searchUrl', // (not strictly required, empty allowed)
+    'createdAt',
+    'updatedAt'
   ],
-  indexes: ['topicId', 'userId']
+  indexes: ['topicId', 'userId'] // TODO: Adjust compound indexes as needed based on query patterns (e.g., topicId + createdAt for sorting entries within a topic)
 } as const;
 
 export const entrySchema = toTypedRxJsonSchema(entrySchemaLiteral);

@@ -19,13 +19,13 @@ const formSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(5, "Topic name must be at least 5 characters.")
-    .max(50, "Topic name must be less than 50 characters."),
+    .min(1, "Name is required.")
+    .max(255, "Name is too long."),
   // TODO: Implement unique name validation so no topics with the same name exist.
   description: z
     .string()
     .trim()
-    .max(500, "Description is too long.")
+    .max(1000, "Description is too long.")
     .optional()
     .or(z.literal("")),
   tags: z.string(),
@@ -144,7 +144,7 @@ export function TopicForm({
             />
             <InputGroupAddon align="block-end">
               <InputGroupText className="tabular-nums ml-auto text-sm">
-                {currentDescription.length}/500 characters
+                {currentDescription.length}/1000 characters
               </InputGroupText>
             </InputGroupAddon>
           </InputGroup>

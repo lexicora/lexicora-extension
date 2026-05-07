@@ -69,7 +69,7 @@ function EntryCreatePage() {
           name: finalTopicId,
           //description: "",
           createdAt: new Date().toISOString(),
-          //updatedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         });
         finalTopicId = newTopicId;
       }
@@ -101,12 +101,12 @@ function EntryCreatePage() {
       };
 
       await db.entries.insert(newEntryDoc);
-      
+
       const mainBlocks = editor.document;
       const dbBlocks = convertBlockNoteBlocks(
         mainBlocks,
         entryId,
-        "00000000-0000-0000-0000-000000000000" // using nil UUID for userId
+        "00000000-0000-0000-0000-000000000000", // using nil UUID for userId
       );
 
       if (dbBlocks.length > 0) {
