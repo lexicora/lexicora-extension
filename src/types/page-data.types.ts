@@ -1,5 +1,3 @@
-import { Article, NonNullableArticle } from "@/types/mozilla-article.types";
-
 export type PageData = {
   /** BaseUri of the page */
   baseUri: string;
@@ -14,7 +12,7 @@ export type PageData = {
   /** The location data of the page */
   location: {
     href: string;
-    origin: string;
+    //origin: string;
     hostname: string;
     pathname: string;
     search: string;
@@ -33,15 +31,5 @@ export type PageData = {
   misc: {
     overrideExisting: boolean; // Whether to replace the existing editor content and form data with the parsed content
   };
-  // Optional fields populated by mozilla readability parsing, that are not already included in the above fields
-  // mozArticle?: {
-  //   textContent?: NonNullableArticle["content"];
-  //   length?: NonNullableArticle["length"];
-  //   excerpt?: NonNullableArticle["excerpt"];
-  //   byline?: NonNullableArticle["byline"];
-  //   dir?: NonNullableArticle["dir"];
-  //   siteName?: NonNullableArticle["siteName"]; // Maybe remove (redundant with location.origin)
-  //   publishedTime?: NonNullableArticle["publishedTime"];
-  // };
   //Todo: Add more fields if needed
 };
