@@ -22,7 +22,7 @@ export function convertBlockNoteBlocks(
   let order = startIndex;
 
   for (const block of blocks) {
-    const newBlockId = uuidv7(); //* Maybe generate a batch of length of blocks first, so monotonicity is closer together?
+    const newBlockId = uuidv7();
 
     const dbBlock: BlockDocType = {
       id: newBlockId,
