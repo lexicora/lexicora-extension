@@ -25,6 +25,7 @@ export async function getSelectionPageData(): Promise<PageData | null> {
     location: {
       href: window.location.href,
       origin: window.location.origin,
+      hostname: window.location.hostname,
       pathname: window.location.pathname,
       search: window.location.search,
       hash: window.location.hash,
@@ -35,12 +36,13 @@ export async function getSelectionPageData(): Promise<PageData | null> {
       byline: parsedSnippet.byline,
       siteName: parsedSnippet.siteName,
       publishedTime: parsedSnippet.publishedTime,
+      faviconUrl: parsedSnippet.faviconUrl,
       dir: document.documentElement.dir || null,
     },
     misc: {
       // TODO: Implement a setting, where the user can decide whether to replace the editor content with the parsed content, or to append it.
       // For selections, it might make more sense to append the content to the editor, rather than replacing it, since users might want to capture multiple selections from the same page.
-      replaceEditorContent: false,
+      overrideExisting: false,
     },
     //TODO: Add more fields if needed
   };

@@ -15,6 +15,7 @@ export type PageData = {
   location: {
     href: string;
     origin: string;
+    hostname: string;
     pathname: string;
     search: string;
     hash: string;
@@ -26,10 +27,11 @@ export type PageData = {
     byline: string | null;
     siteName: string | null;
     publishedTime: string | null;
+    faviconUrl?: string | null;
     dir?: string | null; // Text direction (e.g., "ltr", "rtl", "auto")
   };
   misc: {
-    replaceEditorContent: boolean; // Whether to replace the editor content with the parsed content
+    overrideExisting: boolean; // Whether to replace the existing editor content and form data with the parsed content
   };
   // Optional fields populated by mozilla readability parsing, that are not already included in the above fields
   // mozArticle?: {

@@ -1,0 +1,567 @@
+import { Button } from "@/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
+import { Field, FieldError, FieldGroup } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroupTextarea,
+} from "@/components/ui/input-group";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Toggle } from "@/components/ui/toggle";
+import { TopicDocType } from "@/db/schemas/topic";
+import { useTabSupport } from "@/hooks/use-tab-support";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ChevronDownIcon, RefreshCw, StarIcon } from "lucide-react";
+import { Avatar } from "radix-ui";
+import { useEffect, useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+
+const formSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(1, "Title is required.")
+    .max(255, "Title is too long."),
+  topicId: z.string().trim().min(1, "A topic must be selected."),
+  description: z
+    .string()
+    .trim()
+    .max(500, "Description is too long.")
+    .optional()
+    .or(z.literal("")),
+  tags: z.string(),
+  faviconUrl: z.url("Must be a valid URL").optional().or(z.literal("")),
+  url: z.url("Must be a valid URL").optional().or(z.literal("")),
+  siteName: z.string().trim().max(100).optional().or(z.literal("")),
+  languageCode: z.string().trim().max(10).optional().or(z.literal("")),
+  isFavorite: z.boolean(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+export interface EntryFormData {
+  title: string;
+  topicId: string;
+  description: string;
+  tags: string[];
+  faviconUrl: string;
+  url: string;
+  siteName: string;
+  languageCode: string;
+  isFavorite: boolean;
+}
+
+interface EntryFormProps {
+  id?: string;
+  initialData?: Partial<EntryFormData>;
+  overrideExisting?: boolean;
+  topics: TopicDocType[];
+  onSubmit: (data: EntryFormData) => void | Promise<void>;
+  isLoading?: boolean;
+}
+
+export function EntryForm({
+  id,
+  initialData,
+  overrideExisting = true,
+  topics,
+  onSubmit,
+  isLoading,
+}: EntryFormProps) {
+  const { isSupported } = useTabSupport();
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    getValues,
+    watch,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(formSchema), // Applying the zodResolver
+    defaultValues: {
+      title: initialData?.title || "",
+      topicId: initialData?.topicId || "",
+      description: initialData?.description || "",
+      tags: initialData?.tags?.join(", ") || "",
+      faviconUrl: initialData?.faviconUrl || "",
+      url: initialData?.url || "",
+      siteName: initialData?.siteName || "",
+      languageCode: initialData?.languageCode || navigator.language || "en",
+      isFavorite: initialData?.isFavorite || false,
+    },
+  });
+
+  const prevInitialDataId = useRef<string | null>(null);
+  const [topicInputValue, setTopicInputValue] = useState("");
+
+  useEffect(() => {
+    if (!initialData) return;
+
+    // Simple hash/stringification to avoid infinite loops if initialData object reference changes but content doesn't.
+    // If performance is an issue, a more granular check or passing individual values could be done.
+    const currentDataId = JSON.stringify(initialData);
+    if (prevInitialDataId.current === currentDataId) return;
+    prevInitialDataId.current = currentDataId;
+
+    const updateField = (name: keyof FormValues, newValue: any) => {
+      if (newValue === undefined || newValue === null) return;
+      if (overrideExisting || !getValues(name)) {
+        setValue(name, newValue, { shouldDirty: true });
+      }
+    };
+
+    updateField("title", initialData.title);
+    updateField("topicId", initialData.topicId);
+    updateField("description", initialData.description);
+    if (initialData.tags && initialData.tags.length > 0) {
+      updateField("tags", initialData.tags.join(", "));
+    } else if (initialData.tags !== undefined) {
+      updateField("tags", ""); // fallback for empty array
+    }
+    updateField("faviconUrl", initialData.faviconUrl);
+    updateField("url", initialData.url);
+    updateField("siteName", initialData.siteName);
+    updateField("languageCode", initialData.languageCode);
+    updateField("isFavorite", initialData.isFavorite);
+  }, [initialData, overrideExisting, setValue, getValues]);
+
+  const onValidSubmit = (data: FormValues) => {
+    const tagsArray = data.tags
+      .split(",")
+      .map((t) => t.trim())
+      .filter((t) => t.length > 0)
+      .slice(0, 10);
+
+    onSubmit({
+      title: data.title,
+      topicId: data.topicId,
+      description: data.description || "",
+      tags: tagsArray,
+      faviconUrl: data.faviconUrl || "",
+      url: data.url || "",
+      siteName: data.siteName || "",
+      languageCode: data.languageCode || "",
+      isFavorite: data.isFavorite,
+    });
+  };
+
+  const watchTopicId = watch("topicId");
+  const currentDescription = watch("description") || "";
+
+  const handleFetchMetadata = async () => {
+    try {
+      const [tab] = await browser.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+      if (!tab || !tab.id) return;
+
+      const [{ result }] = await browser.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: () => {
+          let faviconUrl =
+            document.querySelector('link[rel="icon"]')?.getAttribute("href") ||
+            document
+              .querySelector('link[rel="shortcut icon"]')
+              ?.getAttribute("href") ||
+            document
+              .querySelector('link[rel="apple-touch-icon"]')
+              ?.getAttribute("href") ||
+            null;
+
+          if (faviconUrl) {
+            try {
+              faviconUrl = new URL(faviconUrl, document.baseURI).href;
+            } catch (e) {
+              faviconUrl = null;
+            }
+          } else {
+            try {
+              faviconUrl = new URL("/favicon.ico", document.baseURI).href;
+            } catch (e) {
+              faviconUrl = null;
+            }
+          }
+
+          const siteName =
+            document
+              .querySelector('meta[property="og:site_name"]')
+              ?.getAttribute("content") || null;
+          const languageCode =
+            document.documentElement.lang || navigator.language || "en";
+
+          return {
+            faviconUrl,
+            siteName,
+            hostname: document.location.hostname,
+            url: document.location.href,
+            languageCode,
+          };
+        },
+      });
+
+      if (result) {
+        setValue("faviconUrl", result.faviconUrl || "", {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
+        setValue("url", result.url || "", {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
+
+        let formattedSiteName = result.siteName;
+        // if (!formattedSiteName && result.hostname) {
+        //   const parts = result.hostname.split(".");
+        //   let domain = parts.length > 1 ? parts[parts.length - 2] : parts[0];
+        //   const commonSlds = ["co", "com", "org", "net", "gov", "edu", "ac"];
+        //   if (commonSlds.includes(domain) && parts.length >= 3) {
+        //     domain = parts[parts.length - 3];
+        //   }
+        //   formattedSiteName = domain.charAt(0).toUpperCase() + domain.slice(1);
+        // }
+
+        setValue("siteName", formattedSiteName || result.hostname || "", {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
+        setValue("languageCode", result.languageCode || "", {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
+      }
+    } catch (err) {
+      console.error("Failed to fetch metadata:", err);
+    }
+  };
+
+  return (
+    <form
+      id={id}
+      onSubmit={handleSubmit(onValidSubmit)}
+      className="py-3.5 space-y-4"
+    >
+      <FieldGroup className="">
+        <Field data-invalid={!!errors.topicId} className="gap-2">
+          <Label
+            htmlFor="topicId"
+            className={cn(
+              "font-semibold ml-1",
+              errors.topicId && "text-destructive",
+            )}
+          >
+            Topic
+          </Label>
+          <Controller
+            control={control}
+            name="topicId"
+            render={({ field }) => {
+              const typed = topicInputValue.trim();
+              const hasExactTopicMatch = topics.some(
+                (t) => t.name.toLowerCase() === typed.toLowerCase(),
+              );
+
+              const isCustomValue =
+                field.value && !topics.some((t) => t.id === field.value);
+
+              const comboboxItems = [
+                ...topics,
+                ...(typed && !hasExactTopicMatch
+                  ? [{ id: typed, name: `Create "${typed}"` }]
+                  : []),
+                ...(isCustomValue && field.value !== typed
+                  ? [{ id: field.value, name: field.value }]
+                  : []),
+              ];
+
+              return (
+                <Combobox
+                  items={comboboxItems}
+                  itemToStringValue={(topic) => topic.name}
+                  itemToStringLabel={(topic) =>
+                    topic.name.startsWith('Create "') ? topic.id : topic.name
+                  }
+                  value={
+                    comboboxItems.find((t) => t.id === field.value) || null
+                  }
+                  onValueChange={(val) => {
+                    field.onChange(val?.id || "");
+                    if (val?.id) setTopicInputValue("");
+                  }}
+                  inputValue={topicInputValue}
+                  onInputValueChange={(val) => setTopicInputValue(val)}
+                >
+                  <div className="relative w-full">
+                    <ComboboxInput
+                      placeholder="Search or select a topic..."
+                      className="w-full"
+                      aria-invalid={!!errors.topicId}
+                      onBlur={(e) => {
+                        if (typed && !field.value && !hasExactTopicMatch) {
+                          field.onChange(typed);
+                        }
+                      }}
+                    />
+                  </div>
+                  <ComboboxContent className="z-50 w-[--radix-popover-trigger-width]">
+                    <ComboboxEmpty>Type to create a new topic.</ComboboxEmpty>
+                    <ComboboxList>
+                      {(topic) => (
+                        <ComboboxItem key={topic.id} value={topic}>
+                          {topic.name}
+                        </ComboboxItem>
+                      )}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
+              );
+            }}
+          />
+          {errors.topicId && <FieldError errors={[errors.topicId]} />}
+
+          {/* Debug/Fallback representation of selected topic name (remove later)*/}
+          {watchTopicId && !topics.some((t) => t.id === watchTopicId) && (
+            <div className="text-xs text-muted-foreground mt-1">
+              Selected: New topic "{watchTopicId}"
+            </div>
+          )}
+          {watchTopicId && topics.some((t) => t.id === watchTopicId) && (
+            <div className="text-xs text-muted-foreground mt-1">
+              Selected: {topics.find((t) => t.id === watchTopicId)?.name}
+            </div>
+          )}
+        </Field>
+        <Field data-invalid={!!errors.title} className="gap-2">
+          <Label
+            htmlFor="title"
+            className={cn(
+              "font-semibold ml-1",
+              errors.title && "text-destructive",
+            )}
+          >
+            Title
+          </Label>
+          <Input
+            id="title"
+            placeholder="Entry Title"
+            aria-invalid={!!errors.title}
+            {...register("title")}
+            className="text-base! py-2"
+          />
+          {errors.title && <FieldError errors={[errors.title]} />}
+        </Field>
+
+        <Collapsible className="w-full">
+          <CollapsibleTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full flex justify-between py-1 px-2 dark:hover:bg-muted"
+            >
+              <span className="text-sm font-medium text-muted-foreground">
+                Additional fields & metadata...
+              </span>
+              <ChevronDownIcon className="h-4 w-4 text-muted-foreground" />
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-4 pt-4">
+            <Field data-invalid={!!errors.tags} className="gap-2">
+              <Label
+                htmlFor="tags"
+                className={cn("ml-1", errors.tags && "text-destructive")}
+              >
+                Tags{" "}
+                <span className="text-muted-foreground">(comma-separated)</span>
+              </Label>
+              <Input
+                id="tags"
+                placeholder="e.g. documentation, context (max 10 allowed)"
+                aria-invalid={!!errors.tags}
+                {...register("tags")}
+              />
+              {errors.tags && <FieldError errors={[errors.tags]} />}
+            </Field>
+            <Field data-invalid={!!errors.description} className="gap-2">
+              <Label
+                htmlFor="description"
+                className={cn("ml-1", errors.description && "text-destructive")}
+              >
+                Description
+              </Label>
+              <InputGroup>
+                <InputGroupTextarea
+                  id="description"
+                  placeholder="A brief description of this entry"
+                  rows={3}
+                  className="min-h-16 max-h-48 resize-none scrollbar-thin scrollbar-bg-transparent"
+                  aria-invalid={!!errors.description}
+                  {...register("description")}
+                />
+                <InputGroupAddon align="block-end">
+                  <InputGroupText className="tabular-nums ml-auto text-sm">
+                    {currentDescription.length}/500 characters
+                  </InputGroupText>
+                </InputGroupAddon>
+              </InputGroup>
+              {errors.description && (
+                <FieldError errors={[errors.description]} />
+              )}
+            </Field>
+            <Separator className="max-w-200 mx-auto mb-6 mt-7" />
+            <div className="grid grid-cols-2 gap-4">
+              <Field data-invalid={!!errors.siteName} className="gap-2">
+                <Label
+                  htmlFor="siteName"
+                  className={cn("ml-1", errors.siteName && "text-destructive")}
+                >
+                  Site Name
+                </Label>
+                <Input
+                  id="siteName"
+                  placeholder="e.g. GitHub"
+                  aria-invalid={!!errors.siteName}
+                  {...register("siteName")}
+                />
+                {errors.siteName && <FieldError errors={[errors.siteName]} />}
+              </Field>
+
+              <Field data-invalid={!!errors.languageCode} className="gap-2">
+                <Label
+                  htmlFor="languageCode"
+                  className={cn(
+                    "ml-1",
+                    errors.languageCode && "text-destructive",
+                  )}
+                >
+                  Language
+                </Label>
+                <Input
+                  id="languageCode"
+                  placeholder="e.g. en"
+                  aria-invalid={!!errors.languageCode}
+                  {...register("languageCode")}
+                />
+                {errors.languageCode && (
+                  <FieldError errors={[errors.languageCode]} />
+                )}
+              </Field>
+            </div>
+            <Field data-invalid={!!errors.url} className="gap-2">
+              <Label
+                htmlFor="url"
+                className={cn("ml-1", errors.url && "text-destructive")}
+              >
+                URL
+              </Label>
+              <Input
+                id="url"
+                placeholder="e.g. https://example.com/path"
+                aria-invalid={!!errors.url}
+                {...register("url")}
+              />
+              {errors.url && <FieldError errors={[errors.url]} />}
+            </Field>
+
+            <Field data-invalid={!!errors.faviconUrl} className="gap-2">
+              <Label
+                htmlFor="faviconUrl"
+                className={cn("ml-1", errors.faviconUrl && "text-destructive")}
+              >
+                Favicon URL
+              </Label>
+              <div className="flex items-end gap-3">
+                <Avatar.Root
+                  className="flex shrink-0 size-8.5 my-px"
+                  onClick={() => document.getElementById("faviconUrl")?.focus()}
+                >
+                  <Avatar.Image
+                    className="rounded-md"
+                    src={watch("faviconUrl") || undefined}
+                    alt="Favicon"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src =
+                        "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cmVjdCB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9IiNlZWVlZWUiIHJ4PSIyIiByeT0iMiIvPjwvc3ZnPg==";
+                    }}
+                  />
+                  <Avatar.Fallback delayMs={500}>
+                    <div className="bg-gray-200 dark:bg-gray-800 size-8.5 rounded-md"></div>
+                  </Avatar.Fallback>
+                </Avatar.Root>
+                <Input
+                  id="faviconUrl"
+                  placeholder="e.g. https://example.com/favicon.ico"
+                  aria-invalid={!!errors.faviconUrl}
+                  {...register("faviconUrl")}
+                />
+              </div>
+              {errors.faviconUrl && <FieldError errors={[errors.faviconUrl]} />}
+            </Field>
+
+            <Field className="mb-2">
+              <div className="flex items-center justify-center gap-2 pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon-sm"
+                  title="Fetch current tab's metadata"
+                  onClick={handleFetchMetadata}
+                  className="shrink-0 text-muted-foreground disabled:cursor-not-allowed"
+                  disabled={!isSupported}
+                >
+                  <RefreshCw className="size-4" />
+                </Button>
+                <Controller
+                  control={control}
+                  name="isFavorite"
+                  render={({ field }) => (
+                    <Toggle
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      pressed={field.value}
+                      onPressedChange={field.onChange}
+                      title="Mark as Favorite"
+                      className={cn(
+                        "transition-colors",
+                        field.value
+                          ? "bg-lc-muted-foreground-hover text-primary"
+                          : "text-muted-foreground",
+                      )}
+                    >
+                      <StarIcon
+                        fill={field.value ? "currentColor" : "none"}
+                        className={cn(
+                          "size-4",
+                          field.value && "text-yellow-500 fill-yellow-500",
+                        )}
+                      />
+                      Favorite
+                    </Toggle>
+                  )}
+                />
+              </div>
+            </Field>
+          </CollapsibleContent>
+        </Collapsible>
+      </FieldGroup>
+    </form>
+  );
+}

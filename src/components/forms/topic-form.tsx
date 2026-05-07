@@ -1,0 +1,193 @@
+import { Field, FieldError, FieldGroup } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroupTextarea,
+} from "@/components/ui/input-group";
+import { Label } from "@/components/ui/label";
+import { Toggle } from "@/components/ui/toggle";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { StarIcon } from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+//import { Button } from "@/components/ui/button";
+
+const formSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(5, "Topic name must be at least 5 characters.")
+    .max(50, "Topic name must be less than 50 characters."),
+  // TODO: Implement unique name validation so no topics with the same name exist.
+  description: z
+    .string()
+    .trim()
+    .max(500, "Description is too long.")
+    .optional()
+    .or(z.literal("")),
+  tags: z.string(),
+  isFavorite: z.boolean(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+export interface TopicFormData {
+  name: string;
+  description: string;
+  tags: string[];
+  isFavorite: boolean;
+}
+
+interface TopicFormProps {
+  id?: string;
+  initialData?: Partial<TopicFormData>;
+  onSubmit: (data: TopicFormData) => void | Promise<void>;
+  isLoading?: boolean;
+}
+
+export function TopicForm({
+  id,
+  initialData,
+  onSubmit /*, isLoading*/,
+}: TopicFormProps) {
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(formSchema), // Applying the zodResolver
+    defaultValues: {
+      name: initialData?.name || "",
+      description: initialData?.description || "",
+      tags: initialData?.tags?.join(", ") || "",
+      isFavorite: initialData?.isFavorite || false,
+    },
+  });
+
+  const onValidSubmit = (data: FormValues) => {
+    const tagsArray = data.tags
+      .split(",")
+      .map((t) => t.trim())
+      .filter((t) => t.length > 0)
+      .slice(0, 10);
+
+    onSubmit({
+      name: data.name,
+      description: data.description || "",
+      tags: tagsArray,
+      isFavorite: data.isFavorite,
+    });
+  };
+
+  const currentDescription = watch("description") || "";
+
+  return (
+    <form id={id} onSubmit={handleSubmit(onValidSubmit)} className="py-3.5">
+      <FieldGroup>
+        <Field data-invalid={!!errors.name} className="gap-2">
+          <Label
+            htmlFor="name"
+            className={cn(
+              "font-semibold ml-1",
+              errors.name && "text-destructive",
+            )}
+          >
+            Name
+          </Label>
+          <Input
+            id="name"
+            placeholder="Topic Name"
+            aria-invalid={!!errors.name}
+            {...register("name")}
+            className="text-base!"
+          />
+          {errors.name && <FieldError errors={[errors.name]} />}
+        </Field>
+
+        <Field data-invalid={!!errors.tags} className="gap-2">
+          <Label
+            htmlFor="tags"
+            className={cn("ml-1", errors.tags && "text-destructive")}
+          >
+            Tags{" "}
+            <span className="text-muted-foreground">(comma-separated)</span>
+          </Label>
+          <Input
+            id="tags"
+            placeholder="e.g. documentation, ideas (max 10 allowed)"
+            aria-invalid={!!errors.tags}
+            {...register("tags")}
+          />
+          {errors.tags && <FieldError errors={[errors.tags]} />}
+        </Field>
+
+        <Field data-invalid={!!errors.description} className="gap-2">
+          <Label
+            htmlFor="description"
+            className={cn("ml-1", errors.description && "text-destructive")}
+          >
+            Description
+          </Label>
+          <InputGroup>
+            <InputGroupTextarea
+              id="description"
+              placeholder="Description of this topic"
+              rows={4}
+              className="min-h-24 max-h-94 resize-none scrollbar-thin scrollbar-bg-transparent"
+              aria-invalid={!!errors.description}
+              {...register("description")}
+            />
+            <InputGroupAddon align="block-end">
+              <InputGroupText className="tabular-nums ml-auto text-sm">
+                {currentDescription.length}/500 characters
+              </InputGroupText>
+            </InputGroupAddon>
+          </InputGroup>
+          {errors.description && <FieldError errors={[errors.description]} />}
+        </Field>
+
+        <Field>
+          <div className="flex items-center justify-center">
+            <Controller
+              control={control}
+              name="isFavorite"
+              render={({ field }) => (
+                <Toggle
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  pressed={field.value}
+                  onPressedChange={field.onChange}
+                  title="Mark as Favorite"
+                  className={cn(
+                    "transition-colors",
+                    field.value
+                      ? "bg-lc-muted-foreground-hover text-primary"
+                      : "text-muted-foreground",
+                  )}
+                >
+                  <StarIcon
+                    fill={field.value ? "currentColor" : "none"}
+                    className={cn(
+                      "size-4",
+                      field.value && "text-yellow-500 fill-yellow-500",
+                    )}
+                  />
+                  Favorite
+                </Toggle>
+              )}
+            />
+          </div>
+        </Field>
+        {/* <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? "Saving..." : "Save Topic"}
+        </Button> */}
+      </FieldGroup>
+    </form>
+  );
+}

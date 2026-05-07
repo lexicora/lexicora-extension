@@ -19,6 +19,7 @@ export async function getPageData(): Promise<PageData | null> {
     location: {
       href: window.location.href,
       origin: window.location.origin,
+      hostname: window.location.hostname,
       pathname: window.location.pathname,
       search: window.location.search,
       hash: window.location.hash,
@@ -29,11 +30,12 @@ export async function getPageData(): Promise<PageData | null> {
       byline: parsedPage.byline,
       siteName: parsedPage.siteName,
       publishedTime: parsedPage.publishedTime,
+      faviconUrl: parsedPage.faviconUrl,
       dir: documentClone.documentElement.dir || null,
     },
     misc: {
       // TODO: Implement a setting, where the user can decide whether to replace the editor content with the parsed content, or to append it.
-      replaceEditorContent: true, // true, because page is being captured, though maybe change this later to false, to be consistent with capturing selections
+      overrideExisting: true, // true, because page is being captured, though maybe change this later to false, to be consistent with capturing selections
     },
     //TODO: Add more fields if needed
   };

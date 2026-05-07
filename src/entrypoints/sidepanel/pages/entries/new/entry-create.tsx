@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { appBlockNoteConfig } from "@/components/editor/config";
 import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
-import { useEffect, useState, useLayoutEffect } from "react";
+import { useEffect, useState, useLayoutEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
@@ -13,6 +13,13 @@ import { PageHeader } from "@/components/page-header";
 import { cn } from "@/lib/utils";
 import { useScrollPos } from "@/providers/scroll-observer";
 import { useCreateBlockNote } from "@blocknote/react";
+
+import { EntryForm, type EntryFormData } from "@/components/forms/entry-form";
+import { getDb } from "@/db";
+import { type TopicDocType } from "@/db/schemas/topic";
+import { convertBlockNoteBlocks } from "@/lib/utils/block-converter";
+import { uuidv7 } from "uuidv7";
+import { da, de } from "zod/v4/locales";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 
 function EntryCreatePage() {
@@ -27,16 +34,98 @@ function EntryCreatePage() {
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
   const aiPromptTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const [topics, setTopics] = useState<TopicDocType[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    let sub: any;
+    getDb().then((db) => {
+      sub = db.topics.find().$.subscribe((results) => {
+        setTopics(results.map((r) => r.toJSON() as TopicDocType));
+      });
+    });
+    return () => {
+      if (sub) sub.unsubscribe();
+    };
+  }, []);
 
   const isAutoCaptureNav = location.state?.isCapturePending === true;
   const showSkeleton = isAutoCaptureNav && !capturedData;
   //const showSkeleton = isAutoCaptureNav && (!capturedData || !isEditorReady); // other approach with requestAnimation frame contrary to useLayoutEffect
 
+  const handleEntrySubmit = async (data: EntryFormData) => {
+    setIsSaving(true);
+    try {
+      const db = await getDb();
+      const entryId = uuidv7();
+
+      let finalTopicId = data.topicId;
+      const isExistingTopic = topics.some((t) => t.id === finalTopicId);
+
+      if (!isExistingTopic && finalTopicId) {
+        const newTopicId = uuidv7();
+        await db.topics.insert({
+          id: newTopicId,
+          name: finalTopicId,
+          //description: "",
+          createdAt: new Date().toISOString(),
+          //updatedAt: new Date().toISOString(),
+        });
+        finalTopicId = newTopicId;
+      }
+
+      let urlObj: URL | null = null;
+      try {
+        urlObj = new URL(data.url);
+      } catch (e) {
+        console.warn("Invalid URL for database parts:", data.url);
+      }
+
+      const newEntryDoc = {
+        id: entryId,
+        topicId: finalTopicId,
+        title: data.title,
+        description: data.description,
+        tags: data.tags,
+        isFavorite: data.isFavorite,
+        languageCode: data.languageCode,
+        siteName: data.siteName,
+        faviconUrl: data.faviconUrl,
+        url: data.url,
+        hostnameUrl: urlObj?.hostname || "",
+        pathnameUrl: urlObj?.pathname || "",
+        searchUrl: urlObj?.search || "",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        // Potentially other fields can go here based on EntryDocType schema
+      };
+
+      await db.entries.insert(newEntryDoc);
+      
+      const mainBlocks = editor.document;
+      const dbBlocks = convertBlockNoteBlocks(
+        mainBlocks,
+        entryId,
+        "00000000-0000-0000-0000-000000000000" // using nil UUID for userId
+      );
+
+      if (dbBlocks.length > 0) {
+        await db.blocks.bulkInsert(dbBlocks);
+      }
+
+      navigate("/entries"); // or wherever appropriate
+    } catch (e) {
+      console.error("Failed to save entry:", e);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   useLayoutEffect(() => {
     if (capturedData?.content) {
       setLanguage(capturedData.lang || navigator.language || "en");
       const blocks = editor.tryParseHTMLToBlocks(capturedData.content);
-      if (capturedData.misc.replaceEditorContent) {
+      if (capturedData.misc.overrideExisting) {
         editor.replaceBlocks(editor.document, blocks);
         return;
       }
@@ -66,11 +155,11 @@ function EntryCreatePage() {
       const cleanupTimer = setTimeout(() => {
         navigate(location.pathname, {
           replace: true,
-          preventScrollReset: !capturedData.misc.replaceEditorContent,
+          preventScrollReset: !capturedData.misc.overrideExisting,
           state: {},
         });
       }, transitionDuration);
-      if (capturedData.misc.replaceEditorContent) window.scrollTo({ top: 0 });
+      if (capturedData.misc.overrideExisting) window.scrollTo({ top: 0 });
       return () => clearTimeout(cleanupTimer);
     }
   }, [capturedData, location.state, navigate, location.pathname]);
@@ -102,12 +191,39 @@ function EntryCreatePage() {
           <section className="mx-px">
             {/*TODO: Maybe add relative and overflow-x-hidden later, when it is guaranteed to fill the entire page (height wise) */}
             <div className="text-start">
+              <EntryForm
+                id="entry-create-form"
+                topics={topics}
+                overrideExisting={capturedData?.misc?.overrideExisting ?? true}
+                initialData={{
+                  title: capturedData?.title || "",
+                  faviconUrl: capturedData?.metadata?.faviconUrl || "",
+                  url: capturedData?.location?.href || "",
+                  siteName:
+                    capturedData?.metadata?.siteName ||
+                    capturedData?.location?.hostname ||
+                    "",
+                  languageCode:
+                    capturedData?.lang || navigator.language || "en",
+                  description: capturedData?.metadata?.excerpt || "",
+                  // [
+                  //   capturedData?.metadata?.byline ? `By ${capturedData.metadata.byline}` : null,
+                  //   capturedData?.metadata?.publishedTime ? `Published: ${capturedData.metadata.publishedTime}` : null,
+                  //   capturedData?.metadata?.excerpt || null,
+                  // ]
+                  //   .filter(Boolean)
+                  //   .join("\n\n") || "",
+                }}
+                onSubmit={handleEntrySubmit}
+                isLoading={isSaving}
+              />
+
               <Label
                 htmlFor="lc-blocknote-view-new-entry"
                 onClick={() => {
                   editor.focus();
                 }}
-                className="text-sm ml-2 mb-0.5"
+                className="text-sm ml-1 mb-1 mt-0"
               >
                 Content
               </Label>
@@ -202,12 +318,14 @@ function EntryCreatePage() {
                 }`}
               >
                 <Button
+                  form="entry-create-form"
+                  type="submit"
                   variant="secondary"
                   title="Save Entry"
                   className="w-full overflow-hidden hover:bg-secondary hover:brightness-90 /*active:brightness-80*/"
-                  disabled={promptText.trimEnd() !== ""}
+                  disabled={promptText.trimEnd() !== "" || isSaving}
                 >
-                  Save Entry
+                  {isSaving ? "Saving..." : "Save Entry"}
                 </Button>
               </div>
               <div className="flex justify-end flex-1">
