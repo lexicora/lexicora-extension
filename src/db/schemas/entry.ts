@@ -24,6 +24,7 @@ const entrySchemaLiteral = {
     hostnameUrl: { type: 'string', maxLength: 600 }, // the origin Url without path, query, or fragment (hidden from user input derived from url)
     pathnameUrl: { type: 'string', maxLength: 700 }, // represents the path only (hidden from user input derived from url)
     searchUrl: { type: 'string', maxLength: 700 }, // search part of the url (hidden from user input derived from url)
+    // Maybe add hashUrl
     faviconUrl: { type: 'string', maxLength: 1000 }, // base64 encoded favicon might be too long, for this.
     createdAt: { type: 'string', format: 'date-time' },
     updatedAt: { type: 'string', format: 'date-time' },

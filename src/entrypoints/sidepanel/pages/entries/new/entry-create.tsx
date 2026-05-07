@@ -206,6 +206,9 @@ function EntryCreatePage() {
                   languageCode:
                     capturedData?.lang || navigator.language || "en",
                   description: capturedData?.metadata?.excerpt || "",
+                  // capturedData?.textContent
+                  //   ? capturedData?.textContent?.trim().slice(0, 400) + "..."
+                  //   : "",
                   // [
                   //   capturedData?.metadata?.byline ? `By ${capturedData.metadata.byline}` : null,
                   //   capturedData?.metadata?.publishedTime ? `Published: ${capturedData.metadata.publishedTime}` : null,

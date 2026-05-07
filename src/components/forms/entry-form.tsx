@@ -441,7 +441,7 @@ export function EntryForm({
                 />
                 <InputGroupAddon align="block-end">
                   <InputGroupText className="tabular-nums ml-auto text-sm">
-                    {currentDescription.length}/500 characters
+                    {currentDescription.length}/1000 characters
                   </InputGroupText>
                 </InputGroupAddon>
               </InputGroup>
