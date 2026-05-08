@@ -59,7 +59,7 @@ export function PageHeader({
             className="shrink-0 size-10 rounded-lg"
             onClick={handleGoBack}
           >
-            <ArrowLeftIcon className="size-4.5" />
+            <ArrowLeftIcon className="size-5.5" />
           </Button>
           <h1
             className={cn(
@@ -112,18 +112,18 @@ export function PageHeader({
               size="icon"
               title="Go back"
               className={cn(
-                "hover:bg-gray-200 dark:hover:bg-gray-800",
-                "ml-1.75 shrink-0 size-7 transition-all duration-150 active-view-transition:transition-none",
+                "hover:bg-gray-200 dark:hover:bg-gray-800 hover:ring-1 ring-inset ring-gray-300 dark:ring-gray-700",
+                "ml-1.75 shrink-0 size-7.5 transition-all duration-150 active-view-transition:transition-none",
                 isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
               )}
               onClick={handleGoBack}
             >
-              <ArrowLeftIcon className="size-4" />
+              <ArrowLeftIcon className="size-4.5" />
             </Button>
             <span
               // was 25px, now 1.5625em
               className={cn(
-                "mr-[calc(var(--lc-scrollbar-offset)+1.5625em)] mt-0.5 w-full max-w-301.75 text-base font-semibold transition-transform-opacity-blur duration-300 active-view-transition:transition-none text-center",
+                "mr-[calc(var(--lc-scrollbar-offset)+1.6875em)] mt-0.5 w-full max-w-300.75 text-base font-semibold transition-transform-opacity-blur duration-300 active-view-transition:transition-none text-center",
                 isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
               )}
             >
@@ -157,7 +157,7 @@ export function PageHeader({
             className="shrink-0 size-10 rounded-lg"
             onClick={handleGoBack}
           >
-            <ArrowLeftIcon className="size-4.5" />
+            <ArrowLeftIcon className="size-5.5" />
           </Button>
           <h1
             className={cn(
