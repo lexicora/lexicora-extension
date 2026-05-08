@@ -20,6 +20,8 @@ import { type TopicDocType } from "@/db/schemas/topic";
 import { convertBlockNoteBlocks } from "@/lib/utils/block-converter";
 import { uuidv7 } from "uuidv7";
 import { da, de } from "zod/v4/locales";
+
+import { SaveIcon } from "lucide-react";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 
 function EntryCreatePage() {
@@ -37,6 +39,18 @@ function EntryCreatePage() {
   const [topics, setTopics] = useState<TopicDocType[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
+  const isAutoCaptureNav = location.state?.isCapturePending === true;
+  const showSkeleton = isAutoCaptureNav && !capturedData;
+  //const showSkeleton = isAutoCaptureNav && (!capturedData || !isEditorReady); // other approach with requestAnimation frame contrary to useLayoutEffect
+
+  const rightActionButton = {
+    iconSmall: <SaveIcon className="size-4.5" />, // You can replace this with an actual icon component
+    iconLarge: <SaveIcon className="size-5.5" />, // You can replace this with an actual icon component
+    title: "Save Entry",
+    variant: "default" as const,
+    onClick: () => {},
+  };
+
   useEffect(() => {
     let sub: any;
     getDb().then((db) => {
@@ -48,10 +62,6 @@ function EntryCreatePage() {
       if (sub) sub.unsubscribe();
     };
   }, []);
-
-  const isAutoCaptureNav = location.state?.isCapturePending === true;
-  const showSkeleton = isAutoCaptureNav && !capturedData;
-  //const showSkeleton = isAutoCaptureNav && (!capturedData || !isEditorReady); // other approach with requestAnimation frame contrary to useLayoutEffect
 
   const handleEntrySubmit = async (data: EntryFormData) => {
     setIsSaving(true);
@@ -186,7 +196,12 @@ function EntryCreatePage() {
     <div id="lc-new-entry-page" className="lc-page-container mb-0! /*pr-3!*/">
       {/*Make the inner container as tall (min-height) as the vh (but not overflowing) to prevent issues with editor*/}
       <div className="lc-page-container-inner">
-        <PageHeader title="New Entry" goBackButton heavyTeardown={true} />
+        <PageHeader
+          title="New Entry"
+          goBackButton
+          rightActionButton={rightActionButton}
+          heavyTeardown={true}
+        />
         <main>
           <section className="mx-px">
             {/*TODO: Maybe add relative and overflow-x-hidden later, when it is guaranteed to fill the entire page (height wise) */}

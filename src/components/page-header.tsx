@@ -5,12 +5,21 @@ import { useNavigate } from "react-router-dom";
 import { useScrollPos } from "@/providers/scroll-observer";
 import { cn } from "@/lib/utils";
 
+interface ActionButtonConfig {
+  iconSmall: React.ReactNode;
+  iconLarge: React.ReactNode;
+  variant?: "default" | "ghost" | "outline" | "secondary" | "destructive";
+  onClick: () => void;
+  title: string;
+}
+
 interface PageHeaderProps {
   title: string;
   children?: React.ReactNode; // Added children for custom UI
   hoverOnScroll?: boolean;
   headerTextAlignment?: "center" | "left";
   goBackButton?: boolean;
+  rightActionButton?: ActionButtonConfig;
   classNameHeaderElement?: string;
   heavyTeardown?: boolean;
 }
@@ -21,6 +30,7 @@ export function PageHeader({
   hoverOnScroll = true,
   headerTextAlignment = "center",
   goBackButton = false,
+  rightActionButton,
   classNameHeaderElement,
   heavyTeardown = false,
 }: PageHeaderProps) {
@@ -64,11 +74,24 @@ export function PageHeader({
           <h1
             className={cn(
               "text-2xl font-semibold",
-              isLeftAligned ? "ml-3 text-left" : "flex-1 text-center mr-10",
+              isLeftAligned
+                ? "ml-3 text-left"
+                : cn("flex-1 text-center", !rightActionButton && "mr-10"),
             )}
           >
             {title}
           </h1>
+          {rightActionButton && (
+            <Button
+              variant={rightActionButton.variant || "default"}
+              size="icon"
+              title={rightActionButton.title}
+              className="shrink-0 size-10 rounded-lg"
+              onClick={rightActionButton.onClick}
+            >
+              {rightActionButton.iconLarge}
+            </Button>
+          )}
           {/* Children rendered at the end of the flex container */}
           {children}
         </header>
@@ -106,14 +129,20 @@ export function PageHeader({
         )}
       >
         {goBackButton ? (
-          <div className="flex mt-1.25 w-full max-w-317.25">
+          <div
+            //className="flex mt-1.25 w-full max-w-317.25 relative"
+            className={cn(
+              "flex mt-1.25 w-full max-w-317.25",
+              rightActionButton ? "justify-between" : "justify-start",
+            )}
+          >
             <Button
               variant="ghost"
               size="icon"
               title="Go back"
               className={cn(
                 "hover:bg-gray-200 dark:hover:bg-gray-800 hover:ring-1 ring-inset ring-gray-300 dark:ring-gray-700",
-                "ml-1.75 shrink-0 size-7.5 transition-all duration-150 active-view-transition:transition-none",
+                "ml-3 shrink-0 size-7.5 transition-all duration-150 active-view-transition:transition-none",
                 isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
               )}
               onClick={handleGoBack}
@@ -123,12 +152,31 @@ export function PageHeader({
             <span
               // was 25px, now 1.5625em
               className={cn(
-                "mr-[calc(var(--lc-scrollbar-offset)+1.6875em)] mt-0.5 w-full max-w-300.75 text-base font-semibold transition-transform-opacity-blur duration-300 active-view-transition:transition-none text-center",
+                "flex-1 mt-0.5 w-full max-w-298.5 text-base font-semibold transition-transform-opacity-blur duration-300 active-view-transition:transition-none text-center",
+                !rightActionButton &&
+                  "mr-[calc(var(--lc-scrollbar-offset)+2.0625em)]",
                 isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
               )}
             >
               {title}
             </span>
+            {rightActionButton && (
+              <Button
+                variant={rightActionButton.variant || "default"}
+                size="icon"
+                title={rightActionButton.title}
+                className={cn(
+                  rightActionButton.variant === "default" &&
+                    "bg-primary/80 hover:bg-primary",
+                  // TODO: Other variants
+                  "mr-0.75 shrink-0 size-7.5 transition-all duration-150 active-view-transition:transition-none",
+                  isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
+                )}
+                onClick={rightActionButton.onClick}
+              >
+                {rightActionButton.iconSmall}
+              </Button>
+            )}
           </div>
         ) : (
           <span
@@ -162,11 +210,29 @@ export function PageHeader({
           <h1
             className={cn(
               "text-2xl font-semibold",
-              isLeftAligned ? "ml-3 text-left" : "w-full text-center mr-10",
+              isLeftAligned
+                ? "ml-3 text-left"
+                : cn("flex-1 text-center", !rightActionButton && "mr-10"),
             )}
           >
             {title}
           </h1>
+          {rightActionButton && (
+            <Button
+              variant={rightActionButton.variant || "default"}
+              size="icon"
+              title={rightActionButton.title}
+              className={cn(
+                rightActionButton.variant === "default" &&
+                  "bg-primary/80 hover:bg-primary",
+                // TODO: Other variants
+                "shrink-0 size-10 rounded-lg",
+              )}
+              onClick={rightActionButton.onClick}
+            >
+              {rightActionButton.iconLarge}
+            </Button>
+          )}
         </div>
       ) : (
         // Large Title: SIMPLE, had css classes:  flex items-center justify-between

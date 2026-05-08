@@ -202,7 +202,7 @@
             scrollbar-color: #afafaf #ededed;
         }
         &.dark {
-            scrollbar-color: #51575e #0d111b;
+            scrollbar-color: #4d5359 #0d111b;
         }
         /*macOS scrollbar fallback, for if set to stable scrollbar*/
         &::-webkit-scrollbar {
