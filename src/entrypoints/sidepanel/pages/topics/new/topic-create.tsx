@@ -55,7 +55,7 @@ function TopicCreatePage() {
             />
           </section>
         </main>
-        <footer className="mt-7">
+        {/* <footer className="mt-7">
           <section className="fixed bottom-0 left-0 min-h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-30 lc-bottom-bar-styled-bg">
             <div className="flex items-center justify-center w-full max-w-2xl mx-auto inset-x-0">
               <Button
@@ -68,7 +68,7 @@ function TopicCreatePage() {
               </Button>
             </div>
           </section>
-        </footer>
+        </footer> */}
       </div>
     </div>
   );

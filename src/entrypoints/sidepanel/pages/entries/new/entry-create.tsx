@@ -369,9 +369,7 @@ function EntryCreatePage() {
                   variant="default"
                   className={cn(
                     "transition-all duration-150 h-full rounded-sm px-3",
-                    //isPromptActive ? "px-3" : "",
                   )}
-                  //disabled={promptText.trimEnd() === ""}
                 >
                   Refine with AI
                   {/* {isPromptActive ? (

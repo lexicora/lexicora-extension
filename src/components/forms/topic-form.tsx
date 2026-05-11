@@ -10,11 +10,11 @@ import { Label } from "@/components/ui/label";
 import { Toggle } from "@/components/ui/toggle";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { StarIcon } from "lucide-react";
+import { SaveIcon, StarIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { getDb } from "@/db";
-//import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 const createFormSchema = (currentTopicId?: string) =>
   z.object({
@@ -68,7 +68,8 @@ interface TopicFormProps {
 export function TopicForm({
   id,
   initialData,
-  onSubmit /*, isLoading*/,
+  onSubmit,
+  isLoading,
 }: TopicFormProps) {
   const schema = createFormSchema(id);
 
@@ -177,7 +178,7 @@ export function TopicForm({
         </Field>
 
         <Field>
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-between gap-6">
             <Controller
               control={control}
               name="isFavorite"
@@ -185,11 +186,12 @@ export function TopicForm({
                 <Toggle
                   type="button"
                   variant="outline"
-                  size="sm"
+                  size="default"
                   pressed={field.value}
                   onPressedChange={field.onChange}
                   title="Mark as Favorite"
                   className={cn(
+                    "shrink-0",
                     "transition-colors",
                     field.value
                       ? "bg-lc-muted-foreground-hover text-primary"
@@ -207,9 +209,12 @@ export function TopicForm({
                 </Toggle>
               )}
             />
+            <Button type="submit" className="shrink-0" disabled={isLoading}>
+              {/*<SaveIcon />*/} {isLoading ? "Saving..." : "Save Topic"}
+            </Button>
           </div>
         </Field>
-        {/* <Button type="submit" className="w-full" disabled={isLoading}>
+        {/* <Button type="submit" className="mx-auto w-1/2" disabled={isLoading}>
           {isLoading ? "Saving..." : "Save Topic"}
         </Button> */}
       </FieldGroup>
