@@ -341,6 +341,11 @@ function EntryCreatePage() {
                 }}
                 // onBlur={() => {}}
               />
+              {isPromptActive && (
+                <div className="absolute left-3.5 bottom-2.5 text-xs text-muted-foreground select-none pointer-events-none transition-opacity">
+                  {promptText.length}/500 characters
+                </div>
+              )}
               <div
                 className={cn(
                   "transition-all duration-150",
