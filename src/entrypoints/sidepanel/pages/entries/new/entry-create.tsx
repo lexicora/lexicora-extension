@@ -309,14 +309,12 @@ function EntryCreatePage() {
                 //rows={4}
                 rows={1}
                 maxLength={500}
-                placeholder="AI prompt"
+                placeholder="Your desired AI prompt..."
                 // TODO: Adjust dark mode shadow
                 className={cn(
                   "transition-all duration-150 py-2.5",
-                  isPromptActive
-                    ? "pb-10 min-h-10.5"
-                    : "w-[50%] min-h-8 py-1.25",
-                  "text-base! field-sizing-content resize-none max-h-[35vh] focus-visible:ring-0 backdrop-blur-lg",
+                  isPromptActive ? "pb-11" : "",
+                  "text-base! field-sizing-content resize-none max-h-[35vh] min-h-10.5 focus-visible:ring-0 backdrop-blur-lg",
                   "dark:bg-[#121724dd] dark:focus-visible:bg-[#121724] bg-[#fdfdfddd] focus-visible:bg-[#fdfdfd] scrollbar-thin scrollbar-bg-transparent",
                   isAtBottom
                     ? "shadow-none"
@@ -346,8 +344,8 @@ function EntryCreatePage() {
               <div
                 className={cn(
                   "transition-all duration-150",
-                  "absolute right-0 flex items-end justify-end w-[50%]",
-                  isPromptActive ? "mr-2.5 mb-2.5 h-7.5 w-30" : "mr-0 h-9",
+                  "absolute right-0 /*right-2.5 bottom-2.5*/ flex items-center /*justify-end*/",
+                  isPromptActive ? "mr-2.25 mb-2 h-7.5" : "mb-1.25 mr-1.5 h-9",
                 )}
               >
                 <Button
@@ -355,8 +353,8 @@ function EntryCreatePage() {
                   size={isPromptActive ? "sm" : "default"}
                   variant="default"
                   className={cn(
-                    "transition-all duration-150 h-full w-full rounded-md px-3 hover:bg-primary hover:brightness-90",
-                    isPromptActive ? "" : "",
+                    "transition-all duration-150 h-full rounded-sm px-3",
+                    //isPromptActive ? "px-3" : "",
                   )}
                   //disabled={promptText.trimEnd() === ""}
                 >
