@@ -19,7 +19,7 @@ const isDev = import.meta.env.DEV;
 
 // Helper function to initialize the db
 export async function initializeDb() {
-  filterConsole();
+  if (!isDev) filterConsole();
 
   const db = await createRxDatabase({
     name: "lexicoradb", // name of the database

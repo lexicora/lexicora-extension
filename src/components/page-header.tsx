@@ -9,8 +9,10 @@ interface ActionButtonConfig {
   iconSmall: React.ReactNode;
   iconLarge: React.ReactNode;
   variant?: "default" | "ghost" | "outline" | "secondary" | "destructive";
-  onClick: () => void;
+  onClick?: () => void;
   title: string;
+  type?: "button" | "submit" | "reset";
+  form?: string;
 }
 
 interface PageHeaderProps {
@@ -83,6 +85,8 @@ export function PageHeader({
           </h1>
           {rightActionButton && (
             <Button
+              form={rightActionButton.form}
+              type={rightActionButton.type}
               variant={rightActionButton.variant || "default"}
               size="icon"
               title={rightActionButton.title}
@@ -167,6 +171,8 @@ export function PageHeader({
             </span>
             {rightActionButton && (
               <Button
+                form={rightActionButton.form}
+                type={rightActionButton.type}
                 variant={rightActionButton.variant || "default"}
                 size="icon"
                 title={rightActionButton.title}
@@ -224,6 +230,8 @@ export function PageHeader({
           </h1>
           {rightActionButton && (
             <Button
+              form={rightActionButton.form}
+              type={rightActionButton.type}
               variant={rightActionButton.variant || "default"}
               size="icon"
               title={rightActionButton.title}

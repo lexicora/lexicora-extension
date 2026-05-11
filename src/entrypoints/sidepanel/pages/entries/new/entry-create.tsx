@@ -46,9 +46,11 @@ function EntryCreatePage() {
   const rightActionButton = {
     iconSmall: <SaveIcon className="size-4.5" />, // You can replace this with an actual icon component
     iconLarge: <SaveIcon className="size-5.5" />, // You can replace this with an actual icon component
-    title: "Save Entry",
     variant: "default" as const,
-    onClick: () => {},
+    //onClick: () => {},
+    title: "Save Entry",
+    type: "submit" as const,
+    form: "entry-create-form",
   };
 
   useEffect(() => {
@@ -85,10 +87,12 @@ function EntryCreatePage() {
       }
 
       let urlObj: URL | null = null;
-      try {
-        urlObj = new URL(data.url);
-      } catch (e) {
-        console.warn("Invalid URL for database parts:", data.url);
+      if (data.url.trim() !== "") {
+        try {
+          urlObj = new URL(data.url);
+        } catch (e) {
+          console.warn("Invalid URL for database parts:", data.url);
+        }
       }
 
       const newEntryDoc = {
