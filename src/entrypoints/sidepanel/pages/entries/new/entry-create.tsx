@@ -341,14 +341,24 @@ function EntryCreatePage() {
                 }}
                 // onBlur={() => {}}
               />
+
+              {promptText.trim() !== "" && (
+                <div
+                  className={cn(
+                    "absolute bottom-0.5 left-0.5 right-2.5 h-14 pointer-events-none rounded-bl-md transition-opacity",
+                    "bg-linear-to-t dark:from-[#121724] from-30% from-[#fdfdfd] to-transparent",
+                  )}
+                />
+              )}
+
               {isPromptActive && (
-                <div className="absolute left-3.5 bottom-2.5 text-xs text-muted-foreground select-none pointer-events-none transition-opacity">
+                <div className="absolute left-3.5 bottom-2.5 text-xs text-muted-foreground select-none pointer-events-none transition-opacity z-10">
                   {promptText.length}/500 characters
                 </div>
               )}
               <div
                 className={cn(
-                  "transition-all duration-150",
+                  "transition-all duration-150 z-10",
                   "absolute right-0 /*right-2.5 bottom-2.5*/ flex items-center /*justify-end*/",
                   isPromptActive ? "mr-2.25 mb-2 h-7.5" : "mb-1.25 mr-1.5 h-9",
                 )}
