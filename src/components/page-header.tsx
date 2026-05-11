@@ -66,7 +66,7 @@ export function PageHeader({
             variant="ghost"
             size="icon"
             title="Go back"
-            className="shrink-0 size-10 rounded-lg"
+            className="shrink-0 size-10 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
             onClick={handleGoBack}
           >
             <ArrowLeftIcon className="size-5.5" />
@@ -86,7 +86,12 @@ export function PageHeader({
               variant={rightActionButton.variant || "default"}
               size="icon"
               title={rightActionButton.title}
-              className="shrink-0 size-10 rounded-lg"
+              className={cn(
+                rightActionButton.variant === "default" &&
+                  "bg-primary/80 hover:bg-primary hover:ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:text-primary-foreground/95",
+                // TODO: Other variants
+                "shrink-0 size-10 rounded-lg",
+              )}
               onClick={rightActionButton.onClick}
             >
               {rightActionButton.iconLarge}
@@ -167,7 +172,7 @@ export function PageHeader({
                 title={rightActionButton.title}
                 className={cn(
                   rightActionButton.variant === "default" &&
-                    "bg-primary/80 hover:bg-primary",
+                    "bg-primary/80 backdrop-blur-xs hover:bg-primary hover:text-primary-foreground/95",
                   // TODO: Other variants
                   "mr-0.75 shrink-0 size-7.5 transition-all duration-150 active-view-transition:transition-none",
                   isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
@@ -202,7 +207,7 @@ export function PageHeader({
             variant="ghost"
             size="icon"
             title="Go back"
-            className="shrink-0 size-10 rounded-lg"
+            className="shrink-0 size-10 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
             onClick={handleGoBack}
           >
             <ArrowLeftIcon className="size-5.5" />
@@ -224,7 +229,7 @@ export function PageHeader({
               title={rightActionButton.title}
               className={cn(
                 rightActionButton.variant === "default" &&
-                  "bg-primary/80 hover:bg-primary",
+                  "bg-primary/80 hover:bg-primary hover:text-primary-foreground/95",
                 // TODO: Other variants
                 "shrink-0 size-10 rounded-lg",
               )}
