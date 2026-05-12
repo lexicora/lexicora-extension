@@ -21,7 +21,7 @@ import { convertBlockNoteBlocks } from "@/lib/utils/block-converter";
 import { uuidv7 } from "uuidv7";
 import { da, de } from "zod/v4/locales";
 
-import { SaveIcon } from "lucide-react";
+import { ArrowUpIcon, SaveIcon } from "lucide-react";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 
 function EntryCreatePage() {
@@ -32,6 +32,10 @@ function EntryCreatePage() {
   const { isAtBottom } = useScrollPos();
   const [language, setLanguage] = useState(navigator.language || "en");
   const [promptText, setPromptText] = useState("");
+  const [isPromptFocused, setIsPromptFocused] = useState(false);
+
+  const isPromptActive = isPromptFocused || promptText.trim() !== "";
+
   //const [isEditorReady, setIsEditorReady] = useState(false); // other approach with requestAnimation frame contrary to useLayoutEffect
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
@@ -46,6 +50,7 @@ function EntryCreatePage() {
   const rightActionButton = {
     iconSmall: <SaveIcon className="size-4.5" />, // You can replace this with an actual icon component
     iconLarge: <SaveIcon className="size-5.5" />, // You can replace this with an actual icon component
+    isLoading: isSaving,
     variant: "default" as const,
     //onClick: () => {},
     title: "Save Entry",
@@ -298,19 +303,28 @@ function EntryCreatePage() {
             className="fixed bottom-0 left-0 min-h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-30
                 lc-bottom-bar-styled-bg"
           >
-            <div className="pb-3 px-px /*mx-px*/ max-w-314 mx-auto inset-x-0 /*mt-1*/">
+            <div className="pb-[0.08rem] px-px max-w-200 mx-auto inset-x-0 relative flex items-end">
               <Textarea
                 id="ai-prompt-textarea"
                 ref={aiPromptTextareaRef}
                 //rows={4}
-                maxLength={500}
-                placeholder="Type your desired AI prompt here."
-                // TODO: Adjust dark mode shadow
-                className={`transition-all duration-150
-                text-base! field-sizing-content resize-none max-h-[35vh] min-h-10.5 focus-visible:ring-0 backdrop-blur-lg
-                dark:bg-[#121724dd] dark:focus-visible:bg-[#121724] bg-[#fdfdfddd] focus-visible:bg-[#fdfdfd] scrollbar-thin scrollbar-bg-transparent
-                ${isAtBottom ? "shadow-none" : "shadow-[0_-6px_6px_0px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_0px_#000010]/25"}
-                ${import.meta.env.FIREFOX ? "resize-y h-10.5" : ""}`} // NOTE (feature parity discrepancy): No support fo field sizing content in Firefox and also different behavior compared to Chrome
+                rows={1}
+                maxLength={800} // was 500
+                placeholder="Your desired AI prompt..."
+                className={cn(
+                  "transition-all duration-150 py-2.5",
+                  "text-base! field-sizing-content resize-none max-h-[35vh] min-h-10.5 focus-visible:ring-0 scrollbar-thin scrollbar-bg-transparent",
+                  "border-neutral-400/50 dark:not-focus-visible:border-neutral-400/40 dark:bg-[#121724]/85 dark:focus-visible:bg-[#121724] bg-[#fefefe]/85 focus-visible:bg-[#fefefe]",
+                  isPromptActive
+                    ? "pb-11 backdrop-blur-lg"
+                    : "backdrop-blur-md",
+                  isAtBottom
+                    ? "shadow-none"
+                    : "shadow-[0_-6px_6px_1px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_1px_#000010]/25",
+                  import.meta.env.FIREFOX && "resize-y h-10.5", //* NOTE (feature parity discrepancy): No support fo field sizing content in Firefox and also different behavior compared to Chrome
+                )}
+                onFocus={() => setIsPromptFocused(true)}
+                onBlur={() => setIsPromptFocused(false)}
                 value={promptText}
                 onChange={(e) => setPromptText(e.target.value)}
                 onKeyDown={(e) => {
@@ -327,35 +341,61 @@ function EntryCreatePage() {
                     alert("Submitted AI request successfully!");
                   }
                 }}
-                // onBlur={() => {}}
               />
-            </div>
-            <div className="flex gap-0 items-center justify-between w-full max-w-314 mx-auto inset-x-0">
-              {/*MAYBE: Remove the animation disabling motion-reduce, because it is a very noticeable and maybe not optimal for accessibility*/}
+
+              {promptText.trim() !== "" && (
+                <div
+                  className={cn(
+                    "absolute bottom-[0.15rem] left-0.5 right-2.5 h-13 pointer-events-none rounded-bl-md transition-opacity",
+                    "bg-linear-to-t dark:from-[#121724] from-30% from-[#fefefe] to-transparent",
+                  )}
+                />
+              )}
               <div
-                className={`flex justify-start transition-all motion-reduce:transition-none duration-300 ease-in-out /*overflow-visible*/ ${
-                  promptText.trimEnd() === ""
-                    ? "flex-1 max-w-[50%] mr-3"
-                    : "flex-0 max-w-0 opacity-0 mr-0 blur-[6px]"
-                }`}
+                className={cn(
+                  "absolute left-3.5 bottom-2.5 text-xs text-muted-foreground select-none pointer-events-none transition-opacity z-10",
+                  isPromptActive ? "opacity-100" : "opacity-0",
+                )}
+              >
+                {promptText.length}/800 characters
+              </div>
+              <div
+                className={cn(
+                  "transition-all duration-150 z-10",
+                  "absolute right-0 /*right-2.5 bottom-2.5*/ flex items-center /*justify-end*/",
+                  isPromptActive ? "mr-2.25 mb-2 h-7.5" : "mb-1.25 mr-1.5 h-9",
+                )}
               >
                 <Button
-                  form="entry-create-form"
-                  type="submit"
-                  variant="secondary"
-                  title="Save Entry"
-                  className="w-full overflow-hidden hover:bg-secondary hover:brightness-90 /*active:brightness-80*/"
-                  disabled={promptText.trimEnd() !== "" || isSaving}
-                >
-                  {isSaving ? "Saving..." : "Save Entry"}
-                </Button>
-              </div>
-              <div className="flex justify-end flex-1">
-                <Button
                   title="Refine Entry with AI"
-                  className="w-full hover:bg-primary hover:brightness-90 /*active:brightness-80*/"
+                  size="default"
+                  variant="default"
+                  className={cn(
+                    "transition-all duration-200 h-full rounded-sm overflow-hidden",
+                    isPromptActive ? "w-7.5 px-0" : "w-31",
+                    promptText.trim() !== "" && "backdrop-blur-xs",
+                  )}
                 >
-                  Refine with AI
+                  <div className="grid place-items-center">
+                    <ArrowUpIcon
+                      className={cn(
+                        "col-start-1 row-start-1 size-4.5 transition-all duration-300",
+                        isPromptActive
+                          ? "opacity-100 scale-100"
+                          : "opacity-0 scale-50",
+                      )}
+                    />
+                    <span
+                      className={cn(
+                        "col-start-1 row-start-1 whitespace-nowrap transition-all duration-300",
+                        isPromptActive
+                          ? "opacity-0 scale-95 pointer-events-none"
+                          : "opacity-100 scale-100",
+                      )}
+                    >
+                      Refine with AI
+                    </span>
+                  </div>
                 </Button>
               </div>
             </div>

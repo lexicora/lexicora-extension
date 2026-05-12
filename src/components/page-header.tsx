@@ -4,10 +4,13 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useScrollPos } from "@/providers/scroll-observer";
 import { cn } from "@/lib/utils";
+import { Spinner } from "./ui/spinner";
 
 interface ActionButtonConfig {
   iconSmall: React.ReactNode;
   iconLarge: React.ReactNode;
+  // TODO: Potentially add loading icon and state here as well
+  isLoading?: boolean;
   variant?: "default" | "ghost" | "outline" | "secondary" | "destructive";
   onClick?: () => void;
   title: string;
@@ -50,7 +53,7 @@ export function PageHeader({
   const isLeftAligned = headerTextAlignment === "left";
 
   const hoverAnimClasses = {
-    hidden: "opacity-0 translate-y-3 blur-xs",
+    hidden: "opacity-0! translate-y-3 blur-xs",
     visible: "opacity-100 translate-y-0 blur-0",
   };
 
@@ -70,6 +73,7 @@ export function PageHeader({
             title="Go back"
             className="shrink-0 size-10 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
             onClick={handleGoBack}
+            disabled={rightActionButton?.isLoading}
           >
             <ArrowLeftIcon className="size-5.5" />
           </Button>
@@ -97,8 +101,13 @@ export function PageHeader({
                 "shrink-0 size-10 rounded-lg",
               )}
               onClick={rightActionButton.onClick}
+              disabled={rightActionButton.isLoading}
             >
-              {rightActionButton.iconLarge}
+              {rightActionButton.isLoading ? (
+                <Spinner data-icon="inline-start" className="size-5.5" />
+              ) : (
+                rightActionButton.iconLarge
+              )}
             </Button>
           )}
           {/* Children rendered at the end of the flex container */}
@@ -155,6 +164,7 @@ export function PageHeader({
                 isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
               )}
               onClick={handleGoBack}
+              disabled={rightActionButton?.isLoading}
             >
               <ArrowLeftIcon className="size-4.5" />
             </Button>
@@ -184,8 +194,13 @@ export function PageHeader({
                   isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
                 )}
                 onClick={rightActionButton.onClick}
+                disabled={rightActionButton.isLoading}
               >
-                {rightActionButton.iconSmall}
+                {rightActionButton.isLoading ? (
+                  <Spinner className="size-4.5" />
+                ) : (
+                  rightActionButton.iconSmall
+                )}
               </Button>
             )}
           </div>
@@ -215,6 +230,7 @@ export function PageHeader({
             title="Go back"
             className="shrink-0 size-10 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
             onClick={handleGoBack}
+            disabled={rightActionButton?.isLoading}
           >
             <ArrowLeftIcon className="size-5.5" />
           </Button>
@@ -242,8 +258,13 @@ export function PageHeader({
                 "shrink-0 size-10 rounded-lg",
               )}
               onClick={rightActionButton.onClick}
+              disabled={rightActionButton.isLoading}
             >
-              {rightActionButton.iconLarge}
+              {rightActionButton.isLoading ? (
+                <Spinner className="size-5.5" />
+              ) : (
+                rightActionButton.iconLarge
+              )}
             </Button>
           )}
         </div>
