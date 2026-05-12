@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -7,14 +8,14 @@ import {
   InputGroupTextarea,
 } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 import { Toggle } from "@/components/ui/toggle";
+import { getDb } from "@/db";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SaveIcon, StarIcon } from "lucide-react";
+import { StarIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { getDb } from "@/db";
-import { Button } from "@/components/ui/button";
 
 const createFormSchema = (currentTopicId?: string) =>
   z.object({
@@ -119,13 +120,44 @@ export function TopicForm({
           >
             Name
           </Label>
-          <Input
-            id="name"
-            placeholder="Topic Name"
-            aria-invalid={!!errors.name}
-            {...register("name")}
-            className="text-base!"
-          />
+          <div className="flex items-center gap-2">
+            <Input
+              id="name"
+              placeholder="Topic Name"
+              aria-invalid={!!errors.name}
+              {...register("name")}
+              className="flex-1 text-base!"
+            />
+            <Controller
+              control={control}
+              name="isFavorite"
+              render={({ field }) => (
+                <Toggle
+                  type="button"
+                  variant="outline"
+                  size="default"
+                  pressed={field.value}
+                  onPressedChange={field.onChange}
+                  title="Mark as Favorite"
+                  className={cn(
+                    "shrink-0",
+                    "transition-colors",
+                    field.value
+                      ? "bg-lc-muted-foreground-hover text-primary"
+                      : "dark:bg-input/30 text-muted-foreground",
+                  )}
+                >
+                  <StarIcon
+                    fill={field.value ? "currentColor" : "none"}
+                    className={cn(
+                      "size-4",
+                      field.value && "text-yellow-500 fill-yellow-500",
+                    )}
+                  />
+                </Toggle>
+              )}
+            />
+          </div>
           {errors.name && (
             <FieldError className="text-center" errors={[errors.name]} />
           )}
@@ -178,45 +210,11 @@ export function TopicForm({
         </Field>
 
         <Field>
-          <div className="flex items-center justify-between gap-6">
-            <Controller
-              control={control}
-              name="isFavorite"
-              render={({ field }) => (
-                <Toggle
-                  type="button"
-                  variant="outline"
-                  size="default"
-                  pressed={field.value}
-                  onPressedChange={field.onChange}
-                  title="Mark as Favorite"
-                  className={cn(
-                    "shrink-0",
-                    "transition-colors",
-                    field.value
-                      ? "bg-lc-muted-foreground-hover text-primary"
-                      : "text-muted-foreground",
-                  )}
-                >
-                  <StarIcon
-                    fill={field.value ? "currentColor" : "none"}
-                    className={cn(
-                      "size-4",
-                      field.value && "text-yellow-500 fill-yellow-500",
-                    )}
-                  />
-                  Favorite
-                </Toggle>
-              )}
-            />
-            <Button type="submit" className="shrink-0" disabled={isLoading}>
-              {/*<SaveIcon />*/} {isLoading ? "Saving..." : "Save Topic"}
-            </Button>
-          </div>
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading && <Spinner data-icon="inline-start" />}
+            {isLoading ? "Saving..." : "Save Topic"}
+          </Button>
         </Field>
-        {/* <Button type="submit" className="mx-auto w-1/2" disabled={isLoading}>
-          {isLoading ? "Saving..." : "Save Topic"}
-        </Button> */}
       </FieldGroup>
     </form>
   );

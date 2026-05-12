@@ -345,7 +345,7 @@ function EntryCreatePage() {
               {promptText.trim() !== "" && (
                 <div
                   className={cn(
-                    "absolute bottom-0.75 left-0.5 right-2.5 h-14 pointer-events-none rounded-bl-md transition-opacity",
+                    "absolute bottom-[0.15rem] left-0.5 right-2.5 h-13 pointer-events-none rounded-bl-md transition-opacity",
                     "bg-linear-to-t dark:from-[#121724] from-30% from-[#fefefe] to-transparent",
                   )}
                 />
@@ -365,18 +365,19 @@ function EntryCreatePage() {
               >
                 <Button
                   title="Refine Entry with AI"
-                  size={isPromptActive ? "sm" : "default"}
+                  size="default"
                   variant="default"
                   className={cn(
-                    "transition-all duration-150 h-full rounded-sm px-3",
+                    "transition-all duration-150 h-full rounded-sm",
+                    isPromptActive ? "px-1.5" : "px-3",
+                    promptText.trim() !== "" && "backdrop-blur-xs",
                   )}
                 >
-                  Refine with AI
-                  {/* {isPromptActive ? (
-                    <ArrowUpIcon className="" />
+                  {isPromptActive ? (
+                    <ArrowUpIcon className="size-4" />
                   ) : (
                     "Refine with AI"
-                  )} */}
+                  )}
                 </Button>
               </div>
             </div>

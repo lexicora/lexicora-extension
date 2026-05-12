@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 interface ActionButtonConfig {
   iconSmall: React.ReactNode;
   iconLarge: React.ReactNode;
+  // TODO: Potentially add loading icon and state here as well
   variant?: "default" | "ghost" | "outline" | "secondary" | "destructive";
   onClick?: () => void;
   title: string;
