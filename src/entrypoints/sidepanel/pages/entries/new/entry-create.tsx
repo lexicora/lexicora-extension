@@ -308,14 +308,15 @@ function EntryCreatePage() {
                 ref={aiPromptTextareaRef}
                 //rows={4}
                 rows={1}
-                maxLength={500}
+                maxLength={800} // was 500
                 placeholder="Your desired AI prompt..."
-                // TODO: Adjust dark mode shadow
                 className={cn(
                   "transition-all duration-150 py-2.5",
-                  isPromptActive ? "pb-11" : "",
-                  "text-base! field-sizing-content resize-none max-h-[35vh] min-h-10.5 focus-visible:ring-0 backdrop-blur-lg",
-                  "dark:bg-[#121724dd] dark:focus-visible:bg-[#121724] bg-[#fdfdfddd] focus-visible:bg-[#fdfdfd] scrollbar-thin scrollbar-bg-transparent",
+                  "text-base! field-sizing-content resize-none max-h-[35vh] min-h-10.5 focus-visible:ring-0 scrollbar-thin scrollbar-bg-transparent",
+                  "border-neutral-400/40 dark:bg-[#121724]/80 dark:focus-visible:bg-[#121724] bg-[#fdfdfd]/80 focus-visible:bg-[#fdfdfd]",
+                  isPromptActive
+                    ? "pb-11 backdrop-blur-lg"
+                    : "backdrop-blur-md",
                   isAtBottom
                     ? "shadow-none"
                     : "shadow-[0_-6px_6px_0px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_0px_#000010]/25",
@@ -339,13 +340,12 @@ function EntryCreatePage() {
                     alert("Submitted AI request successfully!");
                   }
                 }}
-                // onBlur={() => {}}
               />
 
               {promptText.trim() !== "" && (
                 <div
                   className={cn(
-                    "absolute bottom-0.5 left-0.5 right-2.5 h-14 pointer-events-none rounded-bl-md transition-opacity",
+                    "absolute bottom-0.75 left-0.5 right-2.5 h-14 pointer-events-none rounded-bl-md transition-opacity",
                     "bg-linear-to-t dark:from-[#121724] from-30% from-[#fdfdfd] to-transparent",
                   )}
                 />
@@ -353,7 +353,7 @@ function EntryCreatePage() {
 
               {isPromptActive && (
                 <div className="absolute left-3.5 bottom-2.5 text-xs text-muted-foreground select-none pointer-events-none transition-opacity z-10">
-                  {promptText.length}/500 characters
+                  {promptText.length}/800 characters
                 </div>
               )}
               <div
