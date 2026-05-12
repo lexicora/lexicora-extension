@@ -108,7 +108,7 @@ export function TopicForm({
   };
 
   return (
-    <form id={id} onSubmit={handleSubmit(onValidSubmit)} className="py-3.5">
+    <form id={id} onSubmit={handleSubmit(onValidSubmit)} className="pt-3.5">
       <FieldGroup>
         <Field data-invalid={!!errors.name} className="gap-2">
           <Label

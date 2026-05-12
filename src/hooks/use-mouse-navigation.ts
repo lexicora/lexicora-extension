@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-// NOTE (feature parity discrepancy): This hook / feature is currently chrome only, as Firefox does not currently support this.
+// TODO: When forms are saving data disable this navigation too, to prevent accidental navigation. (potentially make a provider out of it? or interact with react-router)
+//* NOTE (feature parity discrepancy): This hook / feature is currently chrome only, as Firefox does not currently support this.
 export function useMouseNavigation() {
   const navigate = useNavigate();
 

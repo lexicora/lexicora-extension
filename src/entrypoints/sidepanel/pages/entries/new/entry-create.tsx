@@ -50,6 +50,7 @@ function EntryCreatePage() {
   const rightActionButton = {
     iconSmall: <SaveIcon className="size-4.5" />, // You can replace this with an actual icon component
     iconLarge: <SaveIcon className="size-5.5" />, // You can replace this with an actual icon component
+    isLoading: isSaving,
     variant: "default" as const,
     //onClick: () => {},
     title: "Save Entry",
@@ -350,12 +351,14 @@ function EntryCreatePage() {
                   )}
                 />
               )}
-
-              {isPromptActive && (
-                <div className="absolute left-3.5 bottom-2.5 text-xs text-muted-foreground select-none pointer-events-none transition-opacity z-10">
-                  {promptText.length}/800 characters
-                </div>
-              )}
+              <div
+                className={cn(
+                  "absolute left-3.5 bottom-2.5 text-xs text-muted-foreground select-none pointer-events-none transition-opacity z-10",
+                  isPromptActive ? "opacity-100" : "opacity-0",
+                )}
+              >
+                {promptText.length}/800 characters
+              </div>
               <div
                 className={cn(
                   "transition-all duration-150 z-10",
@@ -368,16 +371,31 @@ function EntryCreatePage() {
                   size="default"
                   variant="default"
                   className={cn(
-                    "transition-all duration-150 h-full rounded-sm",
-                    isPromptActive ? "px-1.5" : "px-3",
+                    "transition-all duration-200 h-full rounded-sm overflow-hidden",
+                    isPromptActive ? "w-7.5 px-0" : "w-31",
                     promptText.trim() !== "" && "backdrop-blur-xs",
                   )}
                 >
-                  {isPromptActive ? (
-                    <ArrowUpIcon className="size-4" />
-                  ) : (
-                    "Refine with AI"
-                  )}
+                  <div className="grid place-items-center">
+                    <ArrowUpIcon
+                      className={cn(
+                        "col-start-1 row-start-1 size-4.5 transition-all duration-300",
+                        isPromptActive
+                          ? "opacity-100 scale-100"
+                          : "opacity-0 scale-50",
+                      )}
+                    />
+                    <span
+                      className={cn(
+                        "col-start-1 row-start-1 whitespace-nowrap transition-all duration-300",
+                        isPromptActive
+                          ? "opacity-0 scale-95 pointer-events-none"
+                          : "opacity-100 scale-100",
+                      )}
+                    >
+                      Refine with AI
+                    </span>
+                  </div>
                 </Button>
               </div>
             </div>
