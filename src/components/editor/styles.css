@@ -112,13 +112,8 @@ html:has(
   font-family: var(--lc-font-sans);
 }
 
-/*maybe unnecessary*/
 .bn-root[data-color-scheme] .bn-editor {
-  /*--bn-font-family: var(--lc-font-sans);*/
-  font-family: var(--lc-font-sans);
-}
-
-.bn-root[data-color-scheme] .bn-editor {
+  font-family: var(--lc-font-sans); /*maybe unnecessary*/
   padding-top: 8px;
   padding-bottom: 8px;
   padding-inline-start: 50px; /*TODO: Maybe increase to 52px later*/
@@ -559,6 +554,15 @@ html:has(
   .bn-block-content[data-content-type="divider"]
   hr {
   border-top: 1px solid #5a6270;
+}
+
+@media (min-width: 1280px) {
+  .bn-root[data-color-scheme] .bn-editor {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-inline-start: 50px; /*TODO: Maybe increase to 52px later*/
+    padding-inline-end: 50px !important;
+  }
 }
 
 /*TODO: Maybe change colors of links in editor.*/

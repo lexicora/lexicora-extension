@@ -302,7 +302,7 @@ function EntryCreatePage() {
             className="fixed bottom-0 left-0 min-h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-30
                 lc-bottom-bar-styled-bg"
           >
-            <div className="pb-[0.08rem] px-px max-w-314 mx-auto inset-x-0 relative flex items-end">
+            <div className="pb-[0.08rem] px-px max-w-200 mx-auto inset-x-0 relative flex items-end">
               <Textarea
                 id="ai-prompt-textarea"
                 ref={aiPromptTextareaRef}
@@ -313,13 +313,13 @@ function EntryCreatePage() {
                 className={cn(
                   "transition-all duration-150 py-2.5",
                   "text-base! field-sizing-content resize-none max-h-[35vh] min-h-10.5 focus-visible:ring-0 scrollbar-thin scrollbar-bg-transparent",
-                  "border-neutral-400/40 dark:bg-[#121724]/80 dark:focus-visible:bg-[#121724] bg-[#fdfdfd]/80 focus-visible:bg-[#fdfdfd]",
+                  "border-neutral-400/50 dark:not-focus-visible:border-neutral-400/40 dark:bg-[#121724]/85 dark:focus-visible:bg-[#121724] bg-[#fefefe]/85 focus-visible:bg-[#fefefe]",
                   isPromptActive
                     ? "pb-11 backdrop-blur-lg"
                     : "backdrop-blur-md",
                   isAtBottom
                     ? "shadow-none"
-                    : "shadow-[0_-6px_6px_0px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_0px_#000010]/25",
+                    : "shadow-[0_-6px_6px_1px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_1px_#000010]/25",
                   import.meta.env.FIREFOX && "resize-y h-10.5", //* NOTE (feature parity discrepancy): No support fo field sizing content in Firefox and also different behavior compared to Chrome
                 )}
                 onFocus={() => setIsPromptFocused(true)}
@@ -346,7 +346,7 @@ function EntryCreatePage() {
                 <div
                   className={cn(
                     "absolute bottom-0.75 left-0.5 right-2.5 h-14 pointer-events-none rounded-bl-md transition-opacity",
-                    "bg-linear-to-t dark:from-[#121724] from-30% from-[#fdfdfd] to-transparent",
+                    "bg-linear-to-t dark:from-[#121724] from-30% from-[#fefefe] to-transparent",
                   )}
                 />
               )}
