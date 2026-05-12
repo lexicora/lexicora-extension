@@ -2,7 +2,7 @@
 	"servers": {
 		"io.github.upstash/context7": {
 			"type": "stdio",
-			"command": "npx",
+			"command": "pwsh.exe",
 			"args": [
     			"-Command",
     			"npx -y @upstash/context7-mcp@1.0.31"
