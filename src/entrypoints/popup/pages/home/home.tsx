@@ -1,11 +1,29 @@
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
+// TODO: Potentially make Lexicora logos into components.
+
 import { useState, useEffect } from "react";
 //import styles from "./home.module.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowUpRightIcon, PanelRightIcon } from "lucide-react";
+import {
+  DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import {
+  ArrowUpRightIcon,
+  ChevronDownIcon,
+  EllipsisVerticalIcon,
+  MenuIcon,
+  PanelRightIcon,
+  UserIcon,
+} from "lucide-react";
 import { sendMessage } from "webext-bridge/popup";
 
 import { MSG } from "@/constants/messaging";
@@ -85,14 +103,28 @@ function HomePage() {
         >
           <div className="flex gap-0 items-center justify-between w-full">
             <div className="flex justify-start flex-1">
-              {/*MAYBE: Add dropdown menu of quick actions here (profile included, like maybe navigate directly to create new entry in sidepanel)*/}
-              <Avatar className="size-8 ml-0.5" title="Profile">
-                <AvatarImage
-                  src="https://github.com/tgmaurer.png"
-                  alt="@tgmaurer"
-                />
-                <AvatarFallback>TG</AvatarFallback>
-              </Avatar>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div className="ml-0.5 size-8 rounded-md flex items-center">
+                    <div className="flex items-center justify-center size-full rounded-full bg-secondary/80 ring ring-inset ring-black/20 dark:ring-white/20">
+                      <UserIcon className="size-4.5" />
+                    </div>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="select-none">
+                  <DropdownMenuLabel className="py-1">
+                    My Account
+                  </DropdownMenuLabel>
+                  <DropdownMenuItem className="py-1">Profile</DropdownMenuItem>
+                  <DropdownMenuItem className="py-1">Settings</DropdownMenuItem>
+                  {/*TODO: Maybe add "My Plan", "Subscription" or something like that, if we have a paid offering in the future */}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="py-1">Support</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="py-1">Sign out</DropdownMenuItem>
+                  {/*TODO: Make dynamic based on login status */}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
             <div
               className="shrink-0"
