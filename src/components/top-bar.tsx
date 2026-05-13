@@ -1,7 +1,14 @@
 import { cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ExternalLinkIcon } from "lucide-react";
+import { SquareArrowOutUpRightIcon, UserIcon } from "lucide-react";
 
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
@@ -10,6 +17,20 @@ import { useScrollPos } from "@/providers/scroll-observer";
 
 export function TopBar() {
   const { isAtTop } = useScrollPos();
+
+  const openExtensionWindow = () => {
+    // TODO: Make sure only one windowed instance is open at a time.
+    //* NOTE: For messaging, use webext-bridge/sidepanel, because the window is similar in behavior and the windowId is different so no conflicts with the real side-panel.
+    browser.windows.create({
+      url: browser.runtime.getURL("/sidepanel.html"), // TODO: Implement unlisted side-panel similar app (see: https://wxt.dev/guide/essentials/entrypoints.html#unlisted-pages)
+      type: "popup",
+      width: 400,
+      height: 660, // plus 40, because of window bar
+      //tabId potentially set, could be useful for messaging.
+    });
+
+    window.close(); // Close current side-panel
+  };
 
   return (
     <section
@@ -21,13 +42,27 @@ export function TopBar() {
     >
       <div className="flex gap-0 items-center justify-between w-full max-w-317 mx-auto inset-x-0">
         <div className="flex justify-start flex-1">
-          <Avatar className="size-8 ml-0.5" title="Profile">
-            <AvatarImage
-              src="https://github.com/tgmaurer.png"
-              alt="@tgmaurer"
-            />
-            <AvatarFallback>TG</AvatarFallback>
-          </Avatar>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="ml-0.5 size-8 rounded-md flex items-center">
+                <div className="flex items-center justify-center size-full rounded-full bg-secondary/80 ring ring-inset ring-black/20 dark:ring-white/20">
+                  <UserIcon className="size-4.5" />
+                  {/* TODO: If logged in, show user's avatar or initials */}
+                </div>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="select-none">
+              <DropdownMenuLabel className="py-1">My Account</DropdownMenuLabel>
+              <DropdownMenuItem className="py-1">Profile</DropdownMenuItem>
+              <DropdownMenuItem className="py-1">Settings</DropdownMenuItem>
+              {/*TODO: Maybe add "My Plan", "Subscription" or something like that, if we have a paid offering in the future */}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="py-1">Support</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="py-1">Sign out</DropdownMenuItem>
+              {/*TODO: Make dynamic based on login status */}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <div
           className="shrink-0 select-none"
@@ -55,16 +90,18 @@ export function TopBar() {
           <Button
             variant="ghost"
             size="icon"
+            onClick={openExtensionWindow}
+            title="Open Lexicora in window"
             //title="Visit Lexicora.com"
-            asChild
           >
-            <a
+            <SquareArrowOutUpRightIcon className="size-4.5" />
+            {/* <a
               href="https://lexicora.com"
               title="Visit Lexicora.com"
               target="_blank"
             >
-              <ExternalLinkIcon className="size-4.5" />
-            </a>
+              <SquareArrowOutUpRightIcon className="size-4.5" />
+            </a> */}
           </Button>
         </div>
       </div>

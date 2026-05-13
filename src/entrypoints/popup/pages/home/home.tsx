@@ -2,28 +2,19 @@ import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.s
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
 // TODO: Potentially make Lexicora logos into components.
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 //import styles from "./home.module.css";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import {
-  DropdownMenuTrigger,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  ArrowUpRightIcon,
-  ChevronDownIcon,
-  EllipsisVerticalIcon,
-  MenuIcon,
-  PanelRightIcon,
-  UserIcon,
-} from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { ArrowUpRightIcon, PanelRightIcon, UserIcon } from "lucide-react";
 import { sendMessage } from "webext-bridge/popup";
 
 import { MSG } from "@/constants/messaging";
@@ -108,6 +99,7 @@ function HomePage() {
                   <div className="ml-0.5 size-8 rounded-md flex items-center">
                     <div className="flex items-center justify-center size-full rounded-full bg-secondary/80 ring ring-inset ring-black/20 dark:ring-white/20">
                       <UserIcon className="size-4.5" />
+                      {/* TODO: If logged in, show user's avatar or initials */}
                     </div>
                   </div>
                 </DropdownMenuTrigger>

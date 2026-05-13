@@ -28,6 +28,7 @@ import {
   Settings2Icon,
   ShieldCheckIcon,
   SunMoonIcon,
+  UserIcon,
   UserRoundIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -54,7 +55,7 @@ function SettingsPage() {
           >
             <Link to="/settings/account" draggable={false} viewTransition>
               <ItemMedia variant="icon">
-                <Avatar
+                {/* <Avatar
                   className="size-7 not-dark:border not-dark:border-gray-400/75"
                   title="Profile"
                 >
@@ -63,7 +64,13 @@ function SettingsPage() {
                     alt="@tgmaurer"
                   />
                   <AvatarFallback>TG</AvatarFallback>
-                </Avatar>
+                </Avatar> */}
+                <div className="size-8 rounded-md flex items-center">
+                  <div className="flex items-center justify-center size-full rounded-full bg-secondary/50 ring ring-inset ring-black/20 dark:ring-white/20">
+                    <UserIcon className="size-4.5" />
+                    {/* TODO: If logged in, show user's avatar or initials */}
+                  </div>
+                </div>
               </ItemMedia>
               <ItemContent>
                 <ItemTitle className="text-base /*font-semibold*/">
