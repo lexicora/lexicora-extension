@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
+import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { cn } from "@/lib/utils";
 import { useScrollPos } from "@/providers/scroll-observer";
@@ -202,207 +203,202 @@ function EntryCreatePage() {
 
   return (
     //* NOTE: Opt in for now, because of editor styles being changed
-    <div id="lc-new-entry-page" className="lc-page-container mb-0! /*pr-3!*/">
+    <PageContainer id="lc-new-entry-page" className="mb-0! /*pr-3!*/">
       {/*Make the inner container as tall (min-height) as the vh (but not overflowing) to prevent issues with editor*/}
-      <div className="lc-page-container-inner">
-        <PageHeader
-          title="New Entry"
-          goBackButton
-          rightActionButton={rightActionButton}
-          heavyTeardown={true}
-        />
-        <main>
-          <section className="mx-px">
-            {/*TODO: Maybe add relative and overflow-x-hidden later, when it is guaranteed to fill the entire page (height wise) */}
-            <div className="text-start">
-              <EntryForm
-                id="entry-create-form"
-                topics={topics}
-                overrideExisting={capturedData?.misc?.overrideExisting ?? true}
-                initialData={{
-                  title: capturedData?.title || "",
-                  faviconUrl: capturedData?.metadata?.faviconUrl || "",
-                  url: capturedData?.location?.href || "",
-                  siteName:
-                    capturedData?.metadata?.siteName ||
-                    capturedData?.location?.hostname ||
-                    "",
-                  languageCode:
-                    capturedData?.lang || navigator.language || "en",
-                  description: capturedData?.metadata?.excerpt || "",
-                  // capturedData?.textContent
-                  //   ? capturedData?.textContent?.trim().slice(0, 400) + "..."
-                  //   : "",
-                  // [
-                  //   capturedData?.metadata?.byline ? `By ${capturedData.metadata.byline}` : null,
-                  //   capturedData?.metadata?.publishedTime ? `Published: ${capturedData.metadata.publishedTime}` : null,
-                  //   capturedData?.metadata?.excerpt || null,
-                  // ]
-                  //   .filter(Boolean)
-                  //   .join("\n\n") || "",
-                }}
-                onSubmit={handleEntrySubmit}
-                isLoading={isSaving}
-              />
+      <PageHeader
+        title="New Entry"
+        goBackButton
+        rightActionButton={rightActionButton}
+        heavyTeardown={true}
+      />
+      <main>
+        <section className="mx-px">
+          {/*TODO: Maybe add relative and overflow-x-hidden later, when it is guaranteed to fill the entire page (height wise) */}
+          <div className="text-start">
+            <EntryForm
+              id="entry-create-form"
+              topics={topics}
+              overrideExisting={capturedData?.misc?.overrideExisting ?? true}
+              initialData={{
+                title: capturedData?.title || "",
+                faviconUrl: capturedData?.metadata?.faviconUrl || "",
+                url: capturedData?.location?.href || "",
+                siteName:
+                  capturedData?.metadata?.siteName ||
+                  capturedData?.location?.hostname ||
+                  "",
+                languageCode: capturedData?.lang || navigator.language || "en",
+                description: capturedData?.metadata?.excerpt || "",
+                // capturedData?.textContent
+                //   ? capturedData?.textContent?.trim().slice(0, 400) + "..."
+                //   : "",
+                // [
+                //   capturedData?.metadata?.byline ? `By ${capturedData.metadata.byline}` : null,
+                //   capturedData?.metadata?.publishedTime ? `Published: ${capturedData.metadata.publishedTime}` : null,
+                //   capturedData?.metadata?.excerpt || null,
+                // ]
+                //   .filter(Boolean)
+                //   .join("\n\n") || "",
+              }}
+              onSubmit={handleEntrySubmit}
+              isLoading={isSaving}
+            />
 
-              <Label
-                htmlFor="lc-blocknote-view-new-entry"
-                onClick={() => {
-                  editor.focus();
-                }}
-                className="text-sm ml-1 mb-1 mt-0"
-              >
-                Content
-              </Label>
-              <div className="relative">
-                {/*Unused css classes for div className="relative overflow-x-hidden min-h-[55vh] mt-1" */}
-                {/* --- SKELETON LOADER OVERLAY (update to shadcn-ui component later)--- */}
-                {showSkeleton && (
-                  <div className="absolute inset-0 z-10 p-2 space-y-4 animate-pulse">
-                    <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-3/4"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-5/6"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-4/5"></div>
-                  </div>
-                )}
-                {/* --- ACTUAL EDITOR --- */}
-                {/* It is ALWAYS mounted to prevent the Floating UI crash. We just hide it visually until ready. */}
-                <div
-                  className={cn(
-                    "transition-opacity duration-150", //MAYBE: Reduce duration a bit more, dont use will-change-opacity, because editor ui elements are covered by top and bottom ui.
-                    showSkeleton
-                      ? "opacity-0 pointer-events-none"
-                      : "opacity-100",
-                  )}
-                >
-                  {/*TODO: maybe add max width of maybe around 1000px or so */}
-                  <BlockNoteView
-                    editor={editor}
-                    lang={language}
-                    id="lc-blocknote-view-new-entry"
-                    //className=""
-                    //editable={false}
-                  />
+            <Label
+              htmlFor="lc-blocknote-view-new-entry"
+              onClick={() => {
+                editor.focus();
+              }}
+              className="text-sm ml-1 mb-1 mt-0"
+            >
+              Content
+            </Label>
+            <div className="relative">
+              {/*Unused css classes for div className="relative overflow-x-hidden min-h-[55vh] mt-1" */}
+              {/* --- SKELETON LOADER OVERLAY (update to shadcn-ui component later)--- */}
+              {showSkeleton && (
+                <div className="absolute inset-0 z-10 p-2 space-y-4 animate-pulse">
+                  <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-5/6"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-4/5"></div>
                 </div>
-              </div>
-              {/*TODO: maybe add max width of maybe around 1000px or so */}
-            </div>
-          </section>
-        </main>
-        <footer
-          //id="lc-new-entry-bottom-footer"
-          //className="mt-10.5"
-          className={cn(styles.bottomFooter, "mt-10.5")}
-          ref={footerRef}
-        >
-          <section
-            ref={footerContentRef}
-            //* NOTE: Opt in for now, because of editor styles being changed
-            className="fixed bottom-0 left-0 min-h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-30
-                lc-bottom-bar-styled-bg"
-          >
-            <div className="pb-[0.08rem] px-px max-w-200 mx-auto inset-x-0 relative flex items-end">
-              <Textarea
-                id="ai-prompt-textarea"
-                ref={aiPromptTextareaRef}
-                //rows={4}
-                rows={1}
-                maxLength={800} // was 500
-                placeholder="Your desired AI prompt..."
-                className={cn(
-                  "transition-all duration-150 py-2.5",
-                  "text-base! field-sizing-content resize-none max-h-[35vh] min-h-10.5 focus-visible:ring-0 scrollbar-thin scrollbar-bg-transparent",
-                  "border-neutral-400/50 dark:not-focus-visible:border-neutral-400/40 dark:bg-[#121724]/85 dark:focus-visible:bg-[#121724] bg-[#fefefe]/85 focus-visible:bg-[#fefefe]",
-                  isPromptActive
-                    ? "pb-11 backdrop-blur-lg"
-                    : "backdrop-blur-md",
-                  isAtBottom
-                    ? "shadow-none"
-                    : "shadow-[0_-6px_6px_1px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_1px_#000010]/25",
-                  import.meta.env.FIREFOX && "resize-y h-10.5", //* NOTE (feature parity discrepancy): No support fo field sizing content in Firefox and also different behavior compared to Chrome
-                )}
-                onFocus={() => setIsPromptFocused(true)}
-                onBlur={() => setIsPromptFocused(false)}
-                value={promptText}
-                onChange={(e) => setPromptText(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Escape") {
-                    e.preventDefault();
-                    aiPromptTextareaRef.current?.blur();
-                  }
-                  // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
-                  if (e.ctrlKey && e.key === "Enter") {
-                    // Maybe change it to Ctrl/Cmd + Enter?
-                    e.preventDefault();
-                    if (promptText.trim() === "") return;
-                    // Submit AI prompt logic here
-                    alert("Submitted AI request successfully!");
-                  }
-                }}
-              />
-
-              {promptText.trim() !== "" && (
-                <div
-                  className={cn(
-                    "absolute bottom-[0.15rem] left-0.5 right-2.5 h-13 pointer-events-none rounded-bl-md transition-opacity",
-                    "bg-linear-to-t dark:from-[#121724] from-30% from-[#fefefe] to-transparent",
-                  )}
-                />
               )}
+              {/* --- ACTUAL EDITOR --- */}
+              {/* It is ALWAYS mounted to prevent the Floating UI crash. We just hide it visually until ready. */}
               <div
                 className={cn(
-                  "absolute left-3.5 bottom-2.5 text-xs text-muted-foreground select-none pointer-events-none transition-opacity z-10",
-                  isPromptActive ? "opacity-100" : "opacity-0",
+                  "transition-opacity duration-150", //MAYBE: Reduce duration a bit more, dont use will-change-opacity, because editor ui elements are covered by top and bottom ui.
+                  showSkeleton
+                    ? "opacity-0 pointer-events-none"
+                    : "opacity-100",
                 )}
               >
-                {promptText.length}/800 characters
-              </div>
-              <div
-                className={cn(
-                  "transition-all duration-150 z-10",
-                  "absolute right-0 /*right-2.5 bottom-2.5*/ flex items-center /*justify-end*/",
-                  isPromptActive ? "mr-2.25 mb-2 h-7.5" : "mb-1.25 mr-1.5 h-9",
-                )}
-              >
-                <Button
-                  title="Refine Entry with AI"
-                  size="default"
-                  variant="default"
-                  className={cn(
-                    "transition-all duration-200 h-full rounded-sm overflow-hidden",
-                    isPromptActive ? "w-7.5 px-0" : "w-31",
-                    promptText.trim() !== "" && "backdrop-blur-xs",
-                  )}
-                >
-                  <div className="grid place-items-center">
-                    <ArrowUpIcon
-                      className={cn(
-                        "col-start-1 row-start-1 size-4.5 transition-all duration-300",
-                        isPromptActive
-                          ? "opacity-100 scale-100"
-                          : "opacity-0 scale-50",
-                      )}
-                    />
-                    <span
-                      className={cn(
-                        "col-start-1 row-start-1 whitespace-nowrap transition-all duration-300",
-                        isPromptActive
-                          ? "opacity-0 scale-95 pointer-events-none"
-                          : "opacity-100 scale-100",
-                      )}
-                    >
-                      Refine with AI
-                    </span>
-                  </div>
-                </Button>
+                {/*TODO: maybe add max width of maybe around 1000px or so */}
+                <BlockNoteView
+                  editor={editor}
+                  lang={language}
+                  id="lc-blocknote-view-new-entry"
+                  //className=""
+                  //editable={false}
+                />
               </div>
             </div>
-          </section>
-        </footer>
-      </div>
-    </div>
+            {/*TODO: maybe add max width of maybe around 1000px or so */}
+          </div>
+        </section>
+      </main>
+      <footer
+        //id="lc-new-entry-bottom-footer"
+        //className="mt-10.5"
+        className={cn(styles.bottomFooter, "mt-10.5")}
+        ref={footerRef}
+      >
+        <section
+          ref={footerContentRef}
+          //* NOTE: Opt in for now, because of editor styles being changed
+          className="fixed bottom-0 left-0 min-h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-30
+                lc-bottom-bar-styled-bg"
+        >
+          <div className="pb-[0.08rem] px-px max-w-200 mx-auto inset-x-0 relative flex items-end">
+            <Textarea
+              id="ai-prompt-textarea"
+              ref={aiPromptTextareaRef}
+              //rows={4}
+              rows={1}
+              maxLength={800} // was 500
+              placeholder="Your desired AI prompt..."
+              className={cn(
+                "transition-all duration-150 py-2.5",
+                "text-base! field-sizing-content resize-none max-h-[35vh] min-h-10.5 focus-visible:ring-0 scrollbar-thin scrollbar-bg-transparent",
+                "border-neutral-400/50 dark:not-focus-visible:border-neutral-400/40 dark:bg-[#121724]/85 dark:focus-visible:bg-[#121724] bg-[#fefefe]/85 focus-visible:bg-[#fefefe]",
+                isPromptActive ? "pb-11 backdrop-blur-lg" : "backdrop-blur-md",
+                isAtBottom
+                  ? "shadow-none"
+                  : "shadow-[0_-6px_6px_1px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_1px_#000010]/25",
+                import.meta.env.FIREFOX && "resize-y h-10.5", //* NOTE (feature parity discrepancy): No support fo field sizing content in Firefox and also different behavior compared to Chrome
+              )}
+              onFocus={() => setIsPromptFocused(true)}
+              onBlur={() => setIsPromptFocused(false)}
+              value={promptText}
+              onChange={(e) => setPromptText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  e.preventDefault();
+                  aiPromptTextareaRef.current?.blur();
+                }
+                // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
+                if (e.ctrlKey && e.key === "Enter") {
+                  // Maybe change it to Ctrl/Cmd + Enter?
+                  e.preventDefault();
+                  if (promptText.trim() === "") return;
+                  // Submit AI prompt logic here
+                  alert("Submitted AI request successfully!");
+                }
+              }}
+            />
+
+            {promptText.trim() !== "" && (
+              <div
+                className={cn(
+                  "absolute bottom-[0.15rem] left-0.5 right-2.5 h-13 pointer-events-none rounded-bl-md transition-opacity",
+                  "bg-linear-to-t dark:from-[#121724] from-30% from-[#fefefe] to-transparent",
+                )}
+              />
+            )}
+            <div
+              className={cn(
+                "absolute left-3.5 bottom-2.5 text-xs text-muted-foreground select-none pointer-events-none transition-opacity z-10",
+                isPromptActive ? "opacity-100" : "opacity-0",
+              )}
+            >
+              {promptText.length}/800 characters
+            </div>
+            <div
+              className={cn(
+                "transition-all duration-150 z-10",
+                "absolute right-0 /*right-2.5 bottom-2.5*/ flex items-center /*justify-end*/",
+                isPromptActive ? "mr-2.25 mb-2 h-7.5" : "mb-1.25 mr-1.5 h-9",
+              )}
+            >
+              <Button
+                title="Refine Entry with AI"
+                size="default"
+                variant="default"
+                className={cn(
+                  "transition-all duration-200 h-full rounded-sm overflow-hidden",
+                  isPromptActive ? "w-7.5 px-0" : "w-31",
+                  promptText.trim() !== "" && "backdrop-blur-xs",
+                )}
+              >
+                <div className="grid place-items-center">
+                  <ArrowUpIcon
+                    className={cn(
+                      "col-start-1 row-start-1 size-4.5 transition-all duration-300",
+                      isPromptActive
+                        ? "opacity-100 scale-100"
+                        : "opacity-0 scale-50",
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      "col-start-1 row-start-1 whitespace-nowrap transition-all duration-300",
+                      isPromptActive
+                        ? "opacity-0 scale-95 pointer-events-none"
+                        : "opacity-100 scale-100",
+                    )}
+                  >
+                    Refine with AI
+                  </span>
+                </div>
+              </Button>
+            </div>
+          </div>
+        </section>
+      </footer>
+    </PageContainer>
   );
 }
 

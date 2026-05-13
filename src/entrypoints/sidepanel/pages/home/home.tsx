@@ -4,6 +4,7 @@ import styles from "./home.module.css";
 //import wxtLogo from "/wxt.svg";
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
+import { PageContainer } from "@/components/page-container";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowUpRightIcon } from "lucide-react";
@@ -50,151 +51,147 @@ function HomePage() {
   };
 
   return (
-    <div id="lc-home-page" className="lc-page-container">
-      <div className="lc-page-container-inner">
-        <header className="mt-4">
-          <span className="flex justify-center gap-3 items-baseline mb-3">
-            {/*Maybe add link to lexicora.com */}
-            <img
-              src={lexicoraLightThemeLogoNoBg}
-              className="h-6.5 lc-display-light rounded-xs"
-              alt="Lexicora logo"
-              draggable="false"
-            />
-            <img
-              src={lexicoraDarkThemeLogoNoBg}
-              className="h-6.5 lc-display-dark rounded-xs"
-              alt="Lexicora logo"
-              draggable="false"
-            />
-            {/*#00143d is the Lexicora color */}
-            <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground leading-0">
-              Lexicora
-            </h1>
-          </span>
-          <div className="flex justify-center mt-1">
-            <a
-              href="https://lexicora.com"
-              target="_blank"
-              className="text-sm text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 hover:text-lc-muted-foreground-hover"
-              title="https://lexicora.com"
-            >
-              Visit Lexicora.com{" "}
-              <ArrowUpRightIcon className="inline" size={16} />
-            </a>
-          </div>
+    <PageContainer id="lc-home-page">
+      <header className="mt-4">
+        <span className="flex justify-center gap-3 items-baseline mb-3">
+          {/*Maybe add link to lexicora.com */}
+          <img
+            src={lexicoraLightThemeLogoNoBg}
+            className="h-6.5 lc-display-light rounded-xs"
+            alt="Lexicora logo"
+            draggable="false"
+          />
+          <img
+            src={lexicoraDarkThemeLogoNoBg}
+            className="h-6.5 lc-display-dark rounded-xs"
+            alt="Lexicora logo"
+            draggable="false"
+          />
+          {/*#00143d is the Lexicora color */}
+          <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground leading-0">
+            Lexicora
+          </h1>
+        </span>
+        <div className="flex justify-center mt-1">
+          <a
+            href="https://lexicora.com"
+            target="_blank"
+            className="text-sm text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 hover:text-lc-muted-foreground-hover"
+            title="https://lexicora.com"
+          >
+            Visit Lexicora.com <ArrowUpRightIcon className="inline" size={16} />
+          </a>
+        </div>
+        <hr className="mt-3 mx-2" />
+      </header>
+      <main className="mb-12">
+        <section className="mt-4">
+          <h2 className="text-base font-semibold text-red-400 /*text-[#00143d]*/ /*dark:text-foreground*/">
+            Put other actions and stuff here!
+          </h2>
+          {/* Maybe add buttons for recent captures, settings, help, most recent entries, favorit entries etc. */}
           <hr className="mt-3 mx-2" />
-        </header>
-        <main className="mb-12">
-          <section className="mt-4">
-            <h2 className="text-base font-semibold text-red-400 /*text-[#00143d]*/ /*dark:text-foreground*/">
-              Put other actions and stuff here!
+        </section>
+        <section>
+          {/*TODO: Maybe show indication (like in browsers bottom left of window), where this link leads */}
+          <article>
+            <h2 className="text-lg font-medium mt-4 mb-1 text-[#00143d] dark:text-foreground">
+              Describe what you want AI to do
             </h2>
-            {/* Maybe add buttons for recent captures, settings, help, most recent entries, favorit entries etc. */}
-            <hr className="mt-3 mx-2" />
-          </section>
-          <section>
-            {/*TODO: Maybe show indication (like in browsers bottom left of window), where this link leads */}
-            <article>
-              <h2 className="text-lg font-medium mt-4 mb-1 text-[#00143d] dark:text-foreground">
-                Describe what you want AI to do
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                Provide instructions for capturing and enhancing the content of
-                the current page using AI.
-              </p>
-              <hr className="mx-24 mt-2.75" />
-              <p className="text-sm text-muted-foreground mt-2">
-                Or, leave it blank to capture the page as-is.
-              </p>
-            </article>
-          </section>
-          <section className="mt-5">
-            <Textarea
-              id="ai-prompt-textarea"
-              ref={aiPromptTextareaRef}
-              placeholder="Type your desired AI prompt here."
-              // Adjust default height to full height minus top and bottom bars and content above
-              className="field-sizing-content resize-y min-h-[max(138px,calc(100vh-478px))] /*min-h-34.5*/ /*max-h-300*/ w-[calc(100%-2px)] max-w-313.5 mx-auto scrollbar-thin
+            <p className="text-sm text-muted-foreground">
+              Provide instructions for capturing and enhancing the content of
+              the current page using AI.
+            </p>
+            <hr className="mx-24 mt-2.75" />
+            <p className="text-sm text-muted-foreground mt-2">
+              Or, leave it blank to capture the page as-is.
+            </p>
+          </article>
+        </section>
+        <section className="mt-5">
+          <Textarea
+            id="ai-prompt-textarea"
+            ref={aiPromptTextareaRef}
+            placeholder="Type your desired AI prompt here."
+            // Adjust default height to full height minus top and bottom bars and content above
+            className="field-sizing-content resize-y min-h-[max(138px,calc(100vh-478px))] /*min-h-34.5*/ /*max-h-300*/ w-[calc(100%-2px)] max-w-313.5 mx-auto scrollbar-thin
             transition-colors duration-150 focus-visible:ring-0"
-              maxLength={1000}
-              disabled={!isSupported}
-              title={
-                isSupported
-                  ? ""
-                  : "You are currently on a unsupported page for capturing."
+            maxLength={1000}
+            disabled={!isSupported}
+            title={
+              isSupported
+                ? ""
+                : "You are currently on a unsupported page for capturing."
+            }
+            value={promptText}
+            onChange={(e) => {
+              setPromptText(e.target.value);
+              // Makes sure shadow disappears
+            }} // 4. Update state on every keystroke
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                e.preventDefault();
+                aiPromptTextareaRef.current?.blur();
               }
-              value={promptText}
-              onChange={(e) => {
-                setPromptText(e.target.value);
-                // Makes sure shadow disappears
-              }} // 4. Update state on every keystroke
-              onKeyDown={(e) => {
-                if (e.key === "Escape") {
-                  e.preventDefault();
-                  aiPromptTextareaRef.current?.blur();
+              // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
+              if (e.ctrlKey && e.key === "Enter") {
+                // Submit AI prompt logic here
+                e.preventDefault();
+                if (promptText.trim() === "") return;
+                alert("Submitted AI request successfully!");
+                // TODO: do more here
+              }
+            }}
+          />
+        </section>
+      </main>
+      <footer className={styles.bottomFooter}>
+        <section className="fixed bottom-14.75 left-0 h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-10 lc-bottom-bar-styled-bg">
+          {/*MAYBE: Remove the animation disabling motion-reduce, because it is a very noticeable and maybe not optimal for accessibility*/}
+          <div className="flex gap-0 items-center justify-between w-full max-w-314 mx-auto inset-x-0">
+            <div
+              className={`flex justify-start transition-all motion-reduce:transition-none duration-300 ease-in-out /*overflow-visible*/ ${
+                promptText.trimEnd() === ""
+                  ? "flex-1 max-w-[50%] mr-3"
+                  : "flex-0 max-w-0 opacity-0 mr-0 blur-[6px]"
+              }`}
+            >
+              <Button
+                variant="secondary"
+                title={
+                  isSupported
+                    ? "Capture page"
+                    : "You are currently on a unsupported page for capturing."
                 }
-                // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
-                if (e.ctrlKey && e.key === "Enter") {
-                  // Submit AI prompt logic here
-                  e.preventDefault();
-                  if (promptText.trim() === "") return;
-                  alert("Submitted AI request successfully!");
-                  // TODO: do more here
-                }
-              }}
-            />
-          </section>
-        </main>
-        <footer className={styles.bottomFooter}>
-          <section className="fixed bottom-14.75 left-0 h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-10 lc-bottom-bar-styled-bg">
-            {/*MAYBE: Remove the animation disabling motion-reduce, because it is a very noticeable and maybe not optimal for accessibility*/}
-            <div className="flex gap-0 items-center justify-between w-full max-w-314 mx-auto inset-x-0">
-              <div
-                className={`flex justify-start transition-all motion-reduce:transition-none duration-300 ease-in-out /*overflow-visible*/ ${
-                  promptText.trimEnd() === ""
-                    ? "flex-1 max-w-[50%] mr-3"
-                    : "flex-0 max-w-0 opacity-0 mr-0 blur-[6px]"
-                }`}
+                className={cn(
+                  "w-full hover:bg-secondary hover:brightness-90 overflow-hidden disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:brightness-100 /*active:brightness-80*/",
+                  {
+                    "disabled:pointer-events-none": promptText.trimEnd() !== "",
+                  },
+                )}
+                disabled={promptText.trimEnd() !== "" || !isSupported}
+                onClick={capturePage}
               >
-                <Button
-                  variant="secondary"
-                  title={
-                    isSupported
-                      ? "Capture page"
-                      : "You are currently on a unsupported page for capturing."
-                  }
-                  className={cn(
-                    "w-full hover:bg-secondary hover:brightness-90 overflow-hidden disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:brightness-100 /*active:brightness-80*/",
-                    {
-                      "disabled:pointer-events-none":
-                        promptText.trimEnd() !== "",
-                    },
-                  )}
-                  disabled={promptText.trimEnd() !== "" || !isSupported}
-                  onClick={capturePage}
-                >
-                  Capture
-                </Button>
-              </div>
-              <div className="flex justify-end flex-1">
-                <Button
-                  title={
-                    isSupported
-                      ? "Capture page with AI"
-                      : "You are currently on a unsupported page for capturing."
-                  }
-                  className="w-full hover:bg-primary hover:brightness-90 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:brightness-100 /*active:brightness-80*/"
-                  disabled={!isSupported}
-                >
-                  Capture with AI
-                </Button>
-              </div>
+                Capture
+              </Button>
             </div>
-          </section>
-        </footer>
-      </div>
-    </div>
+            <div className="flex justify-end flex-1">
+              <Button
+                title={
+                  isSupported
+                    ? "Capture page with AI"
+                    : "You are currently on a unsupported page for capturing."
+                }
+                className="w-full hover:bg-primary hover:brightness-90 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:brightness-100 /*active:brightness-80*/"
+                disabled={!isSupported}
+              >
+                Capture with AI
+              </Button>
+            </div>
+          </div>
+        </section>
+      </footer>
+    </PageContainer>
   );
 }
 

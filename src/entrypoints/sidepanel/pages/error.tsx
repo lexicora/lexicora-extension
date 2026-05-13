@@ -1,3 +1,4 @@
+import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { isRouteErrorResponse, useRouteError } from "react-router-dom";
 
@@ -20,22 +21,20 @@ function ErrorPage() {
     }
 
     return (
-      <div className="lc-page-container mt-0! mb-6!">
-        <div className="lc-page-container-inner">
-          <PageHeader
-            title="Error"
-            goBackButton={true}
-            hoverOnScroll={false}
-            classNameHeaderElement="mb-2"
-          />
-          <main>
-            <h2 className="text-8xl text-red-900 dark:text-red-300">
-              {statusCode}
-            </h2>
-            <p className="text-muted-foreground mt-2">{errorMessage}</p>
-          </main>
-        </div>
-      </div>
+      <PageContainer className="mt-0! mb-6!">
+        <PageHeader
+          title="Error"
+          goBackButton={true}
+          hoverOnScroll={false}
+          classNameHeaderElement="mb-2"
+        />
+        <main>
+          <h2 className="text-8xl text-red-900 dark:text-red-300">
+            {statusCode}
+          </h2>
+          <p className="text-muted-foreground mt-2">{errorMessage}</p>
+        </main>
+      </PageContainer>
     );
   }
 
@@ -87,17 +86,15 @@ function ErrorPage() {
   }
 
   return (
-    <div className="lc-page-container mt-0! mb-0!">
-      <div className="lc-page-container-inner">
-        <PageHeader
-          title="Error"
-          goBackButton={true}
-          hoverOnScroll={false}
-          classNameHeaderElement="mb-2"
-        />
-        <main>{errorContent}</main>
-      </div>
-    </div>
+    <PageContainer className="mt-0! mb-0!">
+      <PageHeader
+        title="Error"
+        goBackButton={true}
+        hoverOnScroll={false}
+        classNameHeaderElement="mb-2"
+      />
+      <main>{errorContent}</main>
+    </PageContainer>
   );
 }
 

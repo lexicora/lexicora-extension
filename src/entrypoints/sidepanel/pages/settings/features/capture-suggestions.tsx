@@ -1,3 +1,4 @@
+import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import {
   Item,
@@ -26,121 +27,119 @@ function CaptureSuggestionsSettingsPage() {
   const currentDelay = delayMultiplier || 2;
 
   return (
-    <div className="lc-page-container">
-      <div className="lc-page-container-inner">
-        <PageHeader title="Capture Suggestions" goBackButton />
-        <main className="flex flex-col gap-6.5 w-full pt-4.5 px-1.5 mb-1">
-          <section>
-            <Item
-              variant="muted"
-              size="default"
-              className="group py-2.5 gap-2 transition-none bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-b-none"
-            >
-              <ItemHeader>
-                <ItemMedia variant="icon">
-                  <CameraIcon className="size-8 text-red-500" />
-                </ItemMedia>
-              </ItemHeader>
-              <ItemContent>
-                <ItemDescription className="line-clamp-none /*leading-relaxed*/">
-                  Webpage prompts that suggest capturing content after you've
-                  spent some time on a site.
-                  {/*TODO: Later change when this feature becomes smart with analysis*/}
-                </ItemDescription>
-              </ItemContent>
-            </Item>
-            <div className="flex flex-row">
-              <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
-              <div className="flex-1 w-full h-0 max-w-[calc(100%-30px)] border-t border-t-[#c4cbd4] dark:border-t-[#2b3b52]"></div>
-              <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
-            </div>
-            <Item
-              variant="muted"
-              size="sm"
-              className="group transition-none hover:cursor-pointer bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-t-none"
-              onClick={() => {
-                setEnabled(!enabled);
-              }}
-            >
-              <ItemMedia variant="icon">
-                <CameraIcon
-                  className={`size-5 text-green-500 transition-all scale-100 rotate-0 ${enabled ? "" : "scale-0! -rotate-90!"}`}
-                />
-                <CameraOffIcon
-                  className={`absolute size-5 text-gray-500 transition-all scale-100 rotate-0 ${enabled ? "scale-0! rotate-90!" : ""}`}
-                />
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle>Capture Suggestions</ItemTitle>
-              </ItemContent>
-              <ItemActions>
-                <Switch
-                  className="data-[state=unchecked]:bg-gray-400 dark:data-[state=unchecked]:bg-gray-700"
-                  checked={enabled ?? false}
-                />
-              </ItemActions>
-            </Item>
-          </section>
-          <section
-            className={`transition-all duration-150 ${!enabled ? "opacity-65 grayscale-30 pointer-events-none" : "opacity-100"}`}
+    <PageContainer>
+      <PageHeader title="Capture Suggestions" goBackButton />
+      <main className="flex flex-col gap-6.5 w-full pt-4.5 px-1.5 mb-1">
+        <section>
+          <Item
+            variant="muted"
+            size="default"
+            className="group py-2.5 gap-2 transition-none bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-b-none"
           >
-            <Item
-              variant="muted"
-              size="xs"
-              className="bg-slate-200/75 dark:bg-muted/50 rounded-2xl py-2.5"
-            >
-              <div className="flex flex-col w-full gap-4">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <TimerIcon className="size-5 text-orange-500" />
-                    <span className="text-sm font-medium">Prompt Delay</span>
-                  </div>
-                  <div className="text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-600 border border-orange-700/25 dark:border-orange-600/25 px-2 py-0.5 rounded-full">
-                    {currentDelay} min
-                  </div>
+            <ItemHeader>
+              <ItemMedia variant="icon">
+                <CameraIcon className="size-8 text-red-500" />
+              </ItemMedia>
+            </ItemHeader>
+            <ItemContent>
+              <ItemDescription className="line-clamp-none /*leading-relaxed*/">
+                Webpage prompts that suggest capturing content after you've
+                spent some time on a site.
+                {/*TODO: Later change when this feature becomes smart with analysis*/}
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+          <div className="flex flex-row">
+            <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
+            <div className="flex-1 w-full h-0 max-w-[calc(100%-30px)] border-t border-t-[#c4cbd4] dark:border-t-[#2b3b52]"></div>
+            <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
+          </div>
+          <Item
+            variant="muted"
+            size="sm"
+            className="group transition-none hover:cursor-pointer bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-t-none"
+            onClick={() => {
+              setEnabled(!enabled);
+            }}
+          >
+            <ItemMedia variant="icon">
+              <CameraIcon
+                className={`size-5 text-green-500 transition-all scale-100 rotate-0 ${enabled ? "" : "scale-0! -rotate-90!"}`}
+              />
+              <CameraOffIcon
+                className={`absolute size-5 text-gray-500 transition-all scale-100 rotate-0 ${enabled ? "scale-0! rotate-90!" : ""}`}
+              />
+            </ItemMedia>
+            <ItemContent>
+              <ItemTitle>Capture Suggestions</ItemTitle>
+            </ItemContent>
+            <ItemActions>
+              <Switch
+                className="data-[state=unchecked]:bg-gray-400 dark:data-[state=unchecked]:bg-gray-700"
+                checked={enabled ?? false}
+              />
+            </ItemActions>
+          </Item>
+        </section>
+        <section
+          className={`transition-all duration-150 ${!enabled ? "opacity-65 grayscale-30 pointer-events-none" : "opacity-100"}`}
+        >
+          <Item
+            variant="muted"
+            size="xs"
+            className="bg-slate-200/75 dark:bg-muted/50 rounded-2xl py-2.5"
+          >
+            <div className="flex flex-col w-full gap-4">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <TimerIcon className="size-5 text-orange-500" />
+                  <span className="text-sm font-medium">Prompt Delay</span>
                 </div>
-                <div className="px-1.5">
-                  <Slider
-                    min={1}
-                    max={60}
-                    step={1}
-                    value={[currentDelay]}
-                    onValueChange={(v) => setDelayMultiplier(v[0])}
-                    disabled={!enabled}
-                  />
-                  <div className="flex justify-between mt-2 px-0.5">
-                    <span className="text-[10px] text-muted-foreground font-medium">
-                      1m
-                    </span>
-                    <span className="text-[10px] text-muted-foreground font-medium ">
-                      30m
-                    </span>
-                    <span className="text-[10px] text-muted-foreground font-medium">
-                      1h
-                    </span>
-                  </div>
+                <div className="text-xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-600 border border-orange-700/25 dark:border-orange-600/25 px-2 py-0.5 rounded-full">
+                  {currentDelay} min
                 </div>
-                <p className="text-[11px] text-muted-foreground italic text-center">
-                  Suggestions will appear after {currentDelay} minute
-                  {currentDelay > 1 ? "s" : ""} of activity.
-                </p>
               </div>
-            </Item>
-            {import.meta.env.DEV && (
-              <p className="mt-2 text-muted-foreground">
-                In dev mode minutes are seconds.
+              <div className="px-1.5">
+                <Slider
+                  min={1}
+                  max={60}
+                  step={1}
+                  value={[currentDelay]}
+                  onValueChange={(v) => setDelayMultiplier(v[0])}
+                  disabled={!enabled}
+                />
+                <div className="flex justify-between mt-2 px-0.5">
+                  <span className="text-[10px] text-muted-foreground font-medium">
+                    1m
+                  </span>
+                  <span className="text-[10px] text-muted-foreground font-medium ">
+                    30m
+                  </span>
+                  <span className="text-[10px] text-muted-foreground font-medium">
+                    1h
+                  </span>
+                </div>
+              </div>
+              <p className="text-[11px] text-muted-foreground italic text-center">
+                Suggestions will appear after {currentDelay} minute
+                {currentDelay > 1 ? "s" : ""} of activity.
               </p>
-            )}
-          </section>
-          {/*TODO: Potential features to add later:
+            </div>
+          </Item>
+          {import.meta.env.DEV && (
+            <p className="mt-2 text-muted-foreground">
+              In dev mode minutes are seconds.
+            </p>
+          )}
+        </section>
+        {/*TODO: Potential features to add later:
           - Option to only show suggestions on certain sites or block suggestions on certain sites (with a toggle and input for sites)
           - Option to customize the suggestions with instructions for the AI (like "suggest capturing if you are reading an article for more than 5 minutes" or "suggest capturing if you are on a shopping site for more than 10 minutes" etc.)
           - max prompts per day/week/month with option to reset the count (with a toggle and input for number of prompts)
           - snooze suggestions for a certain amount of time (with a button to snooze and input for snooze duration)*/}
-        </main>
-        <footer>{/* Footer content if needed */}</footer>
-      </div>
-    </div>
+      </main>
+      <footer>{/* Footer content if needed */}</footer>
+    </PageContainer>
   );
 }
 

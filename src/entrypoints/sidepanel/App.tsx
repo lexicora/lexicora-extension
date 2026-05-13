@@ -24,7 +24,7 @@ import NotFoundPage from "./pages/not-found";
 import NotSupportedPage from "./pages/not-supported";
 
 // Entries Pages
-import EntriesPage from "./pages/entries/entries";
+import EntriesPage from "./pages/entries/entries"; // TODO: Maybe change this to content page, because it also has topics...
 import EntryCreatePage from "./pages/entries/new/entry-create";
 import EntryDetailPage from "./pages/entries/[id]/entry-detail";
 import EntryEditPage from "./pages/entries/edit/[id]/entry-edit";
