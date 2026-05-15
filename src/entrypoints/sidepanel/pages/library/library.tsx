@@ -24,7 +24,7 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 
-function EntriesPage() {
+function LibraryPage() {
   const navigate = useNavigate();
 
   return (
@@ -33,7 +33,7 @@ function EntriesPage() {
           <h1 className="text-2xl font-semibold">Entries</h1>
         </header>*/}
       <Tabs defaultValue="entries">
-        <PageHeader title="Entries">
+        <PageHeader title="Library">
           <div className="mt-3 mx-2">
             <div id="search" className="dark:scheme-dark">
               <Field orientation="horizontal">
@@ -61,7 +61,7 @@ function EntriesPage() {
               </Toggle>
               {/*Group Tabs of pure entries and topics (grouping of entries) and sites (grouping of entries based on their sites url grouped and matched) */}
               <div className="flex-1 mr-7.5">
-                <TabsList className="h-8!">
+                <TabsList className="h-8! pt-0.5">
                   <TabsTrigger value="entries">Entries</TabsTrigger>
                   <TabsTrigger value="topics">Topics</TabsTrigger>
                   <TabsTrigger value="sites">Sites</TabsTrigger>
@@ -73,19 +73,19 @@ function EntriesPage() {
         </PageHeader>
         <TabsContent value="entries">
           <main>
-            {/* Entries list would go here */}
+            {/* Entries list would go here (potentially make a component for this tab)*/}
             <p>Entries</p>
           </main>
         </TabsContent>
         <TabsContent value="topics">
           <main>
-            {/* Topics list would go here */}
+            {/* Topics list would go here (potentially make a component for this tab)*/}
             <p>Topics</p>
           </main>
         </TabsContent>
         <TabsContent value="sites">
           <main>
-            {/* Sites list would go here */}
+            {/* Sites list would go here (potentially make a component for this tab)*/}
             <p>Sites</p>
           </main>
         </TabsContent>
@@ -105,7 +105,11 @@ function EntriesPage() {
                 <PlusIcon className="size-5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent side="top" align="end" className="min-w-21">
+            <DropdownMenuContent
+              side="top"
+              align="end"
+              className="min-w-21 /*bg-popover/80 backdrop-blur-md*/"
+            >
               <DropdownMenuGroup>
                 <DropdownMenuLabel className="select-none py-1">
                   New...
@@ -113,7 +117,7 @@ function EntriesPage() {
                 <DropdownMenuItem
                   className="cursor-pointer"
                   onClick={() =>
-                    navigate("/topics/new", { viewTransition: true })
+                    navigate("/library/topics/new", { viewTransition: true })
                   }
                 >
                   <FolderIcon className="mr-0 size-4" />
@@ -122,7 +126,7 @@ function EntriesPage() {
                 <DropdownMenuItem
                   className="cursor-pointer"
                   onClick={() =>
-                    navigate("/entries/new", { viewTransition: true })
+                    navigate("/library/entries/new", { viewTransition: true })
                   }
                 >
                   <FileTextIcon className="mr-0 size-4" />
@@ -137,4 +141,4 @@ function EntriesPage() {
   );
 }
 
-export default EntriesPage;
+export default LibraryPage;

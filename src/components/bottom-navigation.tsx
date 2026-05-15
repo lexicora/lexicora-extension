@@ -25,10 +25,10 @@ export function BottomNavigation() {
   const { isAtBottom } = useScrollPos();
 
   const hiddenPatterns = [
-    "entries/new",
-    "/entries/:id/edit", // Matches /entries/123/edit
-    "/topics/new",
-    "/topics/:id/edit",
+    "/library/entries/new",
+    "/library/entries/:id/edit", // Matches /library/entries/123/edit
+    "/library/topics/new",
+    "/library/topics/:id/edit",
   ];
 
   // Check if current path matches any of our hidden patterns
@@ -88,10 +88,10 @@ export function BottomNavigation() {
         <div className="flex-1 mx-3 flex items-center justify-center h-full">
           {/* Entries */}
           <NavLink
-            to="/entries"
-            title={pathname.startsWith("/entries") ? "" : "Entries"}
+            to="/library"
+            title={pathname.startsWith("/library") ? "" : "Library"}
             draggable={false}
-            viewTransition={pathname === "/entries" ? false : true}
+            viewTransition={pathname === "/library" ? false : true}
             className="group flex flex-col items-center py-4 w-full"
           >
             {({ isActive }) => (

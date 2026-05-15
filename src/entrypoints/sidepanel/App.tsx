@@ -23,17 +23,19 @@ import ErrorPage from "./pages/error";
 import NotFoundPage from "./pages/not-found";
 import NotSupportedPage from "./pages/not-supported";
 
+// (Content) Library
+import LibraryPage from "./pages/library/library";
+
 // Entries Pages
-import EntriesPage from "./pages/entries/entries"; // TODO: Maybe change this to content page, because it also has topics...
-import EntryCreatePage from "./pages/entries/new/entry-create";
-import EntryDetailPage from "./pages/entries/[id]/entry-detail";
-import EntryEditPage from "./pages/entries/edit/[id]/entry-edit";
+import EntryCreatePage from "./pages/library/entries/new/entry-create";
+import EntryDetailPage from "./pages/library/entries/[id]/entry-detail";
+import EntryEditPage from "./pages/library/entries/edit/[id]/entry-edit";
 
 // Topic Pages
 //* INFO: TopicsPage not necessary right now
-import TopicCreatePage from "./pages/topics/new/topic-create";
-import TopicDetailPage from "./pages/topics/[id]/topic-detail";
-import TopicEditPage from "./pages/topics/edit/[id]/topic-edit";
+import TopicCreatePage from "./pages/library/topics/new/topic-create";
+import TopicDetailPage from "./pages/library/topics/[id]/topic-detail";
+import TopicEditPage from "./pages/library/topics/edit/[id]/topic-edit";
 
 // Settings Pages
 import SettingsPage from "./pages/settings/settings";
@@ -45,6 +47,7 @@ import CaptureSuggestionsSettingsPage from "./pages/settings/features/capture-su
 function RootLayout() {
   useMouseNavigation();
   //* NOTE: Feature parity discrepancy: Firefox does not support stuff related to the unsupported capture suggestions feature.
+  // Also Firefox natively handles state of the side-panel already being open or closed.
   if (!import.meta.env.FIREFOX) {
     useSidePanelConnection();
   }
@@ -73,14 +76,14 @@ const router = createMemoryRouter([
       { path: "not-supported", element: <NotSupportedPage /> },
       // Add fallback page for error display
       // Entries
-      { path: "entries", element: <EntriesPage /> },
-      { path: "entries/new", element: <EntryCreatePage /> },
-      { path: "entries/:id", element: <EntryDetailPage /> },
-      { path: "entries/:id/edit", element: <EntryEditPage /> },
+      { path: "library", element: <LibraryPage /> },
+      { path: "library/entries/new", element: <EntryCreatePage /> },
+      { path: "library/entries/:id", element: <EntryDetailPage /> },
+      { path: "library/entries/:id/edit", element: <EntryEditPage /> },
       // Topics
-      { path: "topics/new", element: <TopicCreatePage /> },
-      { path: "topics/:id", element: <TopicDetailPage /> },
-      { path: "topics/:id/edit", element: <TopicEditPage /> },
+      { path: "library/topics/new", element: <TopicCreatePage /> },
+      { path: "library/topics/:id", element: <TopicDetailPage /> },
+      { path: "library/topics/:id/edit", element: <TopicEditPage /> },
       // Settings
       { path: "settings", element: <SettingsPage /> },
       {
