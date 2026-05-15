@@ -29,7 +29,7 @@ function TopicCreatePage() {
         updatedAt: new Date().toISOString(),
       });
       // Navigate to the newly created topic, or topics list
-      navigate(`/topics/${newDoc.id}`);
+      navigate(`/library/topics/${newDoc.id}`);
     } catch (err) {
       console.error("Failed to create topic:", err);
       // TODO: toast notification

@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
+  InputGroupInput,
   InputGroupText,
   InputGroupTextarea,
 } from "@/components/ui/input-group";
@@ -379,13 +380,49 @@ export function EntryForm({
           >
             Title
           </Label>
-          <Input
+          {/* <Input
             id="title"
             placeholder="Entry Title"
             aria-invalid={!!errors.title}
             {...register("title")}
             className="text-base! py-2"
-          />
+          /> */}
+          <InputGroup>
+            <InputGroupInput
+              id="title"
+              placeholder="Entry Title"
+              aria-invalid={!!errors.title}
+              {...register("title")}
+              className="text-base! py-2"
+            />
+            <InputGroupAddon align="inline-end" className="pr-2.5 py-0.5">
+              <Controller
+                control={control}
+                name="isFavorite"
+                render={({ field }) => (
+                  <Toggle
+                    type="button"
+                    variant="default"
+                    size="sm"
+                    pressed={field.value}
+                    onPressedChange={field.onChange}
+                    title="Mark as Favorite"
+                    className={cn(
+                      "p-0 size-6.5 min-w-6.5 transition-colors ring-0! bg-transparent! hover:bg-transparent active:bg-transparent",
+                    )}
+                  >
+                    <StarIcon
+                      fill={field.value ? "currentColor" : "none"}
+                      className={cn(
+                        "size-4",
+                        field.value && "text-yellow-500 fill-yellow-500",
+                      )}
+                    />
+                  </Toggle>
+                )}
+              />
+            </InputGroupAddon>
+          </InputGroup>
           {errors.title && (
             <FieldError className="text-center" errors={[errors.title]} />
           )}
@@ -558,47 +595,24 @@ export function EntryForm({
             </Field>
 
             <Field className="mb-2">
-              <div className="flex items-center justify-center gap-2 pt-2">
+              <div
+                title={isSupported ? "" : "Unsupported Page"}
+                className={cn(
+                  "flex items-center justify-center gap-2 pt-2",
+                  !isSupported && "cursor-not-allowed",
+                )}
+              >
                 <Button
                   type="button"
                   variant="outline"
-                  size="icon-sm"
+                  size="sm"
                   title="Fetch current tab's metadata"
                   onClick={handleFetchMetadata}
-                  className="shrink-0 text-muted-foreground disabled:cursor-not-allowed"
+                  className="shrink-0 text-muted-foreground"
                   disabled={!isSupported}
                 >
-                  <RefreshCw className="size-4" />
+                  <RefreshCw className="size-4" /> Refresh Metadata
                 </Button>
-                <Controller
-                  control={control}
-                  name="isFavorite"
-                  render={({ field }) => (
-                    <Toggle
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      pressed={field.value}
-                      onPressedChange={field.onChange}
-                      title="Mark as Favorite"
-                      className={cn(
-                        "transition-colors",
-                        field.value
-                          ? "bg-lc-muted-foreground-hover text-primary"
-                          : "text-muted-foreground",
-                      )}
-                    >
-                      <StarIcon
-                        fill={field.value ? "currentColor" : "none"}
-                        className={cn(
-                          "size-4",
-                          field.value && "text-yellow-500 fill-yellow-500",
-                        )}
-                      />
-                      Favorite
-                    </Toggle>
-                  )}
-                />
               </div>
             </Field>
           </CollapsibleContent>
