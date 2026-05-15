@@ -31,7 +31,7 @@ export function SettingsItem({
   MediaIcon?: typeof PlaceHolderIcon;
   mediaIconColor?: string;
   itemTitle?: string;
-  roundingClass?: "" | "rounded-b-none" | "rounded-t-none" | "rounded-none!"; // TODO
+  roundingClass?: "" | "rounded-b-none" | "rounded-t-none" | "rounded-none!";
   disabled?: boolean;
   disabledReason?: string;
 }) {
