@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 function LibraryPage() {
+  const [search, setSearch] = useState("");
+
   const navigate = useNavigate();
 
   return (
@@ -42,6 +44,8 @@ function LibraryPage() {
                   type="search"
                   placeholder="Search..."
                   className="h-8 px-2"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
                 <Button size="icon" /*title="Search"*/ className="size-8">
                   <SearchIcon />
@@ -57,7 +61,7 @@ function LibraryPage() {
                 variant="outline"
                 className="shrink-0 transition-colors min-w-7.5 size-7.5"
               >
-                <StarIcon className="group-data-[state=on]/toggle:fill-foreground" />
+                <StarIcon className="group-data-[state=on]/toggle:text-yellow-500 group-data-[state=on]/toggle:fill-yellow-500" />
               </Toggle>
               {/*Group Tabs of pure entries and topics (grouping of entries) and sites (grouping of entries based on their sites url grouped and matched) */}
               <div className="flex-1 mr-7.5">
