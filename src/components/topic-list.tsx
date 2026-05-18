@@ -54,8 +54,8 @@ export function TopicItem({ topic }: TopicItemProps) {
         )}
         onClick={() => navigate(`/library/topics/${topic.id}`)}
       >
-        <ItemContent className="">
-          <ItemTitle className="line-clamp-1">
+        <ItemContent className="flex-3 flex-col justify-between items-start /*gap-1.75*/ gap-[0.48rem]">
+          <ItemTitle className="line-clamp-1 truncate max-w-[50vw]">
             {topic.name}
             {/* -{" "}
             <span className="text-muted-foreground">{formattedDate}</span> */}
@@ -63,11 +63,11 @@ export function TopicItem({ topic }: TopicItemProps) {
           {/* <ItemDescription>
             {topic.entryCount} {topic.entryCount === 1 ? "entry" : "entries"}
           </ItemDescription> */}
-          <ItemDescription className="truncate max-w-[50%]">
+          <ItemDescription className="truncate max-w-[50vw]">
             {topic.description || "-"}
           </ItemDescription>
         </ItemContent>
-        <ItemContent className="flex-col justify-between items-end gap-3">
+        <ItemContent className="flex-1 flex-col justify-between items-end gap-3">
           <div className="flex justify-end">
             <StarIcon
               className={cn(
@@ -156,7 +156,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
 
       const query = db.collections.topics.find({
         selector,
-        sort: [{ updatedAt: "desc" }],
+        sort: [{ updatedAt: "desc" }], //? Maybe sort by createdAt instead?
         limit: limit,
       });
 
@@ -200,4 +200,4 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   );
 }
 
-// TODO: Show the text "No topics found", when no topics exist.
+// TODO: Show the text "No topics found", with create button, when no topics exist.

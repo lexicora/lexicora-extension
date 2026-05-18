@@ -48,7 +48,7 @@ function LibraryPage() {
           <h1 className="text-2xl font-semibold">Entries</h1>
         </header>*/}
       <Tabs value={activeTab} onValueChange={handleTabChange}>
-        <PageHeader title="Library">
+        <PageHeader title="Library" classNameHeaderElement="mb-2">
           <div className="mt-3 mx-2">
             <div id="search" className="dark:scheme-dark">
               <Field orientation="horizontal">
