@@ -12,7 +12,7 @@ import {
   StarIcon,
 } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { TopicList } from "@/components/topic-list";
 
 import { PageContainer } from "@/components/page-container";
@@ -29,15 +29,24 @@ import {
 function LibraryPage() {
   const [search, setSearch] = useState(""); //* Not working currently.
   const [showFavorites, setShowFavorites] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const activeTab = searchParams.get("tab") || "entries";
 
   const navigate = useNavigate();
+
+  const handleTabChange = (value: string) => {
+    // If it's already the same tab, don't do anything
+    if (value === activeTab) return;
+    setSearchParams({ tab: value }, { replace: true });
+  };
 
   return (
     <PageContainer>
       {/*<header className="mb-4 mt-1">
           <h1 className="text-2xl font-semibold">Entries</h1>
         </header>*/}
-      <Tabs defaultValue="entries">
+      <Tabs value={activeTab} onValueChange={handleTabChange}>
         <PageHeader title="Library">
           <div className="mt-3 mx-2">
             <div id="search" className="dark:scheme-dark">

@@ -25,6 +25,25 @@ interface TopicItemProps {
 export function TopicItem({ topic }: TopicItemProps) {
   const navigate = useNavigate();
 
+  // Format the date using the modern Temporal API (with a standard Date fallback).
+  // We use `updatedAt` because library items are typically sorted and searched by recent activity.
+  const formattedDate = (() => {
+    try {
+      // @ts-ignore - TS might not have Temporal types inherently available yet.
+      const instant = Temporal.Instant.from(topic.updatedAt);
+      return instant.toLocaleString(navigator.language, {
+        dateStyle: "medium", // 'medium' is usually nicely balanced (e.g. Oct 18, 2026)
+        timeStyle: "short",
+      });
+    } catch (e) {
+      // Safe fallback if Temporal throws/isn't supported
+      return new Date(topic.updatedAt).toLocaleString(navigator.language, {
+        dateStyle: "medium",
+        timeStyle: "short",
+      });
+    }
+  })();
+
   return (
     <Item key={topic.id} variant="outline" asChild>
       <Button
@@ -33,13 +52,19 @@ export function TopicItem({ topic }: TopicItemProps) {
         onClick={() => navigate(`/library/topics/${topic.id}`)}
       >
         <ItemContent>
-          <ItemTitle>{topic.name}</ItemTitle>
+          <ItemTitle className="line-clamp-1">
+            {topic.name}
+            {/* -{" "}
+            <span className="text-muted-foreground">{formattedDate}</span> */}
+          </ItemTitle>
           {/* <ItemDescription>
             {topic.entryCount} {topic.entryCount === 1 ? "entry" : "entries"}
           </ItemDescription> */}
-          {/* <ItemDescription>{topic.description.substring(0, 20)}...</ItemDescription> */}
+          <ItemDescription className="truncate max-w-[50%]">
+            {topic.description || "-"}
+          </ItemDescription>
         </ItemContent>
-        <ItemContent className="flex-col justify-between">
+        <ItemContent className="flex-col justify-between items-end">
           <div className="flex justify-end">
             <StarIcon
               className={cn(
@@ -50,16 +75,14 @@ export function TopicItem({ topic }: TopicItemProps) {
               )}
             />
           </div>
-          <ItemDescription>{topic.updatedAt}</ItemDescription>
+          <ItemDescription className="text-xs text-muted-foreground whitespace-nowrap">
+            {formattedDate}
+          </ItemDescription>
         </ItemContent>
       </Button>
     </Item>
   );
 }
-
-// export function TopicList() {
-//     return ();
-// }
 
 interface TopicListProps {
   search: string;
@@ -118,7 +141,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
       data={topics}
       endReached={() => setLimit((prev) => prev + 50)}
       itemContent={(_, topic) => (
-        <div className="px-2 py-1.5">
+        <div className="px-1.5 py-1.5">
           <TopicItem topic={topic} />
         </div>
       )}
