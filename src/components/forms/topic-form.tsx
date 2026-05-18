@@ -130,6 +130,7 @@ export function TopicForm({
             <InputGroupInput
               id="name"
               placeholder="Topic Name"
+              autoComplete="off"
               aria-invalid={!!errors.name}
               {...register("name")}
               className="text-base!"

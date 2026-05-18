@@ -340,7 +340,7 @@ export function EntryForm({
                       }}
                     />
                   </div>
-                  <ComboboxContent className="z-50 w-[--radix-popover-trigger-width]">
+                  <ComboboxContent className="z-50 scrollbar-bg-transparent w-[--radix-popover-trigger-width]">
                     <ComboboxEmpty>Type to create a new topic.</ComboboxEmpty>
                     <ComboboxList>
                       {(topic) => (
