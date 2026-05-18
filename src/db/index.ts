@@ -36,6 +36,12 @@ export async function initializeDb() {
     blocks: { schema: blockSchema },
   });
 
+  // Seed dummy data if in development mode
+  if (isDev) {
+    const { seedDummyData } = await import("./seed");
+    await seedDummyData(db);
+  }
+
   return db;
 }
 
