@@ -134,7 +134,7 @@ export function TopicForm({
               {...register("name")}
               className="text-base!"
             />
-            <InputGroupAddon align="inline-end" className="pr-2.5 py-0.5">
+            <InputGroupAddon align="inline-end" className="pr-2 py-0.5">
               <Controller
                 control={control}
                 name="isFavorite"
@@ -147,7 +147,7 @@ export function TopicForm({
                     onPressedChange={field.onChange}
                     title="Mark as Favorite"
                     className={cn(
-                      "p-0 size-6.5 min-w-6.5 transition-colors ring-0! bg-transparent! hover:bg-transparent active:bg-transparent",
+                      "p-0 size-6.5 min-w-6.5 rounded-[3px] transition-colors not-focus-visible:ring-0! bg-transparent! hover:bg-transparent active:bg-transparent",
                     )}
                   >
                     <StarIcon
