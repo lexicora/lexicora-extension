@@ -109,21 +109,23 @@ function LibraryPage() {
         </TabsContent>
         <footer></footer>
       </Tabs>
-      <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20 pointer-events-none">
+      <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+7px)] z-20 pointer-events-none">
         <div className="shrink-0 flex items-center justify-end max-w-315 mx-auto inset-x-0">
           {/*MAYBE: Make smaller and also maybe a bit darker */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 size="icon"
+                //variant="secondary"
                 title="Create..."
                 draggable={false}
                 //className="btn-green-ring size-9.5 rounded-lg shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)]"
                 className={cn(
                   "pointer-events-auto",
-                  "text-lc-light-foreground bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800",
-                  "ring-1 ring-inset ring-black/25 dark:ring-white/30 hover:ring-black/30 dark:hover:ring-white/25",
-                  "size-9.5 rounded-lg shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)]",
+                  //"bg-secondary/80 hover:bg-secondary",
+                  "text-lc-light-foreground bg-green-500 hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800",
+                  "ring-1 ring-inset ring-black/20 dark:ring-white/30 hover:ring-black/25 dark:hover:ring-white/25",
+                  "size-9 rounded-[12px] shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)]",
                 )}
               >
                 <PlusIcon className="size-5" />

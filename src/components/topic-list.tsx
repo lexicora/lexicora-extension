@@ -50,7 +50,7 @@ export function TopicItem({ topic }: TopicItemProps) {
         variant="outline"
         className={cn(
           "h-full py-3 px-3.5 rounded-lg",
-          "bg-gray-100/75 hover:bg-gray-200/75 dark:bg-gray-900/50 dark:hover:bg-gray-800/60",
+          "bg-gray-100/50 hover:bg-gray-200/60 dark:bg-gray-900/50 dark:hover:bg-gray-800/60",
         )}
         onClick={() => navigate(`/library/topics/${topic.id}`)}
       >
@@ -176,7 +176,11 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   }, [search, onlyFavorites, limit]);
 
   return (
-    <div style={{ minHeight: placeholderHeight > 0 ? placeholderHeight : undefined }}>
+    <div
+      style={{
+        minHeight: placeholderHeight > 0 ? placeholderHeight : undefined,
+      }}
+    >
       <Virtuoso
         useWindowScroll
         data={topics}
@@ -195,3 +199,5 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
     </div>
   );
 }
+
+// TODO: Show the text "No topics found", when no topics exist.
