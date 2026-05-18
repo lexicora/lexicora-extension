@@ -11,7 +11,9 @@ import {
   SearchIcon,
   StarIcon,
 } from "lucide-react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { TopicList } from "@/components/topic-list";
 
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -25,7 +27,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 function LibraryPage() {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(""); //* Not working currently.
+  const [showFavorites, setShowFavorites] = useState(false);
 
   const navigate = useNavigate();
 
@@ -57,15 +60,17 @@ function LibraryPage() {
               className="mx-2 my-4 flex items-center justify-center"
             >
               <Toggle
-                title="Show only Favorites"
+                title={showFavorites ? "Show all" : "Show only Favorites"}
                 variant="outline"
                 className="shrink-0 transition-colors min-w-7.5 size-7.5"
+                pressed={showFavorites}
+                onPressedChange={setShowFavorites}
               >
                 <StarIcon className="group-data-[state=on]/toggle:text-yellow-500 group-data-[state=on]/toggle:fill-yellow-500" />
               </Toggle>
               {/*Group Tabs of pure entries and topics (grouping of entries) and sites (grouping of entries based on their sites url grouped and matched) */}
               <div className="flex-1 mr-7.5">
-                <TabsList className="h-8! pt-0.5">
+                <TabsList className="h-8! pt-[0.16rem]">
                   <TabsTrigger value="entries">Entries</TabsTrigger>
                   <TabsTrigger value="topics">Topics</TabsTrigger>
                   <TabsTrigger value="sites">Sites</TabsTrigger>
@@ -82,9 +87,8 @@ function LibraryPage() {
           </main>
         </TabsContent>
         <TabsContent value="topics">
-          <main>
-            {/* Topics list would go here (potentially make a component for this tab)*/}
-            <p>Topics</p>
+          <main className="mb-4">
+            <TopicList search={search} onlyFavorites={showFavorites} />
           </main>
         </TabsContent>
         <TabsContent value="sites">
@@ -104,7 +108,7 @@ function LibraryPage() {
                 size="icon"
                 title="Create..."
                 draggable={false}
-                className="btn-green-ring size-10 rounded-lg shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)]"
+                className="btn-green-ring size-9.5 rounded-lg shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)]"
               >
                 <PlusIcon className="size-5" />
               </Button>
