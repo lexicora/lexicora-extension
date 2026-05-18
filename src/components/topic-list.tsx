@@ -8,10 +8,10 @@ import {
   ItemMedia,
 } from "@/components/ui/item";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useNavigationType } from "react-router-dom";
 import { StarIcon } from "lucide-react";
 import { TopicDocType } from "@/db/schemas/topic";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { getDb } from "@/db";
 import { Virtuoso } from "react-virtuoso";
 import { cn } from "@/lib/utils";
@@ -47,11 +47,14 @@ export function TopicItem({ topic }: TopicItemProps) {
   return (
     <Item key={topic.id} variant="outline" asChild>
       <Button
-        variant="ghost"
-        className="h-full rounded-lg"
+        variant="outline"
+        className={cn(
+          "h-full py-3 px-3.5 rounded-lg",
+          "bg-gray-100/75 hover:bg-gray-200/75 dark:bg-gray-900/50 dark:hover:bg-gray-800/60",
+        )}
         onClick={() => navigate(`/library/topics/${topic.id}`)}
       >
-        <ItemContent>
+        <ItemContent className="">
           <ItemTitle className="line-clamp-1">
             {topic.name}
             {/* -{" "}
@@ -64,7 +67,7 @@ export function TopicItem({ topic }: TopicItemProps) {
             {topic.description || "-"}
           </ItemDescription>
         </ItemContent>
-        <ItemContent className="flex-col justify-between items-end">
+        <ItemContent className="flex-col justify-between items-end gap-3">
           <div className="flex justify-end">
             <StarIcon
               className={cn(
@@ -91,12 +94,48 @@ interface TopicListProps {
 
 export function TopicList({ search, onlyFavorites }: TopicListProps) {
   const [topics, setTopics] = useState<TopicDocType[]>([]);
-  const [limit, setLimit] = useState(50);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const navigationType = useNavigationType();
 
-  // Reset limit when search or filters change
+  // If we arrived here via standard navigation (not back/POP), reset the scroll and limit
   useEffect(() => {
+    if (navigationType !== "POP") {
+      sessionStorage.removeItem("topicListScrollIndex");
+      sessionStorage.setItem("topicListLimit", "50");
+    }
+  }, [navigationType]);
+
+  // Restore previous limit so the list doesn't shrink back to 50 when navigating back
+  const [limit, setLimit] = useState(() => {
+    if (navigationType !== "POP") return 50;
+    const savedLimit = sessionStorage.getItem("topicListLimit");
+    return savedLimit ? parseInt(savedLimit, 10) : 50;
+  });
+
+  const isFirstRender = useRef(true);
+
+  // Reset limit and scroll position only when search or filters actively change
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     setLimit(50);
+    sessionStorage.setItem("topicListLimit", "50");
+    sessionStorage.removeItem("topicListScrollIndex");
   }, [search, onlyFavorites]);
+
+  // Persist limit when it increases
+  useEffect(() => {
+    sessionStorage.setItem("topicListLimit", limit.toString());
+  }, [limit]);
+
+  // Keep track of the virtual list's previous total height to avoid layout shift when waiting for RxDB
+  const placeholderHeight = useMemo(() => {
+    if (navigationType !== "POP") return 0;
+    const height = sessionStorage.getItem("topicListScrollHeight");
+    return height ? parseInt(height, 10) : 0;
+  }, [navigationType]);
 
   useEffect(() => {
     let sub: any;
@@ -123,6 +162,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
 
       sub = query.$.subscribe((results) => {
         setTopics(results as TopicDocType[]);
+        setIsDataLoaded(true);
       });
     };
 
@@ -136,15 +176,22 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   }, [search, onlyFavorites, limit]);
 
   return (
-    <Virtuoso
-      useWindowScroll
-      data={topics}
-      endReached={() => setLimit((prev) => prev + 50)}
-      itemContent={(_, topic) => (
-        <div className="px-1.5 py-1.5">
-          <TopicItem topic={topic} />
-        </div>
-      )}
-    />
+    <div style={{ minHeight: placeholderHeight > 0 ? placeholderHeight : undefined }}>
+      <Virtuoso
+        useWindowScroll
+        data={topics}
+        totalListHeightChanged={(height) => {
+          if (height > 0) {
+            sessionStorage.setItem("topicListScrollHeight", height.toString());
+          }
+        }}
+        endReached={() => setLimit((prev) => prev + 50)}
+        itemContent={(_, topic) => (
+          <div className="px-1.5 py-1.5">
+            <TopicItem topic={topic} />
+          </div>
+        )}
+      />
+    </div>
   );
 }
