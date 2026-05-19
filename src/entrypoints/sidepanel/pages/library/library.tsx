@@ -97,7 +97,7 @@ function LibraryPage() {
           </main>
         </TabsContent>
         <TabsContent value="topics">
-          <main className="mb-4">
+          <main className="mb-2.5">
             <TopicList search={search} onlyFavorites={showFavorites} />
           </main>
         </TabsContent>
