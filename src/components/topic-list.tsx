@@ -150,8 +150,9 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
       }
 
       if (search.trim()) {
-        // Simple regex matching on name
-        selector.name = { $regex: new RegExp(search, "i") };
+        // RxDB requires the regex operator to be a string
+        selector.name = { $regex: search, $options: "i" };
+        //? Maybe add description too, though preferably only indexed fields.
       }
 
       const query = db.collections.topics.find({

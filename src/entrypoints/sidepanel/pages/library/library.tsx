@@ -10,8 +10,9 @@ import {
   PlusIcon,
   SearchIcon,
   StarIcon,
+  XIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useDeferredValue } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { TopicList } from "@/components/topic-list";
 
@@ -26,9 +27,16 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 
 function LibraryPage() {
-  const [search, setSearch] = useState(""); //* Not working currently.
+  const [search, setSearch] = useState("");
+  const deferredSearch = useDeferredValue(search);
   const [showFavorites, setShowFavorites] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -52,23 +60,39 @@ function LibraryPage() {
           <div className="mt-3 mx-2">
             <div id="search" className="dark:scheme-dark">
               <Field orientation="horizontal">
-                <Input
-                  id="search-input"
-                  type="search"
-                  placeholder="Search..."
-                  className="h-8 px-2"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <Button size="icon" /*title="Search"*/ className="size-8">
+                <InputGroup>
+                  <InputGroupAddon>
+                    <SearchIcon />
+                  </InputGroupAddon>
+                  <InputGroupInput
+                    id="search-input"
+                    //type="search"
+                    placeholder="Search..."
+                    className="h-8 px-2"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                  {search && (
+                    <InputGroupButton
+                      size="icon-sm"
+                      onClick={() => setSearch("")}
+                      title="Clear search"
+                      className="size-7.5 mr-0.5"
+                    >
+                      <XIcon />
+                    </InputGroupButton>
+                  )}
+                  {/* <Button size="icon" className="size-8">
                   <SearchIcon />
-                </Button>
+                </Button> */}
+                </InputGroup>
               </Field>
             </div>
             <div
               id="tab-switcher-favorites-toggle"
               className="mx-2 my-4 flex items-center justify-center"
             >
+              {/* Maybe put toggle inline with search input or potentially move to the right side of the tab-list */}
               <Toggle
                 title={showFavorites ? "Show all" : "Show only Favorites"}
                 variant="outline"
@@ -80,7 +104,7 @@ function LibraryPage() {
               </Toggle>
               {/*Group Tabs of pure entries and topics (grouping of entries) and sites (grouping of entries based on their sites url grouped and matched) */}
               <div className="flex-1 mr-7.5">
-                <TabsList className="h-8! pt-[0.16rem]">
+                <TabsList className="h-8! py-[0.16rem]">
                   <TabsTrigger value="entries">Entries</TabsTrigger>
                   <TabsTrigger value="topics">Topics</TabsTrigger>
                   <TabsTrigger value="sites">Sites</TabsTrigger>
@@ -98,7 +122,7 @@ function LibraryPage() {
         </TabsContent>
         <TabsContent value="topics">
           <main className="mb-2.5">
-            <TopicList search={search} onlyFavorites={showFavorites} />
+            <TopicList search={deferredSearch} onlyFavorites={showFavorites} />
           </main>
         </TabsContent>
         <TabsContent value="sites">
