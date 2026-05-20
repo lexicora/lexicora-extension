@@ -12,7 +12,7 @@ import {
   StarIcon,
   XIcon,
 } from "lucide-react";
-import { useState, useDeferredValue } from "react";
+import { useState, useDeferredValue, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { TopicList } from "@/components/topic-list";
 
@@ -35,19 +35,49 @@ import {
 } from "@/components/ui/input-group";
 
 function LibraryPage() {
-  const [search, setSearch] = useState("");
-  const deferredSearch = useDeferredValue(search);
-  const [showFavorites, setShowFavorites] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("q") || "");
+  const deferredSearch = useDeferredValue(search);
+  const [showFavorites, setShowFavorites] = useState(
+    searchParams.get("favorites") === "true",
+  );
 
   const activeTab = searchParams.get("tab") || "entries";
+
+  useEffect(() => {
+    setSearchParams(
+      (prev) => {
+        const newParams = new URLSearchParams(prev);
+        if (deferredSearch) {
+          newParams.set("q", deferredSearch);
+        } else {
+          newParams.delete("q");
+        }
+
+        if (showFavorites) {
+          newParams.set("favorites", "true");
+        } else {
+          newParams.delete("favorites");
+        }
+        return newParams;
+      },
+      { replace: true },
+    );
+  }, [deferredSearch, showFavorites, setSearchParams]);
 
   const navigate = useNavigate();
 
   const handleTabChange = (value: string) => {
     // If it's already the same tab, don't do anything
     if (value === activeTab) return;
-    setSearchParams({ tab: value }, { replace: true });
+    setSearchParams(
+      (prev) => {
+        const newParams = new URLSearchParams(prev);
+        newParams.set("tab", value);
+        return newParams;
+      },
+      { replace: true },
+    );
   };
 
   return (
