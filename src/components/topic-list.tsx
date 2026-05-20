@@ -91,6 +91,8 @@ function TopicItem({ topic }: TopicItemProps) {
   );
 }
 
+// TODO: Fix scroll reset not working. (commit: feat(library): display empty state for topic list) might be the issue at line 211
+
 interface TopicListProps {
   search: string;
   onlyFavorites: boolean;
