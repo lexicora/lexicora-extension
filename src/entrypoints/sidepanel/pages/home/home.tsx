@@ -44,7 +44,7 @@ function HomePage() {
     sendMessage(MSG.REQUEST_PAGE_CAPTURE, tabData, "background").catch(
       () => null,
     );
-    navigate("/entries/new", {
+    navigate("/library/entries/new", {
       viewTransition: true,
       state: { isCapturePending: true },
     });
