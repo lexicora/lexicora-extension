@@ -96,6 +96,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   const [topics, setTopics] = useState<TopicDocType[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const navigationType = useNavigationType();
+  const navigate = useNavigate();
 
   // If we arrived here via standard navigation (not back/POP), reset the scroll and limit
   useEffect(() => {
@@ -182,23 +183,43 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
         minHeight: placeholderHeight > 0 ? placeholderHeight : undefined,
       }}
     >
-      <Virtuoso
-        useWindowScroll
-        data={topics}
-        totalListHeightChanged={(height) => {
-          if (height > 0) {
-            sessionStorage.setItem("topicListScrollHeight", height.toString());
-          }
-        }}
-        endReached={() => setLimit((prev) => prev + 50)}
-        itemContent={(_, topic) => (
-          <div className="px-1.5 py-1.5">
-            <TopicItem topic={topic} />
-          </div>
-        )}
-      />
+      {isDataLoaded && topics.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+          {search.trim() ? (
+            <p className="text-muted-foreground mb-3">
+              No topics found matching "{search}". <br /> Try changing your
+              search query.
+            </p>
+          ) : (
+            <p className="text-muted-foreground mb-3">No topics found.</p>
+          )}
+          <Button
+            variant="link"
+            onClick={() => navigate("/library/topics/new")}
+          >
+            Create Topic
+          </Button>
+        </div>
+      ) : (
+        <Virtuoso
+          useWindowScroll
+          data={topics}
+          totalListHeightChanged={(height) => {
+            if (height > 0) {
+              sessionStorage.setItem(
+                "topicListScrollHeight",
+                height.toString(),
+              );
+            }
+          }}
+          endReached={() => setLimit((prev) => prev + 50)}
+          itemContent={(_, topic) => (
+            <div className="px-1.5 py-1.5">
+              <TopicItem topic={topic} />
+            </div>
+          )}
+        />
+      )}
     </div>
   );
 }
-
-// TODO: Show the text "No topics found", with create button, when no topics exist.
