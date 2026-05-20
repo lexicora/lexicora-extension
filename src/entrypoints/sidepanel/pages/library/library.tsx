@@ -34,6 +34,8 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 
+// TODO: Potentially make searching faster, when entering a search query, because on every character, a navigation takes place.
+
 function LibraryPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") || "");
