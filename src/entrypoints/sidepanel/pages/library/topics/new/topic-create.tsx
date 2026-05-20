@@ -7,12 +7,13 @@ import { TopicForm, type TopicFormData } from "@/components/forms/topic-form";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { getDb } from "@/db";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { uuidv7 } from "uuidv7";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 
 function TopicCreatePage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [isCreating, setIsCreating] = useState(false);
 
   const handleCreateTopic = async (data: TopicFormData) => {
@@ -46,6 +47,7 @@ function TopicCreatePage() {
         <section className="mx-px">
           <TopicForm
             id="topic-create-form"
+            initialData={{ name: searchParams.get("name") || "" }}
             onSubmit={handleCreateTopic}
             isLoading={isCreating}
           />

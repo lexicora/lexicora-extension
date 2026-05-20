@@ -16,13 +16,14 @@ import { getDb } from "@/db";
 import { Virtuoso } from "react-virtuoso";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Separator } from "./ui/separator";
 
 interface TopicItemProps {
   topic: TopicDocType;
   // potentially more fields, like author, tags, etc.
 }
 
-export function TopicItem({ topic }: TopicItemProps) {
+function TopicItem({ topic }: TopicItemProps) {
   const navigate = useNavigate();
 
   // Format the date using the modern Temporal API (with a standard Date fallback).
@@ -52,7 +53,9 @@ export function TopicItem({ topic }: TopicItemProps) {
           "h-full py-3 px-3.5 rounded-lg",
           "bg-gray-100/50 hover:bg-gray-200/60 dark:bg-gray-900/50 dark:hover:bg-gray-800/60",
         )}
-        onClick={() => navigate(`/library/topics/${topic.id}`)}
+        onClick={() =>
+          navigate(`/library/topics/${topic.id}`, { viewTransition: true })
+        }
       >
         <ItemContent className="flex-3 flex-col justify-between items-start /*gap-1.75*/ gap-[0.48rem]">
           <ItemTitle className="line-clamp-1 truncate max-w-[50vw]">
@@ -98,14 +101,6 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   const navigationType = useNavigationType();
   const navigate = useNavigate();
 
-  // If we arrived here via standard navigation (not back/POP), reset the scroll and limit
-  useEffect(() => {
-    if (navigationType !== "POP") {
-      sessionStorage.removeItem("topicListScrollIndex");
-      sessionStorage.setItem("topicListLimit", "50");
-    }
-  }, [navigationType]);
-
   // Restore previous limit so the list doesn't shrink back to 50 when navigating back
   const [limit, setLimit] = useState(() => {
     if (navigationType !== "POP") return 50;
@@ -114,6 +109,14 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   });
 
   const isFirstRender = useRef(true);
+
+  // If we arrived here via standard navigation (not back/POP), reset the scroll and limit
+  useEffect(() => {
+    if (navigationType !== "POP") {
+      sessionStorage.removeItem("topicListScrollIndex");
+      sessionStorage.setItem("topicListLimit", "50");
+    }
+  }, [navigationType]);
 
   // Reset limit and scroll position only when search or filters actively change
   useEffect(() => {
@@ -186,19 +189,47 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
       {isDataLoaded && topics.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
           {search.trim() ? (
-            <p className="text-muted-foreground mb-3">
-              No topics found matching "{search}". <br /> Try changing your
-              search query.
-            </p>
+            <>
+              <p className="text-muted-foreground mb-3">
+                No topics found matching{" "}
+                <span className="text-lc-muted-foreground-hover inline-block max-w-32 truncate align-bottom">
+                  "{search}"
+                </span>
+                . <br /> Try changing your search query.
+              </p>
+              <div className="flex justify-center items-center gap-3 w-1/6 max-w-24 mx-auto mb-1">
+                <Separator />
+                <span className="text-muted-foreground">or</span>
+                <Separator />
+              </div>
+              <Button
+                variant="link"
+                onClick={() =>
+                  navigate(
+                    `/library/topics/new?name=${encodeURIComponent(search)}`,
+                    { viewTransition: true },
+                  )
+                }
+              >
+                Create Topic{" "}
+                <span className="inline-block max-w-34 truncate align-bottom text-lc-muted-foreground-hover">
+                  "{search}"
+                </span>
+              </Button>
+            </>
           ) : (
-            <p className="text-muted-foreground mb-3">No topics found.</p>
+            <>
+              <p className="text-muted-foreground mb-3">No topics found.</p>
+              <Button
+                variant="link"
+                onClick={() =>
+                  navigate("/library/topics/new", { viewTransition: true })
+                }
+              >
+                Create Topic
+              </Button>
+            </>
           )}
-          <Button
-            variant="link"
-            onClick={() => navigate("/library/topics/new")}
-          >
-            Create Topic
-          </Button>
         </div>
       ) : (
         <Virtuoso
