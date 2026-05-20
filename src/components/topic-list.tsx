@@ -52,6 +52,7 @@ function TopicItem({ topic }: TopicItemProps) {
         className={cn(
           "h-full py-3 px-3.5 rounded-lg",
           "bg-gray-100/50 hover:bg-gray-200/60 dark:bg-gray-900/50 dark:hover:bg-gray-800/60",
+          // TODO: Maybe change colors, to zero border, but then the background more prominent.
         )}
         onClick={() =>
           navigate(`/library/topics/${topic.id}`, { viewTransition: true })
@@ -141,6 +142,8 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
     return height ? parseInt(height, 10) : 0;
   }, [navigationType]);
 
+  //? TODO: Improve query if possible, so it the useEffect doesn't overwrite the subscription on scroll.
+
   useEffect(() => {
     let sub: any;
 
@@ -154,20 +157,37 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
       }
 
       if (search.trim()) {
-        // RxDB requires the regex operator to be a string
-        selector.name = { $regex: search, $options: "i" };
-        //? Maybe add description too, though preferably only indexed fields.
+        try {
+          // Escape special characters so they are treated as literals
+          const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+          // Test the regex string before using it
+          new RegExp(escapedSearch, "i");
+
+          // RxDB requires the regex operator to be a string
+          selector.name = { $regex: escapedSearch, $options: "i" };
+          //? Maybe add description too, though preferably only indexed fields.
+        } catch (error) {
+          console.error("Failed to compile search regex:", error);
+        }
       }
 
       const query = db.collections.topics.find({
         selector,
-        sort: [{ updatedAt: "desc" }], //? Maybe sort by createdAt instead?
+        sort: [{ updatedAt: "desc" }], // TODO: Make sorting dynamic based on user selection (e.g. sort by createdAt, name, etc.). passed down from library page.
         limit: limit,
       });
 
-      sub = query.$.subscribe((results) => {
-        setTopics(results as TopicDocType[]);
-        setIsDataLoaded(true);
+      sub = query.$.subscribe({
+        next: (results) => {
+          setTopics(results as TopicDocType[]);
+          setIsDataLoaded(true);
+        },
+        error: (err) => {
+          console.error("Error executing topics query:", err);
+          setTopics([]);
+          setIsDataLoaded(true);
+        },
       });
     };
 
@@ -220,6 +240,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
           ) : (
             <>
               <p className="text-muted-foreground mb-3">No topics found.</p>
+              <Separator className="max-w-24 mx-auto mb-1" />
               <Button
                 variant="link"
                 onClick={() =>
