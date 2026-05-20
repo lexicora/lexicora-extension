@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/input-group";
 
 // TODO: Potentially make searching faster, when entering a search query, because on every character, a navigation takes place.
+// TODO: Also ensure, that when on a tab, the other tabs should not be rendered and in a way put to sleep, so they don't do unnecessary processing.
 
 function LibraryPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -114,9 +115,6 @@ function LibraryPage() {
                       <XIcon />
                     </InputGroupButton>
                   )}
-                  {/* <Button size="icon" className="size-8">
-                  <SearchIcon />
-                </Button> */}
                 </InputGroup>
               </Field>
             </div>
@@ -142,6 +140,8 @@ function LibraryPage() {
                   <TabsTrigger value="sites">Sites</TabsTrigger>
                 </TabsList>
               </div>
+              {/* TODO: Implement a filter menu here, to filter by different stuff and also implement toggle to sort by updated or created, 
+              also potentially save the current filter to browser local storage */}
             </div>
             <Separator className="" />
           </div>
