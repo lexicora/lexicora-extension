@@ -13,17 +13,18 @@ import { StarIcon } from "lucide-react";
 import { TopicDocType } from "@/db/schemas/topic";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { getDb } from "@/db";
-import { Virtuoso } from "react-virtuoso";
+import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Separator } from "./ui/separator";
 
 interface TopicItemProps {
   topic: TopicDocType;
+  onNavigate?: (id: string) => void;
   // potentially more fields, like author, tags, etc.
 }
 
-function TopicItem({ topic }: TopicItemProps) {
+function TopicItem({ topic, onNavigate }: TopicItemProps) {
   const navigate = useNavigate();
 
   // Format the date using the modern Temporal API (with a standard Date fallback).
@@ -54,9 +55,14 @@ function TopicItem({ topic }: TopicItemProps) {
           "bg-gray-100/50 hover:bg-gray-200/60 dark:bg-gray-900/50 dark:hover:bg-gray-800/60",
           // TODO: Maybe change colors, to zero border, but then the background more prominent.
         )}
-        onClick={() =>
-          navigate(`/library/topics/${topic.id}`, { viewTransition: true })
-        }
+        onClick={(e) => {
+          e.preventDefault();
+          if (onNavigate) {
+            onNavigate(topic.id);
+          } else {
+            navigate(`/library/topics/${topic.id}`, { viewTransition: true });
+          }
+        }}
       >
         <ItemContent className="flex-3 flex-col justify-between items-start /*gap-1.75*/ gap-[0.48rem]">
           <ItemTitle className="line-clamp-1 truncate max-w-[50vw]">
@@ -91,8 +97,6 @@ function TopicItem({ topic }: TopicItemProps) {
   );
 }
 
-// TODO: Fix scroll reset not working. (commit: feat(library): display empty state for topic list) might be the issue at line 211
-
 interface TopicListProps {
   search: string;
   onlyFavorites: boolean;
@@ -103,6 +107,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const navigationType = useNavigationType();
   const navigate = useNavigate();
+  const virtuosoRef = useRef<VirtuosoHandle>(null);
 
   // Restore previous limit so the list doesn't shrink back to 50 when navigating back
   const [limit, setLimit] = useState(() => {
@@ -111,12 +116,31 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
     return savedLimit ? parseInt(savedLimit, 10) : 50;
   });
 
+  // Load Virtuoso's last state to prevent layout thrashing on mount
+  const restoredState = useMemo(() => {
+    if (navigationType !== "POP") return undefined;
+    const str = sessionStorage.getItem("topicListVirtuosoState");
+    try {
+      return str ? JSON.parse(str) : undefined;
+    } catch {
+      return undefined;
+    }
+  }, [navigationType]);
+
+  const savedScrollY = useMemo(() => {
+    if (navigationType !== "POP") return 0;
+    const str = sessionStorage.getItem("topicListScrollY");
+    return str ? parseInt(str, 10) : 0;
+  }, [navigationType]);
+
   const isFirstRender = useRef(true);
 
   // If we arrived here via standard navigation (not back/POP), reset the scroll and limit
   useEffect(() => {
     if (navigationType !== "POP") {
-      sessionStorage.removeItem("topicListScrollIndex");
+      sessionStorage.removeItem("topicListVirtuosoState");
+      sessionStorage.removeItem("topicListScrollY");
+      sessionStorage.removeItem("topicListScrollHeight");
       sessionStorage.setItem("topicListLimit", "50");
     }
   }, [navigationType]);
@@ -129,7 +153,9 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
     }
     setLimit(50);
     sessionStorage.setItem("topicListLimit", "50");
-    sessionStorage.removeItem("topicListScrollIndex");
+    sessionStorage.removeItem("topicListVirtuosoState");
+    sessionStorage.removeItem("topicListScrollY");
+    sessionStorage.removeItem("topicListScrollHeight");
   }, [search, onlyFavorites]);
 
   // Persist limit when it increases
@@ -143,6 +169,25 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
     const height = sessionStorage.getItem("topicListScrollHeight");
     return height ? parseInt(height, 10) : 0;
   }, [navigationType]);
+
+  const hasRestoredScroll = useRef(false);
+
+  // If native browser restoration (or react router) fails to scroll, we manually align the window.
+  useEffect(() => {
+    if (
+      !hasRestoredScroll.current &&
+      isDataLoaded &&
+      topics.length > 0 &&
+      savedScrollY > 0
+    ) {
+      hasRestoredScroll.current = true;
+      // Wait for the render phase to commit the DOM, ensuring minimal shifting.
+      // Since Virtuoso has `restoreStateFrom`, its structural height is known instantly!
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: savedScrollY, behavior: "instant" });
+      });
+    }
+  }, [isDataLoaded, topics.length, savedScrollY]);
 
   //? TODO: Improve query if possible, so it the useEffect doesn't overwrite the subscription on scroll.
 
@@ -208,7 +253,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
         minHeight: placeholderHeight > 0 ? placeholderHeight : undefined,
       }}
     >
-      {isDataLoaded && topics.length === 0 ? (
+      {isDataLoaded && topics.length === 0 && (
         <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
           {search.trim() ? (
             <>
@@ -254,9 +299,13 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
             </>
           )}
         </div>
-      ) : (
+      )}
+
+      {isDataLoaded && topics.length > 0 && (
         <Virtuoso
+          ref={virtuosoRef}
           useWindowScroll
+          restoreStateFrom={restoredState}
           data={topics}
           totalListHeightChanged={(height) => {
             if (height > 0) {
@@ -269,7 +318,24 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
           endReached={() => setLimit((prev) => prev + 50)}
           itemContent={(_, topic) => (
             <div className="px-1.5 py-1.5">
-              <TopicItem topic={topic} />
+              <TopicItem
+                topic={topic}
+                onNavigate={(id) => {
+                  // Capture exact dimensions and scroll boundaries before destroying the list
+                  virtuosoRef.current?.getState((state) => {
+                    sessionStorage.setItem(
+                      "topicListVirtuosoState",
+                      JSON.stringify(state),
+                    );
+                  });
+                  // Capture current viewport y-offset
+                  sessionStorage.setItem(
+                    "topicListScrollY",
+                    window.scrollY.toString(),
+                  );
+                  navigate(`/library/topics/${id}`, { viewTransition: true });
+                }}
+              />
             </div>
           )}
         />
