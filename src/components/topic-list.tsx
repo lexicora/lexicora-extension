@@ -97,6 +97,8 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
   );
 }
 
+// TODO: Maybe put the logic of setting the stuff for session storage in the return of component useEffect return statement for unmount.
+
 interface TopicListProps {
   search: string;
   onlyFavorites: boolean;
