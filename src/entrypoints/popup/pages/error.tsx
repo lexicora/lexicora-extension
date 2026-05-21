@@ -27,10 +27,10 @@ function ErrorPage() {
         classNameHeaderElement="mb-2"
       />
       <main>
-        <h2 className="text-8xl text-red-900 dark:text-red-300">
+        <h2 className="select-text text-8xl text-red-900 dark:text-red-300">
           {statusCode}
         </h2>
-        <p className="text-muted-foreground mt-2">{errorMessage}</p>
+        <p className="select-text text-muted-foreground mt-2">{errorMessage}</p>
       </main>
     </div>
   );

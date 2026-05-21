@@ -29,10 +29,12 @@ function ErrorPage() {
           classNameHeaderElement="mb-2"
         />
         <main>
-          <h2 className="text-8xl text-red-900 dark:text-red-300">
+          <h2 className="select-text text-8xl text-red-900 dark:text-red-300">
             {statusCode}
           </h2>
-          <p className="text-muted-foreground mt-2">{errorMessage}</p>
+          <p className="select-text text-muted-foreground mt-2">
+            {errorMessage}
+          </p>
         </main>
       </PageContainer>
     );
@@ -44,13 +46,15 @@ function ErrorPage() {
   if (isRouteErrorResponse(error)) {
     errorContent = (
       <>
-        <h2 className="text-8xl text-red-900 dark:text-red-300">
+        <h2 className="select-text text-8xl text-red-900 dark:text-red-300">
           {error.status}
         </h2>
-        <p className="text-muted-foreground mt-2 text-xl">{error.statusText}</p>
+        <p className="select-text text-muted-foreground mt-2 text-xl">
+          {error.statusText}
+        </p>
         <div className="mt-4">
-          <h3 className="text-xl mb-1.5">Error Details</h3>
-          <pre className="text-left text-sm bg-muted p-4 rounded-md overflow-auto whitespace-pre-wrap font-lc-monospace">
+          <h3 className="select-text text-xl mb-1.5">Error Details</h3>
+          <pre className="select-text text-left text-sm bg-muted p-4 rounded-md overflow-auto whitespace-pre-wrap font-lc-monospace scrollbar-bg-transparent">
             {typeof error.data === "string"
               ? error.data
               : JSON.stringify(error.data, null, 2)}
@@ -61,12 +65,16 @@ function ErrorPage() {
   } else if (error instanceof Error) {
     errorContent = (
       <>
-        <h2 className="text-6xl text-red-900 dark:text-red-300 mb-4">Error</h2>
-        <h3 className="text-xl mb-1.5">Message</h3>
-        <p className="text-muted-foreground text-lg">{error.message}</p>
+        <h2 className="select-text text-6xl text-red-900 dark:text-red-300 mb-4">
+          Error
+        </h2>
+        <h3 className="select-text text-xl mb-1.5">Message</h3>
+        <p className="select-text text-muted-foreground text-lg">
+          {error.message}
+        </p>
         <div className="mt-4">
-          <h3 className="text-xl mb-1.5">Stack Trace</h3>
-          <pre className="text-left text-sm bg-muted p-4 rounded-md overflow-auto whitespace-pre-wrap font-lc-monospace">
+          <h3 className="select-text text-xl mb-1.5">Stack Trace</h3>
+          <pre className="select-text text-left text-sm bg-muted p-4 rounded-md overflow-auto whitespace-pre-wrap font-lc-monospace scrollbar-bg-transparent">
             {error.stack}
           </pre>
         </div>
