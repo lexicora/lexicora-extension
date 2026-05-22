@@ -130,19 +130,19 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
     }
   }, [navigationType]);
 
-  const savedScrollY = useMemo(() => {
-    if (navigationType !== "POP") return 0;
-    const str = sessionStorage.getItem("topicListScrollY");
-    return str ? parseInt(str, 10) : 0;
-  }, [navigationType]);
+  // const savedScrollY = useMemo(() => {
+  //   if (navigationType !== "POP") return 0;
+  //   const str = sessionStorage.getItem("topicListScrollY");
+  //   return str ? parseInt(str, 10) : 0;
+  // }, [navigationType]);
 
-  const isFirstRender = useRef(true);
+  //const isFirstRender = useRef(true);
 
   // If we arrived here via standard navigation (not back/POP), reset the scroll and limit
   useEffect(() => {
     if (navigationType !== "POP") {
       sessionStorage.removeItem("topicListVirtuosoState");
-      sessionStorage.removeItem("topicListScrollY");
+      //sessionStorage.removeItem("topicListScrollY");
       sessionStorage.removeItem("topicListScrollHeight");
       //sessionStorage.setItem("topicListLimit", "50");
     }
@@ -150,14 +150,14 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
 
   // Reset limit and scroll position only when search or filters actively change
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
+    // if (isFirstRender.current) {
+    //   isFirstRender.current = false;
+    //   return;
+    // }
     setLimit(50);
     //sessionStorage.setItem("topicListLimit", "50");
     sessionStorage.removeItem("topicListVirtuosoState");
-    sessionStorage.removeItem("topicListScrollY");
+    //sessionStorage.removeItem("topicListScrollY");
     sessionStorage.removeItem("topicListScrollHeight");
   }, [search, onlyFavorites]);
 
@@ -167,30 +167,30 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   // }, [limit]);
 
   // Keep track of the virtual list's previous total height to avoid layout shift when waiting for RxDB
-  const placeholderHeight = useMemo(() => {
-    if (navigationType !== "POP") return 0;
-    const height = sessionStorage.getItem("topicListScrollHeight");
-    return height ? parseInt(height, 10) : 0;
-  }, [navigationType]);
+  // const placeholderHeight = useMemo(() => {
+  //   if (navigationType !== "POP") return 0;
+  //   const height = sessionStorage.getItem("topicListScrollHeight");
+  //   return height ? parseInt(height, 10) : 0;
+  // }, [navigationType]);
 
-  const hasRestoredScroll = useRef(false);
+  //const hasRestoredScroll = useRef(false);
 
   // If native browser restoration (or react router) fails to scroll, we manually align the window.
-  useEffect(() => {
-    if (
-      !hasRestoredScroll.current &&
-      isDataLoaded &&
-      topics.length > 0 &&
-      savedScrollY > 0
-    ) {
-      hasRestoredScroll.current = true;
-      // Wait for the render phase to commit the DOM, ensuring minimal shifting.
-      // Since Virtuoso has `restoreStateFrom`, its structural height is known instantly!
-      requestAnimationFrame(() => {
-        //window.scrollTo({ top: savedScrollY, behavior: "instant" });
-      });
-    }
-  }, [isDataLoaded, topics.length, savedScrollY]);
+  // useEffect(() => {
+  //   if (
+  //     !hasRestoredScroll.current &&
+  //     isDataLoaded &&
+  //     topics.length > 0 &&
+  //     savedScrollY > 0
+  //   ) {
+  //     hasRestoredScroll.current = true;
+  //     // Wait for the render phase to commit the DOM, ensuring minimal shifting.
+  //     // Since Virtuoso has `restoreStateFrom`, its structural height is known instantly!
+  //     requestAnimationFrame(() => {
+  //       window.scrollTo({ top: savedScrollY, behavior: "instant" });
+  //     });
+  //   }
+  // }, [isDataLoaded, topics.length, savedScrollY]);
 
   //? TODO: Improve query if possible, so it the useEffect doesn't overwrite the subscription on scroll.
 
@@ -252,9 +252,11 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
 
   return (
     <div
-      style={{
-        minHeight: placeholderHeight > 0 ? placeholderHeight : undefined,
-      }}
+      style={
+        {
+          //minHeight: placeholderHeight > 0 ? placeholderHeight : undefined,
+        }
+      }
     >
       {isDataLoaded && topics.length === 0 && (
         <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
@@ -332,10 +334,10 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
                     );
                   });
                   // Capture current viewport y-offset
-                  sessionStorage.setItem(
-                    "topicListScrollY",
-                    window.scrollY.toString(),
-                  );
+                  // sessionStorage.setItem(
+                  //   "topicListScrollY",
+                  //   window.scrollY.toString(),
+                  // );
                   navigate(`/library/topics/${id}`, { viewTransition: true });
                 }}
               />
