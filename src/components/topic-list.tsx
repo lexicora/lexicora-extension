@@ -136,29 +136,29 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   //   return str ? parseInt(str, 10) : 0;
   // }, [navigationType]);
 
-  //const isFirstRender = useRef(true);
+  const isFirstRender = useRef(true);
 
   // If we arrived here via standard navigation (not back/POP), reset the scroll and limit
   useEffect(() => {
     if (navigationType !== "POP") {
       sessionStorage.removeItem("topicListVirtuosoState");
       //sessionStorage.removeItem("topicListScrollY");
-      sessionStorage.removeItem("topicListScrollHeight");
+      //sessionStorage.removeItem("topicListScrollHeight");
       //sessionStorage.setItem("topicListLimit", "50");
     }
   }, [navigationType]);
 
   // Reset limit and scroll position only when search or filters actively change
   useEffect(() => {
-    // if (isFirstRender.current) {
-    //   isFirstRender.current = false;
-    //   return;
-    // }
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     setLimit(50);
     //sessionStorage.setItem("topicListLimit", "50");
     sessionStorage.removeItem("topicListVirtuosoState");
     //sessionStorage.removeItem("topicListScrollY");
-    sessionStorage.removeItem("topicListScrollHeight");
+    //sessionStorage.removeItem("topicListScrollHeight");
   }, [search, onlyFavorites]);
 
   // Persist limit when it increases
@@ -312,14 +312,14 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
           useWindowScroll
           restoreStateFrom={restoredState}
           data={topics}
-          totalListHeightChanged={(height) => {
-            if (height > 0) {
-              sessionStorage.setItem(
-                "topicListScrollHeight",
-                height.toString(),
-              );
-            }
-          }}
+          // totalListHeightChanged={(height) => {
+          //   if (height > 0) {
+          //     sessionStorage.setItem(
+          //       "topicListScrollHeight",
+          //       height.toString(),
+          //     );
+          //   }
+          // }}
           endReached={() => setLimit((prev) => prev + 50)}
           itemContent={(_, topic) => (
             <div className="px-1.5 py-1.5">
