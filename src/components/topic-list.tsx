@@ -114,8 +114,9 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   // Restore previous limit so the list doesn't shrink back to 50 when navigating back
   const [limit, setLimit] = useState(() => {
     if (navigationType !== "POP") return 50;
-    const savedLimit = sessionStorage.getItem("topicListLimit");
-    return savedLimit ? parseInt(savedLimit, 10) : 50;
+    //const savedLimit = sessionStorage.getItem("topicListLimit");
+    //return savedLimit ? parseInt(savedLimit, 10) : 50;
+    return 50;
   });
 
   // Load Virtuoso's last state to prevent layout thrashing on mount
@@ -143,7 +144,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
       sessionStorage.removeItem("topicListVirtuosoState");
       sessionStorage.removeItem("topicListScrollY");
       sessionStorage.removeItem("topicListScrollHeight");
-      sessionStorage.setItem("topicListLimit", "50");
+      //sessionStorage.setItem("topicListLimit", "50");
     }
   }, [navigationType]);
 
@@ -154,16 +155,16 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
       return;
     }
     setLimit(50);
-    sessionStorage.setItem("topicListLimit", "50");
+    //sessionStorage.setItem("topicListLimit", "50");
     sessionStorage.removeItem("topicListVirtuosoState");
     sessionStorage.removeItem("topicListScrollY");
     sessionStorage.removeItem("topicListScrollHeight");
   }, [search, onlyFavorites]);
 
   // Persist limit when it increases
-  useEffect(() => {
-    sessionStorage.setItem("topicListLimit", limit.toString());
-  }, [limit]);
+  // useEffect(() => {
+  //   sessionStorage.setItem("topicListLimit", limit.toString());
+  // }, [limit]);
 
   // Keep track of the virtual list's previous total height to avoid layout shift when waiting for RxDB
   const placeholderHeight = useMemo(() => {
@@ -186,7 +187,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
       // Wait for the render phase to commit the DOM, ensuring minimal shifting.
       // Since Virtuoso has `restoreStateFrom`, its structural height is known instantly!
       requestAnimationFrame(() => {
-        window.scrollTo({ top: savedScrollY, behavior: "instant" });
+        //window.scrollTo({ top: savedScrollY, behavior: "instant" });
       });
     }
   }, [isDataLoaded, topics.length, savedScrollY]);

@@ -52,6 +52,11 @@ function RootLayout() {
     useSidePanelConnection();
   }
 
+  // Potentially disable scroll restoration, on library page paths.
+  // const disableScrollRestoration = (location) => {
+  //   return location.pathname.includes("/library");
+  // };
+
   return (
     <SidePanelMessagingProvider>
       <RouterListener />
