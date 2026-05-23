@@ -1,22 +1,19 @@
-import * as Avatar from "@radix-ui/react-avatar";
+import { Button } from "@/components/ui/button";
 import {
   Item,
   ItemContent,
-  ItemTitle,
   ItemDescription,
-  ItemHeader,
-  ItemMedia,
+  ItemTitle,
 } from "@/components/ui/item";
+import { Separator } from "@/components/ui/separator";
 
-import { useNavigate, useNavigationType } from "react-router-dom";
-import { StarIcon } from "lucide-react";
-import { TopicDocType } from "@/db/schemas/topic";
-import { useState, useEffect, useRef, useMemo } from "react";
 import { getDb } from "@/db";
-import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
+import { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Separator } from "./ui/separator";
+import { StarIcon } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useNavigationType } from "react-router-dom";
+import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 
 interface TopicItemProps {
   topic: TopicDocType;
@@ -114,8 +111,6 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   // Restore previous limit so the list doesn't shrink back to 50 when navigating back
   const [limit, setLimit] = useState(() => {
     if (navigationType !== "POP") return 50;
-    //const savedLimit = sessionStorage.getItem("topicListLimit");
-    //return savedLimit ? parseInt(savedLimit, 10) : 50;
     return 50;
   });
 
@@ -130,21 +125,12 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
     }
   }, [navigationType]);
 
-  // const savedScrollY = useMemo(() => {
-  //   if (navigationType !== "POP") return 0;
-  //   const str = sessionStorage.getItem("topicListScrollY");
-  //   return str ? parseInt(str, 10) : 0;
-  // }, [navigationType]);
-
   const isFirstRender = useRef(true);
 
   // If we arrived here via standard navigation (not back/POP), reset the scroll and limit
   useEffect(() => {
     if (navigationType !== "POP") {
       sessionStorage.removeItem("topicListVirtuosoState");
-      //sessionStorage.removeItem("topicListScrollY");
-      //sessionStorage.removeItem("topicListScrollHeight");
-      //sessionStorage.setItem("topicListLimit", "50");
     }
   }, [navigationType]);
 
@@ -155,42 +141,8 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
       return;
     }
     setLimit(50);
-    //sessionStorage.setItem("topicListLimit", "50");
     sessionStorage.removeItem("topicListVirtuosoState");
-    //sessionStorage.removeItem("topicListScrollY");
-    //sessionStorage.removeItem("topicListScrollHeight");
   }, [search, onlyFavorites]);
-
-  // Persist limit when it increases
-  // useEffect(() => {
-  //   sessionStorage.setItem("topicListLimit", limit.toString());
-  // }, [limit]);
-
-  // Keep track of the virtual list's previous total height to avoid layout shift when waiting for RxDB
-  // const placeholderHeight = useMemo(() => {
-  //   if (navigationType !== "POP") return 0;
-  //   const height = sessionStorage.getItem("topicListScrollHeight");
-  //   return height ? parseInt(height, 10) : 0;
-  // }, [navigationType]);
-
-  //const hasRestoredScroll = useRef(false);
-
-  // If native browser restoration (or react router) fails to scroll, we manually align the window.
-  // useEffect(() => {
-  //   if (
-  //     !hasRestoredScroll.current &&
-  //     isDataLoaded &&
-  //     topics.length > 0 &&
-  //     savedScrollY > 0
-  //   ) {
-  //     hasRestoredScroll.current = true;
-  //     // Wait for the render phase to commit the DOM, ensuring minimal shifting.
-  //     // Since Virtuoso has `restoreStateFrom`, its structural height is known instantly!
-  //     requestAnimationFrame(() => {
-  //       window.scrollTo({ top: savedScrollY, behavior: "instant" });
-  //     });
-  //   }
-  // }, [isDataLoaded, topics.length, savedScrollY]);
 
   //? TODO: Improve query if possible, so it the useEffect doesn't overwrite the subscription on scroll.
 
@@ -251,13 +203,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   }, [search, onlyFavorites, limit]);
 
   return (
-    <div
-      style={
-        {
-          //minHeight: placeholderHeight > 0 ? placeholderHeight : undefined,
-        }
-      }
-    >
+    <div /* maybe change to render fragment */>
       {isDataLoaded && topics.length === 0 && (
         <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
           {search.trim() ? (
@@ -312,14 +258,6 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
           useWindowScroll
           restoreStateFrom={restoredState}
           data={topics}
-          // totalListHeightChanged={(height) => {
-          //   if (height > 0) {
-          //     sessionStorage.setItem(
-          //       "topicListScrollHeight",
-          //       height.toString(),
-          //     );
-          //   }
-          // }}
           endReached={() => setLimit((prev) => prev + 50)}
           itemContent={(_, topic) => (
             <div className="px-1.5 py-1.5">
@@ -333,11 +271,6 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
                       JSON.stringify(state),
                     );
                   });
-                  // Capture current viewport y-offset
-                  // sessionStorage.setItem(
-                  //   "topicListScrollY",
-                  //   window.scrollY.toString(),
-                  // );
                   navigate(`/library/topics/${id}`, { viewTransition: true });
                 }}
               />
