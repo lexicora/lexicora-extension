@@ -15,6 +15,7 @@ import {
 import { useState, useDeferredValue, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { TopicList } from "@/components/topic-list";
+import { EntryList } from "@/components/entry-list";
 
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -148,8 +149,7 @@ function LibraryPage() {
         </PageHeader>
         <TabsContent value="entries">
           <main>
-            {/* Entries list would go here (potentially make a component for this tab)*/}
-            <p>Entries</p>
+            <EntryList search={deferredSearch} onlyFavorites={showFavorites} />
           </main>
         </TabsContent>
         <TabsContent value="topics">
@@ -190,7 +190,7 @@ function LibraryPage() {
             <DropdownMenuContent
               side="top"
               align="end"
-              className="min-w-21 /*bg-popover/80 backdrop-blur-md*/"
+              className="min-w-28 /*min-w-21*/ /*bg-popover/80 backdrop-blur-md*/"
             >
               <DropdownMenuGroup>
                 <DropdownMenuLabel className="select-none py-1">
