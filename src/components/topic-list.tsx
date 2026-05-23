@@ -107,12 +107,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   const navigationType = useNavigationType();
   const navigate = useNavigate();
   const virtuosoRef = useRef<VirtuosoHandle>(null);
-
-  // Restore previous limit so the list doesn't shrink back to 50 when navigating back
-  const [limit, setLimit] = useState(() => {
-    if (navigationType !== "POP") return 50;
-    return 50;
-  });
+  const isFirstRender = useRef(true);
 
   // Load Virtuoso's last state to prevent layout thrashing on mount
   const restoredState = useMemo(() => {
@@ -125,26 +120,21 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
     }
   }, [navigationType]);
 
-  const isFirstRender = useRef(true);
-
-  // If we arrived here via standard navigation (not back/POP), reset the scroll and limit
+  // If we arrived here via standard navigation (not back/POP), reset the Virtuoso state
   useEffect(() => {
     if (navigationType !== "POP") {
       sessionStorage.removeItem("topicListVirtuosoState");
     }
   }, [navigationType]);
 
-  // Reset limit and scroll position only when search or filters actively change
+  // Reset Virtuoso state when search or filters actively change
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
-    setLimit(50);
     sessionStorage.removeItem("topicListVirtuosoState");
   }, [search, onlyFavorites]);
-
-  //? TODO: Improve query if possible, so it the useEffect doesn't overwrite the subscription on scroll.
 
   useEffect(() => {
     let sub: any;
@@ -177,7 +167,6 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
       const query = db.collections.topics.find({
         selector,
         sort: [{ updatedAt: "desc" }], // TODO: Make sorting dynamic based on user selection (e.g. sort by createdAt, name, etc.). passed down from library page.
-        limit: limit,
       });
 
       sub = query.$.subscribe({
@@ -200,7 +189,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
         sub.unsubscribe();
       }
     };
-  }, [search, onlyFavorites, limit]);
+  }, [search, onlyFavorites]);
 
   return (
     <div /* maybe change to render fragment */>
@@ -258,7 +247,6 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
           useWindowScroll
           restoreStateFrom={restoredState}
           data={topics}
-          endReached={() => setLimit((prev) => prev + 50)}
           itemContent={(_, topic) => (
             <div className="px-1.5 py-1.5">
               <TopicItem
