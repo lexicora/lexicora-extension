@@ -12,8 +12,8 @@ import { getDb } from "@/db";
 import { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
-import { StarIcon } from "lucide-react";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { FoldersIcon, StarIcon } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useNavigationType } from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
 
@@ -48,7 +48,7 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
         }}
       >
         <ItemContent className="flex-3 flex-col justify-between items-start /*gap-1.75*/ /*gap-[0.6rem]*/ gap-2.25">
-          <ItemTitle className="line-clamp-1 truncate max-w-[50vw]">
+          <ItemTitle className="line-clamp-1 truncate max-w-[calc(100vw-178px)] /*max-w-[50vw]*/">
             {topic.name}
             {/* -{" "}
             <span className="text-muted-foreground">{formattedDate}</span> */}
@@ -193,7 +193,15 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   }, [search, onlyFavorites]);
 
   return (
-    <div className={cn("animate-in fade-in-60")}>
+    <div className="animate-in fade-in-40">
+      <div className="flex items-center gap-2.5 w-full px-2 pb-0.5">
+        <Separator className="flex-1" />
+        <span className="text-xs text-muted-foreground font-medium /uppercase tracking-widest">
+          <FoldersIcon className="size-3.5 inline -mt-0.5" /> {topics.length}
+          {/* {topics.length === 1 ? " item" : " items"} */}
+        </span>
+        <Separator className="flex-1" />
+      </div>
       {isDataLoaded && topics.length === 0 && (
         <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
           {search.trim() ? (
@@ -254,7 +262,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
                 topic={topic}
                 onNavigate={(id) => {
                   // Save scroll position as a plain number before navigating away
-                  const adjustedScrollTop = window.scrollY - 236; // Adjust for top bar height (and potential margin)
+                  const adjustedScrollTop = window.scrollY - 229; // Adjust for top bar height (and potential margin)
                   sessionStorage.setItem(
                     "topicListScrollTop",
                     adjustedScrollTop.toString(),

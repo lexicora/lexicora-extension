@@ -80,7 +80,7 @@ function LibraryPage() {
         newParams.set("tab", value);
         return newParams;
       },
-      { replace: true },
+      { replace: true, viewTransition: true },
     );
   };
 
@@ -90,7 +90,7 @@ function LibraryPage() {
           <h1 className="text-2xl font-semibold">Entries</h1>
         </header>*/}
       <Tabs value={activeTab} onValueChange={handleTabChange}>
-        <PageHeader title="Library" classNameHeaderElement="mb-2">
+        <PageHeader title="Library" classNameHeaderElement="mb-0">
           <div className="mt-3 mx-1.5">
             <div id="search" className="dark:scheme-dark">
               <Field orientation="horizontal">
@@ -121,7 +121,7 @@ function LibraryPage() {
             </div>
             <div
               id="tab-switcher-favorites-toggle"
-              className="mx-2 my-4 flex items-center justify-center"
+              className="mx-2 mt-4 mb-0 flex items-center justify-center"
             >
               {/* Maybe put toggle inline with search input or potentially move to the right side of the tab-list */}
               <Toggle
@@ -144,11 +144,11 @@ function LibraryPage() {
               {/* TODO: Implement a filter menu here, to filter by different stuff and also implement toggle to sort by updated or created, 
               also potentially save the current filter to browser local storage */}
             </div>
-            <Separator className="" />
+            {/* <Separator className="" /> */}
           </div>
         </PageHeader>
         <TabsContent value="entries">
-          <main>
+          <main className="mb-2.5">
             <EntryList search={deferredSearch} onlyFavorites={showFavorites} />
           </main>
         </TabsContent>
@@ -165,7 +165,7 @@ function LibraryPage() {
         </TabsContent>
         <footer></footer>
       </Tabs>
-      <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+7px)] z-20 pointer-events-none">
+      <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] /*WAS:pr-[calc(var(--lc-scrollbar-offset)+7px)]*/ z-20 pointer-events-none">
         <div className="shrink-0 flex items-center justify-end max-w-315 mx-auto inset-x-0">
           {/*MAYBE: Make smaller and also maybe a bit darker */}
           <DropdownMenu>

@@ -12,8 +12,8 @@ import { getDb } from "@/db";
 import { EntryDocType } from "@/db/schemas/entry";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
-import { StarIcon } from "lucide-react";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { FilesIcon, StarIcon } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useNavigationType } from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
 
@@ -49,7 +49,7 @@ function EntryItem({ entry, onNavigate }: EntryItemProps) {
         }}
       >
         <ItemContent className="flex-3 flex-col justify-between items-start /*gap-1.75*/ /*gap-[0.48rem]*/ gap-2.25">
-          <ItemTitle className="line-clamp-1 truncate max-w-[50vw]">
+          <ItemTitle className="line-clamp-1 truncate max-w-[calc(100vw-178px)] /*max-w-[50vw]*/">
             {entry.title}
             {/* -{" "}
             <span className="text-muted-foreground">{entry.topicName}</span> */}
@@ -192,7 +192,15 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
 
   // TODO: For wider screens or the windowed app, maybe add a two column layout.
   return (
-    <div className={cn("animate-in fade-in-60")}>
+    <div className="animate-in fade-in-40">
+      <div className="flex items-center gap-2.5 w-full px-2 pb-0.5">
+        <Separator className="flex-1" />
+        <span className="text-xs text-muted-foreground font-medium /uppercase tracking-widest">
+          <FilesIcon className="size-3.5 inline -mt-0.5" /> {entries.length}
+          {/* {entries.length === 1 ? " item" : " items"} */}
+        </span>
+        <Separator className="flex-1" />
+      </div>
       {isDataLoaded && entries.length === 0 && (
         <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
           {search.trim() ? (
@@ -253,7 +261,7 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
                 entry={entry}
                 onNavigate={(id) => {
                   // Save scroll position as a plain number before navigating away
-                  const adjustedScrollTop = window.scrollY - 236;
+                  const adjustedScrollTop = window.scrollY - 229;
                   sessionStorage.setItem(
                     "entryListScrollTop",
                     adjustedScrollTop.toString(),
