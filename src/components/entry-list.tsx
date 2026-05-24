@@ -147,6 +147,9 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
 
       sub = query.$.subscribe({
         next: (results) => {
+          // if (import.meta.env.DEV) {
+          //   console.log(`[EntryList] ${results.length} entries loaded`);
+          // }
           setEntries(results as EntryDocType[]);
           setIsDataLoaded(true);
         },

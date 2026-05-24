@@ -149,6 +149,9 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
 
       sub = query.$.subscribe({
         next: (results) => {
+          // if (import.meta.env.DEV) {
+          //   console.log(`[EntryList] ${results.length} entries loaded`);
+          // }
           setTopics(results as TopicDocType[]);
           setIsDataLoaded(true);
         },
