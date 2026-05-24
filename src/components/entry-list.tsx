@@ -6,6 +6,7 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { Separator } from "@/components/ui/separator";
+import { Toggle } from "@/components/ui/toggle";
 
 import { getDb } from "@/db";
 import { EntryDocType } from "@/db/schemas/entry";
@@ -33,7 +34,7 @@ function EntryItem({ entry, onNavigate }: EntryItemProps) {
       <Button
         variant="ghost"
         className={cn(
-          "h-full pt-3 pb-2.5 px-3.5 rounded-2xl",
+          "h-full pt-3 pb-2.5 px-3.25 rounded-2xl",
           // "bg-gray-100/50 hover:bg-gray-200/60 dark:bg-gray-900/50 dark:hover:bg-gray-800/60",
           "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
           // TODO: Maybe change colors, to zero border, but then the background more prominent.
@@ -58,16 +59,34 @@ function EntryItem({ entry, onNavigate }: EntryItemProps) {
           </ItemDescription>
         </ItemContent>
         <ItemContent className="flex-1 flex-col justify-between items-end gap-3.5">
-          <div className="flex justify-end">
+          <Toggle
+            className="size-6 min-w-6 /*group*/ flex justify-end p-1 -m-1 rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700"
+            onClick={async (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const db = await getDb();
+              if (db) {
+                const doc = await db.collections.entries
+                  .findOne({ selector: { id: entry.id } })
+                  .exec();
+                if (doc) {
+                  await doc.incrementalPatch({
+                    isFavorite: !entry.isFavorite,
+                    //updatedAt: new Date().toISOString(),
+                  });
+                }
+              }
+            }}
+          >
             <StarIcon
               className={cn(
-                "size-4",
+                "size-4 /*transition-transform*/ /*group-hover:scale-110*/ /*active:scale-95*/",
                 entry.isFavorite
-                  ? "text-yellow-500 fill-yellow-500"
-                  : "text-gray-400",
+                  ? "text-yellow-600/75 fill-yellow-600/75 dark:text-yellow-500 dark:fill-yellow-500"
+                  : "text-gray-500/75 dark:text-gray-400 /*group-hover:text-yellow-500/70*/",
               )}
             />
-          </div>
+          </Toggle>
           <ItemDescription className="text-xs text-muted-foreground whitespace-nowrap">
             {formattedDate}
           </ItemDescription>
