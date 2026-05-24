@@ -10,6 +10,7 @@ import {
   ChevronRightIcon,
   SquareDashedIcon as PlaceHolderIcon,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 /**
  * Use this in the settings index page to render each settings item
@@ -40,7 +41,12 @@ export function SettingsItem({
       <Item
         variant="muted"
         size={size}
-        className={`group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl ${roundingClass} ${disabled ? "opacity-65 grayscale-30 pointer-events-none" : ""}`}
+        className={cn(
+          "group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl",
+          roundingClass,
+          { "opacity-65 grayscale-30 pointer-events-none": disabled },
+          //disabled && "opacity-65 grayscale-30 pointer-events-none", (works the same as above)
+        )}
         tabIndex={disabled ? -1 : 0}
         asChild
       >

@@ -29,12 +29,13 @@ function EntryItem({ entry, onNavigate }: EntryItemProps) {
   const formattedDate = formatDate(entry.updatedAt);
 
   return (
-    <Item key={entry.id} variant="outline" asChild>
+    <Item key={entry.id} variant="default" asChild>
       <Button
-        variant="outline"
+        variant="ghost"
         className={cn(
-          "h-full py-3 px-3.5 rounded-lg",
-          "bg-gray-100/50 hover:bg-gray-200/60 dark:bg-gray-900/50 dark:hover:bg-gray-800/60",
+          "h-full pt-3 pb-2.5 px-3.5 rounded-2xl",
+          // "bg-gray-100/50 hover:bg-gray-200/60 dark:bg-gray-900/50 dark:hover:bg-gray-800/60",
+          "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
           // TODO: Maybe change colors, to zero border, but then the background more prominent.
         )}
         onClick={(e) => {
@@ -46,7 +47,7 @@ function EntryItem({ entry, onNavigate }: EntryItemProps) {
           }
         }}
       >
-        <ItemContent className="flex-3 flex-col justify-between items-start /*gap-1.75*/ gap-[0.48rem]">
+        <ItemContent className="flex-3 flex-col justify-between items-start /*gap-1.75*/ /*gap-[0.48rem]*/ gap-2.25">
           <ItemTitle className="line-clamp-1 truncate max-w-[50vw]">
             {entry.title}
             {/* -{" "}
@@ -56,7 +57,7 @@ function EntryItem({ entry, onNavigate }: EntryItemProps) {
             {entry.description || "-"}
           </ItemDescription>
         </ItemContent>
-        <ItemContent className="flex-1 flex-col justify-between items-end gap-3">
+        <ItemContent className="flex-1 flex-col justify-between items-end gap-3.5">
           <div className="flex justify-end">
             <StarIcon
               className={cn(
@@ -170,6 +171,7 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
     };
   }, [search, onlyFavorites]);
 
+  // TODO: For wider screens or the windowed app, maybe add a two column layout.
   return (
     <div className={cn("animate-in fade-in-60")}>
       {isDataLoaded && entries.length === 0 && (
@@ -227,7 +229,7 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
           data={entries}
           overscan={200}
           itemContent={(_, entry) => (
-            <div className="px-1.5 py-1.5">
+            <div className="px-1.25 py-1.5">
               <EntryItem
                 entry={entry}
                 onNavigate={(id) => {

@@ -28,12 +28,13 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
   const formattedDate = formatDate(topic.updatedAt);
 
   return (
-    <Item key={topic.id} variant="outline" asChild>
+    <Item key={topic.id} variant="default" asChild>
       <Button
-        variant="outline"
+        variant="ghost"
         className={cn(
-          "h-full py-3 px-3.5 rounded-lg",
-          "bg-gray-100/50 hover:bg-gray-200/60 dark:bg-gray-900/50 dark:hover:bg-gray-800/60",
+          "h-full pt-3 pb-2.5 px-3.5 rounded-2xl",
+          //"bg-gray-100/50 hover:bg-gray-200/60 dark:bg-gray-900/50 dark:hover:bg-gray-800/60",
+          "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
           // TODO: Maybe change colors, to zero border, but then the background more prominent.
         )}
         onClick={(e) => {
@@ -45,7 +46,7 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
           }
         }}
       >
-        <ItemContent className="flex-3 flex-col justify-between items-start /*gap-1.75*/ gap-[0.48rem]">
+        <ItemContent className="flex-3 flex-col justify-between items-start /*gap-1.75*/ /*gap-[0.6rem]*/ gap-2.25">
           <ItemTitle className="line-clamp-1 truncate max-w-[50vw]">
             {topic.name}
             {/* -{" "}
@@ -58,7 +59,8 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
             {topic.description || "-"}
           </ItemDescription>
         </ItemContent>
-        <ItemContent className="flex-1 flex-col justify-between items-end gap-3">
+        <ItemContent className="flex-1 flex-col justify-between items-end gap-3.5">
+          {/* TODO: Make this a toggle button */}
           <div className="flex justify-end">
             <StarIcon
               className={cn(
@@ -229,7 +231,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
           data={topics}
           overscan={200}
           itemContent={(_, topic) => (
-            <div className="px-1.5 py-1.5">
+            <div className="px-1.25 py-1.5">
               <TopicItem
                 topic={topic}
                 onNavigate={(id) => {

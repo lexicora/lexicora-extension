@@ -91,7 +91,7 @@ function LibraryPage() {
         </header>*/}
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <PageHeader title="Library" classNameHeaderElement="mb-2">
-          <div className="mt-3 mx-2">
+          <div className="mt-3 mx-1.5">
             <div id="search" className="dark:scheme-dark">
               <Field orientation="horizontal">
                 <InputGroup>
