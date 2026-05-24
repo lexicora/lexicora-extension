@@ -89,6 +89,13 @@ export function BottomNavigation() {
           {/* Library */}
           <NavLink
             to={pathname === "/library" ? `/library${search}` : "/library"}
+            onClick={(e) => {
+              // If we're already on the library page, prevent navigation and just scroll to top
+              if (pathname === "/library") {
+                e.preventDefault();
+                window.scrollTo({ top: 0 });
+              }
+            }}
             title={pathname.startsWith("/library") ? "" : "Library"}
             draggable={false}
             viewTransition={pathname === "/library" ? false : true}

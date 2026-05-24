@@ -8,7 +8,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 import { getDb } from "@/db";
-import { TopicDocType } from "@/db/schemas/topic";
+import { EntryDocType } from "@/db/schemas/entry";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
 import { StarIcon } from "lucide-react";
@@ -16,19 +16,20 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useNavigationType } from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
 
-interface TopicItemProps {
-  topic: TopicDocType;
+interface EntryItemProps {
+  entry: EntryDocType;
   onNavigate?: (id: string) => void;
   // potentially more fields, like author, tags, etc.
 }
 
-function TopicItem({ topic, onNavigate }: TopicItemProps) {
+// TODO: Potentially show more properties for each Entry and make an entry item potentially taller.
+function EntryItem({ entry, onNavigate }: EntryItemProps) {
   const navigate = useNavigate();
 
-  const formattedDate = formatDate(topic.updatedAt);
+  const formattedDate = formatDate(entry.updatedAt);
 
   return (
-    <Item key={topic.id} variant="outline" asChild>
+    <Item key={entry.id} variant="outline" asChild>
       <Button
         variant="outline"
         className={cn(
@@ -39,23 +40,20 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
         onClick={(e) => {
           e.preventDefault();
           if (onNavigate) {
-            onNavigate(topic.id);
+            onNavigate(entry.id);
           } else {
-            navigate(`/library/topics/${topic.id}`, { viewTransition: true });
+            navigate(`/library/entries/${entry.id}`, { viewTransition: true });
           }
         }}
       >
         <ItemContent className="flex-3 flex-col justify-between items-start /*gap-1.75*/ gap-[0.48rem]">
           <ItemTitle className="line-clamp-1 truncate max-w-[50vw]">
-            {topic.name}
+            {entry.title}
             {/* -{" "}
-            <span className="text-muted-foreground">{formattedDate}</span> */}
+            <span className="text-muted-foreground">{entry.topicName}</span> */}
           </ItemTitle>
-          {/* <ItemDescription>
-            {topic.entryCount} {topic.entryCount === 1 ? "entry" : "entries"}
-          </ItemDescription> */}
           <ItemDescription className="truncate max-w-[50vw]">
-            {topic.description || "-"}
+            {entry.description || "-"}
           </ItemDescription>
         </ItemContent>
         <ItemContent className="flex-1 flex-col justify-between items-end gap-3">
@@ -63,7 +61,7 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
             <StarIcon
               className={cn(
                 "size-4",
-                topic.isFavorite
+                entry.isFavorite
                   ? "text-yellow-500 fill-yellow-500"
                   : "text-gray-400",
               )}
@@ -80,13 +78,13 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
 
 // TODO: Maybe put the logic of setting the stuff for session storage in the return of component useEffect return statement for unmount.
 
-interface TopicListProps {
+interface EntryListProps {
   search: string;
   onlyFavorites: boolean;
 }
 
-export function TopicList({ search, onlyFavorites }: TopicListProps) {
-  const [topics, setTopics] = useState<TopicDocType[]>([]);
+export function EntryList({ search, onlyFavorites }: EntryListProps) {
+  const [entries, setEntries] = useState<EntryDocType[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const navigationType = useNavigationType();
   const navigate = useNavigate();
@@ -95,29 +93,29 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   // On POP, restore the scroll position (plain number, no JSON overhead)
   const savedScrollTop = useMemo(() => {
     if (navigationType !== "POP") return 0;
-    return parseInt(sessionStorage.getItem("topicListScrollTop") || "0", 10);
+    return parseInt(sessionStorage.getItem("entryListScrollTop") || "0", 10);
   }, [navigationType]);
 
-  // If we arrived here via standard navigation (not back/POP), clear saved scroll
+  // If we arrived here via standard navigation (not back/POP), reset the Virtuoso state
   useEffect(() => {
     if (navigationType !== "POP") {
-      sessionStorage.removeItem("topicListScrollTop");
+      sessionStorage.removeItem("entryListScrollTop");
     }
   }, [navigationType]);
 
-  // Clear saved scroll when search or filters actively change
+  // Reset Virtuoso state when search or filters actively change
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
-    sessionStorage.removeItem("topicListScrollTop");
+    sessionStorage.removeItem("entryListScrollTop");
   }, [search, onlyFavorites]);
 
   useEffect(() => {
     let sub: any;
 
-    const fetchTopics = async () => {
+    const fetchEntries = async () => {
       const db = await getDb();
       if (!db) return;
 
@@ -135,14 +133,14 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
           new RegExp(escapedSearch, "i");
 
           // RxDB requires the regex operator to be a string
-          selector.name = { $regex: escapedSearch, $options: "i" };
+          selector.title = { $regex: escapedSearch, $options: "i" };
           //? Maybe add description too, though preferably only indexed fields.
         } catch (error) {
           console.error("Failed to compile search regex:", error);
         }
       }
 
-      const query = db.collections.topics.find({
+      const query = db.collections.entries.find({
         selector,
         sort: [{ updatedAt: "desc" }], // TODO: Make sorting dynamic based on user selection (e.g. sort by createdAt, name, etc.). passed down from library page.
       });
@@ -152,18 +150,18 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
           // if (import.meta.env.DEV) {
           //   console.log(`[EntryList] ${results.length} entries loaded`);
           // }
-          setTopics(results as TopicDocType[]);
+          setEntries(results as EntryDocType[]);
           setIsDataLoaded(true);
         },
         error: (err) => {
-          console.error("Error executing topics query:", err);
-          setTopics([]);
+          console.error("Error executing entries query:", err);
+          setEntries([]);
           setIsDataLoaded(true);
         },
       });
     };
 
-    fetchTopics();
+    fetchEntries();
 
     return () => {
       if (sub) {
@@ -174,12 +172,12 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
 
   return (
     <div className={cn("animate-in fade-in-60")}>
-      {isDataLoaded && topics.length === 0 && (
+      {isDataLoaded && entries.length === 0 && (
         <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
           {search.trim() ? (
             <>
               <p className="text-muted-foreground mb-3">
-                No topics found matching{" "}
+                No entries found matching{" "}
                 <span className="text-lc-muted-foreground-hover inline-block max-w-32 truncate align-bottom">
                   "{search}"
                 </span>
@@ -194,12 +192,12 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
                 variant="link"
                 onClick={() =>
                   navigate(
-                    `/library/topics/new?name=${encodeURIComponent(search)}`,
+                    `/library/entries/new?title=${encodeURIComponent(search)}`,
                     { viewTransition: true },
                   )
                 }
               >
-                Create Topic{" "}
+                Create Entry{" "}
                 <span className="inline-block max-w-34 truncate align-bottom text-lc-muted-foreground-hover">
                   "{search}"
                 </span>
@@ -207,39 +205,39 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
             </>
           ) : (
             <>
-              <p className="text-muted-foreground mb-3">No topics found.</p>
+              <p className="text-muted-foreground mb-3">No entries found.</p>
               <Separator className="max-w-24 mx-auto mb-1" />
               <Button
                 variant="link"
                 onClick={() =>
-                  navigate("/library/topics/new", { viewTransition: true })
+                  navigate("/library/entries/new", { viewTransition: true })
                 }
               >
-                Create Topic
+                Create Entry
               </Button>
             </>
           )}
         </div>
       )}
 
-      {isDataLoaded && topics.length > 0 && (
+      {isDataLoaded && entries.length > 0 && (
         <Virtuoso
           useWindowScroll
           initialScrollTop={savedScrollTop}
-          data={topics}
+          data={entries}
           overscan={200}
-          itemContent={(_, topic) => (
+          itemContent={(_, entry) => (
             <div className="px-1.5 py-1.5">
-              <TopicItem
-                topic={topic}
+              <EntryItem
+                entry={entry}
                 onNavigate={(id) => {
                   // Save scroll position as a plain number before navigating away
-                  const adjustedScrollTop = window.scrollY - 236; // Adjust for top bar height (and potential margin)
+                  const adjustedScrollTop = window.scrollY - 236;
                   sessionStorage.setItem(
-                    "topicListScrollTop",
+                    "entryListScrollTop",
                     adjustedScrollTop.toString(),
                   );
-                  navigate(`/library/topics/${id}`, { viewTransition: true });
+                  navigate(`/library/entries/${id}`, { viewTransition: true });
                 }}
               />
             </div>

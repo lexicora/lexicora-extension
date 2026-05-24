@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { appBlockNoteConfig } from "@/components/editor/config";
 import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
 import { useEffect, useState, useLayoutEffect, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
@@ -28,6 +28,7 @@ import { ArrowUpIcon, SaveIcon } from "lucide-react";
 function EntryCreatePage() {
   const location = useLocation(); // This is used in order to trigger useEffect on location change
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const editor = useCreateBlockNote(appBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
   const capturedData = useCaptureData();
   const { isAtBottom } = useScrollPos();
@@ -220,7 +221,7 @@ function EntryCreatePage() {
               topics={topics}
               overrideExisting={capturedData?.misc?.overrideExisting ?? true}
               initialData={{
-                title: capturedData?.title || "",
+                title: capturedData?.title || searchParams.get("title") || "",
                 faviconUrl: capturedData?.metadata?.faviconUrl || "",
                 url: capturedData?.location?.href || "",
                 siteName:
