@@ -195,7 +195,7 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
                 variant="link"
                 onClick={() =>
                   navigate(
-                    `/library/entries/new?name=${encodeURIComponent(search)}`,
+                    `/library/entries/new?title=${encodeURIComponent(search)}`,
                     { viewTransition: true },
                   )
                 }
@@ -229,6 +229,7 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
           useWindowScroll
           restoreStateFrom={restoredState}
           data={entries}
+          overscan={200}
           itemContent={(_, entry) => (
             <div className="px-1.5 py-1.5">
               <EntryItem

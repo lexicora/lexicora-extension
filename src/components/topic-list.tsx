@@ -231,6 +231,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
           useWindowScroll
           restoreStateFrom={restoredState}
           data={topics}
+          overscan={200}
           itemContent={(_, topic) => (
             <div className="px-1.5 py-1.5">
               <TopicItem
