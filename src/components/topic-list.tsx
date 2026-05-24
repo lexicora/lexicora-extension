@@ -12,9 +12,9 @@ import { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
 import { StarIcon } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useNavigationType } from "react-router-dom";
-import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
+import { Virtuoso } from "react-virtuoso";
 
 interface TopicItemProps {
   topic: TopicDocType;
@@ -90,34 +90,28 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const navigationType = useNavigationType();
   const navigate = useNavigate();
-  const virtuosoRef = useRef<VirtuosoHandle>(null);
   const isFirstRender = useRef(true);
 
-  // Load Virtuoso's last state to prevent layout thrashing on mount
-  const restoredState = useMemo(() => {
-    if (navigationType !== "POP") return undefined;
-    const str = sessionStorage.getItem("topicListVirtuosoState");
-    try {
-      return str ? JSON.parse(str) : undefined;
-    } catch {
-      return undefined;
-    }
+  // On POP, restore the scroll position (plain number, no JSON overhead)
+  const savedScrollTop = useMemo(() => {
+    if (navigationType !== "POP") return 0;
+    return parseInt(sessionStorage.getItem("topicListScrollTop") || "0", 10);
   }, [navigationType]);
 
-  // If we arrived here via standard navigation (not back/POP), reset the Virtuoso state
+  // If we arrived here via standard navigation (not back/POP), clear saved scroll
   useEffect(() => {
     if (navigationType !== "POP") {
-      sessionStorage.removeItem("topicListVirtuosoState");
+      sessionStorage.removeItem("topicListScrollTop");
     }
   }, [navigationType]);
 
-  // Reset Virtuoso state when search or filters actively change
+  // Clear saved scroll when search or filters actively change
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
-    sessionStorage.removeItem("topicListVirtuosoState");
+    sessionStorage.removeItem("topicListScrollTop");
   }, [search, onlyFavorites]);
 
   useEffect(() => {
@@ -227,9 +221,8 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
 
       {isDataLoaded && topics.length > 0 && (
         <Virtuoso
-          ref={virtuosoRef}
           useWindowScroll
-          restoreStateFrom={restoredState}
+          initialScrollTop={savedScrollTop}
           data={topics}
           overscan={200}
           itemContent={(_, topic) => (
@@ -237,13 +230,12 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
               <TopicItem
                 topic={topic}
                 onNavigate={(id) => {
-                  // Capture exact dimensions and scroll boundaries before destroying the list
-                  virtuosoRef.current?.getState((state) => {
-                    sessionStorage.setItem(
-                      "topicListVirtuosoState",
-                      JSON.stringify(state),
-                    );
-                  });
+                  // Save scroll position as a plain number before navigating away
+                  const adjustedScrollTop = window.scrollY - 236; // Adjust for top bar height (and potential margin)
+                  sessionStorage.setItem(
+                    "topicListScrollTop",
+                    adjustedScrollTop.toString(),
+                  );
                   navigate(`/library/topics/${id}`, { viewTransition: true });
                 }}
               />

@@ -4,6 +4,7 @@ import {
   RouterProvider,
   Outlet,
   ScrollRestoration,
+  useLocation,
 } from "react-router-dom";
 
 // Hooks, Providers and Components
@@ -46,6 +47,7 @@ import CaptureSuggestionsSettingsPage from "./pages/settings/features/capture-su
 
 function RootLayout() {
   useMouseNavigation();
+  const location = useLocation();
   //* NOTE: Feature parity discrepancy: Firefox does not support stuff related to the unsupported capture suggestions feature.
   // Also Firefox natively handles state of the side-panel already being open or closed.
   if (!import.meta.env.FIREFOX) {
@@ -53,14 +55,12 @@ function RootLayout() {
   }
 
   // Potentially disable scroll restoration, on library page paths.
-  // const disableScrollRestoration = (location) => {
-  //   return location.pathname.includes("/library");
-  // };
+  const disableScrollRestoration = location.pathname.startsWith("/library");
 
   return (
     <SidePanelMessagingProvider>
       <RouterListener />
-      <ScrollRestoration />
+      {disableScrollRestoration || <ScrollRestoration />}
       <ScrollObserverProvider>
         <TopBar />
         <Outlet />

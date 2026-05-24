@@ -12,9 +12,9 @@ import { EntryDocType } from "@/db/schemas/entry";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
 import { StarIcon } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useNavigationType } from "react-router-dom";
-import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
+import { Virtuoso } from "react-virtuoso";
 
 interface EntryItemProps {
   entry: EntryDocType;
@@ -88,24 +88,18 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const navigationType = useNavigationType();
   const navigate = useNavigate();
-  const virtuosoRef = useRef<VirtuosoHandle>(null);
   const isFirstRender = useRef(true);
 
-  // Load Virtuoso's last state to prevent layout thrashing on mount
-  const restoredState = useMemo(() => {
-    if (navigationType !== "POP") return undefined;
-    const str = sessionStorage.getItem("entryListVirtuosoState");
-    try {
-      return str ? JSON.parse(str) : undefined;
-    } catch {
-      return undefined;
-    }
+  // On POP, restore the scroll position (plain number, no JSON overhead)
+  const savedScrollTop = useMemo(() => {
+    if (navigationType !== "POP") return 0;
+    return parseInt(sessionStorage.getItem("entryListScrollTop") || "0", 10);
   }, [navigationType]);
 
   // If we arrived here via standard navigation (not back/POP), reset the Virtuoso state
   useEffect(() => {
     if (navigationType !== "POP") {
-      sessionStorage.removeItem("entryListVirtuosoState");
+      sessionStorage.removeItem("entryListScrollTop");
     }
   }, [navigationType]);
 
@@ -115,7 +109,7 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
       isFirstRender.current = false;
       return;
     }
-    sessionStorage.removeItem("entryListVirtuosoState");
+    sessionStorage.removeItem("entryListScrollTop");
   }, [search, onlyFavorites]);
 
   useEffect(() => {
@@ -225,9 +219,8 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
 
       {isDataLoaded && entries.length > 0 && (
         <Virtuoso
-          ref={virtuosoRef}
           useWindowScroll
-          restoreStateFrom={restoredState}
+          initialScrollTop={savedScrollTop}
           data={entries}
           overscan={200}
           itemContent={(_, entry) => (
@@ -235,13 +228,12 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
               <EntryItem
                 entry={entry}
                 onNavigate={(id) => {
-                  // Capture exact dimensions and scroll boundaries before destroying the list
-                  virtuosoRef.current?.getState((state) => {
-                    sessionStorage.setItem(
-                      "entryListVirtuosoState",
-                      JSON.stringify(state),
-                    );
-                  });
+                  // Save scroll position as a plain number before navigating away
+                  const adjustedScrollTop = window.scrollY - 236;
+                  sessionStorage.setItem(
+                    "entryListScrollTop",
+                    adjustedScrollTop.toString(),
+                  );
                   navigate(`/library/entries/${id}`, { viewTransition: true });
                 }}
               />
