@@ -33,7 +33,7 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
       <Button
         variant="ghost"
         className={cn(
-          "h-full /*min-h-26.25*/ flex-col !items-start pt-3 pb-3.25 px-3.25 rounded-2xl",
+          "h-full /*min-h-26.25*/ flex-col items-start! pt-3 pb-3.25 px-3.25 rounded-2xl",
           topic.tags.length === 0 && "pb-2.5",
           //"bg-gray-100/50 hover:bg-gray-200/60 dark:bg-gray-900/50 dark:hover:bg-gray-800/60",
           "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
@@ -111,7 +111,7 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
             {topic.tags.slice(0, 5).map((tag) => (
               <span
                 key={tag}
-                className="px-1.5 py-0.5 rounded-md bg-gray-400/37 dark:bg-gray-600/40 text-[11px] font-medium text-lc-muted-foreground-hover truncate max-w-[100px]"
+                className="px-1.5 py-0.5 rounded-md bg-gray-400/37 dark:bg-gray-600/40 text-[11px] font-medium text-lc-muted-foreground-hover truncate max-w-25"
               >
                 {tag}
               </span>
