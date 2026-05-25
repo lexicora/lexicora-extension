@@ -23,9 +23,10 @@ interface TopicItemProps {
   // potentially more fields, like author, tags, etc.
 }
 
+// TODO: Make HTML structure more semantic, try to avoid clickable stuff, within clickable stuff.
+// TODO: Implement variable tags being displayed, also make sure they never overflow of the container.
 function TopicItem({ topic, onNavigate }: TopicItemProps) {
   const navigate = useNavigate();
-
   const formattedDate = formatDate(topic.updatedAt);
 
   return (
@@ -35,9 +36,7 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
         className={cn(
           "h-full /*min-h-26.25*/ flex-col items-start! pt-3 pb-3.25 px-3.25 rounded-2xl",
           topic.tags.length === 0 && "pb-2.5",
-          //"bg-gray-100/50 hover:bg-gray-200/60 dark:bg-gray-900/50 dark:hover:bg-gray-800/60",
           "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
-          // TODO: Maybe change colors, to zero border, but then the background more prominent.
         )}
         onClick={(e) => {
           e.preventDefault();
