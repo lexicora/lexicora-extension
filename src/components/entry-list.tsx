@@ -59,8 +59,13 @@ function EntryItem({ entry, onNavigate }: EntryItemProps) {
           </ItemDescription>
         </ItemContent>
         <ItemContent className="flex-1 flex-col justify-between items-end gap-3.5">
-          <Toggle
-            className="size-6 min-w-6 /*group*/ flex justify-end p-1 -m-1 rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700"
+          <div
+            role="button"
+            tabIndex={0}
+            className={cn(
+              "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
+            )}
             onClick={async (e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -86,7 +91,7 @@ function EntryItem({ entry, onNavigate }: EntryItemProps) {
                   : "text-gray-500/75 dark:text-gray-400 /*group-hover:text-yellow-500/70*/",
               )}
             />
-          </Toggle>
+          </div>
           <ItemDescription className="text-xs text-muted-foreground whitespace-nowrap">
             {formattedDate}
           </ItemDescription>

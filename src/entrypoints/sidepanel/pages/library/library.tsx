@@ -47,6 +47,11 @@ function LibraryPage() {
   );
 
   const activeTab = searchParams.get("tab") || "entries";
+  const targetTabRef = useRef(activeTab);
+
+  useEffect(() => {
+    targetTabRef.current = activeTab;
+  }, [activeTab]);
 
   useEffect(() => {
     setSearchParams(
@@ -73,7 +78,10 @@ function LibraryPage() {
 
   const handleTabChange = (value: string) => {
     // If it's already the same tab, don't do anything
-    if (value === activeTab) return;
+    if (value === targetTabRef.current) return;
+
+    targetTabRef.current = value;
+
     setSearchParams(
       (prev) => {
         const newParams = new URLSearchParams(prev);

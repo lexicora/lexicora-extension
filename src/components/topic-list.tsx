@@ -33,7 +33,8 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
       <Button
         variant="ghost"
         className={cn(
-          "h-full pt-3 pb-2.5 px-3.25 rounded-2xl",
+          "h-full /*min-h-26.25*/ flex-col !items-start pt-3 pb-3.25 px-3.25 rounded-2xl",
+          topic.tags.length === 0 && "pb-2.5",
           //"bg-gray-100/50 hover:bg-gray-200/60 dark:bg-gray-900/50 dark:hover:bg-gray-800/60",
           "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
           // TODO: Maybe change colors, to zero border, but then the background more prominent.
@@ -47,52 +48,81 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
           }
         }}
       >
-        <ItemContent className="flex-3 flex-col justify-between items-start /*gap-1.75*/ /*gap-[0.6rem]*/ gap-2.25">
-          <ItemTitle className="line-clamp-1 truncate max-w-[calc(100vw-178px)] /*max-w-[50vw]*/">
-            {topic.name}
-            {/* -{" "}
-            <span className="text-muted-foreground">{formattedDate}</span> */}
-          </ItemTitle>
-          {/* <ItemDescription>
-            {topic.entryCount} {topic.entryCount === 1 ? "entry" : "entries"}
-          </ItemDescription> */}
-          <ItemDescription className="truncate max-w-[50vw]">
-            {topic.description || "-"}
-          </ItemDescription>
-        </ItemContent>
-        <ItemContent className="flex-1 flex-col justify-between items-end gap-3.5">
-          <Toggle
-            className="size-6 min-w-6 /*group*/ flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700"
-            onClick={async (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              const db = await getDb();
-              if (db) {
-                const doc = await db.collections.topics
-                  .findOne({ selector: { id: topic.id } })
-                  .exec();
-                if (doc) {
-                  await doc.incrementalPatch({
-                    isFavorite: !topic.isFavorite,
-                    //updatedAt: new Date().toISOString(),
-                  });
-                }
-              }
-            }}
+        <div className="flex w-full justify-between items-start gap-4">
+          <ItemContent
+            className={cn(
+              "flex-3 flex-col justify-between items-start gap-2",
+              topic.tags.length === 0 && "gap-2.25",
+            )}
           >
-            <StarIcon
+            <ItemTitle className="line-clamp-1 truncate max-w-[calc(100vw-178px)]">
+              {topic.name}
+            </ItemTitle>
+            <ItemDescription className="truncate max-w-[50vw]">
+              {topic.description || "-"}
+            </ItemDescription>
+          </ItemContent>
+          <ItemContent
+            className={cn(
+              "flex-1 flex-col justify-between items-end gap-3.25 mt-px",
+              topic.tags.length === 0 && "gap-3.75 /mt-0.5",
+            )}
+          >
+            <div
+              role="button"
+              tabIndex={0}
               className={cn(
-                "size-4 /*transition-transform*/ /*group-hover:scale-110*/ /*active:scale-95*/",
-                topic.isFavorite
-                  ? "text-yellow-600/75 fill-yellow-600/75 dark:text-yellow-500 dark:fill-yellow-500"
-                  : "text-gray-500/75 dark:text-gray-400 /*group-hover:text-yellow-500/70*/",
+                "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
               )}
-            />
-          </Toggle>
-          <ItemDescription className="text-xs text-muted-foreground whitespace-nowrap">
-            {formattedDate}
-          </ItemDescription>
-        </ItemContent>
+              onClick={async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const db = await getDb();
+                if (db) {
+                  const doc = await db.collections.topics
+                    .findOne({ selector: { id: topic.id } })
+                    .exec();
+                  if (doc) {
+                    await doc.incrementalPatch({
+                      isFavorite: !topic.isFavorite,
+                    });
+                  }
+                }
+              }}
+            >
+              <StarIcon
+                className={cn(
+                  "size-4",
+                  topic.isFavorite
+                    ? "text-yellow-600/75 fill-yellow-600/75 dark:text-yellow-500 dark:fill-yellow-500"
+                    : "text-gray-500/75 dark:text-gray-400",
+                )}
+              />
+            </div>
+            <ItemDescription className="text-xs text-muted-foreground whitespace-nowrap">
+              {formattedDate}
+            </ItemDescription>
+          </ItemContent>
+        </div>
+
+        {topic.tags && topic.tags.length > 0 && (
+          <div className="flex items-center flex-wrap gap-1.5 w-full mt-0">
+            {topic.tags.slice(0, 5).map((tag) => (
+              <span
+                key={tag}
+                className="px-1.5 py-0.5 rounded-md bg-gray-400/37 dark:bg-gray-600/40 text-[11px] font-medium text-lc-muted-foreground-hover truncate max-w-[100px]"
+              >
+                {tag}
+              </span>
+            ))}
+            {topic.tags.length > 5 && (
+              <span className="text-[11px] text-muted-foreground shrink-0 font-medium">
+                +{topic.tags.length - 5}
+              </span>
+            )}
+          </div>
+        )}
       </Button>
     </Item>
   );
@@ -156,6 +186,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
 
           // RxDB requires the regex operator to be a string
           selector.name = { $regex: escapedSearch, $options: "i" };
+          // TODO: Potentially add tags to the search.
           //? Maybe add description too, though preferably only indexed fields.
         } catch (error) {
           console.error("Failed to compile search regex:", error);
