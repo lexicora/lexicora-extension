@@ -24,7 +24,7 @@ interface TopicItemProps {
 }
 
 // TODO: Make HTML structure more semantic, try to avoid clickable stuff, within clickable stuff.
-// TODO: Implement variable tags being displayed, also make sure they never overflow of the container.
+// TODO: Potentially implement variable tags being displayed, also make sure they never overflow of the container.
 function TopicItem({ topic, onNavigate }: TopicItemProps) {
   const navigate = useNavigate();
   const formattedDate = formatDate(topic.updatedAt);
@@ -104,7 +104,6 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
             </ItemDescription>
           </ItemContent>
         </div>
-
         {topic.tags && topic.tags.length > 0 && (
           <div className="flex items-center flex-wrap gap-1.5 w-full mt-0">
             {topic.tags.slice(0, 5).map((tag) => (

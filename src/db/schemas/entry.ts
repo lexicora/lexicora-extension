@@ -11,7 +11,7 @@ const entrySchemaLiteral = {
     id: uuidSchema,
     userId: uuidWithNilDefault,
     topicId: uuidSchema,
-    title: { type: 'string', maxLength: 255 },
+    title: { type: 'string', maxLength: 255 }, //? Maybe rename from title to name.
     description: { type: 'string', maxLength: 1000 },
     tags: {
       type: 'array',
