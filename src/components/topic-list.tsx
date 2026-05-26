@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Item,
   ItemContent,
@@ -12,7 +12,7 @@ import { getDb } from "@/db";
 import { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
-import { FoldersIcon, StarIcon } from "lucide-react";
+import { FoldersIcon, MinusIcon, StarIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useNavigationType } from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
@@ -46,22 +46,33 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
       }
     }
   };
+
+  const handleNavigate = (
+    e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
+  ) => {
+    e.preventDefault();
+    if (onNavigate) {
+      onNavigate(topic.id);
+    } else {
+      navigate(`/library/topics/${topic.id}`, { viewTransition: true });
+    }
+  };
+
   return (
     <Item key={topic.id} variant="default" asChild>
-      <Button
-        variant="ghost"
+      <div
+        role="button"
+        tabIndex={0}
         className={cn(
-          "h-full /*min-h-26.25*/ flex-col items-start! pt-2.75 pb-3.25 px-3.25 rounded-2xl",
-          topic.tags.length === 0 && "pb-2.5",
+          buttonVariants({ variant: "ghost" }),
+          "cursor-pointer",
+          "h-full /*min-h-26.25*/ flex-col items-start! pt-2.75! pb-3.25! px-3.25! rounded-2xl!",
+          topic.tags.length === 0 && "pb-2.5!",
           "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
         )}
-        onClick={(e) => {
-          e.preventDefault();
-          if (onNavigate) {
-            onNavigate(topic.id);
-          } else {
-            navigate(`/library/topics/${topic.id}`, { viewTransition: true });
-          }
+        onClick={handleNavigate}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") handleNavigate(e);
         }}
       >
         <div className="flex w-full justify-between items-start gap-4">
@@ -75,7 +86,7 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
               {topic.name}
             </ItemTitle>
             <ItemDescription className="line-clamp-2 truncate max-w-[min(calc(100vw-178px),550px)]">
-              {topic.description || "-"}
+              {topic.description || <MinusIcon className="inline size-2.5" />}
             </ItemDescription>
           </ItemContent>
           <ItemContent
@@ -92,9 +103,7 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
               )}
               onKeyDown={async (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  handleFavoriteToggle(e);
-                }
+                if (e.key === "Enter" || e.key === " ") handleFavoriteToggle(e);
               }}
               onClick={handleFavoriteToggle}
             >
@@ -129,7 +138,7 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
             )}
           </div>
         )}
-      </Button>
+      </div>
     </Item>
   );
 }
@@ -191,7 +200,9 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
           new RegExp(escapedSearch, "i");
 
           // RxDB requires the regex operator to be a string
-          selector.name = { $regex: escapedSearch, $options: "i" };
+          //selector.name = { $regex: escapedSearch, $options: "i" };
+          const searchRegex = { $regex: escapedSearch, $options: "i" };
+          selector.$or = [{ name: searchRegex }, { tags: searchRegex }];
           // TODO: Potentially add tags to the search.
           //? Maybe add description too, though preferably only indexed fields.
         } catch (error) {
