@@ -74,7 +74,7 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
             <ItemTitle className="line-clamp-1 truncate max-w-[calc(100vw-178px)]">
               {topic.name}
             </ItemTitle>
-            <ItemDescription className="truncate max-w-[50vw]">
+            <ItemDescription className="line-clamp-2 truncate max-w-[min(calc(100vw-178px),550px)]">
               {topic.description || "-"}
             </ItemDescription>
           </ItemContent>
