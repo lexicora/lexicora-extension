@@ -29,12 +29,29 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
   const navigate = useNavigate();
   const formattedDate = formatDate(topic.updatedAt);
 
+  const handleFavoriteToggle = async (
+    e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const db = await getDb();
+    if (db) {
+      const doc = await db.collections.topics
+        .findOne({ selector: { id: topic.id } })
+        .exec();
+      if (doc) {
+        await doc.incrementalPatch({
+          isFavorite: !topic.isFavorite,
+        });
+      }
+    }
+  };
   return (
     <Item key={topic.id} variant="default" asChild>
       <Button
         variant="ghost"
         className={cn(
-          "h-full /*min-h-26.25*/ flex-col items-start! pt-3 pb-3.25 px-3.25 rounded-2xl",
+          "h-full /*min-h-26.25*/ flex-col items-start! pt-2.75 pb-3.25 px-3.25 rounded-2xl",
           topic.tags.length === 0 && "pb-2.5",
           "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
         )}
@@ -63,8 +80,8 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
           </ItemContent>
           <ItemContent
             className={cn(
-              "flex-1 flex-col justify-between items-end gap-3.25 mt-px",
-              topic.tags.length === 0 && "gap-3.75 /mt-0.5",
+              "flex-1 flex-col justify-between items-end gap-3.25 mt-0.5",
+              topic.tags.length === 0 && "gap-3.75 /*mt-0.5*/",
             )}
           >
             <div
@@ -74,21 +91,12 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
                 "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
               )}
-              onClick={async (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const db = await getDb();
-                if (db) {
-                  const doc = await db.collections.topics
-                    .findOne({ selector: { id: topic.id } })
-                    .exec();
-                  if (doc) {
-                    await doc.incrementalPatch({
-                      isFavorite: !topic.isFavorite,
-                    });
-                  }
+              onKeyDown={async (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  handleFavoriteToggle(e);
                 }
               }}
+              onClick={handleFavoriteToggle}
             >
               <StarIcon
                 className={cn(
@@ -105,11 +113,11 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
           </ItemContent>
         </div>
         {topic.tags && topic.tags.length > 0 && (
-          <div className="flex items-center flex-wrap gap-1.5 w-full mt-0">
+          <div className="flex items-center gap-1.5 w-full mt-0 overflow-hidden">
             {topic.tags.slice(0, 5).map((tag) => (
               <span
                 key={tag}
-                className="px-1.5 py-0.5 rounded-md bg-gray-400/37 dark:bg-gray-600/40 text-[11px] font-medium text-lc-muted-foreground-hover truncate max-w-25"
+                className="px-1.5 py-0.5 rounded-md bg-gray-400/37 dark:bg-gray-600/40 text-[11px] font-medium text-lc-muted-foreground-hover truncate max-w-25 min-w-0 shrink"
               >
                 {tag}
               </span>
