@@ -47,7 +47,7 @@ const formSchema = z.object({
     .max(1000, "Description is too long.")
     .optional()
     .or(z.literal("")),
-  tags: z.string().max(550, "Tags input is too long."), // TODO: Improve validation, we will split and validate individual tags later
+  tags: z.string().max(550, "Tags input is too long."), // TODO: Improve validation, we will split and validate individual tags later also filter out duplicates
   faviconUrl: z
     .url("Must be a valid URL")
     .max(1000, "Favicon URL is too long.")

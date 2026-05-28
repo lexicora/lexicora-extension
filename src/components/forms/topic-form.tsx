@@ -42,7 +42,7 @@ const createFormSchema = (currentTopicId?: string) =>
         }
         return true;
       }, "A topic with this name already exists."),
-    tags: z.string().max(550, "Tags input is too long."), // TODO: Improve validation, we will split and validate individual tags later
+    tags: z.string().max(550, "Tags input is too long."), // TODO: Improve validation, we will split and validate individual tags later also filter out duplicates
     description: z
       .string()
       .trim()

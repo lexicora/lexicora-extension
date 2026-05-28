@@ -19,13 +19,10 @@ import { Virtuoso } from "react-virtuoso";
 
 interface TopicItemProps {
   topic: TopicDocType;
-  onNavigate?: (id: string) => void;
   // potentially more fields, like author, tags, etc.
 }
 
-// TODO: Make HTML structure more semantic, try to avoid clickable stuff, within clickable stuff.
-// TODO: Potentially implement variable tags being displayed, also make sure they never overflow of the container.
-function TopicItem({ topic, onNavigate }: TopicItemProps) {
+function TopicItem({ topic }: TopicItemProps) {
   const navigate = useNavigate();
   const formattedDate = formatDate(topic.updatedAt);
 
@@ -51,11 +48,12 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
     e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
   ) => {
     e.preventDefault();
-    if (onNavigate) {
-      onNavigate(topic.id);
-    } else {
-      navigate(`/library/topics/${topic.id}`, { viewTransition: true });
-    }
+
+    // Save scroll position as a plain number before navigating away
+    const adjustedScrollTop = window.scrollY - 229; // Adjust for top bar height (and potential margin)
+    sessionStorage.setItem("topicListScrollTop", adjustedScrollTop.toString());
+
+    navigate(`/library/topics/${topic.id}`, { viewTransition: true });
   };
 
   return (
@@ -66,7 +64,7 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
         className={cn(
           buttonVariants({ variant: "ghost" }),
           "cursor-pointer",
-          "h-full /*min-h-26.25*/ flex-col items-start! pt-2.75! pb-3.25! px-3.25! rounded-2xl!",
+          "h-full /*min-h-26.25*/ flex-col items-start! pt-2.75! pb-2.75! px-3.25! rounded-2xl!",
           topic.tags.length === 0 && "pb-2.5!",
           "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
         )}
@@ -102,10 +100,10 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
                 "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
               )}
+              onClick={handleFavoriteToggle}
               onKeyDown={async (e) => {
                 if (e.key === "Enter" || e.key === " ") handleFavoriteToggle(e);
               }}
-              onClick={handleFavoriteToggle}
             >
               <StarIcon
                 className={cn(
@@ -122,20 +120,20 @@ function TopicItem({ topic, onNavigate }: TopicItemProps) {
           </ItemContent>
         </div>
         {topic.tags && topic.tags.length > 0 && (
-          <div className="flex items-center gap-1.5 w-full mt-0 overflow-hidden">
-            {topic.tags.slice(0, 5).map((tag) => (
+          <div
+            // h-[22px] forces a single line height.
+            // flex-wrap moves overflow tags to the 2nd line, which is hidden by overflow-hidden
+            className="flex flex-wrap items-center gap-1.5 w-[90%] mt-0 h-5.5 overflow-hidden content-start"
+          >
+            {topic.tags.map((tag) => (
               <span
                 key={tag}
-                className="px-1.5 py-0.5 rounded-md bg-gray-400/37 dark:bg-gray-600/40 text-[11px] font-medium text-lc-muted-foreground-hover truncate max-w-25 min-w-0 shrink"
+                // shrink-0 prevents compressing; max-w-[150px] gives them plenty of room before truncating
+                className="px-1.5 py-0.5 rounded-md bg-gray-400/37 dark:bg-gray-600/40 text-[11px] font-medium text-lc-muted-foreground-hover truncate max-w-30 min-w-0 shrink-0"
               >
                 {tag}
               </span>
             ))}
-            {topic.tags.length > 5 && (
-              <span className="text-[11px] text-muted-foreground shrink-0 font-medium">
-                +{topic.tags.length - 5}
-              </span>
-            )}
           </div>
         )}
       </div>
@@ -306,18 +304,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
           overscan={200}
           itemContent={(_, topic) => (
             <div className="px-1.25 py-1.5">
-              <TopicItem
-                topic={topic}
-                onNavigate={(id) => {
-                  // Save scroll position as a plain number before navigating away
-                  const adjustedScrollTop = window.scrollY - 229; // Adjust for top bar height (and potential margin)
-                  sessionStorage.setItem(
-                    "topicListScrollTop",
-                    adjustedScrollTop.toString(),
-                  );
-                  navigate(`/library/topics/${id}`, { viewTransition: true });
-                }}
-              />
+              <TopicItem topic={topic} />
             </div>
           )}
         />

@@ -190,6 +190,7 @@ function LibraryPage() {
                   "text-lc-light-foreground bg-green-500 hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800",
                   "ring-1 ring-inset ring-black/20 dark:ring-white/30 hover:ring-black/25 dark:hover:ring-white/25",
                   "size-9 rounded-[12px] shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)]",
+                  "focus-visible:ring-offset-1",
                 )}
               >
                 <PlusIcon className="size-5" />

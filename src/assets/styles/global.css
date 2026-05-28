@@ -199,10 +199,10 @@
     html {
         scrollbar-width: thin;
         &.light {
-            scrollbar-color: #afafaf #ededed;
+            scrollbar-color: #afafaf #ededed; /* Potentially make bg of this transparent */
         }
         &.dark {
-            scrollbar-color: #4d5359 #0d111b;
+            scrollbar-color: #4d5359 #0d111b; /* Potentially make bg of this transparent */
         }
         /*macOS scrollbar fallback, for if set to stable scrollbar*/
         &::-webkit-scrollbar {
