@@ -62,7 +62,7 @@ function TopicItem({ topic }: TopicItemProps) {
         role="button"
         tabIndex={0}
         className={cn(
-          buttonVariants({ variant: "ghost" }),
+          buttonVariants({ variant: "ghost" }), // add classes manually
           "cursor-pointer",
           "h-full /*min-h-26.25*/ flex-col items-start! pt-2.75! pb-2.75! px-3.25! rounded-2xl!",
           topic.tags.length === 0 && "pb-2.5!",
@@ -125,9 +125,9 @@ function TopicItem({ topic }: TopicItemProps) {
             // flex-wrap moves overflow tags to the 2nd line, which is hidden by overflow-hidden
             className="flex flex-wrap items-center gap-1.5 w-[90%] mt-0 h-5.5 overflow-hidden content-start"
           >
-            {topic.tags.map((tag) => (
+            {topic.tags.map((tag, index) => (
               <span
-                key={tag}
+                key={tag + index}
                 // shrink-0 prevents compressing; max-w-[150px] gives them plenty of room before truncating
                 className="px-1.5 py-0.5 rounded-md bg-gray-400/37 dark:bg-gray-600/40 text-[11px] font-medium text-lc-muted-foreground-hover truncate max-w-30 min-w-0 shrink-0"
               >

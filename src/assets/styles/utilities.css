@@ -55,3 +55,8 @@
 .will-change-opacity {
   will-change: opacity;
 }
+
+:focus-visible.button-focus-visible-default {
+  /*TODO: Add focus-visible styles from base shadcn-ui button.*/
+  /*NOTE: Used in TopicItem or EntryItem */
+}

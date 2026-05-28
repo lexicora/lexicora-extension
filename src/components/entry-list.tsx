@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Item,
   ItemContent,
@@ -12,91 +12,132 @@ import { getDb } from "@/db";
 import { EntryDocType } from "@/db/schemas/entry";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
-import { FilesIcon, StarIcon } from "lucide-react";
+import { FilesIcon, MinusIcon, StarIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useNavigationType } from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
 
 interface EntryItemProps {
   entry: EntryDocType;
-  onNavigate?: (id: string) => void;
   // potentially more fields, like author, tags, etc.
 }
 
 // TODO: Potentially show more properties for each Entry and make an entry item potentially taller.
-function EntryItem({ entry, onNavigate }: EntryItemProps) {
+function EntryItem({ entry }: EntryItemProps) {
   const navigate = useNavigate();
-
   const formattedDate = formatDate(entry.updatedAt);
+
+  const handleFavoriteToggle = async (
+    e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const db = await getDb();
+    if (db) {
+      const doc = await db.collections.entries
+        .findOne({ selector: { id: entry.id } })
+        .exec();
+      if (doc) {
+        await doc.incrementalPatch({
+          isFavorite: !entry.isFavorite,
+        });
+      }
+    }
+  };
+
+  const handleNavigate = (
+    e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
+  ) => {
+    e.preventDefault();
+
+    // Save scroll position as a plain number before navigating away
+    const adjustedScrollTop = window.scrollY - 229; // Adjust for top bar height (and potential margin)
+    sessionStorage.setItem("entryListScrollTop", adjustedScrollTop.toString());
+
+    navigate(`/library/entries/${entry.id}`, { viewTransition: true });
+  };
 
   return (
     <Item key={entry.id} variant="default" asChild>
-      <Button
-        variant="ghost"
+      <div
+        role="button"
+        tabIndex={0}
         className={cn(
-          "h-full pt-3 pb-2.5 px-3.25 rounded-2xl",
-          // "bg-gray-100/50 hover:bg-gray-200/60 dark:bg-gray-900/50 dark:hover:bg-gray-800/60",
+          buttonVariants({ variant: "ghost" }), // add classes manually
+          "cursor-pointer",
+          "h-full /*min-h-26.25*/ flex-col items-start! pt-2.75! pb-2.75! px-3.25! rounded-2xl!",
+          entry.tags.length === 0 && "pb-2.5!",
           "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
-          // TODO: Maybe change colors, to zero border, but then the background more prominent.
         )}
-        onClick={(e) => {
-          e.preventDefault();
-          if (onNavigate) {
-            onNavigate(entry.id);
-          } else {
-            navigate(`/library/entries/${entry.id}`, { viewTransition: true });
-          }
+        onClick={handleNavigate}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") handleNavigate(e);
         }}
       >
-        <ItemContent className="flex-3 flex-col justify-between items-start /*gap-1.75*/ /*gap-[0.48rem]*/ gap-2.25">
-          <ItemTitle className="line-clamp-1 truncate max-w-[calc(100vw-178px)] /*max-w-[50vw]*/">
-            {entry.title}
-            {/* -{" "}
-            <span className="text-muted-foreground">{entry.topicName}</span> */}
-          </ItemTitle>
-          <ItemDescription className="truncate max-w-[50vw]">
-            {entry.description || "-"}
-          </ItemDescription>
-        </ItemContent>
-        <ItemContent className="flex-1 flex-col justify-between items-end gap-3.5">
-          <div
-            role="button"
-            tabIndex={0}
+        <div className="flex w-full justify-between items-start gap-4">
+          <ItemContent
             className={cn(
-              "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
+              "flex-3 flex-col justify-between items-start gap-2",
+              entry.tags.length === 0 && "gap-2.25",
             )}
-            onClick={async (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              const db = await getDb();
-              if (db) {
-                const doc = await db.collections.entries
-                  .findOne({ selector: { id: entry.id } })
-                  .exec();
-                if (doc) {
-                  await doc.incrementalPatch({
-                    isFavorite: !entry.isFavorite,
-                    //updatedAt: new Date().toISOString(),
-                  });
-                }
-              }
-            }}
           >
-            <StarIcon
+            <ItemTitle className="line-clamp-1 truncate max-w-[calc(100vw-178px)]">
+              {entry.title}
+            </ItemTitle>
+            <ItemDescription className="line-clamp-2 truncate max-w-[min(calc(100vw-178px),550px)]">
+              {entry.description || <MinusIcon className="inline size-2.5" />}
+            </ItemDescription>
+          </ItemContent>
+          <ItemContent
+            className={cn(
+              "flex-1 flex-col justify-between items-end gap-3.25 mt-0.5",
+              entry.tags.length === 0 && "gap-3.75 /*mt-0.5*/",
+            )}
+          >
+            <div
+              role="button"
+              tabIndex={0}
               className={cn(
-                "size-4 /*transition-transform*/ /*group-hover:scale-110*/ /*active:scale-95*/",
-                entry.isFavorite
-                  ? "text-yellow-600/75 fill-yellow-600/75 dark:text-yellow-500 dark:fill-yellow-500"
-                  : "text-gray-500/75 dark:text-gray-400 /*group-hover:text-yellow-500/70*/",
+                "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
               )}
-            />
+              onClick={handleFavoriteToggle}
+              onKeyDown={async (e) => {
+                if (e.key === "Enter" || e.key === " ") handleFavoriteToggle(e);
+              }}
+            >
+              <StarIcon
+                className={cn(
+                  "size-4",
+                  entry.isFavorite
+                    ? "text-yellow-600/75 fill-yellow-600/75 dark:text-yellow-500 dark:fill-yellow-500"
+                    : "text-gray-500/75 dark:text-gray-400",
+                )}
+              />
+            </div>
+            <ItemDescription className="text-xs text-muted-foreground whitespace-nowrap">
+              {formattedDate}
+            </ItemDescription>
+          </ItemContent>
+        </div>
+        {entry.tags && entry.tags.length > 0 && (
+          <div
+            // h-[22px] forces a single line height.
+            // flex-wrap moves overflow tags to the 2nd line, which is hidden by overflow-hidden
+            className="flex flex-wrap items-center gap-1.5 w-[90%] mt-0 h-5.5 overflow-hidden content-start"
+          >
+            {entry.tags.map((tag, index) => (
+              <span
+                key={tag + index}
+                // shrink-0 prevents compressing; max-w-[150px] gives them plenty of room before truncating
+                className="px-1.5 py-0.5 rounded-md bg-gray-400/37 dark:bg-gray-600/40 text-[11px] font-medium text-lc-muted-foreground-hover truncate max-w-30 min-w-0 shrink-0"
+              >
+                {tag}
+              </span>
+            ))}
           </div>
-          <ItemDescription className="text-xs text-muted-foreground whitespace-nowrap">
-            {formattedDate}
-          </ItemDescription>
-        </ItemContent>
-      </Button>
+        )}
+      </div>
     </Item>
   );
 }
@@ -262,18 +303,7 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
           overscan={200}
           itemContent={(_, entry) => (
             <div className="px-1.25 py-1.5">
-              <EntryItem
-                entry={entry}
-                onNavigate={(id) => {
-                  // Save scroll position as a plain number before navigating away
-                  const adjustedScrollTop = window.scrollY - 229;
-                  sessionStorage.setItem(
-                    "entryListScrollTop",
-                    adjustedScrollTop.toString(),
-                  );
-                  navigate(`/library/entries/${id}`, { viewTransition: true });
-                }}
-              />
+              <EntryItem entry={entry} />
             </div>
           )}
         />
