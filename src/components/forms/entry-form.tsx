@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
+  InputGroupInput,
   InputGroupText,
   InputGroupTextarea,
 } from "@/components/ui/input-group";
@@ -46,7 +47,7 @@ const formSchema = z.object({
     .max(1000, "Description is too long.")
     .optional()
     .or(z.literal("")),
-  tags: z.string().max(550, "Tags input is too long."), // we will split and validate individual tags later
+  tags: z.string().max(550, "Tags input is too long."), // TODO: Improve validation, we will split and validate individual tags later also filter out duplicates
   faviconUrl: z
     .url("Must be a valid URL")
     .max(1000, "Favicon URL is too long.")
@@ -339,7 +340,7 @@ export function EntryForm({
                       }}
                     />
                   </div>
-                  <ComboboxContent className="z-50 w-[--radix-popover-trigger-width]">
+                  <ComboboxContent className="z-50 scrollbar-bg-transparent w-[--radix-popover-trigger-width]">
                     <ComboboxEmpty>Type to create a new topic.</ComboboxEmpty>
                     <ComboboxList>
                       {(topic) => (
@@ -379,13 +380,49 @@ export function EntryForm({
           >
             Title
           </Label>
-          <Input
+          {/* <Input
             id="title"
             placeholder="Entry Title"
             aria-invalid={!!errors.title}
             {...register("title")}
             className="text-base! py-2"
-          />
+          /> */}
+          <InputGroup>
+            <InputGroupInput
+              id="title"
+              placeholder="Entry Title"
+              aria-invalid={!!errors.title}
+              {...register("title")}
+              className="text-base! py-2"
+            />
+            <InputGroupAddon align="inline-end" className="pr-2 py-0.5">
+              <Controller
+                control={control}
+                name="isFavorite"
+                render={({ field }) => (
+                  <Toggle
+                    type="button"
+                    variant="default"
+                    size="sm"
+                    pressed={field.value}
+                    onPressedChange={field.onChange}
+                    title="Mark as Favorite"
+                    className={cn(
+                      "p-0 size-6.5 min-w-6.5 rounded-[3px] transition-colors not-focus-visible:ring-0! bg-transparent! hover:bg-transparent active:bg-transparent",
+                    )}
+                  >
+                    <StarIcon
+                      fill={field.value ? "currentColor" : "none"}
+                      className={cn(
+                        "size-4",
+                        field.value && "text-yellow-500 fill-yellow-500",
+                      )}
+                    />
+                  </Toggle>
+                )}
+              />
+            </InputGroupAddon>
+          </InputGroup>
           {errors.title && (
             <FieldError className="text-center" errors={[errors.title]} />
           )}
@@ -533,10 +570,10 @@ export function EntryForm({
                     className="rounded-md"
                     src={watch("faviconUrl") || undefined}
                     alt="Favicon"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cmVjdCB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9IiNlZWVlZWUiIHJ4PSIyIiByeT0iMiIvPjwvc3ZnPg==";
-                    }}
+                    // onError={(e) => {
+                    //   (e.target as HTMLImageElement).src =
+                    //     "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cmVjdCB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9IiNlZWVlZWUiIHJ4PSIyIiByeT0iMiIvPjwvc3ZnPg==";
+                    // }}
                   />
                   <Avatar.Fallback delayMs={500}>
                     <div className="bg-gray-200 dark:bg-gray-800 size-8.5 rounded-md"></div>
@@ -558,47 +595,24 @@ export function EntryForm({
             </Field>
 
             <Field className="mb-2">
-              <div className="flex items-center justify-center gap-2 pt-2">
+              <div
+                title={isSupported ? "" : "Unsupported Page"}
+                className={cn(
+                  "flex items-center justify-center gap-2 pt-2",
+                  !isSupported && "cursor-not-allowed",
+                )}
+              >
                 <Button
                   type="button"
                   variant="outline"
-                  size="icon-sm"
+                  size="sm"
                   title="Fetch current tab's metadata"
                   onClick={handleFetchMetadata}
-                  className="shrink-0 text-muted-foreground disabled:cursor-not-allowed"
+                  className="shrink-0 text-muted-foreground"
                   disabled={!isSupported}
                 >
-                  <RefreshCw className="size-4" />
+                  <RefreshCw className="size-4" /> Refresh Metadata
                 </Button>
-                <Controller
-                  control={control}
-                  name="isFavorite"
-                  render={({ field }) => (
-                    <Toggle
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      pressed={field.value}
-                      onPressedChange={field.onChange}
-                      title="Mark as Favorite"
-                      className={cn(
-                        "transition-colors",
-                        field.value
-                          ? "bg-lc-muted-foreground-hover text-primary"
-                          : "text-muted-foreground",
-                      )}
-                    >
-                      <StarIcon
-                        fill={field.value ? "currentColor" : "none"}
-                        className={cn(
-                          "size-4",
-                          field.value && "text-yellow-500 fill-yellow-500",
-                        )}
-                      />
-                      Favorite
-                    </Toggle>
-                  )}
-                />
               </div>
             </Field>
           </CollapsibleContent>

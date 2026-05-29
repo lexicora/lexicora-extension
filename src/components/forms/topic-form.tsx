@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
   InputGroupText,
   InputGroupTextarea,
 } from "@/components/ui/input-group";
@@ -40,7 +42,7 @@ const createFormSchema = (currentTopicId?: string) =>
         }
         return true;
       }, "A topic with this name already exists."),
-    tags: z.string().max(550, "Tags input is too long."), // we will split and validate individual tags later
+    tags: z.string().max(550, "Tags input is too long."), // TODO: Improve validation, we will split and validate individual tags later also filter out duplicates
     description: z
       .string()
       .trim()
@@ -124,44 +126,43 @@ export function TopicForm({
           >
             Name
           </Label>
-          <div className="flex items-center gap-2">
-            <Input
+          <InputGroup>
+            <InputGroupInput
               id="name"
               placeholder="Topic Name"
+              autoComplete="off"
               aria-invalid={!!errors.name}
               {...register("name")}
-              className="flex-1 text-base!"
+              className="text-base!"
             />
-            <Controller
-              control={control}
-              name="isFavorite"
-              render={({ field }) => (
-                <Toggle
-                  type="button"
-                  variant="outline"
-                  size="default"
-                  pressed={field.value}
-                  onPressedChange={field.onChange}
-                  title="Mark as Favorite"
-                  className={cn(
-                    "shrink-0",
-                    "transition-colors",
-                    field.value
-                      ? "bg-lc-muted-foreground-hover text-primary"
-                      : "dark:bg-input/30 text-muted-foreground",
-                  )}
-                >
-                  <StarIcon
-                    fill={field.value ? "currentColor" : "none"}
+            <InputGroupAddon align="inline-end" className="pr-2 py-0.5">
+              <Controller
+                control={control}
+                name="isFavorite"
+                render={({ field }) => (
+                  <Toggle
+                    type="button"
+                    variant="default"
+                    size="sm"
+                    pressed={field.value}
+                    onPressedChange={field.onChange}
+                    title="Mark as Favorite"
                     className={cn(
-                      "size-4",
-                      field.value && "text-yellow-500 fill-yellow-500",
+                      "p-0 size-6.5 min-w-6.5 rounded-[3px] transition-colors not-focus-visible:ring-0! bg-transparent! hover:bg-transparent active:bg-transparent",
                     )}
-                  />
-                </Toggle>
-              )}
-            />
-          </div>
+                  >
+                    <StarIcon
+                      fill={field.value ? "currentColor" : "none"}
+                      className={cn(
+                        "size-4",
+                        field.value && "text-yellow-500 fill-yellow-500",
+                      )}
+                    />
+                  </Toggle>
+                )}
+              />
+            </InputGroupAddon>
+          </InputGroup>
           {errors.name && (
             <FieldError className="text-center" errors={[errors.name]} />
           )}

@@ -3,55 +3,59 @@
 /*Classes for Lexicora logos in light and dark mode*/
 .lc-display-light, /*has implicit .light class*/
 .dark .lc-display-dark {
-    display: block;
+  display: block;
 }
 
 .lc-display-dark, /*has implicit .light class*/
 .dark .lc-display-light {
-    display: none;
+  display: none;
 }
 
+/* Can be removed, tailwind now supports this natively*/
 .scrollbar-thin {
-    scrollbar-width: thin;
-    /*scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);*/
+  scrollbar-width: thin;
+  /*scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);*/
 }
 
 /*Has default specified scrollbar foreground colors*/
 .scrollbar-bg-transparent {
-    scrollbar-color: #b2b2b2 transparent; /*was: light-dark(#b2b2b2, #646464)*/
+  scrollbar-color: #b2b2b2 transparent; /*was: light-dark(#b2b2b2, #646464)*/
 }
 
 .dark .scrollbar-bg-transparent {
-    scrollbar-color: #535961 transparent; /*was: light-dark(#b2b2b2, #646464)*/
+  scrollbar-color: #535961 transparent; /*was: light-dark(#b2b2b2, #646464)*/
 }
 
 /* Manual Override: Completely Disable Transitions */
 /* Add this class to the element (or a parent) to kill all animation */
 .lc-no-transitions,
 .lc-no-transitions * {
-    transition: none !important;
-    animation: none !important;
+  transition: none !important;
+  animation: none !important;
 }
 
 .btn-green-ring {
-    @apply text-lc-light-foreground bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800
+  @apply text-lc-light-foreground bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800
     ring-1 ring-inset ring-black/25 dark:ring-white/30 hover:ring-black/30 dark:hover:ring-white/25;
 }
 
 .transition-transform-opacity-blur {
-    will-change: transform, translate, opacity, filter;
-    transition-property: transform, translate, opacity, filter;
-    transition-timing-function: var(
-        --tw-ease,
-        var(--default-transition-timing-function)
-            /* cubic-bezier(0.4, 0, 0.2, 1) */
-    );
-    transition-duration: var(
-        --tw-duration,
-        var(--default-transition-duration) /* 150ms */
-    );
+  will-change: transform, translate, opacity, filter;
+  transition-property: transform, translate, opacity, filter;
+  transition-timing-function: var(
+    --tw-ease,
+    var(--default-transition-timing-function) /* cubic-bezier(0.4, 0, 0.2, 1) */
+  );
+  transition-duration: var(
+    --tw-duration,
+    var(--default-transition-duration) /* 150ms */
+  );
 }
 
 .will-change-opacity {
-    will-change: opacity;
+  will-change: opacity;
+}
+
+.button-default {
+  @apply focus-visible:border-ring focus-visible:ring-ring/50 border border-transparent bg-clip-padding focus-visible:ring-[3px] whitespace-nowrap transition-all outline-none select-none;
 }

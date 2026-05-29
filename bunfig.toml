@@ -1,0 +1,6 @@
+# [install]
+# ignoreScripts = true 
+
+[install]
+# 24 hours = 86,400 seconds
+minimumReleaseAge = 86400

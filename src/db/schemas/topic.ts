@@ -18,6 +18,7 @@ const topicSchemaLiteral = {
       items: { type: 'string', maxLength: 50 }
     },
     isFavorite: { type: 'boolean' },
+    //isPinned: { type: 'boolean' },
     createdAt: { type: 'string', format: 'date-time' },
     updatedAt: { type: 'string', format: 'date-time' }
   },

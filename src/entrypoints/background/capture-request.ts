@@ -18,12 +18,12 @@ export async function handleCaptureRequest(
   tabData: TabData,
 ) {
   if (senderContext === "popup") {
-    setPendingNavigation("/entries/new");
+    setPendingNavigation("/library/entries/new");
 
     // Push logic if side panel is already open
     const clearPendingNavigation = await sendMessage(
       MSG.NAVIGATE_IN_SIDEPANEL,
-      { path: "/entries/new" },
+      { path: "/library/entries/new" },
       "side-panel@" + tabData.windowId,
     ).catch(() => false);
     // Will fail silently if side-panel is not open yet, which is expected

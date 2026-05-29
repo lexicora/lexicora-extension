@@ -11,7 +11,7 @@ const entrySchemaLiteral = {
     id: uuidSchema,
     userId: uuidWithNilDefault,
     topicId: uuidSchema,
-    title: { type: 'string', maxLength: 255 },
+    title: { type: 'string', maxLength: 255 }, //? Maybe rename from title to name.
     description: { type: 'string', maxLength: 1000 },
     tags: {
       type: 'array',
@@ -19,6 +19,7 @@ const entrySchemaLiteral = {
       items: { type: 'string', maxLength: 50 }
     },
     isFavorite: { type: 'boolean' },
+    //isPinned: { type: 'boolean' },
     languageCode: { type: 'string', maxLength: 10 },
     url: { type: 'string', maxLength: 2048 },
     hostnameUrl: { type: 'string', maxLength: 600 }, // the origin Url without path, query, or fragment (hidden from user input derived from url)

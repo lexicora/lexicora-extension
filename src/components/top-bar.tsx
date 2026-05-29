@@ -8,12 +8,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { SquareArrowOutUpRightIcon, UserIcon } from "lucide-react";
+import {
+  ArrowUpRightIcon,
+  ExternalLinkIcon,
+  SquareArrowOutUpRightIcon,
+  UserIcon,
+} from "lucide-react";
 
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
 
 import { useScrollPos } from "@/providers/scroll-observer";
+import { Arrow } from "@radix-ui/react-dropdown-menu";
 
 export function TopBar() {
   const { isAtTop } = useScrollPos();
@@ -47,7 +53,8 @@ export function TopBar() {
               <div className="ml-0.5 size-8 rounded-md flex items-center">
                 <div className="flex items-center justify-center size-full rounded-full bg-secondary/80 ring ring-inset ring-black/20 dark:ring-white/20">
                   <UserIcon className="size-4.5" />
-                  {/* TODO: If logged in, show user's avatar or initials */}
+                  {/* TODO: If logged in, show user's avatar or initials and also change the hue of the background to a color (user varying and users can choose)*/}
+                  {/* Maybe also just generate an image with an image generator */}
                 </div>
               </div>
             </DropdownMenuTrigger>
@@ -87,7 +94,8 @@ export function TopBar() {
           />
         </div>
         <div className="flex justify-end flex-1">
-          <Button
+          {/* Disable for now */}
+          {/* <Button
             variant="ghost"
             size="icon"
             onClick={openExtensionWindow}
@@ -95,13 +103,15 @@ export function TopBar() {
             //title="Visit Lexicora.com"
           >
             <SquareArrowOutUpRightIcon className="size-4.5" />
-            {/* <a
+          </Button> */}
+          <Button variant="ghost" size="icon">
+            <a
               href="https://lexicora.com"
               title="Visit Lexicora.com"
               target="_blank"
             >
-              <SquareArrowOutUpRightIcon className="size-4.5" />
-            </a> */}
+              <ExternalLinkIcon className="size-4.5" />
+            </a>
           </Button>
         </div>
       </div>

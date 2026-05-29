@@ -21,7 +21,7 @@ import { NavLink, useLocation, matchPath } from "react-router-dom";
 import { useScrollPos } from "@/providers/scroll-observer";
 
 export function BottomNavigation() {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const { isAtBottom } = useScrollPos();
 
   const hiddenPatterns = [
@@ -86,9 +86,16 @@ export function BottomNavigation() {
           </NavLink>
         </div>
         <div className="flex-1 mx-3 flex items-center justify-center h-full">
-          {/* Entries */}
+          {/* Library */}
           <NavLink
-            to="/library"
+            to={pathname === "/library" ? `/library${search}` : "/library"}
+            onClick={(e) => {
+              // If we're already on the library page, prevent navigation and just scroll to top
+              if (pathname === "/library") {
+                e.preventDefault();
+                window.scrollTo({ top: 0 });
+              }
+            }}
             title={pathname.startsWith("/library") ? "" : "Library"}
             draggable={false}
             viewTransition={pathname === "/library" ? false : true}
