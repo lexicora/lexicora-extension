@@ -156,12 +156,12 @@ function LibraryPage() {
           </div>
         </PageHeader>
         <TabsContent value="entries">
-          <main className="mb-2.5">
+          <main className="mb-0">
             <EntryList search={deferredSearch} onlyFavorites={showFavorites} />
           </main>
         </TabsContent>
         <TabsContent value="topics">
-          <main className="mb-2.5">
+          <main className="mb-0">
             <TopicList search={deferredSearch} onlyFavorites={showFavorites} />
           </main>
         </TabsContent>
