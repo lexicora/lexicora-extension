@@ -1,5 +1,5 @@
 Lexicora Extension License
-Version 1.1 — 2026
+Version 1.2 — 2026
 
 Copyright (c) 2025-2026 Lexicora / Timothy (@tgmaurer). All rights reserved.
 
@@ -15,7 +15,7 @@ Email: tgmaurer@icloud.com
 Any redistribution or modification of this software must include clear and visible attribution to Lexicora. At minimum, the following notice must remain in all copies or substantial portions of the software:
 
 This software is based on the Lexicora Extension.
-Copyright (c) 2025-2026 Lexicora / Timothy (@tgmaurer).
+Copyright (c) 2025-2026 Lexicora / Timothy (@tgmaurer). All rights reserved.
 Used under the Lexicora Extension License.
 
 3. Share-Alike
