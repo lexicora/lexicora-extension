@@ -1,9 +1,13 @@
 import { defineConfig, UserManifest } from "wxt";
+import tailwindcss from "@tailwindcss/vite";
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   srcDir: "src",
+  vite: () => ({
+    plugins: [tailwindcss()],
+  }),
   // vite: () => ({
   //   plugins: [
   //     {
@@ -22,7 +26,6 @@ export default defineConfig({
   //     dedupe: ["react", "react-dom"],
   //   },
   // }),
-  //vite
   manifest: ({ browser, manifestVersion, mode, command }) => {
     const manifestBase: UserManifest = {
       name: "Lexicora Extension",
