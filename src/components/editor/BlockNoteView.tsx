@@ -38,7 +38,6 @@ import "./styles.css";
 import { useTheme } from "@/providers/theme-provider";
 //import { getCustomSlashMenuItems } from "./config";
 
-//! NOTE: Potential temporary regression with the shadcn integration. color preview is not shown in the color picker dropdowns.
 export function BlockNoteView({
   editor,
   className,
