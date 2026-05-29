@@ -57,17 +57,26 @@ function TopicItem({ topic }: TopicItemProps) {
   };
 
   return (
-    <Item key={topic.id} variant="default" asChild>
+    <Item
+      key={topic.id}
+      variant="default"
+      className={cn(
+        "button-default cursor-pointer", // add classes manually
+        "h-full /*min-h-26.25*/ flex-col items-start pt-2.75 pb-2.75 px-3.25 rounded-2xl",
+        topic.tags.length === 0 && "pb-2.5!",
+        "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
+      )}
+      asChild
+    >
       <div
         role="button"
         tabIndex={0}
-        className={cn(
-          buttonVariants({ variant: "ghost" }), // add classes manually
-          "cursor-pointer",
-          "h-full /*min-h-26.25*/ flex-col items-start! pt-2.75! pb-2.75! px-3.25! rounded-2xl!",
-          topic.tags.length === 0 && "pb-2.5!",
-          "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
-        )}
+        // className={cn(
+        //   "button-default cursor-pointer", // add classes manually
+        //   "h-full /*min-h-26.25*/ flex-col items-start pt-2.75 pb-2.75 px-3.25 rounded-2xl",
+        //   topic.tags.length === 0 && "pb-2.5!",
+        //   "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
+        // )}
         onClick={handleNavigate}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") handleNavigate(e);

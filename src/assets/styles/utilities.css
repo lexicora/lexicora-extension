@@ -56,7 +56,6 @@
   will-change: opacity;
 }
 
-:focus-visible.button-focus-visible-default {
-  /*TODO: Add focus-visible styles from base shadcn-ui button.*/
-  /*NOTE: Used in TopicItem or EntryItem */
+.button-default {
+  @apply focus-visible:border-ring focus-visible:ring-ring/50 border border-transparent bg-clip-padding focus-visible:ring-[3px] whitespace-nowrap transition-all outline-none select-none;
 }
