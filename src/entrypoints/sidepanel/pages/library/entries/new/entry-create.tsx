@@ -87,6 +87,8 @@ function EntryCreatePage() {
           id: newTopicId,
           name: finalTopicId,
           //description: "",
+          //tags: [], // maybe add the tags that were added to the entry.
+          //isFavorite: false, // maybe add the isFavorite that was added to the entry.
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         });

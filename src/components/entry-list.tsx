@@ -16,13 +16,14 @@ import { FilesIcon, MinusIcon, StarIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useNavigationType } from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
+import { Avatar } from "radix-ui";
 
 interface EntryItemProps {
   entry: EntryDocType;
   // potentially more fields, like author, tags, etc.
 }
 
-// TODO: Potentially show more properties for each Entry and make an entry item potentially taller.
+// TODO: Potentially show more properties for each Entry.
 function EntryItem({ entry }: EntryItemProps) {
   const navigate = useNavigate();
   const formattedDate = formatDate(entry.updatedAt);
@@ -64,7 +65,10 @@ function EntryItem({ entry }: EntryItemProps) {
       className={cn(
         "button-default cursor-pointer",
         "h-full /*min-h-26.25*/ flex-col items-start py-2.75 px-3.25 rounded-2xl",
-        entry.tags.length === 0 && "pb-2.5",
+        !entry.tags?.length &&
+          !entry.hostnameUrl &&
+          !entry.siteName &&
+          "pb-2.5",
         "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
       )}
       asChild
@@ -80,21 +84,27 @@ function EntryItem({ entry }: EntryItemProps) {
         <div className="flex w-full justify-between items-start gap-4">
           <ItemContent
             className={cn(
-              "flex-3 flex-col justify-between items-start gap-2",
-              entry.tags.length === 0 && "gap-2.25",
+              "flex-3 flex-col justify-between items-start gap-2 max-w-[calc(100%-100px)]",
+              !entry.tags?.length &&
+                !entry.hostnameUrl &&
+                !entry.siteName &&
+                "gap-2.25",
             )}
           >
-            <ItemTitle className="line-clamp-1 truncate max-w-[calc(100vw-178px)]">
+            <ItemTitle className="line-clamp-1 truncate max-w-full">
               {entry.title}
             </ItemTitle>
-            <ItemDescription className="line-clamp-2 truncate max-w-[min(calc(100vw-178px),550px)]">
+            <ItemDescription className="line-clamp-2 mt-px truncate max-w-[min(100%,550px)]">
               {entry.description || <MinusIcon className="inline size-2.5" />}
             </ItemDescription>
           </ItemContent>
           <ItemContent
             className={cn(
               "flex-1 flex-col justify-between items-end gap-3.25 mt-0.5",
-              entry.tags.length === 0 && "gap-3.75 /*mt-0.5*/",
+              !entry.tags?.length &&
+                !entry.hostnameUrl &&
+                !entry.siteName &&
+                "gap-3.75",
             )}
           >
             <div
@@ -123,16 +133,54 @@ function EntryItem({ entry }: EntryItemProps) {
             </ItemDescription>
           </ItemContent>
         </div>
-        {entry.tags && entry.tags.length > 0 && (
+        {((entry.tags && entry.tags.length > 0) ||
+          entry.hostnameUrl ||
+          entry.siteName) && (
           <div className="flex flex-wrap items-center gap-1.5 w-[90%] mt-0 h-5.5 overflow-hidden content-start">
-            {entry.tags.map((tag, index) => (
-              <span
-                key={entry.id + "-tag-" + index}
-                className="px-1.5 py-0.5 rounded-md bg-gray-400/37 dark:bg-gray-600/40 text-[11px] font-medium text-lc-muted-foreground-hover truncate max-w-30 min-w-0 shrink-0"
-              >
-                {tag}
-              </span>
-            ))}
+            {(entry.hostnameUrl || entry.siteName) && (
+              <div className="flex items-center gap-1.5 text-[12px] font-medium text-muted-foreground/90 shrink-0 max-w-32">
+                {entry.faviconUrl && (
+                  <>
+                    <Avatar.Root className="size-4.25 rounded-sm opacity-90 shrink-0 ml-0.75">
+                      <Avatar.Image
+                        className="rounded-sm"
+                        src={entry.faviconUrl}
+                        alt="Favicon"
+                        // onError={(e) => {
+                        //   (e.target as HTMLImageElement).src =
+                        //     "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cmVjdCB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9IiNlZWVlZWUiIHJ4PSIyIiByeT0iMiIvPjwvc3ZnPg==";
+                        // }}
+                      />
+                      <Avatar.Fallback delayMs={50}>
+                        <div className="bg-gray-400/35 dark:bg-gray-700/50 size-4.25 rounded-sm"></div>
+                      </Avatar.Fallback>
+                    </Avatar.Root>
+                  </>
+                )}
+                <span className="truncate">
+                  {entry.siteName || entry.hostnameUrl}
+                </span>
+              </div>
+            )}
+
+            {(entry.hostnameUrl || entry.siteName) &&
+              entry.tags &&
+              entry.tags.length > 0 && (
+                <span className="text-muted-foreground/40 text-xs shrink-0">
+                  •
+                </span>
+              )}
+
+            {entry.tags &&
+              entry.tags.length > 0 &&
+              entry.tags.map((tag, index) => (
+                <span
+                  key={entry.id + "-tag-" + index}
+                  className="px-1.5 py-0.5 rounded-md bg-gray-400/37 dark:bg-gray-600/40 text-[11px] font-medium text-lc-muted-foreground-hover truncate max-w-30 min-w-0 shrink-0"
+                >
+                  {tag}
+                </span>
+              ))}
           </div>
         )}
       </div>
@@ -239,7 +287,7 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
     <>
       <div className="flex items-center gap-2.5 w-full px-2 pb-0.5">
         <Separator className="flex-1" />
-        <span className="text-xs text-muted-foreground font-medium /uppercase tracking-widest">
+        <span className="text-xs text-muted-foreground font-medium tracking-widest">
           <FilesIcon className="size-3.5 inline -mt-0.5" /> {entries.length}
           {/* {entries.length === 1 ? " item" : " items"} */}
         </span>

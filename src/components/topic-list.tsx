@@ -63,7 +63,7 @@ function TopicItem({ topic }: TopicItemProps) {
       className={cn(
         "button-default cursor-pointer",
         "h-full /*min-h-26.25*/ flex-col items-start py-2.75 px-3.25 rounded-2xl",
-        topic.tags.length === 0 && "pb-2.5",
+        topic.tags?.length === 0 && "pb-2.5",
         "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
       )}
       asChild
@@ -76,24 +76,24 @@ function TopicItem({ topic }: TopicItemProps) {
           if (e.key === "Enter" || e.key === " ") handleNavigate(e);
         }}
       >
-        <div className="flex w-full justify-between items-start gap-4">
+        <div className="flex w-full justify-between items-start gap-3.5">
           <ItemContent
             className={cn(
-              "flex-3 flex-col justify-between items-start gap-2",
-              topic.tags.length === 0 && "gap-2.25",
+              "flex-3 flex-col justify-between items-start gap-2 max-w-[calc(100%-100px)]",
+              topic.tags?.length === 0 && "gap-2.25",
             )}
           >
-            <ItemTitle className="line-clamp-1 truncate max-w-[calc(100vw-178px)]">
+            <ItemTitle className="line-clamp-1 truncate max-w-full">
               {topic.name}
             </ItemTitle>
-            <ItemDescription className="line-clamp-2 truncate max-w-[min(calc(100vw-178px),550px)]">
+            <ItemDescription className="line-clamp-2 mt-px truncate max-w-[min(100%,550px)]">
               {topic.description || <MinusIcon className="inline size-2.5" />}
             </ItemDescription>
           </ItemContent>
           <ItemContent
             className={cn(
               "flex-1 flex-col justify-between items-end gap-3.25 mt-0.5",
-              topic.tags.length === 0 && "gap-3.75 /*mt-0.5*/",
+              topic.tags?.length === 0 && "gap-3.75",
             )}
           >
             <div

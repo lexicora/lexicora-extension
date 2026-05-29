@@ -93,7 +93,7 @@ function LibraryPage() {
   };
 
   return (
-    <PageContainer>
+    <PageContainer className="pb-2.25!">
       {/*<header className="mb-4 mt-1">
           <h1 className="text-2xl font-semibold">Entries</h1>
         </header>*/}
