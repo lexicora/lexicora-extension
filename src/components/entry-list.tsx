@@ -1,4 +1,4 @@
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Item,
   ItemContent,
@@ -6,17 +6,16 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { Separator } from "@/components/ui/separator";
-import { Toggle } from "@/components/ui/toggle";
 
-import { getDb } from "@/db";
 import { EntryDocType } from "@/db/schemas/entry";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
 import { FilesIcon, MinusIcon, StarIcon } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Avatar } from "radix-ui";
+import { useEffect, useMemo, useRef } from "react";
 import { useNavigate, useNavigationType } from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
-import { Avatar } from "radix-ui";
+import { useRxCollection } from "rxdb/plugins/react";
 
 interface EntryItemProps {
   entry: EntryDocType;
@@ -27,15 +26,15 @@ interface EntryItemProps {
 function EntryItem({ entry }: EntryItemProps) {
   const navigate = useNavigate();
   const formattedDate = formatDate(entry.updatedAt);
+  const collection = useRxCollection("entries");
 
   const handleFavoriteToggle = async (
     e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    const db = await getDb();
-    if (db) {
-      const doc = await db.collections.entries
+    if (collection) {
+      const doc = await collection
         .findOne({ selector: { id: entry.id } })
         .exec();
       if (doc) {
@@ -198,6 +197,7 @@ interface EntryListProps {
 export function EntryList({ search, onlyFavorites }: EntryListProps) {
   const [entries, setEntries] = useState<EntryDocType[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const collection = useRxCollection("entries");
   const navigationType = useNavigationType();
   const navigate = useNavigate();
   const isFirstRender = useRef(true);
@@ -225,39 +225,35 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
   }, [search, onlyFavorites]);
 
   useEffect(() => {
-    let sub: any;
+    if (!collection) return;
 
-    const fetchEntries = async () => {
-      const db = await getDb();
-      if (!db) return;
+    const selector: any = {};
+    if (onlyFavorites) {
+      selector.isFavorite = true;
+    }
 
-      const selector: any = {};
-      if (onlyFavorites) {
-        selector.isFavorite = true;
+    if (search.trim()) {
+      try {
+        // Escape special characters so they are treated as literals
+        const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+        // Test the regex string before using it
+        new RegExp(escapedSearch, "i");
+
+        // RxDB requires the regex operator to be a string
+        selector.title = { $regex: escapedSearch, $options: "i" };
+        //? Maybe add description too, though preferably only indexed fields.
+      } catch (error) {
+        console.error("Failed to compile search regex:", error);
       }
+    }
 
-      if (search.trim()) {
-        try {
-          // Escape special characters so they are treated as literals
-          const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-          // Test the regex string before using it
-          new RegExp(escapedSearch, "i");
-
-          // RxDB requires the regex operator to be a string
-          selector.title = { $regex: escapedSearch, $options: "i" };
-          //? Maybe add description too, though preferably only indexed fields.
-        } catch (error) {
-          console.error("Failed to compile search regex:", error);
-        }
-      }
-
-      const query = db.collections.entries.find({
+    const sub = collection
+      .find({
         selector,
         sort: [{ updatedAt: "desc" }], // TODO: Make sorting dynamic based on user selection (e.g. sort by createdAt, name, etc.). passed down from library page.
-      });
-
-      sub = query.$.subscribe({
+      })
+      .$.subscribe({
         next: (results) => {
           // if (import.meta.env.DEV) {
           //   console.log(`[EntryList] ${results.length} entries loaded`);
@@ -271,16 +267,9 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
           setIsDataLoaded(true);
         },
       });
-    };
 
-    fetchEntries();
-
-    return () => {
-      if (sub) {
-        sub.unsubscribe();
-      }
-    };
-  }, [search, onlyFavorites]);
+    return () => sub.unsubscribe();
+  }, [collection, search, onlyFavorites]);
 
   // TODO: For wider screens or the windowed app, maybe add a two column layout.
   return (

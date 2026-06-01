@@ -1,4 +1,4 @@
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Item,
   ItemContent,
@@ -6,9 +6,7 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { Separator } from "@/components/ui/separator";
-import { Toggle } from "@/components/ui/toggle";
 
-import { getDb } from "@/db";
 import { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
@@ -16,6 +14,7 @@ import { FoldersIcon, MinusIcon, StarIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useNavigationType } from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
+import { useRxCollection } from "rxdb/plugins/react";
 
 interface TopicItemProps {
   topic: TopicDocType;
@@ -25,15 +24,15 @@ interface TopicItemProps {
 function TopicItem({ topic }: TopicItemProps) {
   const navigate = useNavigate();
   const formattedDate = formatDate(topic.updatedAt);
+  const collection = useRxCollection("topics");
 
   const handleFavoriteToggle = async (
     e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    const db = await getDb();
-    if (db) {
-      const doc = await db.collections.topics
+    if (collection) {
+      const doc = await collection
         .findOne({ selector: { id: topic.id } })
         .exec();
       if (doc) {
@@ -149,6 +148,7 @@ interface TopicListProps {
 export function TopicList({ search, onlyFavorites }: TopicListProps) {
   const [topics, setTopics] = useState<TopicDocType[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const collection = useRxCollection("topics");
   const navigationType = useNavigationType();
   const navigate = useNavigate();
   const isFirstRender = useRef(true);
@@ -176,46 +176,38 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
   }, [search, onlyFavorites]);
 
   useEffect(() => {
-    let sub: any;
+    if (!collection) return;
 
-    const fetchTopics = async () => {
-      const db = await getDb();
-      if (!db) return;
+    const selector: any = {};
+    if (onlyFavorites) {
+      selector.isFavorite = true;
+    }
 
-      const selector: any = {};
-      if (onlyFavorites) {
-        selector.isFavorite = true;
+    if (search.trim()) {
+      try {
+        // Escape special characters so they are treated as literals
+        const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+        // Test the regex string before using it
+        new RegExp(escapedSearch, "i");
+
+        // RxDB requires the regex operator to be a string
+        const searchRegex = { $regex: escapedSearch, $options: "i" };
+        selector.$or = [{ name: searchRegex }, { tags: searchRegex }];
+        // TODO: Potentially add tags to the search.
+        //? Maybe add description too, though preferably only indexed fields.
+      } catch (error) {
+        console.error("Failed to compile search regex:", error);
       }
+    }
 
-      if (search.trim()) {
-        try {
-          // Escape special characters so they are treated as literals
-          const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-          // Test the regex string before using it
-          new RegExp(escapedSearch, "i");
-
-          // RxDB requires the regex operator to be a string
-          //selector.name = { $regex: escapedSearch, $options: "i" };
-          const searchRegex = { $regex: escapedSearch, $options: "i" };
-          selector.$or = [{ name: searchRegex }, { tags: searchRegex }];
-          // TODO: Potentially add tags to the search.
-          //? Maybe add description too, though preferably only indexed fields.
-        } catch (error) {
-          console.error("Failed to compile search regex:", error);
-        }
-      }
-
-      const query = db.collections.topics.find({
+    const sub = collection
+      .find({
         selector,
         sort: [{ updatedAt: "desc" }], // TODO: Make sorting dynamic based on user selection (e.g. sort by createdAt, name, etc.). passed down from library page.
-      });
-
-      sub = query.$.subscribe({
+      })
+      .$.subscribe({
         next: (results) => {
-          // if (import.meta.env.DEV) {
-          //   console.log(`[EntryList] ${results.length} entries loaded`);
-          // }
           setTopics(results as TopicDocType[]);
           setIsDataLoaded(true);
         },
@@ -225,16 +217,9 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
           setIsDataLoaded(true);
         },
       });
-    };
 
-    fetchTopics();
-
-    return () => {
-      if (sub) {
-        sub.unsubscribe();
-      }
-    };
-  }, [search, onlyFavorites]);
+    return () => sub.unsubscribe();
+  }, [collection, search, onlyFavorites]);
 
   return (
     <>
