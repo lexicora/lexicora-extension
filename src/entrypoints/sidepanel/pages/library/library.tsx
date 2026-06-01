@@ -1,7 +1,7 @@
+import { EntryList } from "@/components/entry-list";
+import { TopicList } from "@/components/topic-list";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toggle } from "@/components/ui/toggle";
 import {
@@ -12,28 +12,26 @@ import {
   StarIcon,
   XIcon,
 } from "lucide-react";
-import { useState, useDeferredValue, useEffect } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { TopicList } from "@/components/topic-list";
-import { EntryList } from "@/components/entry-list";
+import { useDeferredValue, useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import {
-  DropdownMenuTrigger,
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuGroup,
+  DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { cn } from "@/lib/utils";
 
 // TODO: Potentially make searching faster, when entering a search query, because on every character, a navigation takes place.
 // TODO: Also ensure, that when on a tab, the other tabs should not be rendered and in a way put to sleep, so they don't do unnecessary processing.
@@ -94,9 +92,6 @@ function LibraryPage() {
 
   return (
     <PageContainer className="pb-2.25!">
-      {/*<header className="mb-4 mt-1">
-          <h1 className="text-2xl font-semibold">Entries</h1>
-        </header>*/}
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <PageHeader title="Library" classNameHeaderElement="mb-0">
           <div className="mt-3 mx-1.5">
@@ -146,7 +141,7 @@ function LibraryPage() {
                 <TabsList className="h-8! py-[0.16rem]">
                   <TabsTrigger value="entries">Entries</TabsTrigger>
                   <TabsTrigger value="topics">Topics</TabsTrigger>
-                  <TabsTrigger value="sites">Sites</TabsTrigger>
+                  {/* <TabsTrigger value="sites">Sites</TabsTrigger> */}
                 </TabsList>
               </div>
               {/* TODO: Implement a filter menu here, to filter by different stuff and also implement toggle to sort by updated or created, 
@@ -165,12 +160,11 @@ function LibraryPage() {
             <TopicList search={deferredSearch} onlyFavorites={showFavorites} />
           </main>
         </TabsContent>
-        <TabsContent value="sites">
+        {/* <TabsContent value="sites">
           <main>
-            {/* Sites list would go here (potentially make a component for this tab)*/}
             <p>Sites</p>
           </main>
-        </TabsContent>
+        </TabsContent> */}
         <footer></footer>
       </Tabs>
       <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] /*WAS:pr-[calc(var(--lc-scrollbar-offset)+7px)]*/ z-20 pointer-events-none">
