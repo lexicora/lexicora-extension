@@ -1,5 +1,6 @@
 import { createRxDatabase, addRxPlugin } from "rxdb";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
+//import { RxDBQueryBuilderPlugin } from "rxdb/plugins/query-builder";
 import { disableWarnings, RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
 
 // Schemas

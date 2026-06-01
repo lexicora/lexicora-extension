@@ -15,12 +15,11 @@ import { cn } from "@/lib/utils";
 import { useScrollPos } from "@/providers/scroll-observer";
 import { useCreateBlockNote } from "@blocknote/react";
 
+import { useRxCollection, useRxDatabase } from "rxdb/plugins/react";
 import { EntryForm, type EntryFormData } from "@/components/forms/entry-form";
-import { getDb } from "@/db";
 import { type TopicDocType } from "@/db/schemas/topic";
 import { convertBlockNoteBlocks } from "@/lib/utils/block-converter";
 import { uuidv7 } from "uuidv7";
-import { da, de } from "zod/v4/locales";
 
 import { ArrowUpIcon, SaveIcon } from "lucide-react";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
@@ -35,6 +34,10 @@ function EntryCreatePage() {
   const [language, setLanguage] = useState(navigator.language || "en");
   const [promptText, setPromptText] = useState("");
   const [isPromptFocused, setIsPromptFocused] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [topics, setTopics] = useState<TopicDocType[]>([]);
+  const topicsCollection = useRxCollection("topics");
+  const db = useRxDatabase();
 
   const isPromptActive = isPromptFocused || promptText.trim() !== "";
 
@@ -42,8 +45,6 @@ function EntryCreatePage() {
   const footerRef = useRef<HTMLElement>(null);
   const footerContentRef = useRef<HTMLElement>(null);
   const aiPromptTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const [topics, setTopics] = useState<TopicDocType[]>([]);
-  const [isSaving, setIsSaving] = useState(false);
 
   const isAutoCaptureNav = location.state?.isCapturePending === true;
   const showSkeleton = isAutoCaptureNav && !capturedData;
@@ -61,21 +62,17 @@ function EntryCreatePage() {
   };
 
   useEffect(() => {
-    let sub: any;
-    getDb().then((db) => {
-      sub = db.topics.find().$.subscribe((results) => {
-        setTopics(results.map((r) => r.toJSON() as TopicDocType));
-      });
+    if (!topicsCollection) return;
+    const sub = topicsCollection.find().$.subscribe((results) => {
+      setTopics(results.map((r) => r.toJSON() as TopicDocType));
     });
-    return () => {
-      if (sub) sub.unsubscribe();
-    };
-  }, []);
+    return () => sub.unsubscribe();
+  }, [topicsCollection]);
 
   const handleEntrySubmit = async (data: EntryFormData) => {
+    if (!db) return;
     setIsSaving(true);
     try {
-      const db = await getDb();
       const entryId = uuidv7();
 
       let finalTopicId = data.topicId;
@@ -85,7 +82,7 @@ function EntryCreatePage() {
         const newTopicId = uuidv7();
         await db.topics.insert({
           id: newTopicId,
-          name: finalTopicId,
+          name: finalTopicId, //* NOTE: Is effectively the name of the not yet existing topic given.
           //description: "",
           //tags: [], // maybe add the tags that were added to the entry.
           //isFavorite: false, // maybe add the isFavorite that was added to the entry.

@@ -6,7 +6,7 @@ import "./topic-create.module.css";
 import { TopicForm, type TopicFormData } from "@/components/forms/topic-form";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
-import { getDb } from "@/db";
+import { useRxCollection } from "rxdb/plugins/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { uuidv7 } from "uuidv7";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
@@ -15,12 +15,13 @@ function TopicCreatePage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [isCreating, setIsCreating] = useState(false);
+  const collection = useRxCollection("topics");
 
   const handleCreateTopic = async (data: TopicFormData) => {
+    if (!collection) return;
     try {
       setIsCreating(true);
-      const db = await getDb();
-      const newDoc = await db.topics.insert({
+      const newDoc = await collection.insert({
         id: uuidv7(),
         name: data.name,
         description: data.description,
