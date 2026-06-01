@@ -27,7 +27,7 @@ export async function initializeDb() {
     multiInstance: true, // true by default - highly important for extensions crossing contexts
     ignoreDuplicate: false, // true is only allowed in development.
     closeDuplicates: isDev, // automatically close duplicate instances (e.g. from hot reload) - only relevant if ignoreDuplicate is true (enable if needed)
-    //potentially add eventReduce: true,
+    eventReduce: true,
   });
 
   // Add the collections
