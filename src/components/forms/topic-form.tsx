@@ -31,7 +31,7 @@ const createFormSchema = (currentTopicId?: string) =>
         const existing = await db.topics
           .findOne({
             selector: {
-              name: { $eq: name },
+              name: { $regex: `^${name}$`, $options: "i" }, // Case-insensitive match
             },
           })
           .exec();

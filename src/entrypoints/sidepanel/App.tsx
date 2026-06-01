@@ -15,6 +15,7 @@ import { useSidePanelConnection } from "@/hooks/sidepanel/use-sidepanel-connecti
 import { SidePanelMessagingProvider } from "@/providers/sidepanel-messaging";
 import { ScrollObserverProvider } from "@/providers/scroll-observer";
 import { ThemeProvider } from "@/providers/theme-provider";
+import RxDBProvider from "@/providers/rxdb-provider";
 import { TopBar } from "@/components/top-bar";
 import { BottomNavigation } from "@/components/bottom-navigation";
 
@@ -106,7 +107,9 @@ const router = createMemoryRouter([
 function App() {
   return (
     <ThemeProvider defaultTheme="system">
-      <RouterProvider router={router} />
+      <RxDBProvider>
+        <RouterProvider router={router} />
+      </RxDBProvider>
     </ThemeProvider>
   );
 }
