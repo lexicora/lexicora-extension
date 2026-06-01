@@ -62,7 +62,7 @@ function TopicItem({ topic }: TopicItemProps) {
       className={cn(
         "button-default cursor-pointer",
         "h-full /*min-h-26.25*/ flex-col items-start py-2.75 px-3.25 rounded-2xl",
-        topic.tags?.length === 0 && "pb-2.5",
+        !topic.tags?.length && "pb-2.5",
         "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
       )}
       asChild
@@ -79,7 +79,7 @@ function TopicItem({ topic }: TopicItemProps) {
           <ItemContent
             className={cn(
               "flex-3 flex-col justify-between items-start gap-2 max-w-[calc(100%-100px)]",
-              topic.tags?.length === 0 && "gap-2.25",
+              !topic.tags?.length && "gap-2.25",
             )}
           >
             <ItemTitle className="line-clamp-1 truncate max-w-full">
@@ -92,7 +92,7 @@ function TopicItem({ topic }: TopicItemProps) {
           <ItemContent
             className={cn(
               "flex-1 flex-col justify-between items-end gap-3.25 mt-0.5",
-              topic.tags?.length === 0 && "gap-3.75",
+              !topic.tags?.length && "gap-3.75",
             )}
           >
             <div
