@@ -19,7 +19,8 @@ const entrySchemaLiteral = {
       items: { type: 'string', maxLength: 50 }
     },
     isFavorite: { type: 'boolean' },
-    //isPinned: { type: 'boolean' },
+    isPinned: { type: 'boolean' },
+    isArchived: { type: 'boolean' },
     languageCode: { type: 'string', maxLength: 10 },
     url: { type: 'string', maxLength: 2048 },
     hostnameUrl: { type: 'string', maxLength: 600 }, // the origin Url without path, query, or fragment (hidden from user input derived from url)
@@ -43,6 +44,8 @@ const entrySchemaLiteral = {
     'title', 
     'tags', 
     'isFavorite', 
+    'isPinned',
+    'isArchived',
     'languageCode', 
     'url', // (not strictly required, empty allowed)
     'hostnameUrl', // (not strictly required, empty allowed)

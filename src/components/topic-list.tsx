@@ -10,7 +10,14 @@ import { Separator } from "@/components/ui/separator";
 import { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
-import { FoldersIcon, MinusIcon, StarIcon } from "lucide-react";
+import {
+  ArchiveIcon,
+  ArchiveXIcon,
+  FoldersIcon,
+  MinusIcon,
+  PinIcon,
+  StarIcon,
+} from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useNavigationType } from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
@@ -26,8 +33,9 @@ function TopicItem({ topic }: TopicItemProps) {
   const formattedDate = formatDate(topic.updatedAt);
   const collection = useRxCollection("topics");
 
-  const handleFavoriteToggle = async (
+  const handleAttributeToggle = async (
     e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
+    attribute: "isFavorite" | "isPinned" | "isArchived",
   ) => {
     e.preventDefault();
     e.stopPropagation();
@@ -36,9 +44,22 @@ function TopicItem({ topic }: TopicItemProps) {
         .findOne({ selector: { id: topic.id } })
         .exec();
       if (doc) {
-        await doc.incrementalPatch({
-          isFavorite: !topic.isFavorite,
-        });
+        const newValue = !topic[attribute];
+        const patch: any = { [attribute]: newValue };
+
+        if (attribute === "isArchived" && newValue) {
+          // If we're archiving, also unpin and unfavorite to avoid confusion.
+          patch.isPinned = false;
+          patch.isFavorite = false;
+        } else if (
+          (attribute === "isFavorite" || attribute === "isPinned") &&
+          topic.isArchived
+        ) {
+          // If a topic is archived and the favorite or pin is toggled, unarchive it.
+          patch.isArchived = false;
+        }
+
+        await doc.incrementalPatch(patch);
       }
     }
   };
@@ -95,26 +116,80 @@ function TopicItem({ topic }: TopicItemProps) {
               !topic.tags?.length && "gap-3.75",
             )}
           >
-            <div
-              role="button"
-              tabIndex={0}
-              className={cn(
-                "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
-              )}
-              onClick={handleFavoriteToggle}
-              onKeyDown={async (e) => {
-                if (e.key === "Enter" || e.key === " ") handleFavoriteToggle(e);
-              }}
-            >
-              <StarIcon
+            <div className="flex justify-end items-center gap-2.5">
+              <div
+                role="button"
+                tabIndex={0}
                 className={cn(
-                  "size-4",
-                  topic.isFavorite
-                    ? "text-yellow-600/75 fill-yellow-600/75 dark:text-yellow-500 dark:fill-yellow-500"
-                    : "text-gray-500/75 dark:text-gray-400",
+                  "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
                 )}
-              />
+                onClick={(e) => handleAttributeToggle(e, "isArchived")}
+                onKeyDown={async (e) => {
+                  if (e.key === "Enter" || e.key === " ")
+                    handleAttributeToggle(e, "isArchived");
+                }}
+              >
+                {topic.isArchived ? (
+                  <ArchiveXIcon
+                    className={cn(
+                      "size-4 transition-colors",
+                      "text-gray-500/50 dark:text-gray-500 group-hover:text-gray-500/75 dark:group-hover:text-gray-400",
+                    )}
+                  />
+                ) : (
+                  <ArchiveIcon
+                    className={cn(
+                      "size-4 transition-colors",
+                      "text-gray-400/75 dark:text-gray-500 group-hover:text-gray-500/75 dark:group-hover:text-gray-400",
+                    )}
+                  />
+                )}
+              </div>
+              <div
+                role="button"
+                tabIndex={0}
+                className={cn(
+                  "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
+                )}
+                onClick={async (e) => handleAttributeToggle(e, "isPinned")}
+                onKeyDown={async (e) => {
+                  if (e.key === "Enter" || e.key === " ")
+                    handleAttributeToggle(e, "isPinned");
+                }}
+              >
+                <PinIcon
+                  className={cn(
+                    "size-4",
+                    topic.isPinned
+                      ? "text-red-600/75 fill-red-600/75 dark:text-red-500 dark:fill-red-500"
+                      : "text-gray-500/75 dark:text-gray-400",
+                  )}
+                />
+              </div>
+              <div
+                role="button"
+                tabIndex={0}
+                className={cn(
+                  "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
+                )}
+                onClick={async (e) => handleAttributeToggle(e, "isFavorite")}
+                onKeyDown={async (e) => {
+                  if (e.key === "Enter" || e.key === " ")
+                    handleAttributeToggle(e, "isFavorite");
+                }}
+              >
+                <StarIcon
+                  className={cn(
+                    "size-4",
+                    topic.isFavorite
+                      ? "text-yellow-600/75 fill-yellow-600/75 dark:text-yellow-500 dark:fill-yellow-500"
+                      : "text-gray-500/75 dark:text-gray-400",
+                  )}
+                />
+              </div>
             </div>
             <ItemDescription className="text-xs text-muted-foreground whitespace-nowrap">
               {formattedDate}
@@ -204,7 +279,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
     const sub = collection
       .find({
         selector,
-        sort: [{ updatedAt: "desc" }], // TODO: Make sorting dynamic based on user selection (e.g. sort by createdAt, name, etc.). passed down from library page.
+        sort: [{ isPinned: "desc" }, { updatedAt: "desc" }],
       })
       .$.subscribe({
         next: (results) => {
