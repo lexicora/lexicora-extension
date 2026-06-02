@@ -16,6 +16,7 @@ import {
   FoldersIcon,
   MinusIcon,
   PinIcon,
+  PinOffIcon,
   StarIcon,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -150,7 +151,7 @@ function TopicItem({ topic }: TopicItemProps) {
                 role="button"
                 tabIndex={0}
                 className={cn(
-                  "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+                  "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
                 )}
                 onClick={async (e) => handleAttributeToggle(e, "isPinned")}
@@ -163,7 +164,7 @@ function TopicItem({ topic }: TopicItemProps) {
                   className={cn(
                     "size-4",
                     topic.isPinned
-                      ? "text-red-600/75 fill-red-600/75 dark:text-red-500 dark:fill-red-500"
+                      ? "text-blue-600 fill-blue-600 dark:text-blue-500 dark:fill-blue-500"
                       : "text-gray-500/75 dark:text-gray-400",
                   )}
                 />
@@ -185,7 +186,7 @@ function TopicItem({ topic }: TopicItemProps) {
                   className={cn(
                     "size-4",
                     topic.isFavorite
-                      ? "text-yellow-600/75 fill-yellow-600/75 dark:text-yellow-500 dark:fill-yellow-500"
+                      ? "text-yellow-600/60 fill-yellow-600/85 dark:text-yellow-500 dark:fill-yellow-500"
                       : "text-gray-500/75 dark:text-gray-400",
                   )}
                 />
