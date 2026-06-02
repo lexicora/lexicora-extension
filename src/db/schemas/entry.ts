@@ -54,7 +54,7 @@ const entrySchemaLiteral = {
     'createdAt',
     'updatedAt'
   ],
-  indexes: ['topicId', 'userId'] // TODO: Adjust compound indexes as needed based on query patterns (e.g., topicId + createdAt for sorting entries within a topic)
+  indexes: ['topicId', 'userId', ['isPinned', 'updatedAt']] // TODO: Adjust compound indexes as needed based on query patterns (e.g., topicId + createdAt for sorting entries within a topic)
 } as const;
 
 export const entrySchema = toTypedRxJsonSchema(entrySchemaLiteral);
