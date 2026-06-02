@@ -10,7 +10,13 @@ import { Separator } from "@/components/ui/separator";
 import { EntryDocType } from "@/db/schemas/entry";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
-import { ArchiveIcon, FilesIcon, MinusIcon, PinIcon, StarIcon } from "lucide-react";
+import {
+  ArchiveIcon,
+  FilesIcon,
+  MinusIcon,
+  PinIcon,
+  StarIcon,
+} from "lucide-react";
 import { Avatar } from "radix-ui";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useNavigationType } from "react-router-dom";
@@ -252,16 +258,22 @@ function EntryItem({ entry }: EntryItemProps) {
 
 interface EntryListProps {
   search: string;
-  onlyFavorites: boolean;
+  filter?: {
+    onlyFavorites: boolean;
+    onlyArchived: boolean;
+  };
 }
 
-export function EntryList({ search, onlyFavorites }: EntryListProps) {
+export function EntryList({ search, filter }: EntryListProps) {
   const [entries, setEntries] = useState<EntryDocType[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const collection = useRxCollection("entries");
   const navigationType = useNavigationType();
   const navigate = useNavigate();
   const isFirstRender = useRef(true);
+
+  const onlyFavorites = filter?.onlyFavorites ?? false;
+  const onlyArchived = filter?.onlyArchived ?? false;
 
   // On POP, restore the scroll position (plain number, no JSON overhead)
   const savedScrollTop = useMemo(() => {
@@ -283,12 +295,18 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
       return;
     }
     sessionStorage.removeItem("entryListScrollTop");
-  }, [search, onlyFavorites]);
+  }, [search, onlyFavorites, onlyArchived]);
 
   useEffect(() => {
     if (!collection) return;
 
     const selector: any = {};
+    if (onlyArchived) {
+      selector.isArchived = true;
+    } else {
+      selector.isArchived = { $ne: true };
+    }
+
     if (onlyFavorites) {
       selector.isFavorite = true;
     }
@@ -330,7 +348,7 @@ export function EntryList({ search, onlyFavorites }: EntryListProps) {
       });
 
     return () => sub.unsubscribe();
-  }, [collection, search, onlyFavorites]);
+  }, [collection, search, onlyFavorites, onlyArchived]);
 
   // TODO: For wider screens or the windowed app, maybe add a two column layout.
   return (

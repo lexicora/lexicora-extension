@@ -234,7 +234,7 @@ function LibraryPage() {
         </PageHeader>
         <TabsContent value="entries">
           <main className="mb-0">
-            <EntryList search={deferredSearch} onlyFavorites={showFavorites} />
+            <EntryList search={deferredSearch} filter={filter} />
           </main>
         </TabsContent>
         <TabsContent value="topics">
