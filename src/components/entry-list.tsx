@@ -48,21 +48,9 @@ function EntryItem({ entry }: EntryItemProps) {
         const newValue = !entry[attribute];
         const patch: any = { [attribute]: newValue };
 
-        if (attribute === "isArchived" && newValue) {
-          // Archiving explicitly: also clear pin/favorite and mark as explicitly archived.
-          patch.isPinned = false;
-          patch.isFavorite = false;
-          patch.archivedExplicitly = true;
-        } else if (attribute === "isArchived" && !newValue) {
-          // Unarchiving explicitly: clear the explicit flag too.
-          patch.archivedExplicitly = false;
-        } else if (
-          (attribute === "isFavorite" || attribute === "isPinned") &&
-          entry.isArchived
-        ) {
-          // If an entry is archived and the favorite or pin is toggled, unarchive it.
-          patch.isArchived = false;
-          patch.archivedExplicitly = false;
+        if (attribute === "isArchived") {
+          // Track whether the user archived/unarchived this entry directly.
+          patch.archivedExplicitly = newValue;
         }
 
         await doc.incrementalPatch(patch);
@@ -154,50 +142,56 @@ function EntryItem({ entry }: EntryItemProps) {
                   )}
                 />
               </div>
-              <div
-                role="button"
-                tabIndex={0}
-                className={cn(
-                  "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
-                )}
-                onClick={async (e) => handleAttributeToggle(e, "isPinned")}
-                onKeyDown={async (e) => {
-                  if (e.key === "Enter" || e.key === " ")
-                    handleAttributeToggle(e, "isPinned");
-                }}
-              >
-                <PinIcon
-                  className={cn(
-                    "size-4",
-                    entry.isPinned
-                      ? "text-blue-600 fill-blue-600 dark:text-blue-500 dark:fill-blue-500"
-                      : "text-gray-500/75 dark:text-gray-400",
-                  )}
-                />
-              </div>
-              <div
-                role="button"
-                tabIndex={0}
-                className={cn(
-                  "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
-                )}
-                onClick={async (e) => handleAttributeToggle(e, "isFavorite")}
-                onKeyDown={async (e) => {
-                  if (e.key === "Enter" || e.key === " ")
-                    handleAttributeToggle(e, "isFavorite");
-                }}
-              >
-                <StarIcon
-                  className={cn(
-                    "size-4",
-                    entry.isFavorite
-                      ? "text-yellow-600/60 fill-yellow-600/85 dark:text-yellow-500 dark:fill-yellow-500"
-                      : "text-gray-500/75 dark:text-gray-400",
-                  )}
-                />
-              </div>
+              {!entry.isArchived && (
+                <>
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    className={cn(
+                      "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
+                    )}
+                    onClick={async (e) => handleAttributeToggle(e, "isPinned")}
+                    onKeyDown={async (e) => {
+                      if (e.key === "Enter" || e.key === " ")
+                        handleAttributeToggle(e, "isPinned");
+                    }}
+                  >
+                    <PinIcon
+                      className={cn(
+                        "size-4",
+                        entry.isPinned
+                          ? "text-blue-600 fill-blue-600 dark:text-blue-500 dark:fill-blue-500"
+                          : "text-gray-500/75 dark:text-gray-400",
+                      )}
+                    />
+                  </div>
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    className={cn(
+                      "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
+                    )}
+                    onClick={async (e) =>
+                      handleAttributeToggle(e, "isFavorite")
+                    }
+                    onKeyDown={async (e) => {
+                      if (e.key === "Enter" || e.key === " ")
+                        handleAttributeToggle(e, "isFavorite");
+                    }}
+                  >
+                    <StarIcon
+                      className={cn(
+                        "size-4",
+                        entry.isFavorite
+                          ? "text-yellow-600/60 fill-yellow-600/85 dark:text-yellow-500 dark:fill-yellow-500"
+                          : "text-gray-500/75 dark:text-gray-400",
+                      )}
+                    />
+                  </div>
+                </>
+              )}
             </div>
             <ItemDescription className="text-xs text-muted-foreground whitespace-nowrap">
               {formattedDate}
@@ -217,10 +211,6 @@ function EntryItem({ entry }: EntryItemProps) {
                         className="rounded-sm"
                         src={entry.faviconUrl}
                         alt="Favicon"
-                        // onError={(e) => {
-                        //   (e.target as HTMLImageElement).src =
-                        //     "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cmVjdCB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9IiNlZWVlZWUiIHJ4PSIyIiByeT0iMiIvPjwvc3ZnPg==";
-                        // }}
                       />
                       <Avatar.Fallback delayMs={50}>
                         <div className="bg-gray-400/35 dark:bg-gray-700/50 size-4.25 rounded-sm"></div>
@@ -334,7 +324,9 @@ export function EntryList({ search, filter }: EntryListProps) {
     const sub = collection
       .find({
         selector,
-        sort: [{ isPinned: "desc" }, { updatedAt: "desc" }],
+        sort: onlyArchived
+          ? [{ updatedAt: "desc" }]
+          : [{ isPinned: "desc" }, { updatedAt: "desc" }],
       })
       .$.subscribe({
         next: (results) => {
