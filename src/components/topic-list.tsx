@@ -12,11 +12,9 @@ import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
 import {
   ArchiveIcon,
-  ArchiveXIcon,
   FoldersIcon,
   MinusIcon,
   PinIcon,
-  PinOffIcon,
   StarIcon,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -33,6 +31,7 @@ function TopicItem({ topic }: TopicItemProps) {
   const navigate = useNavigate();
   const formattedDate = formatDate(topic.updatedAt);
   const collection = useRxCollection("topics");
+  const entriesCollection = useRxCollection("entries");
 
   const handleAttributeToggle = async (
     e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
@@ -48,18 +47,21 @@ function TopicItem({ topic }: TopicItemProps) {
         const newValue = !topic[attribute];
         const patch: any = { [attribute]: newValue };
 
-        if (attribute === "isArchived" && newValue) {
-          // If we're archiving, also unpin and unfavorite to avoid confusion.
-          patch.isPinned = false;
-          patch.isFavorite = false;
-
-          // TODO: Archive all related entries and add dialog confirmation for this action.
-        } else if (
-          (attribute === "isFavorite" || attribute === "isPinned") &&
-          topic.isArchived
-        ) {
-          // If a topic is archived and the favorite or pin is toggled, unarchive it.
-          patch.isArchived = false;
+        if (attribute === "isArchived" && entriesCollection) {
+          // Bulk-archive or restore entries that aren't explicitly archived by the user.
+          const implicitEntries = await entriesCollection
+            .find({
+              selector: {
+                topicId: topic.id,
+                archivedExplicitly: { $ne: true },
+              },
+            })
+            .exec();
+          await Promise.all(
+            implicitEntries.map((e) =>
+              e.incrementalPatch({ isArchived: newValue }),
+            ),
+          );
         }
 
         await doc.incrementalPatch(patch);
@@ -142,50 +144,56 @@ function TopicItem({ topic }: TopicItemProps) {
                   )}
                 />
               </div>
-              <div
-                role="button"
-                tabIndex={0}
-                className={cn(
-                  "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
-                )}
-                onClick={async (e) => handleAttributeToggle(e, "isPinned")}
-                onKeyDown={async (e) => {
-                  if (e.key === "Enter" || e.key === " ")
-                    handleAttributeToggle(e, "isPinned");
-                }}
-              >
-                <PinIcon
-                  className={cn(
-                    "size-4",
-                    topic.isPinned
-                      ? "text-blue-600 fill-blue-600 dark:text-blue-500 dark:fill-blue-500"
-                      : "text-gray-500/75 dark:text-gray-400",
-                  )}
-                />
-              </div>
-              <div
-                role="button"
-                tabIndex={0}
-                className={cn(
-                  "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
-                )}
-                onClick={async (e) => handleAttributeToggle(e, "isFavorite")}
-                onKeyDown={async (e) => {
-                  if (e.key === "Enter" || e.key === " ")
-                    handleAttributeToggle(e, "isFavorite");
-                }}
-              >
-                <StarIcon
-                  className={cn(
-                    "size-4",
-                    topic.isFavorite
-                      ? "text-yellow-600/60 fill-yellow-600/85 dark:text-yellow-500 dark:fill-yellow-500"
-                      : "text-gray-500/75 dark:text-gray-400",
-                  )}
-                />
-              </div>
+              {!topic.isArchived && (
+                <>
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    className={cn(
+                      "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
+                    )}
+                    onClick={async (e) => handleAttributeToggle(e, "isPinned")}
+                    onKeyDown={async (e) => {
+                      if (e.key === "Enter" || e.key === " ")
+                        handleAttributeToggle(e, "isPinned");
+                    }}
+                  >
+                    <PinIcon
+                      className={cn(
+                        "size-4",
+                        topic.isPinned
+                          ? "text-blue-600 fill-blue-600 dark:text-blue-500 dark:fill-blue-500"
+                          : "text-gray-500/75 dark:text-gray-400",
+                      )}
+                    />
+                  </div>
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    className={cn(
+                      "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
+                    )}
+                    onClick={async (e) =>
+                      handleAttributeToggle(e, "isFavorite")
+                    }
+                    onKeyDown={async (e) => {
+                      if (e.key === "Enter" || e.key === " ")
+                        handleAttributeToggle(e, "isFavorite");
+                    }}
+                  >
+                    <StarIcon
+                      className={cn(
+                        "size-4",
+                        topic.isFavorite
+                          ? "text-yellow-600/60 fill-yellow-600/85 dark:text-yellow-500 dark:fill-yellow-500"
+                          : "text-gray-500/75 dark:text-gray-400",
+                      )}
+                    />
+                  </div>
+                </>
+              )}
             </div>
             <ItemDescription className="text-xs text-muted-foreground whitespace-nowrap">
               {formattedDate}
@@ -284,7 +292,9 @@ export function TopicList({ search, filter }: TopicListProps) {
     const sub = collection
       .find({
         selector,
-        sort: [{ isPinned: "desc" }, { updatedAt: "desc" }],
+        sort: onlyArchived
+          ? [{ updatedAt: "desc" }]
+          : [{ isPinned: "desc" }, { updatedAt: "desc" }],
       })
       .$.subscribe({
         next: (results) => {

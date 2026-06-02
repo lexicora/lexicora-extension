@@ -112,6 +112,7 @@ function EntryCreatePage() {
         isFavorite: data.isFavorite,
         isPinned: false,
         isArchived: false,
+        archivedExplicitly: false,
         languageCode: data.languageCode,
         siteName: data.siteName,
         faviconUrl: data.faviconUrl,
