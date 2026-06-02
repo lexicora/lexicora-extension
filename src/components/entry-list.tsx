@@ -319,9 +319,8 @@ export function EntryList({ search, filter }: EntryListProps) {
         // Test the regex string before using it
         new RegExp(escapedSearch, "i");
 
-        // RxDB requires the regex operator to be a string
-        selector.title = { $regex: escapedSearch, $options: "i" };
-        //? Maybe add description too, though preferably only indexed fields.
+        // Query against the pre-lowercased searchBlob (title + tags + description snippet + siteName)
+        selector.searchBlob = { $regex: escapedSearch.toLowerCase() };
       } catch (error) {
         console.error("Failed to compile search regex:", error);
       }
