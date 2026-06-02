@@ -131,21 +131,14 @@ function TopicItem({ topic }: TopicItemProps) {
                     handleAttributeToggle(e, "isArchived");
                 }}
               >
-                {topic.isArchived ? (
-                  <ArchiveXIcon
-                    className={cn(
-                      "size-4 transition-colors",
-                      "text-gray-500/50 dark:text-gray-500 group-hover:text-gray-500/75 dark:group-hover:text-gray-400",
-                    )}
-                  />
-                ) : (
-                  <ArchiveIcon
-                    className={cn(
-                      "size-4 transition-colors",
-                      "text-gray-400/75 dark:text-gray-500 group-hover:text-gray-500/75 dark:group-hover:text-gray-400",
-                    )}
-                  />
-                )}
+                <ArchiveIcon
+                  className={cn(
+                    "size-4 transition-colors",
+                    topic.isArchived
+                      ? "text-green-500/75 dark:text-green-600"
+                      : "text-gray-400/75 dark:text-gray-600 group-hover:text-gray-500/75 dark:group-hover:text-gray-400",
+                  )}
+                />
               </div>
               <div
                 role="button"
