@@ -24,7 +24,7 @@ const topicSchemaLiteral = {
     updatedAt: { type: 'string', format: 'date-time' }
   },
   required: ['id', 'userId', 'name', 'tags', 'isFavorite', 'isPinned', 'isArchived', 'createdAt', 'updatedAt'],
-  indexes: ['userId', ['isPinned', 'updatedAt']]
+  indexes: ['userId', ['isPinned', 'updatedAt'], ['isArchived', 'isPinned', 'updatedAt']]
 } as const;
 
 export const topicSchema = toTypedRxJsonSchema(topicSchemaLiteral);
