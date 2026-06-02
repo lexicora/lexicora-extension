@@ -211,16 +211,22 @@ function TopicItem({ topic }: TopicItemProps) {
 
 interface TopicListProps {
   search: string;
-  onlyFavorites: boolean;
+  filter?: {
+    onlyFavorites: boolean;
+    onlyArchived: boolean;
+  };
 }
 
-export function TopicList({ search, onlyFavorites }: TopicListProps) {
+export function TopicList({ search, filter }: TopicListProps) {
   const [topics, setTopics] = useState<TopicDocType[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const collection = useRxCollection("topics");
   const navigationType = useNavigationType();
   const navigate = useNavigate();
   const isFirstRender = useRef(true);
+
+  const onlyFavorites = filter?.onlyFavorites ?? false;
+  const onlyArchived = filter?.onlyArchived ?? false;
 
   // On POP, restore the scroll position (plain number, no JSON overhead)
   const savedScrollTop = useMemo(() => {
@@ -242,12 +248,18 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
       return;
     }
     sessionStorage.removeItem("topicListScrollTop");
-  }, [search, onlyFavorites]);
+  }, [search, onlyFavorites, onlyArchived]);
 
   useEffect(() => {
     if (!collection) return;
 
     const selector: any = {};
+    if (onlyArchived) {
+      selector.isArchived = true;
+    } else {
+      selector.isArchived = { $ne: true };
+    }
+
     if (onlyFavorites) {
       selector.isFavorite = true;
     }
@@ -288,7 +300,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
       });
 
     return () => sub.unsubscribe();
-  }, [collection, search, onlyFavorites]);
+  }, [collection, search, onlyFavorites, onlyArchived]);
 
   return (
     <>
@@ -302,6 +314,7 @@ export function TopicList({ search, onlyFavorites }: TopicListProps) {
       </div>
       {isDataLoaded && topics.length === 0 && (
         <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+          {/*TODO: Potentially reset search params, except for topic or entry tab, when navigating to create a new topic or entry */}
           {search.trim() ? (
             <>
               <p className="text-muted-foreground mb-3">
