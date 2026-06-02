@@ -413,7 +413,7 @@ export function EntryList({ search, filter }: EntryListProps) {
           useWindowScroll
           initialScrollTop={savedScrollTop}
           data={entries}
-          overscan={200}
+          overscan={200} // potentially increase
           itemContent={(_, entry) => (
             <div className="px-1.25 py-1.5">
               <EntryItem entry={entry} />

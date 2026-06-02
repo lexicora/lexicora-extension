@@ -32,7 +32,7 @@ const entrySchemaLiteral = {
     updatedAt: { type: 'string', format: 'date-time' },
     siteName: { type: 'string', maxLength: 255 },
     // INTERNAL:
-    searchBlob: { type: 'string', maxLength: 3000 }, // Auto-populated denormalized search field (title + tags + description snippet + siteName)
+    searchBlob: { type: 'string', maxLength: 3600 }, // Auto-populated denormalized search field (title + tags + description snippet + siteName + hostnameUrl)
     //excerpt: { type: 'string' }, // not needed currently, put in description for now.
     //byline: { type: 'string' }, // not needed currently, put in description for now.
     //publishedAt: { type: 'string', format: 'date-time' } //not needed currently, put in description for now.

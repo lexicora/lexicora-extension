@@ -23,12 +23,14 @@ export function buildEntrySearchBlob(doc: {
   description?: string;
   tags?: string[];
   siteName?: string;
+  hostnameUrl?: string;
 }): string {
   const parts = [
     (doc.title || '').toLowerCase().trim(),
     flattenTags(doc.tags),
     truncate((doc.description || '').toLowerCase().trim(), DESCRIPTION_MAX_LENGTH),
     (doc.siteName || '').toLowerCase().trim(),
+    (doc.hostnameUrl || '').toLowerCase().trim(),
   ];
 
   return parts.filter(Boolean).join(' ').replace(/\s{2,}/g, ' ').trim();

@@ -52,6 +52,8 @@ function TopicItem({ topic }: TopicItemProps) {
           // If we're archiving, also unpin and unfavorite to avoid confusion.
           patch.isPinned = false;
           patch.isFavorite = false;
+
+          // TODO: Archive all related entries and add dialog confirmation for this action.
         } else if (
           (attribute === "isFavorite" || attribute === "isPinned") &&
           topic.isArchived
@@ -363,7 +365,7 @@ export function TopicList({ search, filter }: TopicListProps) {
           useWindowScroll
           initialScrollTop={savedScrollTop}
           data={topics}
-          overscan={200}
+          overscan={200} // potentially increase
           itemContent={(_, topic) => (
             <div className="px-1.25 py-1.5">
               <TopicItem topic={topic} />

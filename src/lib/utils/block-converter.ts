@@ -63,3 +63,4 @@ export function convertBlockNoteBlocks(
 
 // TODO: Implement reverse conversion from BlockDocType array back to BlockNote.js block structure if needed in the future.
 // TODO: Also very important recursive blocks must not be in the top level, but rather in the children property, containing child blocks.
+//* NOTE: BlockNote.js blocks are standardly given a UUIDv4 id, so we only need to generate an update the id's where the version identifier is 4 and the rest can be left alone.
