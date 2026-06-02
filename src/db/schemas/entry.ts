@@ -19,7 +19,8 @@ const entrySchemaLiteral = {
       items: { type: 'string', maxLength: 50 }
     },
     isFavorite: { type: 'boolean' },
-    //isPinned: { type: 'boolean' },
+    isPinned: { type: 'boolean' },
+    isArchived: { type: 'boolean' },
     languageCode: { type: 'string', maxLength: 10 },
     url: { type: 'string', maxLength: 2048 },
     hostnameUrl: { type: 'string', maxLength: 600 }, // the origin Url without path, query, or fragment (hidden from user input derived from url)
@@ -43,6 +44,8 @@ const entrySchemaLiteral = {
     'title', 
     'tags', 
     'isFavorite', 
+    'isPinned',
+    'isArchived',
     'languageCode', 
     'url', // (not strictly required, empty allowed)
     'hostnameUrl', // (not strictly required, empty allowed)
@@ -51,7 +54,7 @@ const entrySchemaLiteral = {
     'createdAt',
     'updatedAt'
   ],
-  indexes: ['topicId', 'userId'] // TODO: Adjust compound indexes as needed based on query patterns (e.g., topicId + createdAt for sorting entries within a topic)
+  indexes: ['topicId', 'userId', ['isPinned', 'updatedAt'], ['topicId', 'isArchived', 'isPinned', 'updatedAt']] // TODO: Adjust compound indexes as needed based on query patterns (e.g., topicId + createdAt for sorting entries within a topic)
 } as const;
 
 export const entrySchema = toTypedRxJsonSchema(entrySchemaLiteral);

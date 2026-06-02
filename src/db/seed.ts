@@ -617,19 +617,29 @@ export async function seedDummyData(db: RxDatabase) {
 
   for (const t of topicsData) {
     const topicId = uuidv7();
+    const isTopicArchived = Math.random() > 0.92;
+    const isTopicPinned = !isTopicArchived && Math.random() > 0.9;
+    const isTopicFavorite = !isTopicArchived && Math.random() > 0.8;
+
     topicsToInsert.push({
       id: topicId,
       userId: USER_ID,
       name: t.name,
       description: t.description,
       tags: t.tags,
-      isFavorite: Math.random() > 0.8,
+      isFavorite: isTopicFavorite,
+      isPinned: isTopicPinned,
+      isArchived: isTopicArchived,
       createdAt: now,
       updatedAt: now,
     });
 
     for (const e of t.entries) {
       const urlObj = new URL(e.url);
+      const isEntryArchived = Math.random() > 0.92;
+      const isEntryPinned = !isEntryArchived && Math.random() > 0.9;
+      const isEntryFavorite = !isEntryArchived && Math.random() > 0.8;
+
       entriesToInsert.push({
         id: uuidv7(),
         userId: USER_ID,
@@ -641,7 +651,9 @@ export async function seedDummyData(db: RxDatabase) {
           e.title.toLowerCase().split(" ")[0],
           "resource",
         ],
-        isFavorite: Math.random() > 0.8,
+        isFavorite: isEntryFavorite,
+        isPinned: isEntryPinned,
+        isArchived: isEntryArchived,
         languageCode: "en",
         url: e.url,
         hostnameUrl: urlObj.hostname,

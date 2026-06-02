@@ -27,6 +27,8 @@ function TopicCreatePage() {
         description: data.description,
         tags: data.tags,
         isFavorite: data.isFavorite,
+        isPinned: false,
+        isArchived: false,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });

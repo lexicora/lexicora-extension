@@ -83,9 +83,11 @@ function EntryCreatePage() {
         await db.topics.insert({
           id: newTopicId,
           name: finalTopicId, //* NOTE: Is effectively the name of the not yet existing topic given.
-          //description: "",
-          //tags: [], // maybe add the tags that were added to the entry.
-          //isFavorite: false, // maybe add the isFavorite that was added to the entry.
+          description: "",
+          tags: [],
+          isFavorite: false,
+          isPinned: false,
+          isArchived: false,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         });
@@ -108,6 +110,8 @@ function EntryCreatePage() {
         description: data.description,
         tags: data.tags,
         isFavorite: data.isFavorite,
+        isPinned: false,
+        isArchived: false,
         languageCode: data.languageCode,
         siteName: data.siteName,
         faviconUrl: data.faviconUrl,
