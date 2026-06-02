@@ -49,15 +49,20 @@ function EntryItem({ entry }: EntryItemProps) {
         const patch: any = { [attribute]: newValue };
 
         if (attribute === "isArchived" && newValue) {
-          // If we're archiving, also unpin and unfavorite to avoid confusion.
+          // Archiving explicitly: also clear pin/favorite and mark as explicitly archived.
           patch.isPinned = false;
           patch.isFavorite = false;
+          patch.archivedExplicitly = true;
+        } else if (attribute === "isArchived" && !newValue) {
+          // Unarchiving explicitly: clear the explicit flag too.
+          patch.archivedExplicitly = false;
         } else if (
           (attribute === "isFavorite" || attribute === "isPinned") &&
           entry.isArchived
         ) {
           // If an entry is archived and the favorite or pin is toggled, unarchive it.
           patch.isArchived = false;
+          patch.archivedExplicitly = false;
         }
 
         await doc.incrementalPatch(patch);

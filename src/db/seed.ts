@@ -654,6 +654,7 @@ export async function seedDummyData(db: RxDatabase) {
         isFavorite: isEntryFavorite,
         isPinned: isEntryPinned,
         isArchived: isEntryArchived,
+        archivedExplicitly: isEntryArchived, // seeded archived entries are treated as explicitly archived
         languageCode: "en",
         url: e.url,
         hostnameUrl: urlObj.hostname,

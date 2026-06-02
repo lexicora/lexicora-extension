@@ -21,6 +21,7 @@ const entrySchemaLiteral = {
     isFavorite: { type: 'boolean' },
     isPinned: { type: 'boolean' },
     isArchived: { type: 'boolean' },
+    archivedExplicitly: { type: 'boolean' }, // true only when the user directly archived this entry (not via parent topic)
     languageCode: { type: 'string', maxLength: 10 },
     url: { type: 'string', maxLength: 2048 },
     hostnameUrl: { type: 'string', maxLength: 600 }, // the origin Url without path, query, or fragment (hidden from user input derived from url)

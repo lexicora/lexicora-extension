@@ -33,6 +33,7 @@ function TopicItem({ topic }: TopicItemProps) {
   const navigate = useNavigate();
   const formattedDate = formatDate(topic.updatedAt);
   const collection = useRxCollection("topics");
+  const entriesCollection = useRxCollection("entries");
 
   const handleAttributeToggle = async (
     e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
@@ -49,11 +50,44 @@ function TopicItem({ topic }: TopicItemProps) {
         const patch: any = { [attribute]: newValue };
 
         if (attribute === "isArchived" && newValue) {
-          // If we're archiving, also unpin and unfavorite to avoid confusion.
+          // Archiving topic: unpin/unfavorite the topic, then archive all
+          // entries that haven't been explicitly archived already.
           patch.isPinned = false;
           patch.isFavorite = false;
 
-          // TODO: Archive all related entries and add dialog confirmation for this action.
+          if (entriesCollection) {
+            const implicitEntries = await entriesCollection
+              .find({
+                selector: {
+                  topicId: topic.id,
+                  archivedExplicitly: { $ne: true },
+                },
+              })
+              .exec();
+            await Promise.all(
+              implicitEntries.map((e) =>
+                e.incrementalPatch({ isArchived: true }),
+              ),
+            );
+          }
+        } else if (attribute === "isArchived" && !newValue) {
+          // Unarchiving topic: restore only the implicitly-archived entries
+          // (entries with archivedExplicitly === true stay archived).
+          if (entriesCollection) {
+            const implicitEntries = await entriesCollection
+              .find({
+                selector: {
+                  topicId: topic.id,
+                  archivedExplicitly: { $ne: true },
+                },
+              })
+              .exec();
+            await Promise.all(
+              implicitEntries.map((e) =>
+                e.incrementalPatch({ isArchived: false }),
+              ),
+            );
+          }
         } else if (
           (attribute === "isFavorite" || attribute === "isPinned") &&
           topic.isArchived
