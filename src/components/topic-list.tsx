@@ -272,11 +272,8 @@ export function TopicList({ search, filter }: TopicListProps) {
         // Test the regex string before using it
         new RegExp(escapedSearch, "i");
 
-        // RxDB requires the regex operator to be a string
-        const searchRegex = { $regex: escapedSearch, $options: "i" };
-        selector.$or = [{ name: searchRegex }, { tags: searchRegex }];
-        // TODO: Potentially add tags to the search.
-        //? Maybe add description too, though preferably only indexed fields.
+        // Query against the pre-lowercased searchBlob (name + tags + description snippet)
+        selector.searchBlob = { $regex: escapedSearch.toLowerCase() };
       } catch (error) {
         console.error("Failed to compile search regex:", error);
       }
