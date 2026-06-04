@@ -76,6 +76,7 @@ Most interactions happen inside the **browser side panel**, keeping context and 
 | --- | --- |
 | Extension framework | [WXT](https://wxt.dev) (Chrome MV3 / Firefox MV2) |
 | UI | [React 19](https://react.dev), [TailwindCSS v4](https://tailwindcss.com), [shadcn-ui](https://ui.shadcn.com/) (built on [Radix UI](https://www.radix-ui.com/) + [Base UI](https://base-ui.com/)) |
+| Routing | [React Router](https://reactrouter.com/) |
 | Editor | [BlockNote](https://www.blocknotejs.org//) |
 | Local database | [RxDB](https://rxdb.info/) + [Dexie](https://dexie.org/) |
 | Messaging | [webext-bridge](https://github.com/lexicora/webext-bridge), [@webext-core/messaging](https://github.com/webext-core/messaging) |
