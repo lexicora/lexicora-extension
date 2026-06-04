@@ -13,6 +13,9 @@
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
     "compile": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "postinstall": "wxt prepare"
   },
   "dependencies": {
@@ -62,8 +65,11 @@
     "@types/react-dom": "^19.2.3",
     "@types/react-router-dom": "^5.3.3",
     "@types/turndown": "^5.0.6",
+    "@vitest/coverage-v8": "^4.1.8",
     "@wxt-dev/module-react": "^1.2.2",
+    "happy-dom": "^20.9.0",
     "typescript": "^6.0.3",
+    "vitest": "^4.1.8",
     "wxt": "^0.20.26"
   }
 }
