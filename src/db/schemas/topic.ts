@@ -10,7 +10,7 @@ const topicSchemaLiteral = {
   properties: {
     id: uuidSchema,
     userId: uuidWithNilDefault,
-    name: { type: 'string', maxLength: 255 },
+    name: { type: 'string', maxLength: 255 }, // TODO: Potentially index this field.
     description: { type: 'string', maxLength: 1000 },
     tags: {
       type: 'array',
