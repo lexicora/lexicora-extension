@@ -16,7 +16,20 @@ import {
   MinusIcon,
   PinIcon,
   StarIcon,
+  Trash2Icon,
 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useNavigationType } from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
@@ -27,14 +40,19 @@ interface TopicItemProps {
   // potentially more fields, like author, tags, etc.
 }
 
+type InteractionEvent =
+  | React.MouseEvent<HTMLDivElement>
+  | React.KeyboardEvent<HTMLDivElement>;
+
 function TopicItem({ topic }: TopicItemProps) {
   const navigate = useNavigate();
   const formattedDate = formatDate(topic.updatedAt);
   const collection = useRxCollection("topics");
   const entriesCollection = useRxCollection("entries");
+  const blocksCollection = useRxCollection("blocks");
 
   const handleAttributeToggle = async (
-    e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
+    e: InteractionEvent,
     attribute: "isFavorite" | "isPinned" | "isArchived",
   ) => {
     e.preventDefault();
@@ -69,6 +87,30 @@ function TopicItem({ topic }: TopicItemProps) {
     }
   };
 
+  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!collection) return;
+
+    const doc = await collection.findOne({ selector: { id: topic.id } }).exec();
+    if (!doc) return;
+
+    // Cascade: delete all blocks → entries → topic
+    const entries = await entriesCollection
+      ?.find({ selector: { topicId: topic.id } })
+      .exec();
+    for (const entry of entries ?? []) {
+      const blocks = await blocksCollection
+        ?.find({ selector: { entryId: entry.id } })
+        .exec();
+      if (blocks) {
+        await Promise.all(blocks.map((b) => b.remove()));
+      }
+      await entry.remove();
+    }
+    await doc.remove();
+  };
+
   const handleNavigate = (
     e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
   ) => {
@@ -80,6 +122,8 @@ function TopicItem({ topic }: TopicItemProps) {
 
     navigate(`/library/topics/${topic.id}`, { viewTransition: true });
   };
+
+  const stopPropagation = (e: InteractionEvent) => e.stopPropagation();
 
   return (
     <Item
@@ -144,6 +188,66 @@ function TopicItem({ topic }: TopicItemProps) {
                   )}
                 />
               </div>
+              {topic.isArchived && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <div
+                      id={"delete-button-" + topic.id}
+                      role="button"
+                      tabIndex={0}
+                      className={cn(
+                        "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-red-100 dark:hover:bg-red-950/50",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
+                      )}
+                      onClick={stopPropagation}
+                      onKeyDown={(e) => {
+                        e.stopPropagation();
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          document
+                            .getElementById("delete-button-" + topic.id)
+                            ?.click();
+                        }
+                      }}
+                    >
+                      <Trash2Icon className="size-4 text-gray-400/75 dark:text-gray-600 group-hover:text-red-500 dark:group-hover:text-red-400 transition-colors" />
+                    </div>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent
+                    size="sm"
+                    className="z-200! select-none p-4"
+                    onClick={stopPropagation}
+                    onKeyDown={stopPropagation}
+                  >
+                    <AlertDialogHeader>
+                      <AlertDialogMedia className="size-12 bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+                        <Trash2Icon className="size-6" />
+                      </AlertDialogMedia>
+                      <AlertDialogTitle>Delete topic?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This will permanently delete{" "}
+                        <span className="text-lc-muted-foreground-hover">
+                          "{topic.name}"
+                        </span>{" "}
+                        along with all its entries and their content. This
+                        action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="flex gap-3.5">
+                      <AlertDialogCancel variant="outline">
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        variant="destructive"
+                        className="-mr-px"
+                        onClick={handleDelete}
+                      >
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
               {!topic.isArchived && (
                 <>
                   <div
