@@ -5,7 +5,7 @@ import {
   captureSuggestionStorage,
   captureSuggestionDelayMultiplierStorage,
   sidePanelStateStorage,
-} from "../storage/settings";
+} from "../../storage/settings";
 
 describe("settings storage", () => {
   beforeEach(() => {

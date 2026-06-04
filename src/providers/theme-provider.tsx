@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { themeStorage, type Theme } from "@/lib/utils/storage/settings";
+import { themeStorage, type Theme } from "@/lib/storage/settings";
 
 type ThemeProviderState = {
   theme: Theme;

@@ -1,4 +1,4 @@
-import { sidePanelStateStorage } from "@/lib/utils/storage/settings";
+import { sidePanelStateStorage } from "@/lib/storage/settings";
 
 /**
  * Sets up message handlers for pending data and navigation requests

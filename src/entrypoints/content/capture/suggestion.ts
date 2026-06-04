@@ -10,7 +10,7 @@ import {
   captureSuggestionStorage,
   captureSuggestionDelayMultiplierStorage,
   sidePanelStateStorage,
-} from "@/lib/utils/storage/settings";
+} from "@/lib/storage/settings";
 import { UNSUPPORTED_URL_REGEX } from "@/constants/support-capture-sites";
 import "@fontsource/wix-madefor-text/400.css";
 import "@fontsource/wix-madefor-text/500.css";

@@ -15,7 +15,7 @@ import { useAppStorage } from "@/hooks/use-app-storage";
 import {
   captureSuggestionDelayMultiplierStorage,
   captureSuggestionStorage,
-} from "@/lib/utils/storage/settings";
+} from "@/lib/storage/settings";
 import { CameraIcon, CameraOffIcon, TimerIcon } from "lucide-react";
 
 function CaptureSuggestionsSettingsPage() {
