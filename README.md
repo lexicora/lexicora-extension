@@ -61,7 +61,7 @@ Most interactions happen inside the **browser side panel**, keeping context and 
 - Theme support (light / dark)
 - Keyboard-driven navigation
 
-**Planned / In Progress**
+### Planned / In Progress
 
 - AI-assisted summarization and refinement
 - Export to Markdown and other formats
@@ -73,7 +73,7 @@ Most interactions happen inside the **browser side panel**, keeping context and 
 ## Tech Stack
 
 | Layer | Technology |
-|---|---|
+| --- | --- |
 | Extension framework | [WXT](https://wxt.dev) (Chrome MV3 / Firefox MV2) |
 | UI | [React 19](https://react.dev), [TailwindCSS v4](https://tailwindcss.com), [shadcn-ui](https://ui.shadcn.com/) (built on [Radix UI](https://www.radix-ui.com/) + [Base UI](https://base-ui.com/)) |
 | Editor | [BlockNote](https://www.blocknotejs.org//) |
@@ -146,7 +146,7 @@ Tests use Vitest with WXT's `WxtVitest()` plugin and `fakeBrowser` for in-memory
 ### Entrypoints
 
 | Entrypoint | Context | Purpose |
-|---|---|---|
+| --- | --- | --- |
 | `background/` | Service worker | Orchestrates messaging, context menus, port tracking |
 | `content/` | Every page | Injects capture-suggestion toast; relays page data |
 | `sidepanel/` | Side panel | Full React app — primary user-facing UI |

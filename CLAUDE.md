@@ -1,6 +1,8 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+For an overview of what Lexicora is, the problem it solves, and its design philosophy, see the [README.md](README.md).
+
+This file focuses on architecture and development guidance for working with the codebase.
 
 ## Commands
 
