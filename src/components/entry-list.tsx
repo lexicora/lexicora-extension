@@ -38,6 +38,7 @@ import { useRxCollection } from "rxdb/plugins/react";
 
 interface EntryItemProps {
   entry: EntryDocType;
+  topUIScrollOffset?: number; // Optional prop to adjust scroll position when navigating
   // potentially more fields, like author, tags, etc.
 }
 
@@ -46,7 +47,7 @@ type InteractionEvent =
   | React.KeyboardEvent<HTMLDivElement>;
 
 // TODO: Potentially show more properties for each Entry.
-function EntryItem({ entry }: EntryItemProps) {
+function EntryItem({ entry, topUIScrollOffset }: EntryItemProps) {
   const navigate = useNavigate();
   const formattedDate = formatDate(entry.updatedAt);
   const collection = useRxCollection("entries");
@@ -100,7 +101,7 @@ function EntryItem({ entry }: EntryItemProps) {
     e.preventDefault();
 
     // Save scroll position as a plain number before navigating away
-    const adjustedScrollTop = window.scrollY - 229; // Adjust for top bar height (and potential margin)
+    const adjustedScrollTop = window.scrollY - (topUIScrollOffset ?? 0); // Adjust for top bar height (and potential margin)
     sessionStorage.setItem("entryListScrollTop", adjustedScrollTop.toString());
 
     navigate(`/library/entries/${entry.id}`, { viewTransition: true });
@@ -354,9 +355,19 @@ interface EntryListProps {
     onlyFavorites: boolean;
     onlyArchived: boolean;
   };
+  // When set, only entries belonging to this topic are shown. In this mode the
+  // default "hide archived" constraint is dropped so an archived topic still
+  // surfaces its (archived) entries.
+  topicId?: string;
+  topUIScrollOffset?: number; // Optional prop to adjust scroll position when navigating back from detail view with a top UI (like the bottom nav)
 }
 
-export function EntryList({ search, filter }: EntryListProps) {
+export function EntryList({
+  search,
+  filter,
+  topicId,
+  topUIScrollOffset,
+}: EntryListProps) {
   const [entries, setEntries] = useState<EntryDocType[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const collection = useRxCollection("entries");
@@ -393,7 +404,12 @@ export function EntryList({ search, filter }: EntryListProps) {
     if (!collection) return;
 
     const selector: any = {};
-    if (onlyArchived) {
+
+    if (topicId) {
+      // Topic-scoped list: show every entry of the topic regardless of archive
+      // state (an archived topic's entries are all archived).
+      selector.topicId = topicId;
+    } else if (onlyArchived) {
       selector.isArchived = true;
     } else {
       selector.isArchived = { $ne: true };
@@ -441,7 +457,7 @@ export function EntryList({ search, filter }: EntryListProps) {
       });
 
     return () => sub.unsubscribe();
-  }, [collection, search, onlyFavorites, onlyArchived]);
+  }, [collection, search, onlyFavorites, onlyArchived, topicId]);
 
   // TODO: For wider screens or the windowed app, maybe add a two column layout.
   return (
@@ -510,7 +526,7 @@ export function EntryList({ search, filter }: EntryListProps) {
           overscan={200} // potentially increase
           itemContent={(_, entry) => (
             <div className="px-1.25 py-1.5">
-              <EntryItem entry={entry} />
+              <EntryItem entry={entry} topUIScrollOffset={topUIScrollOffset} />
             </div>
           )}
         />
