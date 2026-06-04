@@ -13,9 +13,12 @@ bun run build:firefox    # Production build for Firefox
 bun run zip              # Package for Chrome Web Store
 bun run zip:firefox      # Package for AMO
 bun run compile          # TypeScript type-check only (no emit)
+bun run test             # Run unit tests (Vitest, single pass)
+bun run test:watch       # Run tests in watch mode
+bun run test:coverage    # Run tests with V8 coverage report
 ```
 
-No test runner is configured. Type-check with `bun run compile`.
+Type-check with `bun run compile`. Tests use Vitest with WXT's `WxtVitest()` plugin and `fakeBrowser` for in-memory extension API stubs — no real browser needed. Test files live in `__tests__/` directories alongside the code they test.
 
 ## Architecture
 
