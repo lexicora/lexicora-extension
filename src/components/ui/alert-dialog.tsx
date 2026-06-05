@@ -34,12 +34,12 @@ function AlertDialogOverlay({
   React.useEffect(() => {
     const html = document.documentElement
     const prev = html.style.overflow
-    const prevScrollGutter = html.style.scrollbarGutter
+    //const prevScrollGutter = html.style.scrollbarGutter
     html.style.overflow = "hidden"
-    html.style.scrollbarGutter = "stable"
+    //html.style.scrollbarGutter = "stable"
     return () => {
       html.style.overflow = prev
-      html.style.scrollbarGutter = prevScrollGutter
+      //html.style.scrollbarGutter = prevScrollGutter
     }
   }, [])
 
