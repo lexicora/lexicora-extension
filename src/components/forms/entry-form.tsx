@@ -395,6 +395,7 @@ export function EntryForm({
               {...register("title")}
               className="text-base! py-2"
             />
+            {/* TODO: Maybe add dropdown menu to also pin and favorite it */}
             <InputGroupAddon align="inline-end" className="pr-2 py-0.5">
               <Controller
                 control={control}
