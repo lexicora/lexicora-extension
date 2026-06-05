@@ -29,15 +29,15 @@ import NotSupportedPage from "./pages/not-supported";
 import LibraryPage from "./pages/library/library";
 
 // Entries Pages
-import EntryCreatePage from "./pages/library/entries/new/entry-create";
-import EntryDetailPage from "./pages/library/entries/[id]/entry-detail";
-import EntryEditPage from "./pages/library/entries/edit/[id]/entry-edit";
+import EntryCreatePage from "./pages/library/entries/create/entry-create";
+import EntryDetailPage from "./pages/library/entries/detail/entry-detail";
+import EntryEditPage from "./pages/library/entries/edit/entry-edit";
 
 // Topic Pages
 //* INFO: TopicsPage not necessary right now
-import TopicCreatePage from "./pages/library/topics/new/topic-create";
-import TopicDetailPage from "./pages/library/topics/[id]/topic-detail";
-import TopicEditPage from "./pages/library/topics/edit/[id]/topic-edit";
+import TopicCreatePage from "./pages/library/topics/create/topic-create";
+import TopicDetailPage from "./pages/library/topics/detail/topic-detail";
+import TopicEditPage from "./pages/library/topics/edit/topic-edit";
 
 // Settings Pages
 import SettingsPage from "./pages/settings/settings";
