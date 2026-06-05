@@ -39,6 +39,9 @@ import { useRxCollection } from "rxdb/plugins/react";
 interface EntryItemProps {
   entry: EntryDocType;
   topUIScrollOffset?: number; // Optional prop to adjust scroll position when navigating
+  // sessionStorage key under which the pre-navigation scroll position is saved.
+  // Override to namespace lists that can coexist (e.g. per-topic embedded lists).
+  scrollStorageKey?: string;
   // potentially more fields, like author, tags, etc.
 }
 
@@ -47,7 +50,11 @@ type InteractionEvent =
   | React.KeyboardEvent<HTMLDivElement>;
 
 // TODO: Potentially show more properties for each Entry.
-function EntryItem({ entry, topUIScrollOffset }: EntryItemProps) {
+export function EntryItem({
+  entry,
+  topUIScrollOffset,
+  scrollStorageKey = "entryListScrollTop",
+}: EntryItemProps) {
   const navigate = useNavigate();
   const formattedDate = formatDate(entry.updatedAt);
   const collection = useRxCollection("entries");
@@ -102,7 +109,7 @@ function EntryItem({ entry, topUIScrollOffset }: EntryItemProps) {
 
     // Save scroll position as a plain number before navigating away
     const adjustedScrollTop = window.scrollY - (topUIScrollOffset ?? 0); // Adjust for top bar height (and potential margin)
-    sessionStorage.setItem("entryListScrollTop", adjustedScrollTop.toString());
+    sessionStorage.setItem(scrollStorageKey, adjustedScrollTop.toString());
 
     navigate(`/library/entries/${entry.id}`, { viewTransition: true });
   };
@@ -355,11 +362,12 @@ interface EntryListProps {
     onlyFavorites: boolean;
     onlyArchived: boolean;
   };
-  // When set, only entries belonging to this topic are shown. In this mode the
-  // default "hide archived" constraint is dropped so an archived topic still
-  // surfaces its (archived) entries.
+  // When set, only entries belonging to this topic are shown.
   topicId?: string;
   topUIScrollOffset?: number; // Optional prop to adjust scroll position when navigating back from detail view with a top UI (like the bottom nav)
+  // sessionStorage key for scroll restoration. Override to namespace lists that
+  // can coexist across routes (e.g. the per-topic embedded list).
+  scrollStorageKey?: string;
 }
 
 export function EntryList({
@@ -367,6 +375,7 @@ export function EntryList({
   filter,
   topicId,
   topUIScrollOffset,
+  scrollStorageKey = "entryListScrollTop",
 }: EntryListProps) {
   const [entries, setEntries] = useState<EntryDocType[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -381,15 +390,15 @@ export function EntryList({
   // On POP, restore the scroll position (plain number, no JSON overhead)
   const savedScrollTop = useMemo(() => {
     if (navigationType !== "POP") return 0;
-    return parseInt(sessionStorage.getItem("entryListScrollTop") || "0", 10);
-  }, [navigationType]);
+    return parseInt(sessionStorage.getItem(scrollStorageKey) || "0", 10);
+  }, [navigationType, scrollStorageKey]);
 
   // If we arrived here via standard navigation (not back/POP), reset the Virtuoso state
   useEffect(() => {
     if (navigationType !== "POP") {
-      sessionStorage.removeItem("entryListScrollTop");
+      sessionStorage.removeItem(scrollStorageKey);
     }
-  }, [navigationType]);
+  }, [navigationType, scrollStorageKey]);
 
   // Reset Virtuoso state when search or filters actively change
   useEffect(() => {
@@ -397,8 +406,8 @@ export function EntryList({
       isFirstRender.current = false;
       return;
     }
-    sessionStorage.removeItem("entryListScrollTop");
-  }, [search, onlyFavorites, onlyArchived]);
+    sessionStorage.removeItem(scrollStorageKey);
+  }, [search, onlyFavorites, onlyArchived, scrollStorageKey]);
 
   useEffect(() => {
     if (!collection) return;
@@ -406,10 +415,10 @@ export function EntryList({
     const selector: any = {};
 
     if (topicId) {
-      // Topic-scoped list: show every entry of the topic regardless of archive
-      // state (an archived topic's entries are all archived).
       selector.topicId = topicId;
-    } else if (onlyArchived) {
+    }
+
+    if (onlyArchived) {
       selector.isArchived = true;
     } else {
       selector.isArchived = { $ne: true };
@@ -526,7 +535,11 @@ export function EntryList({
           overscan={200} // potentially increase
           itemContent={(_, entry) => (
             <div className="px-1.25 py-1.5">
-              <EntryItem entry={entry} topUIScrollOffset={topUIScrollOffset} />
+              <EntryItem
+                entry={entry}
+                topUIScrollOffset={topUIScrollOffset}
+                scrollStorageKey={scrollStorageKey}
+              />
             </div>
           )}
         />

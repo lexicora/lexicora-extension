@@ -57,6 +57,7 @@ function RootLayout() {
 
   // Potentially disable scroll restoration, on library page paths.
   const disableScrollRestoration = location.pathname.startsWith("/library");
+  // TODO: Make disabled pages more granular and dynamic, e.g. only entry and topic detail pages...
 
   return (
     <SidePanelMessagingProvider>
