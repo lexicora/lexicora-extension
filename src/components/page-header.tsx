@@ -150,7 +150,7 @@ export function PageHeader({
           <div
             //className="flex mt-1.25 w-full max-w-317.25 relative"
             className={cn(
-              "flex mt-1.25 w-full max-w-317.25",
+              "flex mt-1.25 w-full max-w-317.25 mr-(--lc-scrollbar-offset)",
               rightActionButton ? "justify-between" : "justify-start",
             )}
           >
