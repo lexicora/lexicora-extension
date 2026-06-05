@@ -98,7 +98,7 @@ function TopicEditPage() {
       <PageHeader
         title="Edit Topic"
         goBackButton
-        rightActionButton={saveButton}
+        //rightActionButton={saveButton}
       />
       <main className="flex-1 px-0.5 max-w-2xl mx-auto w-full">
         <section className="mx-px">

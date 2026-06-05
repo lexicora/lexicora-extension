@@ -10,14 +10,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import { EntryList } from "@/components/entry-list";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -26,7 +19,6 @@ import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
 import {
   ArchiveIcon,
-  EllipsisIcon,
   SquarePenIcon,
   StarIcon,
   Trash2Icon,
@@ -35,6 +27,7 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
+import { Separator } from "@/components/ui/separator";
 
 function TopicDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -153,141 +146,46 @@ function TopicDetailPage() {
 
   return (
     <PageContainer id="lc-topic-detail-page">
-      <PageHeader title="Topic" goBackButton rightActionButton={editButton} />
+      <PageHeader
+        title="Topic"
+        classNameHeaderElement="mb-6"
+        goBackButton
+        rightActionButton={editButton}
+      />
 
       <section className="px-1 /*max-w-2xl*/ mx-auto w-full text-left">
-        {/* Title row + actions menu */}
-        <div className="flex items-start justify-between gap-2">
-          <h1 className="text-2xl font-semibold leading-tight break-words min-w-0">
-            {topic.name}
-          </h1>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                title="More actions"
-                className="shrink-0 -mr-1 -mt-0.5 size-9 rounded-lg text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-800"
-              >
-                <EllipsisIcon className="size-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem
-                className="group"
-                onSelect={(e) => {
-                  e.preventDefault();
-                  handleAttributeToggle("isFavorite");
-                }}
-              >
-                <StarIcon
-                  className={cn(
-                    topic.isFavorite
-                      ? "text-yellow-600/70 fill-yellow-600/85 dark:text-yellow-500 dark:fill-yellow-500 group-hover:fill-transparent!"
-                      : "text-muted-foreground",
-                  )}
-                />
-                {topic.isFavorite
-                  ? "Remove from favorites"
-                  : "Add to favorites"}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="group"
-                onSelect={(e) => {
-                  e.preventDefault();
-                  handleAttributeToggle("isPinned");
-                }}
-              >
-                <PinIcon
-                  className={cn(
-                    topic.isPinned
-                      ? "text-blue-600/70 fill-blue-600/85 dark:text-blue-500 dark:fill-blue-500 group-hover:fill-transparent!"
-                      : "text-muted-foreground",
-                  )}
-                />
-                {topic.isPinned ? "Unpin" : "Pin"}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onSelect={(e) => {
-                  e.preventDefault();
-                  handleAttributeToggle("isArchived");
-                }}
-              >
-                <ArchiveIcon
-                  className={cn(
-                    topic.isArchived
-                      ? "text-green-500/80 dark:text-green-600"
-                      : "text-muted-foreground",
-                  )}
-                />
-                {topic.isArchived ? "Restore topic" : "Archive topic"}
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                variant="destructive"
-                onSelect={(e) => {
-                  e.preventDefault();
-                  setDeleteOpen(true);
-                }}
-              >
-                <Trash2Icon />
-                Delete topic
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        {/* Title */}
+        <h1 className="text-2xl font-semibold leading-tight break-words text-pretty">
+          {topic.name}
+        </h1>
 
         {/* Description */}
         <p
           className={cn(
-            "text-sm leading-relaxed whitespace-pre-wrap wrap-break-words mt-4",
+            "text-sm leading-relaxed whitespace-pre-wrap wrap-break-word text-pretty mt-4",
             !topic.description && "italic text-muted-foreground",
           )}
         >
           {topic.description || "No description."}
         </p>
 
-        {/* Status pills */}
-        {(topic.isFavorite || topic.isArchived || topic.isPinned) && (
-          <div className="flex flex-wrap items-center gap-1.5 mt-2.5">
-            {topic.isFavorite && (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-yellow-500/15 text-[11px] font-medium text-yellow-700 dark:text-yellow-500">
-                <StarIcon className="size-3 fill-current" />
-                Favorite
-              </span>
-            )}
-            {topic.isPinned && (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-blue-500/15 text-[11px] font-medium text-blue-700 dark:text-blue-500">
-                <PinIcon className="size-3" />
-                Pinned
-              </span>
-            )}
-            {topic.isArchived && (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-green-500/15 text-[11px] font-medium text-green-700 dark:text-green-600">
-                <ArchiveIcon className="size-3" />
-                Archived
-              </span>
-            )}
-          </div>
-        )}
-
         {/* Tags */}
         {topic.tags && topic.tags.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5 mt-4">
             {topic.tags.map((tag, index) => (
-              <span
+              <Badge
                 key={topic.id + "-tag-" + index}
-                className="px-1.5 py-0.5 rounded-md bg-gray-400/37 dark:bg-gray-600/40 text-[11px] font-medium text-lc-muted-foreground-hover truncate max-w-40"
+                variant="secondary"
+                className="max-w-40 truncate text-muted-foreground"
               >
                 {tag}
-              </span>
+              </Badge>
             ))}
           </div>
         )}
 
         {/* Dates */}
-        <div className="flex flex-wrap gap-x-6 gap-y-1 mt-5 text-xs text-muted-foreground">
+        <div className="flex flex-wrap max-w-lg justify-between gap-x-6 gap-y-1 mt-5 text-xs text-muted-foreground">
           <span>
             <span className="font-medium text-lc-muted-foreground-hover">
               Created
@@ -301,11 +199,76 @@ function TopicDetailPage() {
             {formatDate(topic.updatedAt)}
           </span>
         </div>
+
+        {/* Action bar: state toggles + delete */}
+        <Separator className="mx-1 max-w-[calc(100%-8px)] mt-4 opacity-60" />
+        <div className="flex items-center gap-1 mt-0 pt-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            title={
+              topic.isFavorite ? "Remove from favorites" : "Add to favorites"
+            }
+            onClick={() => handleAttributeToggle("isFavorite")}
+            className="size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
+          >
+            <StarIcon
+              className={cn(
+                "size-4.5",
+                topic.isFavorite
+                  ? "text-yellow-600/80 fill-yellow-600/85 dark:text-yellow-500 dark:fill-yellow-500"
+                  : "text-muted-foreground",
+              )}
+            />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            title={topic.isPinned ? "Unpin topic" : "Pin topic"}
+            onClick={() => handleAttributeToggle("isPinned")}
+            className="size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
+          >
+            <PinIcon
+              className={cn(
+                "size-4.5",
+                topic.isPinned
+                  ? "text-blue-600/80 fill-blue-600/85 dark:text-blue-500 dark:fill-blue-500"
+                  : "text-muted-foreground",
+              )}
+            />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            title={topic.isArchived ? "Restore topic" : "Archive topic"}
+            onClick={() => handleAttributeToggle("isArchived")}
+            className="size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
+          >
+            <ArchiveIcon
+              className={cn(
+                "size-4.5",
+                topic.isArchived
+                  ? "text-green-600/80 dark:text-green-600"
+                  : "text-muted-foreground",
+              )}
+            />
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            title="Delete topic"
+            onClick={() => setDeleteOpen(true)}
+            className="ml-auto size-9 rounded-lg text-muted-foreground hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-950/50 dark:hover:text-red-400"
+          >
+            <Trash2Icon className="size-4.5" />
+          </Button>
+        </div>
       </section>
 
-      {/* Entries belonging to this topic */}
-      <main className="mb-0 mt-4">
-        <EntryList topicId={topic.id} search="" />
+      {/* Entries belonging to this topic (potentially add ref, for top UI scroll offset )*/}
+      <main className="mb-0 mt-px">
+        <EntryList topicId={topic.id} topUIScrollOffset={375} search="" />
       </main>
 
       {/* Delete confirmation (controlled so it survives the dropdown closing) */}
