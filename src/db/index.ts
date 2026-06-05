@@ -28,7 +28,7 @@ export async function initializeDb() {
     storage: getRxStorageDexie(), // TODO: Potentially include dexie.js plugins like dexie-worker or similar in the future. Data compression could be interesting. (encryption is built in to RxDB)
     multiInstance: true, // true by default - highly important for extensions crossing contexts
     ignoreDuplicate: false, // true is only allowed in development.
-    closeDuplicates: isDev, // automatically close duplicate instances (e.g. from hot reload) - only relevant if ignoreDuplicate is true (enable if needed)
+    closeDuplicates: isDev, // TODO: Maybe set to true always. automatically close duplicate instances (e.g. from hot reload) - only relevant if ignoreDuplicate is true (enable if needed)
     eventReduce: true,
   });
 
