@@ -188,7 +188,7 @@ function TopicDetailPage() {
     }
     await doc.remove();
 
-    navigate("/library", { replace: true });
+    navigate("/library", { replace: true, viewTransition: true });
   };
 
   // Loading state — keep the shell so the back button stays available.
@@ -259,7 +259,7 @@ function TopicDetailPage() {
                   <Badge
                     key={topic.id + "-tag-" + index}
                     variant="secondary"
-                    className="max-w-40 truncate text-muted-foreground"
+                    className="max-w-40 truncate text-muted-foreground-hover"
                   >
                     {tag}
                   </Badge>
@@ -284,7 +284,7 @@ function TopicDetailPage() {
             </div>
 
             {/* Action bar: state toggles + delete */}
-            <Separator className="mx-1 max-w-[calc(100%-8px)] mt-4 opacity-60" />
+            <Separator className="mx-auto max-w-[calc(100%-8px)] mt-4 opacity-60" />
             <div className="flex items-center gap-1 mt-0 pt-2">
               <Button
                 variant="ghost"
@@ -366,8 +366,9 @@ function TopicDetailPage() {
 
           {/* Favorite entries preview */}
           {!hideEntries && favoriteEntries.length > 0 && (
-            <section className="px-1 mx-auto w-full mt-6">
-              <div className="flex items-center gap-1.5 mb-1.5 px-1.25">
+            <section className="px-1 mx-auto w-full mt-2">
+              <Separator className="mx-auto max-w-[calc(100%-8px)] mt-0 mb-3 opacity-60" />
+              <div className="flex /*justify-center*/ items-center gap-1.5 mb-1.5 px-1.25">
                 <StarIcon className="size-3.5 text-muted-foreground" />
                 <span className="text-xs font-medium text-muted-foreground tracking-wide">
                   Favorites
@@ -416,28 +417,30 @@ function TopicDetailPage() {
                   </InputGroup>
                 </Field>
               </div>
-              <Toggle
-                title={showFavorites ? "Show all" : "Show only Favorites"}
-                variant="outline"
-                className="shrink-0 transition-colors min-w-8 size-8"
-                pressed={showFavorites}
-                onPressedChange={(pressed) =>
-                  handleToggleFilter("favorites", pressed)
-                }
-              >
-                <StarIcon className="group-data-[state=on]/toggle:text-yellow-500 group-data-[state=on]/toggle:fill-yellow-500" />
-              </Toggle>
-              <Toggle
-                title={showArchived ? "Show all" : "Show only Archived"}
-                variant="outline"
-                className="shrink-0 transition-colors min-w-8 size-8"
-                pressed={showArchived}
-                onPressedChange={(pressed) =>
-                  handleToggleFilter("archived", pressed)
-                }
-              >
-                <ArchiveIcon className="group-data-[state=on]/toggle:text-green-600 dark:group-data-[state=on]/toggle:text-green-500" />
-              </Toggle>
+              <div className="flex items-center gap-0">
+                <Toggle
+                  title={showFavorites ? "Show all" : "Show only Favorites"}
+                  variant="outline"
+                  className="shrink-0 transition-colors min-w-9 size-9 rounded-r-none border-r-border/50"
+                  pressed={showFavorites}
+                  onPressedChange={(pressed) =>
+                    handleToggleFilter("favorites", pressed)
+                  }
+                >
+                  <StarIcon className="group-data-[state=on]/toggle:text-yellow-500 group-data-[state=on]/toggle:fill-yellow-500" />
+                </Toggle>
+                <Toggle
+                  title={showArchived ? "Show all" : "Show only Archived"}
+                  variant="outline"
+                  className="shrink-0 transition-colors min-w-9 size-9 rounded-l-none -ml-px not-data-[state=on]:border-l-border/90"
+                  pressed={showArchived}
+                  onPressedChange={(pressed) =>
+                    handleToggleFilter("archived", pressed)
+                  }
+                >
+                  <ArchiveIcon className="group-data-[state=on]/toggle:text-green-600 dark:group-data-[state=on]/toggle:text-green-500" />
+                </Toggle>
+              </div>
             </div>
 
             <main className="mb-0 mt-px">
@@ -446,7 +449,7 @@ function TopicDetailPage() {
                 search={deferredSearch}
                 filter={filter}
                 scrollStorageKey={`entryList:${topic.id}`}
-                topUIScrollOffset={180}
+                topUIScrollOffset={194}
               />
             </main>
           </TabsContent>

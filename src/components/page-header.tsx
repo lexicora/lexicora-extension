@@ -95,8 +95,11 @@ export function PageHeader({
               size="icon"
               title={rightActionButton.title}
               className={cn(
+                "hover:ring-1 ring-inset ring-gray-300 dark:ring-gray-700",
                 rightActionButton.variant === "default" &&
-                  "bg-primary/80 hover:bg-primary hover:ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:text-primary-foreground/95",
+                  "bg-primary/80 hover:bg-primary hover:text-primary-foreground/95",
+                rightActionButton.variant === "secondary" &&
+                  "bg-secondary/80 hover:bg-secondary hover:text-secondary-foreground/95",
                 // TODO: Other variants
                 "shrink-0 size-10 rounded-lg",
               )}
@@ -187,8 +190,11 @@ export function PageHeader({
                 size="icon"
                 title={rightActionButton.title}
                 className={cn(
+                  "backdrop-blur-xs",
                   rightActionButton.variant === "default" &&
-                    "bg-primary/80 backdrop-blur-xs hover:bg-primary hover:text-primary-foreground/95",
+                    "bg-primary/80 hover:bg-primary hover:text-primary-foreground/95",
+                  rightActionButton.variant === "secondary" &&
+                    "bg-secondary/80 hover:bg-secondary hover:text-secondary-foreground/95 hover:ring-1 ring-inset ring-gray-300 dark:ring-gray-700",
                   // TODO: Other variants
                   "mr-0.75 shrink-0 size-7.5 transition-all duration-150 active-view-transition:transition-none",
                   isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
