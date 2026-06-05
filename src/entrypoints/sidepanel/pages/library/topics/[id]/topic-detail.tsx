@@ -8,16 +8,30 @@ import {
   AlertDialogHeader,
   AlertDialogMedia,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
 import { EntryList } from "@/components/entry-list";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
-import { ArchiveIcon, SquarePenIcon, StarIcon, Trash2Icon } from "lucide-react";
+import {
+  ArchiveIcon,
+  EllipsisIcon,
+  SquarePenIcon,
+  StarIcon,
+  Trash2Icon,
+  PinIcon,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
@@ -30,7 +44,10 @@ function TopicDetailPage() {
   const blocksCollection = useRxCollection("blocks");
 
   // undefined = still loading, null = not found, otherwise the topic.
-  const [topic, setTopic] = useState<TopicDocType | null | undefined>(undefined);
+  const [topic, setTopic] = useState<TopicDocType | null | undefined>(
+    undefined,
+  );
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   useEffect(() => {
     if (!collection || !id) return;
@@ -47,7 +64,7 @@ function TopicDetailPage() {
   }, [collection, id]);
 
   const handleAttributeToggle = async (
-    attribute: "isFavorite" | "isArchived",
+    attribute: "isFavorite" | "isArchived" | "isPinned",
   ) => {
     if (!collection || !topic) return;
 
@@ -116,7 +133,9 @@ function TopicDetailPage() {
       <PageContainer id="lc-topic-detail-page">
         <PageHeader title="Topic" goBackButton />
         <main className="flex flex-col items-center justify-center py-16 px-4 text-center">
-          <p className="text-muted-foreground">This topic could not be found.</p>
+          <p className="text-muted-foreground">
+            This topic could not be found.
+          </p>
         </main>
       </PageContainer>
     );
@@ -126,33 +145,136 @@ function TopicDetailPage() {
     iconSmall: <SquarePenIcon className="size-4.5" />,
     iconLarge: <SquarePenIcon className="size-5.5" />,
     variant: "default" as const,
-    onClick: () => navigate(`/library/topics/${topic.id}/edit`),
+    onClick: () =>
+      navigate(`/library/topics/${topic.id}/edit`, { viewTransition: true }),
     title: "Edit Topic",
     type: "button" as const,
   };
 
   return (
     <PageContainer id="lc-topic-detail-page">
-      <PageHeader
-        title={topic.name}
-        goBackButton
-        rightActionButton={editButton}
-      />
+      <PageHeader title="Topic" goBackButton rightActionButton={editButton} />
 
-      <section className="px-0.5 max-w-2xl mx-auto w-full">
+      <section className="px-1 /*max-w-2xl*/ mx-auto w-full text-left">
+        {/* Title row + actions menu */}
+        <div className="flex items-start justify-between gap-2">
+          <h1 className="text-2xl font-semibold leading-tight break-words min-w-0">
+            {topic.name}
+          </h1>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                title="More actions"
+                className="shrink-0 -mr-1 -mt-0.5 size-9 rounded-lg text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-800"
+              >
+                <EllipsisIcon className="size-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem
+                className="group"
+                onSelect={(e) => {
+                  e.preventDefault();
+                  handleAttributeToggle("isFavorite");
+                }}
+              >
+                <StarIcon
+                  className={cn(
+                    topic.isFavorite
+                      ? "text-yellow-600/70 fill-yellow-600/85 dark:text-yellow-500 dark:fill-yellow-500 group-hover:fill-transparent!"
+                      : "text-muted-foreground",
+                  )}
+                />
+                {topic.isFavorite
+                  ? "Remove from favorites"
+                  : "Add to favorites"}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="group"
+                onSelect={(e) => {
+                  e.preventDefault();
+                  handleAttributeToggle("isPinned");
+                }}
+              >
+                <PinIcon
+                  className={cn(
+                    topic.isPinned
+                      ? "text-blue-600/70 fill-blue-600/85 dark:text-blue-500 dark:fill-blue-500 group-hover:fill-transparent!"
+                      : "text-muted-foreground",
+                  )}
+                />
+                {topic.isPinned ? "Unpin" : "Pin"}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault();
+                  handleAttributeToggle("isArchived");
+                }}
+              >
+                <ArchiveIcon
+                  className={cn(
+                    topic.isArchived
+                      ? "text-green-500/80 dark:text-green-600"
+                      : "text-muted-foreground",
+                  )}
+                />
+                {topic.isArchived ? "Restore topic" : "Archive topic"}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                variant="destructive"
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setDeleteOpen(true);
+                }}
+              >
+                <Trash2Icon />
+                Delete topic
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
         {/* Description */}
         <p
           className={cn(
-            "text-sm whitespace-pre-wrap break-words",
+            "text-sm leading-relaxed whitespace-pre-wrap wrap-break-words mt-4",
             !topic.description && "italic text-muted-foreground",
           )}
         >
           {topic.description || "No description."}
         </p>
 
+        {/* Status pills */}
+        {(topic.isFavorite || topic.isArchived || topic.isPinned) && (
+          <div className="flex flex-wrap items-center gap-1.5 mt-2.5">
+            {topic.isFavorite && (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-yellow-500/15 text-[11px] font-medium text-yellow-700 dark:text-yellow-500">
+                <StarIcon className="size-3 fill-current" />
+                Favorite
+              </span>
+            )}
+            {topic.isPinned && (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-blue-500/15 text-[11px] font-medium text-blue-700 dark:text-blue-500">
+                <PinIcon className="size-3" />
+                Pinned
+              </span>
+            )}
+            {topic.isArchived && (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-green-500/15 text-[11px] font-medium text-green-700 dark:text-green-600">
+                <ArchiveIcon className="size-3" />
+                Archived
+              </span>
+            )}
+          </div>
+        )}
+
         {/* Tags */}
         {topic.tags && topic.tags.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5 mt-3">
+          <div className="flex flex-wrap items-center gap-1.5 mt-4">
             {topic.tags.map((tag, index) => (
               <span
                 key={topic.id + "-tag-" + index}
@@ -165,95 +287,56 @@ function TopicDetailPage() {
         )}
 
         {/* Dates */}
-        <div className="flex flex-wrap gap-x-4 gap-y-0.5 mt-3 text-xs text-muted-foreground">
-          <span>Created {formatDate(topic.createdAt)}</span>
-          <span>Updated {formatDate(topic.updatedAt)}</span>
-        </div>
-
-        {/* Actions */}
-        <div className="flex items-center gap-2 mt-4 mb-1">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleAttributeToggle("isFavorite")}
-            title={
-              topic.isFavorite ? "Remove from favorites" : "Mark as favorite"
-            }
-          >
-            <StarIcon
-              className={cn(
-                "size-4",
-                topic.isFavorite
-                  ? "text-yellow-600/70 fill-yellow-600/85 dark:text-yellow-500 dark:fill-yellow-500"
-                  : "text-muted-foreground",
-              )}
-            />
-            {topic.isFavorite ? "Favorited" : "Favorite"}
-          </Button>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleAttributeToggle("isArchived")}
-            title={topic.isArchived ? "Restore topic" : "Archive topic"}
-          >
-            <ArchiveIcon
-              className={cn(
-                "size-4",
-                topic.isArchived
-                  ? "text-green-500/80 dark:text-green-600"
-                  : "text-muted-foreground",
-              )}
-            />
-            {topic.isArchived ? "Archived" : "Archive"}
-          </Button>
-
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="ml-auto text-muted-foreground hover:text-red-500 hover:border-red-300 dark:hover:border-red-900"
-                title="Delete topic"
-              >
-                <Trash2Icon className="size-4" />
-                Delete
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent size="sm" className="select-none p-4">
-              <AlertDialogHeader>
-                <AlertDialogMedia className="size-12 bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
-                  <Trash2Icon className="size-6" />
-                </AlertDialogMedia>
-                <AlertDialogTitle>Delete topic?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will permanently delete{" "}
-                  <span className="text-lc-muted-foreground-hover">
-                    "{topic.name}"
-                  </span>{" "}
-                  along with all its entries and their content. This action
-                  cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter className="flex gap-3.5">
-                <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  variant="destructive"
-                  className="-mr-px"
-                  onClick={handleDelete}
-                >
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+        <div className="flex flex-wrap gap-x-6 gap-y-1 mt-5 text-xs text-muted-foreground">
+          <span>
+            <span className="font-medium text-lc-muted-foreground-hover">
+              Created
+            </span>{" "}
+            {formatDate(topic.createdAt)}
+          </span>
+          <span>
+            <span className="font-medium text-lc-muted-foreground-hover">
+              Updated
+            </span>{" "}
+            {formatDate(topic.updatedAt)}
+          </span>
         </div>
       </section>
 
       {/* Entries belonging to this topic */}
-      <main className="mb-0 mt-2">
+      <main className="mb-0 mt-4">
         <EntryList topicId={topic.id} search="" />
       </main>
+
+      {/* Delete confirmation (controlled so it survives the dropdown closing) */}
+      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <AlertDialogContent size="sm" className="select-none p-4">
+          <AlertDialogHeader>
+            <AlertDialogMedia className="size-12 bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+              <Trash2Icon className="size-6" />
+            </AlertDialogMedia>
+            <AlertDialogTitle>Delete topic?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete{" "}
+              <span className="text-lc-muted-foreground-hover">
+                "{topic.name}"
+              </span>{" "}
+              along with all its entries and their content. This action cannot
+              be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex gap-3.5">
+            <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              className="-mr-px"
+              onClick={handleDelete}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </PageContainer>
   );
 }
