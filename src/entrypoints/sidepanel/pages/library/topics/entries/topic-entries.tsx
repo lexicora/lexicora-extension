@@ -1,0 +1,111 @@
+import { Field } from "@/components/ui/field";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { Toggle } from "@/components/ui/toggle";
+import { EntryList } from "@/components/entry-list";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
+import { ArchiveIcon, SearchIcon, StarIcon, XIcon } from "lucide-react";
+import { useDeferredValue, useState } from "react";
+import { useParams } from "react-router-dom";
+
+function TopicEntriesPage() {
+  const { id } = useParams<{ id: string }>();
+
+  const [search, setSearch] = useState("");
+  const deferredSearch = useDeferredValue(search);
+  const [showFavorites, setShowFavorites] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
+  const filter = {
+    onlyFavorites: showFavorites,
+    onlyArchived: showArchived,
+  } as const;
+
+  const handleToggleFilter = (
+    type: "favorites" | "archived",
+    pressed: boolean,
+  ) => {
+    if (type === "favorites") {
+      setShowFavorites(pressed);
+      if (pressed) setShowArchived(false);
+    } else {
+      setShowArchived(pressed);
+      if (pressed) setShowFavorites(false);
+    }
+  };
+
+  return (
+    <PageContainer id="lc-topic-entries-page">
+      <PageHeader title="Entries" goBackButton />
+
+      <div className="flex items-center gap-1.5 px-1.5 pt-0.5 pb-1.5 dark:scheme-dark">
+        <div className="flex-1">
+          <Field orientation="horizontal">
+            <InputGroup>
+              <InputGroupAddon>
+                <SearchIcon />
+              </InputGroupAddon>
+              <InputGroupInput
+                name="search"
+                placeholder="Search entries..."
+                className="h-8 px-2"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              {search && (
+                <InputGroupButton
+                  size="icon-sm"
+                  onClick={() => setSearch("")}
+                  title="Clear search"
+                  className="size-7.5 mr-0.5"
+                >
+                  <XIcon />
+                </InputGroupButton>
+              )}
+            </InputGroup>
+          </Field>
+        </div>
+        <div className="flex items-center gap-0">
+          <Toggle
+            title={showFavorites ? "Show all" : "Show only Favorites"}
+            variant="outline"
+            className="shrink-0 transition-colors min-w-9 size-9 rounded-r-none border-r-border/50"
+            pressed={showFavorites}
+            onPressedChange={(pressed) =>
+              handleToggleFilter("favorites", pressed)
+            }
+          >
+            <StarIcon className="group-data-[state=on]/toggle:text-yellow-500 group-data-[state=on]/toggle:fill-yellow-500" />
+          </Toggle>
+          <Toggle
+            title={showArchived ? "Show all" : "Show only Archived"}
+            variant="outline"
+            className="shrink-0 transition-colors min-w-9 size-9 rounded-l-none -ml-px not-data-[state=on]:border-l-border/90"
+            pressed={showArchived}
+            onPressedChange={(pressed) =>
+              handleToggleFilter("archived", pressed)
+            }
+          >
+            <ArchiveIcon className="group-data-[state=on]/toggle:text-green-600 dark:group-data-[state=on]/toggle:text-green-500" />
+          </Toggle>
+        </div>
+      </div>
+
+      <main className="mb-1.25 mt-px">
+        <EntryList
+          topicId={id}
+          search={deferredSearch}
+          filter={filter}
+          scrollStorageKey={`entryList:${id}`}
+          topUIScrollOffset={190}
+        />
+      </main>
+    </PageContainer>
+  );
+}
+
+export default TopicEntriesPage;

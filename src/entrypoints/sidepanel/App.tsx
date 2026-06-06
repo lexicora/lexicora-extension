@@ -38,6 +38,7 @@ import EntryEditPage from "./pages/library/entries/edit/entry-edit";
 import TopicCreatePage from "./pages/library/topics/create/topic-create";
 import TopicDetailPage from "./pages/library/topics/detail/topic-detail";
 import TopicEditPage from "./pages/library/topics/edit/topic-edit";
+import TopicEntriesPage from "./pages/library/topics/entries/topic-entries";
 
 // Settings Pages
 import SettingsPage from "./pages/settings/settings";
@@ -90,6 +91,7 @@ const router = createMemoryRouter([
       // Topics
       { path: "library/topics/new", element: <TopicCreatePage /> },
       { path: "library/topics/:id", element: <TopicDetailPage /> },
+      { path: "library/topics/:id/entries", element: <TopicEntriesPage /> },
       { path: "library/topics/:id/edit", element: <TopicEditPage /> },
       // Settings
       { path: "settings", element: <SettingsPage /> },
