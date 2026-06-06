@@ -137,6 +137,7 @@ html:has(
   padding-inline: 8px !important;
   padding-top: 0px;
   & .bn-file-block-content-wrapper {
+    outline: none;
     cursor: default;
   }
   & img::selection,

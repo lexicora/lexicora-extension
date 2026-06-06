@@ -266,7 +266,7 @@ function EntryDetailPage() {
         {(entry.faviconUrl || entry.siteName || entry.url) && (
           <div className="flex items-center gap-1.5 mt-3 min-w-0">
             {entry.faviconUrl && (
-              <Avatar.Root className="size-4.25 rounded-sm opacity-90 shrink-0 ml-0.75">
+              <Avatar.Root className="size-4.5 rounded-sm opacity-90 shrink-0 ml-0.5">
                 <Avatar.Image
                   className="rounded-sm"
                   src={entry.faviconUrl}
@@ -278,7 +278,7 @@ function EntryDetailPage() {
               </Avatar.Root>
             )}
             {(entry.siteName || entry.hostnameUrl) && (
-              <div className="flex items-center min-w-0 gap-1">
+              <div className="flex items-center mt-px min-w-0 gap-1">
                 {entry.url ? (
                   <a
                     href={entry.url}
@@ -312,8 +312,8 @@ function EntryDetailPage() {
         {/* Description */}
         <p
           className={cn(
-            "text-sm leading-relaxed whitespace-pre-wrap wrap-break-word text-pretty mt-4",
-            !entry.description && "italic text-muted-foreground",
+            "text-sm leading-relaxed whitespace-pre-wrap wrap-break-word text-pretty mt-3.75",
+            !entry.description && "italic text-muted-foreground select-none",
           )}
         >
           {entry.description || "No description."}

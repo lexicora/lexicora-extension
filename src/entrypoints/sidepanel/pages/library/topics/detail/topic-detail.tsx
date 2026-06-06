@@ -248,7 +248,7 @@ function TopicDetailPage() {
         <p
           className={cn(
             "text-sm leading-relaxed whitespace-pre-wrap wrap-break-word text-pretty mt-4",
-            !topic.description && "italic text-muted-foreground",
+            !topic.description && "italic text-muted-foreground select-none",
           )}
         >
           {topic.description || "No description."}
@@ -345,7 +345,7 @@ function TopicDetailPage() {
                 variant="ghost"
                 size="icon"
                 title="Copy topic"
-                className="ml-auto size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
+                className="ml-auto size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 not-hover:text-muted-foreground not-active:text-muted-foreground"
               >
                 <EllipsisIcon className="size-4.5" />
               </Button>
