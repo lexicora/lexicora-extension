@@ -1,6 +1,9 @@
 import { uuidv7 } from "uuidv7";
 import { type BlockDocType } from "@/db/schemas/block";
 
+//* NOTE: Currently all blocks if unchanged are updated and rxdb marks them as a new version,
+//* which means it is included in sync, maybe somehow add an update check to make sync more efficient.
+
 /**
  * Recursively converts BlockNote.js blocks to RxDB BlockDocType documents.
  *
