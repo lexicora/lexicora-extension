@@ -172,9 +172,11 @@ function EntryDetailPage() {
           {entry.title}
         </h1>
 
-        {/* Source line: favicon + site name / hostname as an external link */}
-        {(entry.hostnameUrl || entry.siteName) && (
-          <div className="flex items-center gap-1.5 mt-3">
+        {/* Source line: favicon + site name / hostname + subtle path.
+            faviconUrl and siteName are independent metadata (not derived from url).
+            hostnameUrl / pathnameUrl / searchUrl are derived from url and only exist when url is set. */}
+        {(entry.faviconUrl || entry.siteName || entry.url) && (
+          <div className="flex items-center gap-1.5 mt-3 min-w-0">
             {entry.faviconUrl && (
               <Avatar.Root className="size-4.25 rounded-sm opacity-90 shrink-0 ml-0.75">
                 <Avatar.Image
@@ -187,25 +189,35 @@ function EntryDetailPage() {
                 </Avatar.Fallback>
               </Avatar.Root>
             )}
-            {entry.url ? (
-              <a
-                href={entry.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                title={"Visit: " + entry.url}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors truncate"
-              >
-                {entry.siteName || entry.hostnameUrl}
-              </a>
-            ) : (
-              <span className="text-sm text-muted-foreground truncate">
-                {entry.siteName || entry.hostnameUrl}
-              </span>
+            {(entry.siteName || entry.hostnameUrl) && (
+              <div className="flex items-center min-w-0 gap-1">
+                {entry.url ? (
+                  <a
+                    href={entry.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={"Visit: " + entry.url}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors truncate shrink-0 max-w-[60%]"
+                  >
+                    {entry.siteName || entry.hostnameUrl}
+                  </a>
+                ) : (
+                  <span className="text-sm text-muted-foreground truncate shrink-0 max-w-[60%]">
+                    {entry.siteName}
+                  </span>
+                )}
+                {entry.pathnameUrl && entry.pathnameUrl !== "/" && (
+                  <span className="text-xs mt-px text-muted-foreground/60 truncate">
+                    {entry.pathnameUrl}
+                    {entry.searchUrl || ""}
+                  </span>
+                )}
+                {/* Visually hidden but included in clipboard when user selects and copies */}
+                <span aria-hidden="true" className="sr-only select-text">
+                  {entry.url}
+                </span>
+              </div>
             )}
-            <span aria-hidden className="hidden">
-              {entry.url}
-            </span>
-            {/* TODO: Potentially add full url or path in a muted color, for increased clarity */}
           </div>
         )}
 
