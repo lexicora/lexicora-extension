@@ -193,9 +193,7 @@ function EntryCreatePage() {
     const footerElement = footerRef.current;
     const footerContentElement = footerContentRef.current;
 
-    if (!footerElement || !footerContentElement) {
-      return;
-    }
+    if (!footerElement || !footerContentElement) return;
 
     const resizeObserver = new ResizeObserver(() => {
       footerElement.style.height = `${footerContentElement.offsetHeight}px`;

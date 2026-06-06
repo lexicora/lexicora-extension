@@ -174,13 +174,17 @@ function EntryEditPage() {
   useEffect(() => {
     const footerElement = footerRef.current;
     const footerContentElement = footerContentRef.current;
+
     if (!footerElement || !footerContentElement) return;
+
     const resizeObserver = new ResizeObserver(() => {
       footerElement.style.height = `${footerContentElement.offsetHeight}px`;
     });
+
     resizeObserver.observe(footerContentElement);
+
     return () => resizeObserver.disconnect();
-  }, []);
+  }, [entry, blocks]);
 
   const handleSave = async (data: EntryFormData, editorBlocks: any[]) => {
     if (!entriesCollection || !blocksCollection || !entry) return;
@@ -285,10 +289,7 @@ function EntryEditPage() {
         onSave={handleSave}
         isSaving={isSaving}
       />
-      <footer
-        className={cn(styles.bottomFooter, "mt-10.5")}
-        ref={footerRef}
-      >
+      <footer className={cn(styles.bottomFooter, "mt-10.5")} ref={footerRef}>
         <section
           ref={footerContentRef}
           className="fixed bottom-0 left-0 min-h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-30
