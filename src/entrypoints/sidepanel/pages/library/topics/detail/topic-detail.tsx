@@ -11,6 +11,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { EntryItem } from "@/components/entry-list";
 import { PageContainer } from "@/components/page-container";
@@ -21,6 +28,9 @@ import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
 import {
   ArchiveIcon,
+  CodeIcon,
+  EllipsisIcon,
+  FileTextIcon,
   LayoutListIcon,
   PinIcon,
   SquarePenIcon,
@@ -51,6 +61,7 @@ function TopicDetailPage() {
   const hideEntries = searchParams.get("hideEntries") === "true";
 
   const [favoriteEntries, setFavoriteEntries] = useState<EntryDocType[]>([]);
+  const [entriesCount, setEntriesCount] = useState<number>(0);
 
   useEffect(() => {
     if (!collection || !id) return;
@@ -85,6 +96,15 @@ function TopicDetailPage() {
     return () => sub.unsubscribe();
   }, [entriesCollection, id]);
 
+  useEffect(() => {
+    if (!entriesCollection || !id) return;
+    entriesCollection
+      .count({ selector: { topicId: id } })
+      .exec()
+      .then(setEntriesCount)
+      .catch(() => setEntriesCount(0));
+  }, [entriesCollection, id]);
+
   const handleAttributeToggle = async (
     attribute: "isFavorite" | "isArchived" | "isPinned",
   ) => {
@@ -110,6 +130,50 @@ function TopicDetailPage() {
     }
 
     await doc.incrementalPatch(patch);
+  };
+
+  const escHtml = (s: string) =>
+    s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  const handleCopyMarkdown = async () => {
+    if (!topic) return;
+    try {
+      const lines: string[] = [];
+      lines.push("**Topic**", "");
+      lines.push(`# ${topic.name}`, "");
+      if (topic.description) lines.push(topic.description, "");
+      if (topic.tags && topic.tags.length > 0)
+        lines.push(`**Tags:** ${topic.tags.join(", ")}`, "");
+      lines.push(
+        `**Entries:** ${entriesCount} | **Created:** ${formatDate(topic.createdAt)} | **Updated:** ${formatDate(topic.updatedAt)}`,
+        "",
+      );
+      // TODO: Include topic entries in the copy output when implemented
+      await navigator.clipboard.writeText(lines.join("\n").trimEnd());
+    } catch (e) {
+      console.error("Failed to copy topic as Markdown:", e);
+    }
+  };
+
+  const handleCopyHtml = async () => {
+    if (!topic) return;
+    try {
+      const parts: string[] = [];
+      parts.push(`<p><em>Topic</em></p>`);
+      parts.push(`<h1>${escHtml(topic.name)}</h1>`);
+      if (topic.description) parts.push(`<p>${escHtml(topic.description)}</p>`);
+      if (topic.tags && topic.tags.length > 0)
+        parts.push(
+          `<p><strong>Tags:</strong> ${topic.tags.map(escHtml).join(", ")}</p>`,
+        );
+      parts.push(
+        `<p><em>Entries: ${entriesCount} | Created: ${escHtml(formatDate(topic.createdAt))} | Updated: ${escHtml(formatDate(topic.updatedAt))}</em></p>`,
+      );
+      // TODO: Include topic entries in the copy output when implemented
+      await navigator.clipboard.writeText(parts.join("\n"));
+    } catch (e) {
+      console.error("Failed to copy topic as HTML:", e);
+    }
   };
 
   const handleDelete = async () => {
@@ -275,6 +339,37 @@ function TopicDetailPage() {
             />
           </Button>
 
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                title="Copy topic"
+                className="ml-auto size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
+              >
+                <EllipsisIcon className="size-4.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center" side="left" className="w-38">
+              <DropdownMenuLabel className="text-xs font-medium select-none py-1 text-muted-foreground">
+                Copy topic...
+              </DropdownMenuLabel>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={handleCopyMarkdown}
+              >
+                <FileTextIcon className="size-4 mr-2" />
+                As Markdown
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={handleCopyHtml}
+              >
+                <CodeIcon className="size-4 mr-2" />
+                As HTML
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button
             variant="ghost"
             size="icon"
@@ -284,7 +379,7 @@ function TopicDetailPage() {
                 viewTransition: true,
               })
             }
-            className="ml-auto size-9 rounded-lg text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="size-9 rounded-lg text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-800"
           >
             <SquarePenIcon className="size-4.5" />
           </Button>

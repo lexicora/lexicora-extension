@@ -168,6 +168,7 @@ function EntryDetailPage() {
         editorRef.current.document,
       );
       const lines: string[] = [];
+      lines.push("**Entry**", "");
       lines.push(`# ${entry.title}`, "");
       if (entry.url) {
         const label = entry.siteName || entry.hostnameUrl || entry.url;
@@ -179,8 +180,12 @@ function EntryDetailPage() {
         lines.push(entry.description, "");
       }
       if (entry.tags && entry.tags.length > 0) {
-        lines.push(`**Tags:** ${entry.tags.join(" · ")}`, "");
+        lines.push(`**Tags:** ${entry.tags.join(", ")}`, "");
       }
+      lines.push(
+        `**Created:** ${formatDate(entry.createdAt)} | **Updated:** ${formatDate(entry.updatedAt)}`,
+        "",
+      );
       if (contentMd.trim()) {
         lines.push("---", "", contentMd);
       }
