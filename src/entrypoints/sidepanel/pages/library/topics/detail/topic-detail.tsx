@@ -174,7 +174,7 @@ function TopicDetailPage() {
         rightActionButton={hideEntries ? undefined : viewEntriesButton}
       />
 
-      <section className="px-1 mx-auto w-full text-left">
+      <section className="px-1 mx-auto w-full text-left select-text">
         {/* Title */}
         <h1 className="text-2xl font-semibold leading-tight wrap-break-word text-pretty">
           {topic.name}
