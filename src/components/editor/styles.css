@@ -126,24 +126,21 @@ html:has(
     0 1px 3px 0 rgba(0, 0, 0, 0.05);
 }
 
-.bn-root[data-color-scheme] .bn-editor[contenteditable="false"] {
-  padding-inline: 8px !important;
-  padding-top: 0px;
-}
-
-/* Restore pointer events on images and videos in read-only mode so they can be
-   right-clicked, saved, or dragged like a normal browser image. */
-
 .bn-root[data-color-scheme] .bn-editor[contenteditable] img,
 .bn-root[data-color-scheme] .bn-editor[contenteditable] video {
   -webkit-user-select: auto;
   user-select: auto;
 }
 
-.bn-root[data-color-scheme] .bn-editor[contenteditable="false"] img,
-.bn-root[data-color-scheme] .bn-editor[contenteditable="false"] video {
+.bn-root[data-color-scheme] .bn-editor[contenteditable="false"] {
   /* pointer-events: none; */
-  &::selection {
+  padding-inline: 8px !important;
+  padding-top: 0px;
+  & .bn-file-block-content-wrapper {
+    cursor: default;
+  }
+  & img::selection,
+  video::selection {
     background-color: #2382e27c;
   }
 }
