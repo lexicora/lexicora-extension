@@ -56,9 +56,13 @@ function RootLayout() {
     useSidePanelConnection();
   }
 
-  // Potentially disable scroll restoration, on library page paths.
+  // Disable React Router scroll restoration only on pages with virtualized lists,
+  // which manage their own scroll via Virtuoso + sessionStorage.
+  // const disableScrollRestoration =
+  //   location.pathname === "/library" ||
+  //   /^\/library\/topics\/[^/]+\/entries$/.test(location.pathname); //* NOTE: Doesn't seem to work.
+
   const disableScrollRestoration = location.pathname.startsWith("/library");
-  // TODO: Make disabled pages more granular and dynamic, e.g. only entry and topic detail pages...
 
   return (
     <SidePanelMessagingProvider>
