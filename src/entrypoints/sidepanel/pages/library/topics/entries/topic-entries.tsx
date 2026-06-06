@@ -10,20 +10,35 @@ import { EntryList } from "@/components/entry-list";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { ArchiveIcon, SearchIcon, StarIcon, XIcon } from "lucide-react";
-import { useDeferredValue, useState } from "react";
+import { useDeferredValue, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useRxCollection } from "rxdb/plugins/react";
 
 function TopicEntriesPage() {
   const { id } = useParams<{ id: string }>();
+  const topicsCollection = useRxCollection("topics");
 
   const [search, setSearch] = useState("");
   const deferredSearch = useDeferredValue(search);
   const [showFavorites, setShowFavorites] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
+  // true once we've read the topic's archived state and set the default filter.
+  const [filterReady, setFilterReady] = useState(false);
   const filter = {
     onlyFavorites: showFavorites,
     onlyArchived: showArchived,
   } as const;
+
+  useEffect(() => {
+    if (!topicsCollection || !id) return;
+    topicsCollection
+      .findOne({ selector: { id } })
+      .exec()
+      .then((doc) => {
+        if (doc?.isArchived) setShowArchived(true);
+        setFilterReady(true);
+      });
+  }, [topicsCollection, id]);
 
   const handleToggleFilter = (
     type: "favorites" | "archived",
@@ -95,15 +110,17 @@ function TopicEntriesPage() {
         </div>
       </div>
 
-      <main className="mb-1.25 mt-px">
-        <EntryList
-          topicId={id}
-          search={deferredSearch}
-          filter={filter}
-          scrollStorageKey={`entryList:${id}`}
-          topUIScrollOffset={190}
-        />
-      </main>
+      {filterReady && (
+        <main className="mb-1.25 mt-px">
+          <EntryList
+            topicId={id}
+            search={deferredSearch}
+            filter={filter}
+            scrollStorageKey={`entryList:${id}`}
+            topUIScrollOffset={190}
+          />
+        </main>
+      )}
     </PageContainer>
   );
 }
