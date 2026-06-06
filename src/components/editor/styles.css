@@ -131,6 +131,30 @@ html:has(
   padding-top: 0px;
 }
 
+/* Restore pointer events on images and videos in read-only mode so they can be
+   right-clicked, saved, or dragged like a normal browser image. */
+
+.bn-root[data-color-scheme] .bn-editor[contenteditable] img,
+.bn-root[data-color-scheme] .bn-editor[contenteditable] video {
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+.bn-root[data-color-scheme] .bn-editor[contenteditable="false"] img,
+.bn-root[data-color-scheme] .bn-editor[contenteditable="false"] video {
+  /* pointer-events: none; */
+  &::selection {
+    background-color: #2382e27c;
+  }
+}
+
+.bn-root[data-color-scheme] .bn-editor[contenteditable="true"] img,
+.bn-root[data-color-scheme] .bn-editor[contenteditable="true"] video {
+  &::selection {
+    background-color: #2383e247;
+  }
+}
+
 .bn-root[data-color-scheme].bn-shadcn
   .bn-side-menu
   .bn-menu-dropdown.bn-drag-handle-menu {

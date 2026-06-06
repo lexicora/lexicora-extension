@@ -44,7 +44,7 @@ function EntryContentViewer({ initialBlocks }: { initialBlocks: any[] }) {
     <BlockNoteView
       editor={editor}
       editable={false}
-      className="text-left"
+      className="text-left select-text"
       id="lc-blocknote-view-entry-detail"
     />
   );
@@ -166,7 +166,7 @@ function EntryDetailPage() {
         heavyTeardown
       />
 
-      <section className="px-1 mx-auto w-full text-left">
+      <section className="px-1 mx-auto w-full text-left select-text">
         {/* Title */}
         <h1 className="text-2xl font-semibold leading-tight wrap-break-word text-pretty">
           {entry.title}
@@ -202,6 +202,9 @@ function EntryDetailPage() {
                 {entry.siteName || entry.hostnameUrl}
               </span>
             )}
+            <span aria-hidden className="hidden">
+              {entry.url}
+            </span>
             {/* TODO: Potentially add full url or path in a muted color, for increased clarity */}
           </div>
         )}
