@@ -302,7 +302,7 @@ function TopicDetailPage() {
 
       {/* Favorite entries preview */}
       {!hideEntries && favoriteEntries.length > 0 && (
-        <section className="px-1 mx-auto w-full mt-2 mb-2.25">
+        <section className="px-0.75 mx-auto w-full mt-2 mb-2.25">
           <Separator className="mx-auto max-w-[calc(100%-8px)] mt-0 mb-3 opacity-60" />
           <div className="flex items-center gap-1.5 mb-1.5 px-1.25">
             <StarIcon className="size-3.5 text-muted-foreground" />
