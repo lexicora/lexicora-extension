@@ -11,6 +11,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { appBlockNoteConfig } from "@/components/editor/config";
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
@@ -23,6 +31,10 @@ import { formatDate } from "@/lib/utils/date-formatter";
 import { convertDbBlocksToBlockNote } from "@/lib/utils/block-converter";
 import {
   ArchiveIcon,
+  ClipboardIcon,
+  CodeIcon,
+  EllipsisIcon,
+  FileTextIcon,
   FolderIcon,
   PinIcon,
   SquarePenIcon,
@@ -31,15 +43,32 @@ import {
 } from "lucide-react";
 import { useCreateBlockNote } from "@blocknote/react";
 import { Avatar } from "radix-ui";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
 
-function EntryContentViewer({ initialBlocks }: { initialBlocks: any[] }) {
+type CopyableEditor = {
+  blocksToMarkdownLossy(blocks?: any[]): Promise<string>;
+  blocksToHTMLLossy(blocks?: any[]): Promise<string>;
+  document: any[];
+};
+
+function EntryContentViewer({
+  initialBlocks,
+  onEditorReady,
+}: {
+  initialBlocks: any[];
+  onEditorReady?: (editor: CopyableEditor) => void;
+}) {
   const editor = useCreateBlockNote({
     ...appBlockNoteConfig,
     initialContent: initialBlocks.length > 0 ? initialBlocks : undefined,
   });
+
+  useEffect(() => {
+    onEditorReady?.(editor as unknown as CopyableEditor);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <BlockNoteView
       editor={editor}
@@ -62,6 +91,7 @@ function EntryDetailPage() {
   );
   const [blocks, setBlocks] = useState<any[] | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const editorRef = useRef<CopyableEditor | null>(null);
 
   // Reactive subscription so toggling isFavorite / isArchived / isPinned updates the UI
   useEffect(() => {
@@ -105,6 +135,59 @@ function EntryDetailPage() {
       patch.archivedExplicitly = newValue;
     }
     await doc.incrementalPatch(patch);
+  };
+
+  const handleCopyContentMarkdown = async () => {
+    if (!editorRef.current) return;
+    try {
+      const md = await editorRef.current.blocksToMarkdownLossy(
+        editorRef.current.document,
+      );
+      await navigator.clipboard.writeText(md);
+    } catch (e) {
+      console.error("Failed to copy as Markdown:", e);
+    }
+  };
+
+  const handleCopyContentHtml = async () => {
+    if (!editorRef.current) return;
+    try {
+      const html = await editorRef.current.blocksToHTMLLossy(
+        editorRef.current.document,
+      );
+      await navigator.clipboard.writeText(html);
+    } catch (e) {
+      console.error("Failed to copy as HTML:", e);
+    }
+  };
+
+  const handleCopyEntryMarkdown = async (entry: EntryDocType) => {
+    if (!editorRef.current) return;
+    try {
+      const contentMd = await editorRef.current.blocksToMarkdownLossy(
+        editorRef.current.document,
+      );
+      const lines: string[] = [];
+      lines.push(`# ${entry.title}`, "");
+      if (entry.url) {
+        const label = entry.siteName || entry.hostnameUrl || entry.url;
+        lines.push(`**Source:** [${label}](${entry.url})`, "");
+      } else if (entry.siteName) {
+        lines.push(`**Source:** ${entry.siteName}`, "");
+      }
+      if (entry.description) {
+        lines.push(entry.description, "");
+      }
+      if (entry.tags && entry.tags.length > 0) {
+        lines.push(`**Tags:** ${entry.tags.join(" · ")}`, "");
+      }
+      if (contentMd.trim()) {
+        lines.push("---", "", contentMd);
+      }
+      await navigator.clipboard.writeText(lines.join("\n"));
+    } catch (e) {
+      console.error("Failed to copy entry as Markdown:", e);
+    }
   };
 
   const handleDelete = async () => {
@@ -316,6 +399,51 @@ function EntryDetailPage() {
             />
           </Button>
 
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                title="Copy actions"
+                className="ml-auto size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 not-hover:text-muted-foreground not-active:text-muted-foreground"
+              >
+                <EllipsisIcon className="size-4.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center" side="left" className="w-40">
+              <DropdownMenuLabel className="text-xs font-medium select-none text-muted-foreground py-1">
+                Copy content...
+              </DropdownMenuLabel>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                disabled={blocks?.length === 0}
+                onClick={handleCopyContentMarkdown}
+              >
+                <FileTextIcon className="size-4 mr-2" />
+                As Markdown
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                disabled={blocks?.length === 0}
+                onClick={handleCopyContentHtml}
+              >
+                <CodeIcon className="size-4 mr-2" />
+                As HTML
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel className="text-xs font-medium select-none text-muted-foreground py-1">
+                Copy entry...
+              </DropdownMenuLabel>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                disabled={blocks?.length === 0}
+                onClick={() => handleCopyEntryMarkdown(entry)}
+              >
+                <ClipboardIcon className="size-4 mr-2" />
+                With metadata
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button
             variant="ghost"
             size="icon"
@@ -325,7 +453,7 @@ function EntryDetailPage() {
                 viewTransition: true,
               })
             }
-            className="ml-auto size-9 rounded-lg text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="size-9 rounded-lg text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-800"
           >
             <SquarePenIcon className="size-4.5" />
           </Button>
@@ -344,9 +472,14 @@ function EntryDetailPage() {
       {/* Rich content */}
       {blocks !== null && (
         <section className="mx-auto w-full mt-2 mb-2">
-          <Separator className="mx-auto max-w-[calc(100%-8px)] mb-5 opacity-60" />
+          {/* <Separator className="mx-auto max-w-[calc(100%-8px)] mb-5 opacity-60" /> */}
           {blocks.length > 0 ? (
-            <EntryContentViewer initialBlocks={blocks} />
+            <EntryContentViewer
+              initialBlocks={blocks}
+              onEditorReady={(editor) => {
+                editorRef.current = editor;
+              }}
+            />
           ) : (
             <p className="italic text-muted-foreground text-sm px-4 py-3">
               No content.
