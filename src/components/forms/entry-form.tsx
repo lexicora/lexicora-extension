@@ -130,8 +130,22 @@ export function EntryForm({
 
   const prevInitialDataId = useRef<string | null>(null);
   const [topicInputValue, setTopicInputValue] = useState("");
+  const topicDisplayInitialized = useRef(false);
 
   const watchTopicId = watch("topicId");
+
+  // When loading a pre-selected topicId (e.g. entry-edit), seed the combobox
+  // input text with the matching topic name once topics are available.
+  // Without this, the controlled inputValue stays "" and the placeholder shows.
+  useEffect(() => {
+    if (topicDisplayInitialized.current) return;
+    if (!watchTopicId || !topics.length) return;
+    const matched = topics.find((t) => t.id === watchTopicId);
+    if (matched) {
+      setTopicInputValue(matched.name);
+      topicDisplayInitialized.current = true;
+    }
+  }, [topics, watchTopicId]);
   const currentDescription = watch("description") || "";
 
   useEffect(() => {
@@ -356,18 +370,6 @@ export function EntryForm({
           />
           {errors.topicId && (
             <FieldError className="text-center" errors={[errors.topicId]} />
-          )}
-
-          {/* Debug/Fallback representation of selected topic name (remove later)*/}
-          {watchTopicId && !topics.some((t) => t.id === watchTopicId) && (
-            <div className="text-xs text-muted-foreground mt-1">
-              Selected: New topic "{watchTopicId}"
-            </div>
-          )}
-          {watchTopicId && topics.some((t) => t.id === watchTopicId) && (
-            <div className="text-xs text-muted-foreground mt-1">
-              Selected: {topics.find((t) => t.id === watchTopicId)?.name}
-            </div>
           )}
         </Field>
         <Field data-invalid={!!errors.title} className="gap-2">
