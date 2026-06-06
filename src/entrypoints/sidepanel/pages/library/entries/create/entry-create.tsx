@@ -213,6 +213,7 @@ function EntryCreatePage() {
       <PageHeader
         title="New Entry"
         goBackButton
+        goBackButtonVariant="tinted"
         rightActionButton={rightActionButton}
         heavyTeardown={true}
       />
