@@ -40,6 +40,7 @@ import {
 } from "lucide-react";
 import { useDeferredValue, useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Virtuoso } from "react-virtuoso";
 import { useRxCollection } from "rxdb/plugins/react";
 
 function TopicDetailPage() {
@@ -366,7 +367,7 @@ function TopicDetailPage() {
 
           {/* Favorite entries preview */}
           {!hideEntries && favoriteEntries.length > 0 && (
-            <section className="px-1 mx-auto w-full mt-2">
+            <section className="px-1 mx-auto w-full mt-2 mb-2.25">
               <Separator className="mx-auto max-w-[calc(100%-8px)] mt-0 mb-3 opacity-60" />
               <div className="flex /*justify-center*/ items-center gap-1.5 mb-1.5 px-1.25">
                 <StarIcon className="size-3.5 text-muted-foreground" />
@@ -374,15 +375,16 @@ function TopicDetailPage() {
                   Favorites
                 </span>
               </div>
-              <div className="flex flex-col gap-3">
-                {favoriteEntries.map((entry) => (
-                  <EntryItem
-                    key={entry.id}
-                    entry={entry}
-                    scrollStorageKey={`favoritePreview:${topic.id}`}
-                  />
-                ))}
-              </div>
+              <Virtuoso
+                useWindowScroll
+                data={favoriteEntries}
+                overscan={200}
+                itemContent={(_, entry) => (
+                  <div className="px-px py-1.5">
+                    <EntryItem entry={entry} disableScrollRestore />
+                  </div>
+                )}
+              />
             </section>
           )}
         </TabsContent>
@@ -443,7 +445,7 @@ function TopicDetailPage() {
               </div>
             </div>
 
-            <main className="mb-0 mt-px">
+            <main className="mb-1.25 mt-px">
               <EntryList
                 topicId={topic.id}
                 search={deferredSearch}

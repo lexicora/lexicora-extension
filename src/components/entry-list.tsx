@@ -38,11 +38,10 @@ import { useRxCollection } from "rxdb/plugins/react";
 
 interface EntryItemProps {
   entry: EntryDocType;
-  topUIScrollOffset?: number; // Optional prop to adjust scroll position when navigating
-  // sessionStorage key under which the pre-navigation scroll position is saved.
-  // Override to namespace lists that can coexist (e.g. per-topic embedded lists).
+  topUIScrollOffset?: number;
   scrollStorageKey?: string;
-  // potentially more fields, like author, tags, etc.
+  // When true, skips saving scroll position — the destination always lands at the top.
+  disableScrollRestore?: boolean;
 }
 
 type InteractionEvent =
@@ -54,6 +53,7 @@ export function EntryItem({
   entry,
   topUIScrollOffset,
   scrollStorageKey = "entryListScrollTop",
+  disableScrollRestore = false,
 }: EntryItemProps) {
   const navigate = useNavigate();
   const formattedDate = formatDate(entry.updatedAt);
@@ -107,9 +107,10 @@ export function EntryItem({
   ) => {
     e.preventDefault();
 
-    // Save scroll position as a plain number before navigating away
-    const adjustedScrollTop = window.scrollY - (topUIScrollOffset ?? 0); // Adjust for top bar height (and potential margin)
-    sessionStorage.setItem(scrollStorageKey, adjustedScrollTop.toString());
+    if (!disableScrollRestore) {
+      const adjustedScrollTop = window.scrollY - (topUIScrollOffset ?? 0);
+      sessionStorage.setItem(scrollStorageKey, adjustedScrollTop.toString());
+    }
 
     navigate(`/library/entries/${entry.id}`, { viewTransition: true });
   };
