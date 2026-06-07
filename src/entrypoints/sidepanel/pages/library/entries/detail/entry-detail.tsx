@@ -285,12 +285,12 @@ function EntryDetailPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     title={"Visit: " + entry.url}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors truncate shrink-0 max-w-[60%]"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors truncate min-w-0"
                   >
                     {entry.siteName || entry.hostnameUrl}
                   </a>
                 ) : (
-                  <span className="text-sm text-muted-foreground truncate shrink-0 max-w-[60%]">
+                  <span className="text-sm text-muted-foreground truncate min-w-0">
                     {entry.siteName}
                   </span>
                 )}
