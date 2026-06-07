@@ -243,6 +243,16 @@ function EntryDetailPage() {
     type: "button" as const,
   };
 
+  const hasContent =
+    !!blocks &&
+    !(
+      blocks.length === 0 ||
+      (blocks.length === 1 &&
+        blocks[0].type === "paragraph" &&
+        (!blocks[0].content || blocks[0].content.length === 0) &&
+        (!blocks[0].children || blocks[0].children.length === 0))
+    );
+
   return (
     <PageContainer id="lc-entry-detail-page">
       <PageHeader
@@ -421,7 +431,7 @@ function EntryDetailPage() {
               </DropdownMenuLabel>
               <DropdownMenuItem
                 className="cursor-pointer"
-                disabled={blocks?.length === 0}
+                disabled={!hasContent}
                 onClick={handleCopyContentMarkdown}
               >
                 <FileTextIcon className="size-4 mr-2" />
@@ -429,7 +439,7 @@ function EntryDetailPage() {
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="cursor-pointer"
-                disabled={blocks?.length === 0}
+                disabled={!hasContent}
                 onClick={handleCopyContentHtml}
               >
                 <CodeIcon className="size-4 mr-2" />
@@ -441,7 +451,7 @@ function EntryDetailPage() {
               </DropdownMenuLabel>
               <DropdownMenuItem
                 className="cursor-pointer"
-                disabled={blocks?.length === 0}
+                disabled={!hasContent}
                 onClick={() => handleCopyEntryMarkdown(entry)}
               >
                 <ClipboardIcon className="size-4 mr-2" />
@@ -478,9 +488,9 @@ function EntryDetailPage() {
       {blocks !== null && (
         <section className="mx-auto w-full mt-2 mb-2">
           {/* <Separator className="mx-auto max-w-[calc(100%-8px)] mb-5 opacity-60" /> */}
-          {blocks.length > 0 ? (
+          {hasContent ? (
             <EntryContentViewer
-              initialBlocks={blocks}
+              initialBlocks={blocks!}
               onEditorReady={(editor) => {
                 editorRef.current = editor;
               }}
