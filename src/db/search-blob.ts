@@ -24,6 +24,8 @@ export function buildEntrySearchBlob(doc: {
   tags?: string[];
   siteName?: string;
   hostnameUrl?: string;
+  //? Potentially add path of the URL.
+  //? Potentially add the dates to the search blob.
 }): string {
   const parts = [
     (doc.title || '').toLowerCase().trim(),
@@ -41,6 +43,7 @@ export function buildTopicSearchBlob(doc: {
   name?: string;
   description?: string;
   tags?: string[];
+  //? Potentially add the dates to the search blob.
 }): string {
   const parts = [
     (doc.name || '').toLowerCase().trim(),

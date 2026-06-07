@@ -126,9 +126,40 @@ html:has(
     0 1px 3px 0 rgba(0, 0, 0, 0.05);
 }
 
+.bn-root[data-color-scheme] .bn-editor[contenteditable] img,
+.bn-root[data-color-scheme] .bn-editor[contenteditable] video {
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
 .bn-root[data-color-scheme] .bn-editor[contenteditable="false"] {
+  /* pointer-events: none; */
   padding-inline: 8px !important;
   padding-top: 0px;
+  & .bn-file-block-content-wrapper {
+    outline: none;
+    cursor: default;
+  }
+  & img::selection,
+  video::selection {
+    background-color: #2382e27c;
+  }
+  & .bn-block-content[data-content-type="table"] {
+    & th::after,
+    td::after {
+      background-color: transparent; /*Maybe change later*/
+    }
+  }
+  & .bn-code-content .bn-block-content[data-content-type="codeBlock"] select {
+    cursor: default;
+  }
+}
+
+.bn-root[data-color-scheme] .bn-editor[contenteditable="true"] img,
+.bn-root[data-color-scheme] .bn-editor[contenteditable="true"] video {
+  &::selection {
+    background-color: #2383e247;
+  }
 }
 
 .bn-root[data-color-scheme].bn-shadcn

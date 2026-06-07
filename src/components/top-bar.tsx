@@ -95,7 +95,7 @@ export function TopBar() {
         </div>
         <div className="flex justify-end flex-1">
           {/* Disable for now */}
-          {/* <Button
+          <Button
             variant="ghost"
             size="icon"
             onClick={openExtensionWindow}
@@ -103,8 +103,8 @@ export function TopBar() {
             //title="Visit Lexicora.com"
           >
             <SquareArrowOutUpRightIcon className="size-4.5" />
-          </Button> */}
-          <Button variant="ghost" size="icon">
+          </Button>
+          {/* <Button variant="ghost" size="icon">
             <a
               href="https://lexicora.com"
               title="Visit Lexicora.com"
@@ -112,7 +112,7 @@ export function TopBar() {
             >
               <ExternalLinkIcon className="size-4.5" />
             </a>
-          </Button>
+          </Button> */}
         </div>
       </div>
     </section>

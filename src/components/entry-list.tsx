@@ -38,7 +38,10 @@ import { useRxCollection } from "rxdb/plugins/react";
 
 interface EntryItemProps {
   entry: EntryDocType;
-  // potentially more fields, like author, tags, etc.
+  topUIScrollOffset?: number;
+  scrollStorageKey?: string;
+  // When true, skips saving scroll position — the destination always lands at the top.
+  disableScrollRestore?: boolean;
 }
 
 type InteractionEvent =
@@ -46,7 +49,12 @@ type InteractionEvent =
   | React.KeyboardEvent<HTMLDivElement>;
 
 // TODO: Potentially show more properties for each Entry.
-function EntryItem({ entry }: EntryItemProps) {
+export function EntryItem({
+  entry,
+  topUIScrollOffset,
+  scrollStorageKey = "entryListScrollTop",
+  disableScrollRestore = false,
+}: EntryItemProps) {
   const navigate = useNavigate();
   const formattedDate = formatDate(entry.updatedAt);
   const collection = useRxCollection("entries");
@@ -99,9 +107,10 @@ function EntryItem({ entry }: EntryItemProps) {
   ) => {
     e.preventDefault();
 
-    // Save scroll position as a plain number before navigating away
-    const adjustedScrollTop = window.scrollY - 229; // Adjust for top bar height (and potential margin)
-    sessionStorage.setItem("entryListScrollTop", adjustedScrollTop.toString());
+    if (!disableScrollRestore) {
+      const adjustedScrollTop = window.scrollY - (topUIScrollOffset ?? 0);
+      sessionStorage.setItem(scrollStorageKey, adjustedScrollTop.toString());
+    }
 
     navigate(`/library/entries/${entry.id}`, { viewTransition: true });
   };
@@ -354,9 +363,24 @@ interface EntryListProps {
     onlyFavorites: boolean;
     onlyArchived: boolean;
   };
+  // When set, only entries belonging to this topic are shown.
+  topicId?: string;
+  topUIScrollOffset?: number; // Optional prop to adjust scroll position when navigating back from detail view with a top UI (like the bottom nav)
+  // sessionStorage key for scroll restoration. Override to namespace lists that
+  // can coexist across routes (e.g. the per-topic embedded list).
+  scrollStorageKey?: string;
+  // When true, hides the "Create Entry" buttons in empty-state UI.
+  disableCreate?: boolean;
 }
 
-export function EntryList({ search, filter }: EntryListProps) {
+export function EntryList({
+  search,
+  filter,
+  topicId,
+  topUIScrollOffset,
+  scrollStorageKey = "entryListScrollTop",
+  disableCreate = false,
+}: EntryListProps) {
   const [entries, setEntries] = useState<EntryDocType[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const collection = useRxCollection("entries");
@@ -370,15 +394,15 @@ export function EntryList({ search, filter }: EntryListProps) {
   // On POP, restore the scroll position (plain number, no JSON overhead)
   const savedScrollTop = useMemo(() => {
     if (navigationType !== "POP") return 0;
-    return parseInt(sessionStorage.getItem("entryListScrollTop") || "0", 10);
-  }, [navigationType]);
+    return parseInt(sessionStorage.getItem(scrollStorageKey) || "0", 10);
+  }, [navigationType, scrollStorageKey]);
 
   // If we arrived here via standard navigation (not back/POP), reset the Virtuoso state
   useEffect(() => {
     if (navigationType !== "POP") {
-      sessionStorage.removeItem("entryListScrollTop");
+      sessionStorage.removeItem(scrollStorageKey);
     }
-  }, [navigationType]);
+  }, [navigationType, scrollStorageKey]);
 
   // Reset Virtuoso state when search or filters actively change
   useEffect(() => {
@@ -386,13 +410,18 @@ export function EntryList({ search, filter }: EntryListProps) {
       isFirstRender.current = false;
       return;
     }
-    sessionStorage.removeItem("entryListScrollTop");
-  }, [search, onlyFavorites, onlyArchived]);
+    sessionStorage.removeItem(scrollStorageKey);
+  }, [search, onlyFavorites, onlyArchived, scrollStorageKey]);
 
   useEffect(() => {
     if (!collection) return;
 
     const selector: any = {};
+
+    if (topicId) {
+      selector.topicId = topicId;
+    }
+
     if (onlyArchived) {
       selector.isArchived = true;
     } else {
@@ -441,7 +470,7 @@ export function EntryList({ search, filter }: EntryListProps) {
       });
 
     return () => sub.unsubscribe();
-  }, [collection, search, onlyFavorites, onlyArchived]);
+  }, [collection, search, onlyFavorites, onlyArchived, topicId]);
 
   // TODO: For wider screens or the windowed app, maybe add a two column layout.
   return (
@@ -465,38 +494,49 @@ export function EntryList({ search, filter }: EntryListProps) {
                 </span>
                 . <br /> Try changing your search query.
               </p>
-              <div className="flex justify-center items-center gap-3 w-1/6 max-w-24 mx-auto mb-1">
-                <Separator />
-                <span className="text-muted-foreground">or</span>
-                <Separator />
-              </div>
-              <Button
-                variant="link"
-                onClick={() =>
-                  navigate(
-                    `/library/entries/new?title=${encodeURIComponent(search)}`,
-                    { viewTransition: true },
-                  )
-                }
-              >
-                Create Entry{" "}
-                <span className="inline-block max-w-34 truncate align-bottom text-lc-muted-foreground-hover">
-                  "{search}"
-                </span>
-              </Button>
+              {!disableCreate && (
+                <>
+                  <div className="flex justify-center items-center gap-3 w-1/6 max-w-24 mx-auto mb-1">
+                    <Separator />
+                    <span className="text-muted-foreground">or</span>
+                    <Separator />
+                  </div>
+                  <Button
+                    variant="link"
+                    onClick={() =>
+                      navigate(
+                        `/library/entries/new?title=${encodeURIComponent(search)}${topicId ? `&topicId=${encodeURIComponent(topicId)}` : ""}`,
+                        { viewTransition: true },
+                      )
+                    }
+                  >
+                    Create Entry{" "}
+                    <span className="inline-block max-w-34 truncate align-bottom text-lc-muted-foreground-hover">
+                      "{search}"
+                    </span>
+                  </Button>
+                </>
+              )}
             </>
           ) : (
             <>
               <p className="text-muted-foreground mb-3">No entries found.</p>
-              <Separator className="max-w-24 mx-auto mb-1" />
-              <Button
-                variant="link"
-                onClick={() =>
-                  navigate("/library/entries/new", { viewTransition: true })
-                }
-              >
-                Create Entry
-              </Button>
+              {!disableCreate && (
+                <>
+                  <Separator className="max-w-24 mx-auto mb-1" />
+                  <Button
+                    variant="link"
+                    onClick={() =>
+                      navigate(
+                        `/library/entries/new${topicId ? `?topicId=${encodeURIComponent(topicId)}` : ""}`,
+                        { viewTransition: true },
+                      )
+                    }
+                  >
+                    Create Entry
+                  </Button>
+                </>
+              )}
             </>
           )}
         </div>
@@ -510,7 +550,11 @@ export function EntryList({ search, filter }: EntryListProps) {
           overscan={200} // potentially increase
           itemContent={(_, entry) => (
             <div className="px-1.25 py-1.5">
-              <EntryItem entry={entry} />
+              <EntryItem
+                entry={entry}
+                topUIScrollOffset={topUIScrollOffset}
+                scrollStorageKey={scrollStorageKey}
+              />
             </div>
           )}
         />

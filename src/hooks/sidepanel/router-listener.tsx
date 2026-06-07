@@ -1,5 +1,5 @@
 import { MSG } from "@/constants/messaging";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";
 
@@ -20,6 +20,15 @@ export function RouterListener() {
     // Listen only for the navigation message
     const unsubscribe = onMessage(MSG.NAVIGATE_IN_SIDEPANEL, (msg) => {
       if (!msg.data) return null;
+
+      // If the user is currently editing an entry, absorb capture-triggered
+      // navigation to entry-create so the captured data goes into the open editor.
+      const isOnEntryEdit = /^\/library\/entries\/[^/]+\/edit$/.test(
+        location.pathname,
+      );
+      if (msg.data.path === "/library/entries/new" && isOnEntryEdit) {
+        return true; // Signal background to clear pending navigation; skip navigate()
+      }
 
       // If already on path, replace history so that navigate(-1) works as expected
       const isAlreadyOnPath = location.pathname === msg.data.path;
@@ -51,12 +60,16 @@ export function RouterListener() {
         "background", //destination,
       ).catch(() => null);
       if (path) {
-        if (path === location.pathname) return;
-        navigate(path, {
-          // MAYBE: Use replace logic like above instead of returning early.
-          viewTransition: true,
-          state: { isCapturePending: pathToSetIsCapturePending.includes(path) },
-        });
+        const isOnEntryEdit = /^\/library\/entries\/[^/]+\/edit$/.test(
+          location.pathname,
+        );
+        const suppressed = path === "/library/entries/new" && isOnEntryEdit;
+        if (!suppressed && path !== location.pathname) {
+          navigate(path, {
+            viewTransition: true,
+            state: { isCapturePending: pathToSetIsCapturePending.includes(path) },
+          });
+        }
       }
 
       setPushEnabled(true);

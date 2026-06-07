@@ -1,6 +1,9 @@
 import { uuidv7 } from "uuidv7";
 import { type BlockDocType } from "@/db/schemas/block";
 
+//* NOTE: Currently all blocks if unchanged are updated and rxdb marks them as a new version,
+//* which means it is included in sync, maybe somehow add an update check to make sync more efficient.
+
 /**
  * Recursively converts BlockNote.js blocks to RxDB BlockDocType documents.
  *
@@ -18,14 +21,43 @@ export function convertBlockNoteBlocks(
   parentBlockId?: string,
   startIndex: number = 0,
 ): BlockDocType[] {
+  // At the top-level call, guard against BlockNote returning a partially-flattened
+  // document where child blocks appear both inside their parent's .children array
+  // AND at the top level of the array. Pre-filter to keep only blocks that are not
+  // already captured as descendants of another block in the same input array.
+  let effectiveBlocks = blocks;
+  if (parentBlockId === undefined) {
+    const descendantIds = new Set<string>();
+    const collectDescendantIds = (list: any[]) => {
+      for (const b of list) {
+        if (b.children?.length) {
+          for (const child of b.children) {
+            if (child.id) descendantIds.add(child.id);
+          }
+          collectDescendantIds(b.children);
+        }
+      }
+    };
+    collectDescendantIds(blocks);
+    if (descendantIds.size > 0) {
+      effectiveBlocks = blocks.filter((b) => !descendantIds.has(b.id));
+    }
+  }
+
   let result: BlockDocType[] = [];
   let order = startIndex;
 
-  for (const block of blocks) {
-    const newBlockId = uuidv7();
+  for (const block of effectiveBlocks) {
+    // BlockNote assigns UUIDv4 to new blocks; existing blocks retain their UUIDv7.
+    // Version nibble sits at index 14 of the UUID string (xxxxxxxx-xxxx-Mxxx-...).
+    // Re-use the v7 ID for updates; mint a fresh v7 for brand-new blocks.
+    const blockId =
+      block.id && block.id.length >= 15 && block.id[14] === "7"
+        ? block.id
+        : uuidv7();
 
     const dbBlock: BlockDocType = {
-      id: newBlockId,
+      id: blockId,
       userId,
       entryId,
       order,
@@ -51,7 +83,7 @@ export function convertBlockNoteBlocks(
         block.children,
         entryId,
         userId,
-        newBlockId,
+        blockId,
         0,
       );
       result.push(...childBlocks);
@@ -61,6 +93,39 @@ export function convertBlockNoteBlocks(
   return result;
 }
 
-// TODO: Implement reverse conversion from BlockDocType array back to BlockNote.js block structure if needed in the future.
-// TODO: Also very important recursive blocks must not be in the top level, but rather in the children property, containing child blocks.
-//* NOTE: BlockNote.js blocks are standardly given a UUIDv4 id, so we only need to generate an update the id's where the version identifier is 4 and the rest can be left alone.
+/**
+ * Converts a flat array of BlockDocType documents back to a nested BlockNote.js block structure.
+ * Top-level blocks (no parentBlockId) are sorted by order; children are recursively nested.
+ */
+export function convertDbBlocksToBlockNote(blocks: BlockDocType[]): any[] {
+  const childrenMap = new Map<string, BlockDocType[]>();
+  const topLevelBlocks: BlockDocType[] = [];
+
+  for (const block of blocks) {
+    if (block.parentBlockId) {
+      const children = childrenMap.get(block.parentBlockId) ?? [];
+      children.push(block);
+      childrenMap.set(block.parentBlockId, children);
+    } else {
+      topLevelBlocks.push(block);
+    }
+  }
+
+  topLevelBlocks.sort((a, b) => a.order - b.order);
+  for (const children of childrenMap.values()) {
+    children.sort((a, b) => a.order - b.order);
+  }
+
+  function buildBlock(dbBlock: BlockDocType): any {
+    const children = (childrenMap.get(dbBlock.id) ?? []).map(buildBlock);
+    return {
+      id: dbBlock.id,
+      type: dbBlock.type,
+      props: dbBlock.propsJson,
+      content: dbBlock.contentJson ?? [],
+      children,
+    };
+  }
+
+  return topLevelBlocks.map(buildBlock);
+}

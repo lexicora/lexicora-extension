@@ -24,6 +24,8 @@ interface PageHeaderProps {
   hoverOnScroll?: boolean;
   headerTextAlignment?: "center" | "left";
   goBackButton?: boolean;
+  goBackButtonVariant?: "ghost" | "tinted";
+  goBackButtonTitle?: string;
   rightActionButton?: ActionButtonConfig;
   classNameHeaderElement?: string;
   heavyTeardown?: boolean;
@@ -35,6 +37,8 @@ export function PageHeader({
   hoverOnScroll = true,
   headerTextAlignment = "center",
   goBackButton = false,
+  goBackButtonVariant = "ghost",
+  goBackButtonTitle = "Go back",
   rightActionButton,
   classNameHeaderElement,
   heavyTeardown = false,
@@ -70,8 +74,14 @@ export function PageHeader({
           <Button
             variant="ghost"
             size="icon"
-            title="Go back"
-            className="shrink-0 size-10 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
+            title={goBackButtonTitle}
+            className={cn(
+              "shrink-0 size-10 rounded-lg",
+              goBackButtonVariant === "ghost" &&
+                "hover:bg-gray-200 dark:hover:bg-gray-800",
+              goBackButtonVariant === "tinted" &&
+                "bg-gray-300/75 hover:bg-gray-400/60 dark:bg-gray-800/75 dark:hover:bg-gray-700/60 hover:text-secondary-foreground/95",
+            )}
             onClick={handleGoBack}
             disabled={rightActionButton?.isLoading}
           >
@@ -95,8 +105,11 @@ export function PageHeader({
               size="icon"
               title={rightActionButton.title}
               className={cn(
+                "hover:ring-1 ring-inset ring-gray-300 dark:ring-gray-700",
                 rightActionButton.variant === "default" &&
-                  "bg-primary/80 hover:bg-primary hover:ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:text-primary-foreground/95",
+                  "bg-primary/80 hover:bg-primary hover:text-primary-foreground/95",
+                rightActionButton.variant === "secondary" &&
+                  "bg-secondary/80 hover:bg-secondary hover:text-secondary-foreground/95",
                 // TODO: Other variants
                 "shrink-0 size-10 rounded-lg",
               )}
@@ -150,16 +163,19 @@ export function PageHeader({
           <div
             //className="flex mt-1.25 w-full max-w-317.25 relative"
             className={cn(
-              "flex mt-1.25 w-full max-w-317.25",
+              "flex mt-1.25 w-full max-w-317.25 mr-(--lc-scrollbar-offset)",
               rightActionButton ? "justify-between" : "justify-start",
             )}
           >
             <Button
               variant="ghost"
               size="icon"
-              title="Go back"
+              title={goBackButtonTitle}
               className={cn(
-                "hover:bg-gray-200 dark:hover:bg-gray-800 hover:ring-1 ring-inset ring-gray-300 dark:ring-gray-700",
+                goBackButtonVariant === "ghost" &&
+                  "hover:bg-gray-200 dark:hover:bg-gray-800 hover:ring-1 ring-inset ring-gray-300 dark:ring-gray-700",
+                goBackButtonVariant === "tinted" &&
+                  "backdrop-blur-sm hover:text-secondary-foreground/95 bg-gray-300/75 hover:bg-gray-300 dark:bg-gray-800/75 dark:hover:bg-gray-800 ring-1 ring-inset ring-gray-400/25 hover:ring-gray-400/80 dark:ring-gray-700/35 dark:hover:ring-gray-700",
                 "ml-3 shrink-0 size-7.5 transition-all duration-150 active-view-transition:transition-none",
                 isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
               )}
@@ -187,8 +203,11 @@ export function PageHeader({
                 size="icon"
                 title={rightActionButton.title}
                 className={cn(
+                  "backdrop-blur-xs",
                   rightActionButton.variant === "default" &&
-                    "bg-primary/80 backdrop-blur-xs hover:bg-primary hover:text-primary-foreground/95",
+                    "bg-primary/80 hover:bg-primary hover:text-primary-foreground/95",
+                  rightActionButton.variant === "secondary" &&
+                    "bg-secondary/80 hover:bg-secondary hover:text-secondary-foreground/95 hover:ring-1 ring-inset ring-gray-300 dark:ring-gray-700",
                   // TODO: Other variants
                   "mr-0.75 shrink-0 size-7.5 transition-all duration-150 active-view-transition:transition-none",
                   isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
@@ -227,8 +246,14 @@ export function PageHeader({
           <Button
             variant="ghost"
             size="icon"
-            title="Go back"
-            className="shrink-0 size-10 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
+            title={goBackButtonTitle}
+            className={cn(
+              "shrink-0 size-10 rounded-lg",
+              goBackButtonVariant === "ghost" &&
+                "hover:bg-gray-200 dark:hover:bg-gray-800",
+              goBackButtonVariant === "tinted" &&
+                "bg-gray-300/75 hover:bg-gray-400/60 dark:bg-gray-800/75 dark:hover:bg-gray-700/70 hover:text-secondary-foreground/95",
+            )}
             onClick={handleGoBack}
             disabled={rightActionButton?.isLoading}
           >

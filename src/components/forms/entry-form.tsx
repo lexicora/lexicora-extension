@@ -75,6 +75,13 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+type SourceField = "url" | "siteName" | "faviconUrl" | "languageCode" | "description";
+
+export type EntryFormApi = {
+  setFieldValue: (name: SourceField, value: string) => void;
+  getFieldValue: (name: SourceField) => string;
+};
+
 export interface EntryFormData {
   title: string;
   topicId: string;
@@ -94,6 +101,7 @@ interface EntryFormProps {
   topics: TopicDocType[];
   onSubmit: (data: EntryFormData) => void | Promise<void>;
   isLoading?: boolean;
+  onFormReady?: (api: EntryFormApi) => void;
 }
 
 export function EntryForm({
@@ -103,6 +111,7 @@ export function EntryForm({
   topics,
   onSubmit,
   isLoading,
+  onFormReady,
 }: EntryFormProps) {
   const { isSupported } = useTabSupport();
   const {
@@ -130,8 +139,31 @@ export function EntryForm({
 
   const prevInitialDataId = useRef<string | null>(null);
   const [topicInputValue, setTopicInputValue] = useState("");
+  const topicDisplayInitialized = useRef(false);
+
+  useEffect(() => {
+    onFormReady?.({
+      setFieldValue: (name, value) =>
+        setValue(name, value, { shouldDirty: true }),
+      getFieldValue: (name) => (getValues(name) as string) ?? "",
+    });
+  }, []);
 
   const watchTopicId = watch("topicId");
+
+  // When loading a pre-selected topicId (e.g. entry-edit), seed the combobox
+  // input text with the matching topic name once topics are available.
+  // Without this, the controlled inputValue stays "" and the placeholder shows.
+  useEffect(() => {
+    if (topicDisplayInitialized.current) return;
+    if (!watchTopicId || !topics.length) return;
+    const matched = topics.find((t) => t.id === watchTopicId);
+    if (matched) {
+      setTopicInputValue(matched.name);
+      topicDisplayInitialized.current = true;
+    }
+  }, [topics, watchTopicId]);
+
   const currentDescription = watch("description") || "";
 
   useEffect(() => {
@@ -294,6 +326,9 @@ export function EntryForm({
             name="topicId"
             render={({ field }) => {
               const typed = topicInputValue.trim();
+
+              // Only non-archived topics are selectable; check all topics for name uniqueness.
+              const availableTopics = topics.filter((t) => !t.isArchived);
               const hasExactTopicMatch = topics.some(
                 (t) => t.name.toLowerCase() === typed.toLowerCase(),
               );
@@ -301,15 +336,46 @@ export function EntryForm({
               const isCustomValue =
                 field.value && !topics.some((t) => t.id === field.value);
 
+              // The original archived topic from initialData — always kept in the list so
+              // the user can revert back to it after switching away.
+              const originalArchivedTopic = initialData?.topicId
+                ? topics.find((t) => t.id === initialData.topicId && t.isArchived)
+                : undefined;
+
+              // If the *current* selection (after a change) is a different archived topic,
+              // include it too — but keep it disabled since it wasn't the original.
+              const currentArchivedTopic =
+                field.value && field.value !== originalArchivedTopic?.id
+                  ? topics.find((t) => t.id === field.value && t.isArchived)
+                  : undefined;
+
+              // When typing matches archived topic names, surface them as disabled items
+              // so the user understands why nothing is selectable and "Create" is blocked.
+              const typedMatchingArchivedTopics = typed
+                ? topics.filter(
+                    (t) =>
+                      t.isArchived &&
+                      t.name.toLowerCase().includes(typed.toLowerCase()) &&
+                      (!currentArchivedTopic || t.id !== currentArchivedTopic.id) &&
+                      (!originalArchivedTopic || t.id !== originalArchivedTopic.id),
+                  )
+                : [];
+
               const comboboxItems = [
-                ...topics,
+                ...availableTopics,
                 ...(typed && !hasExactTopicMatch
                   ? [{ id: typed, name: `Create "${typed}"` }]
                   : []),
                 ...(isCustomValue && field.value !== typed
                   ? [{ id: field.value, name: field.value }]
                   : []),
+                ...(originalArchivedTopic ? [originalArchivedTopic] : []),
+                ...(currentArchivedTopic ? [currentArchivedTopic] : []),
+                ...typedMatchingArchivedTopics,
               ];
+
+              const selectedValue =
+                comboboxItems.find((t) => t.id === field.value) || null;
 
               return (
                 <Combobox
@@ -318,9 +384,7 @@ export function EntryForm({
                   itemToStringLabel={(topic) =>
                     topic.name.startsWith('Create "') ? topic.id : topic.name
                   }
-                  value={
-                    comboboxItems.find((t) => t.id === field.value) || null
-                  }
+                  value={selectedValue}
                   onValueChange={(val) => {
                     field.onChange(val?.id || "");
                     if (val?.id) setTopicInputValue("");
@@ -343,11 +407,28 @@ export function EntryForm({
                   <ComboboxContent className="z-50 scrollbar-bg-transparent w-[--radix-popover-trigger-width]">
                     <ComboboxEmpty>Type to create a new topic.</ComboboxEmpty>
                     <ComboboxList>
-                      {(topic) => (
-                        <ComboboxItem key={topic.id} value={topic}>
-                          {topic.name}
-                        </ComboboxItem>
-                      )}
+                      {(topic) => {
+                        const isArchived =
+                          "isArchived" in topic &&
+                          (topic as TopicDocType).isArchived === true;
+                        const isRevertable = isArchived && topic.id === originalArchivedTopic?.id;
+                        return (
+                          <ComboboxItem
+                            key={topic.id}
+                            value={topic}
+                            disabled={isArchived && !isRevertable}
+                          >
+                            <span className="truncate min-w-0 flex-1">
+                              {topic.name}
+                            </span>
+                            {isArchived && (
+                              <span className="shrink-0 text-xs text-muted-foreground italic">
+                                Archived
+                              </span>
+                            )}
+                          </ComboboxItem>
+                        );
+                      }}
                     </ComboboxList>
                   </ComboboxContent>
                 </Combobox>
@@ -356,18 +437,6 @@ export function EntryForm({
           />
           {errors.topicId && (
             <FieldError className="text-center" errors={[errors.topicId]} />
-          )}
-
-          {/* Debug/Fallback representation of selected topic name (remove later)*/}
-          {watchTopicId && !topics.some((t) => t.id === watchTopicId) && (
-            <div className="text-xs text-muted-foreground mt-1">
-              Selected: New topic "{watchTopicId}"
-            </div>
-          )}
-          {watchTopicId && topics.some((t) => t.id === watchTopicId) && (
-            <div className="text-xs text-muted-foreground mt-1">
-              Selected: {topics.find((t) => t.id === watchTopicId)?.name}
-            </div>
           )}
         </Field>
         <Field data-invalid={!!errors.title} className="gap-2">
@@ -395,6 +464,7 @@ export function EntryForm({
               {...register("title")}
               className="text-base! py-2"
             />
+            {/* TODO: Maybe add dropdown menu to also pin and favorite it */}
             <InputGroupAddon align="inline-end" className="pr-2 py-0.5">
               <Controller
                 control={control}

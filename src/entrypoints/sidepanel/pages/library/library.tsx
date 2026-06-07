@@ -234,12 +234,20 @@ function LibraryPage() {
         </PageHeader>
         <TabsContent value="entries">
           <main className="mb-0">
-            <EntryList search={deferredSearch} filter={filter} />
+            <EntryList
+              search={deferredSearch}
+              filter={filter}
+              topUIScrollOffset={229}
+            />
           </main>
         </TabsContent>
         <TabsContent value="topics">
           <main className="mb-0">
-            <TopicList search={deferredSearch} filter={filter} />
+            <TopicList
+              search={deferredSearch}
+              filter={filter}
+              topUIScrollOffset={229}
+            />
           </main>
         </TabsContent>
         {/* <TabsContent value="sites">

@@ -37,6 +37,7 @@ import { useRxCollection } from "rxdb/plugins/react";
 
 interface TopicItemProps {
   topic: TopicDocType;
+  topUIScrollOffset?: number; // Optional prop to adjust scroll position when navigating back from detail view with a top UI (like the bottom nav)
   // potentially more fields, like author, tags, etc.
 }
 
@@ -44,7 +45,7 @@ type InteractionEvent =
   | React.MouseEvent<HTMLDivElement>
   | React.KeyboardEvent<HTMLDivElement>;
 
-function TopicItem({ topic }: TopicItemProps) {
+function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
   const navigate = useNavigate();
   const formattedDate = formatDate(topic.updatedAt);
   const collection = useRxCollection("topics");
@@ -117,7 +118,7 @@ function TopicItem({ topic }: TopicItemProps) {
     e.preventDefault();
 
     // Save scroll position as a plain number before navigating away
-    const adjustedScrollTop = window.scrollY - 229; // Adjust for top bar height (and potential margin)
+    const adjustedScrollTop = window.scrollY - (topUIScrollOffset ?? 0); // Adjust for top bar height (and potential margin)
     sessionStorage.setItem("topicListScrollTop", adjustedScrollTop.toString());
 
     navigate(`/library/topics/${topic.id}`, { viewTransition: true });
@@ -329,9 +330,14 @@ interface TopicListProps {
     onlyFavorites: boolean;
     onlyArchived: boolean;
   };
+  topUIScrollOffset?: number; // Optional prop to adjust scroll position when navigating back from detail view with a top UI (like the bottom nav)
 }
 
-export function TopicList({ search, filter }: TopicListProps) {
+export function TopicList({
+  search,
+  filter,
+  topUIScrollOffset,
+}: TopicListProps) {
   const [topics, setTopics] = useState<TopicDocType[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const collection = useRxCollection("topics");
@@ -482,7 +488,7 @@ export function TopicList({ search, filter }: TopicListProps) {
           overscan={200} // potentially increase
           itemContent={(_, topic) => (
             <div className="px-1.25 py-1.5">
-              <TopicItem topic={topic} />
+              <TopicItem topic={topic} topUIScrollOffset={topUIScrollOffset} />
             </div>
           )}
         />

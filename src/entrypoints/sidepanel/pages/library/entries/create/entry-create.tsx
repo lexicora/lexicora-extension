@@ -193,9 +193,7 @@ function EntryCreatePage() {
     const footerElement = footerRef.current;
     const footerContentElement = footerContentRef.current;
 
-    if (!footerElement || !footerContentElement) {
-      return;
-    }
+    if (!footerElement || !footerContentElement) return;
 
     const resizeObserver = new ResizeObserver(() => {
       footerElement.style.height = `${footerContentElement.offsetHeight}px`;
@@ -213,6 +211,7 @@ function EntryCreatePage() {
       <PageHeader
         title="New Entry"
         goBackButton
+        goBackButtonVariant="tinted"
         rightActionButton={rightActionButton}
         heavyTeardown={true}
       />
@@ -226,6 +225,7 @@ function EntryCreatePage() {
               overrideExisting={capturedData?.misc?.overrideExisting ?? true}
               initialData={{
                 title: capturedData?.title || searchParams.get("title") || "",
+                topicId: searchParams.get("topicId") || "",
                 faviconUrl: capturedData?.metadata?.faviconUrl || "",
                 url: capturedData?.location?.href || "",
                 siteName:
