@@ -6,7 +6,11 @@ import { appBlockNoteConfig } from "@/components/editor/config";
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
-import { EntryForm, type EntryFormData } from "@/components/forms/entry-form";
+import {
+  EntryForm,
+  type EntryFormApi,
+  type EntryFormData,
+} from "@/components/forms/entry-form";
 import { BlockDocType } from "@/db/schemas/block";
 import { EntryDocType } from "@/db/schemas/entry";
 import { TopicDocType } from "@/db/schemas/topic";
@@ -45,12 +49,26 @@ function EntryEditContent({
   });
 
   const capturedData = useCaptureData();
+  const formApiRef = useRef<EntryFormApi | null>(null);
 
   useLayoutEffect(() => {
     if (!capturedData?.content) return;
     const blocks = editor.tryParseHTMLToBlocks(capturedData.content);
+    const api = formApiRef.current;
     if (capturedData.misc.overrideExisting) {
       editor.replaceBlocks(editor.document, blocks);
+      // Source fields always overwritten on full-page capture
+      api?.setFieldValue("url", capturedData.location.href || "");
+      api?.setFieldValue(
+        "siteName",
+        capturedData.metadata.siteName || capturedData.location.hostname || "",
+      );
+      api?.setFieldValue("faviconUrl", capturedData.metadata.faviconUrl || "");
+      api?.setFieldValue("languageCode", capturedData.lang || "");
+      // Description only written if currently empty
+      if (api && !api.getFieldValue("description")) {
+        api.setFieldValue("description", capturedData.metadata.excerpt || "");
+      }
     } else {
       const current = editor.document;
       const isEmpty =
@@ -62,6 +80,18 @@ function EntryEditContent({
         editor.replaceBlocks(current, blocks);
       } else {
         editor.insertBlocks(blocks, current[current.length - 1].id, "after");
+      }
+      // For selection capture, all metadata fields only written if currently empty
+      if (api) {
+        if (!api.getFieldValue("url")) api.setFieldValue("url", capturedData.location.href || "");
+        if (!api.getFieldValue("siteName"))
+          api.setFieldValue("siteName", capturedData.metadata.siteName || capturedData.location.hostname || "");
+        if (!api.getFieldValue("faviconUrl"))
+          api.setFieldValue("faviconUrl", capturedData.metadata.faviconUrl || "");
+        if (!api.getFieldValue("languageCode"))
+          api.setFieldValue("languageCode", capturedData.lang || "");
+        if (!api.getFieldValue("description"))
+          api.setFieldValue("description", capturedData.metadata.excerpt || "");
       }
     }
   }, [capturedData, editor]);
@@ -97,6 +127,7 @@ function EntryEditContent({
             <EntryForm
               id={formId}
               topics={topics}
+              onFormReady={(api) => { formApiRef.current = api; }}
               overrideExisting={true}
               initialData={{
                 title: entry.title,

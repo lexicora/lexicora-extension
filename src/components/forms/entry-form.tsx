@@ -75,6 +75,13 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+type SourceField = "url" | "siteName" | "faviconUrl" | "languageCode" | "description";
+
+export type EntryFormApi = {
+  setFieldValue: (name: SourceField, value: string) => void;
+  getFieldValue: (name: SourceField) => string;
+};
+
 export interface EntryFormData {
   title: string;
   topicId: string;
@@ -94,6 +101,7 @@ interface EntryFormProps {
   topics: TopicDocType[];
   onSubmit: (data: EntryFormData) => void | Promise<void>;
   isLoading?: boolean;
+  onFormReady?: (api: EntryFormApi) => void;
 }
 
 export function EntryForm({
@@ -103,6 +111,7 @@ export function EntryForm({
   topics,
   onSubmit,
   isLoading,
+  onFormReady,
 }: EntryFormProps) {
   const { isSupported } = useTabSupport();
   const {
@@ -131,6 +140,14 @@ export function EntryForm({
   const prevInitialDataId = useRef<string | null>(null);
   const [topicInputValue, setTopicInputValue] = useState("");
   const topicDisplayInitialized = useRef(false);
+
+  useEffect(() => {
+    onFormReady?.({
+      setFieldValue: (name, value) =>
+        setValue(name, value, { shouldDirty: true }),
+      getFieldValue: (name) => (getValues(name) as string) ?? "",
+    });
+  }, []);
 
   const watchTopicId = watch("topicId");
 
