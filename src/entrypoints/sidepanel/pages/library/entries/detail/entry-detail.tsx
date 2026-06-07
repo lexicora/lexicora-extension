@@ -32,7 +32,6 @@ import { convertDbBlocksToBlockNote } from "@/lib/utils/block-converter";
 import {
   ArchiveIcon,
   ClipboardIcon,
-  CodeIcon,
   EllipsisIcon,
   FileTextIcon,
   FolderIcon,
@@ -146,18 +145,6 @@ function EntryDetailPage() {
       await navigator.clipboard.writeText(md);
     } catch (e) {
       console.error("Failed to copy as Markdown:", e);
-    }
-  };
-
-  const handleCopyContentHtml = async () => {
-    if (!editorRef.current) return;
-    try {
-      const html = await editorRef.current.blocksToHTMLLossy(
-        editorRef.current.document,
-      );
-      await navigator.clipboard.writeText(html);
-    } catch (e) {
-      console.error("Failed to copy as HTML:", e);
     }
   };
 
@@ -426,7 +413,7 @@ function EntryDetailPage() {
                 <EllipsisIcon className="size-4.5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="center" side="left" className="w-40">
+            <DropdownMenuContent align="center" side="left" className="w-39">
               <DropdownMenuLabel className="text-xs font-medium select-none text-muted-foreground py-1">
                 Copy content...
               </DropdownMenuLabel>
@@ -438,18 +425,7 @@ function EntryDetailPage() {
                 <FileTextIcon className="size-4 mr-2" />
                 As Markdown
               </DropdownMenuItem>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                disabled={!hasContent}
-                onClick={handleCopyContentHtml}
-              >
-                <CodeIcon className="size-4 mr-2" />
-                As HTML
-              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuLabel className="text-xs font-medium select-none text-muted-foreground py-1">
-                Copy entry...
-              </DropdownMenuLabel>
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() => handleCopyEntryMarkdown(entry)}

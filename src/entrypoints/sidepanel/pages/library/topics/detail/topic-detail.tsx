@@ -11,13 +11,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { EntryItem } from "@/components/entry-list";
 import { PageContainer } from "@/components/page-container";
@@ -29,11 +22,8 @@ import { formatDate } from "@/lib/utils/date-formatter";
 import {
   ArchiveIcon,
   ChevronRightIcon,
-  CodeIcon,
-  EllipsisIcon,
-  FileTextIcon,
+  ClipboardIcon,
   LayoutListIcon,
-  ListIcon,
   PinIcon,
   PlusIcon,
   SquarePenIcon,
@@ -131,9 +121,6 @@ function TopicDetailPage() {
     await doc.incrementalPatch(patch);
   };
 
-  const escHtml = (s: string) =>
-    s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
   const handleCopyMarkdown = async () => {
     if (!topic) return;
     try {
@@ -151,27 +138,6 @@ function TopicDetailPage() {
       await navigator.clipboard.writeText(lines.join("\n").trimEnd());
     } catch (e) {
       console.error("Failed to copy topic as Markdown:", e);
-    }
-  };
-
-  const handleCopyHtml = async () => {
-    if (!topic) return;
-    try {
-      const parts: string[] = [];
-      parts.push(`<p><em>Topic</em></p>`);
-      parts.push(`<h1>${escHtml(topic.name)}</h1>`);
-      if (topic.description) parts.push(`<p>${escHtml(topic.description)}</p>`);
-      if (topic.tags && topic.tags.length > 0)
-        parts.push(
-          `<p><strong>Tags:</strong> ${topic.tags.map(escHtml).join(", ")}</p>`,
-        );
-      parts.push(
-        `<p><em>Entries: ${entriesCount} | Created: ${escHtml(formatDate(topic.createdAt))} | Updated: ${escHtml(formatDate(topic.updatedAt))}</em></p>`,
-      );
-      // TODO: Include topic entries in the copy output when implemented
-      await navigator.clipboard.writeText(parts.join("\n"));
-    } catch (e) {
-      console.error("Failed to copy topic as HTML:", e);
     }
   };
 
@@ -338,37 +304,15 @@ function TopicDetailPage() {
             />
           </Button>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                title="Copy topic"
-                className="ml-auto size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 not-hover:text-muted-foreground not-active:text-muted-foreground"
-              >
-                <EllipsisIcon className="size-4.5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="center" side="left" className="w-38">
-              <DropdownMenuLabel className="text-xs font-medium select-none py-1 text-muted-foreground">
-                Copy topic...
-              </DropdownMenuLabel>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={handleCopyMarkdown}
-              >
-                <FileTextIcon className="size-4 mr-2" />
-                As Markdown
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={handleCopyHtml}
-              >
-                <CodeIcon className="size-4 mr-2" />
-                As HTML
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            variant="ghost"
+            size="icon"
+            title="Copy topic as Markdown"
+            onClick={handleCopyMarkdown}
+            className="ml-auto size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 text-muted-foreground"
+          >
+            <ClipboardIcon className="size-4.5" />
+          </Button>
           <Button
             variant="ghost"
             size="icon"
@@ -425,30 +369,32 @@ function TopicDetailPage() {
       )}
 
       {/* Floating create entry button — hidden for archived topics */}
-      {!topic.isArchived && <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20 pointer-events-none">
-        <div className="shrink-0 flex items-center justify-end max-w-315 mx-auto inset-x-0">
-          <Button
-            size="icon"
-            title="Create Entry"
-            draggable={false}
-            className={cn(
-              "pointer-events-auto",
-              "text-lc-light-foreground bg-green-500 hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800",
-              "ring-1 ring-inset ring-black/20 dark:ring-white/30 hover:ring-black/25 dark:hover:ring-white/25",
-              "size-9 rounded-[12px] shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)]",
-              "focus-visible:ring-offset-1",
-            )}
-            onClick={() =>
-              navigate(
-                `/library/entries/new?topicId=${encodeURIComponent(topic.id)}`,
-                { viewTransition: true },
-              )
-            }
-          >
-            <PlusIcon className="size-5" />
-          </Button>
+      {!topic.isArchived && (
+        <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20 pointer-events-none">
+          <div className="shrink-0 flex items-center justify-end max-w-315 mx-auto inset-x-0">
+            <Button
+              size="icon"
+              title="Create Entry"
+              draggable={false}
+              className={cn(
+                "pointer-events-auto",
+                "text-lc-light-foreground bg-green-500 hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800",
+                "ring-1 ring-inset ring-black/20 dark:ring-white/30 hover:ring-black/25 dark:hover:ring-white/25",
+                "size-9 rounded-[12px] shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)]",
+                "focus-visible:ring-offset-1",
+              )}
+              onClick={() =>
+                navigate(
+                  `/library/entries/new?topicId=${encodeURIComponent(topic.id)}`,
+                  { viewTransition: true },
+                )
+              }
+            >
+              <PlusIcon className="size-5" />
+            </Button>
+          </div>
         </div>
-      </div>}
+      )}
 
       {/* Delete confirmation */}
       <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
