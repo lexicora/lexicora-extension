@@ -500,7 +500,7 @@ export function EntryList({
                 variant="link"
                 onClick={() =>
                   navigate(
-                    `/library/entries/new?title=${encodeURIComponent(search)}`,
+                    `/library/entries/new?title=${encodeURIComponent(search)}${topicId ? `&topicId=${encodeURIComponent(topicId)}` : ""}`,
                     { viewTransition: true },
                   )
                 }
@@ -518,7 +518,10 @@ export function EntryList({
               <Button
                 variant="link"
                 onClick={() =>
-                  navigate("/library/entries/new", { viewTransition: true })
+                  navigate(
+                    `/library/entries/new${topicId ? `?topicId=${encodeURIComponent(topicId)}` : ""}`,
+                    { viewTransition: true },
+                  )
                 }
               >
                 Create Entry

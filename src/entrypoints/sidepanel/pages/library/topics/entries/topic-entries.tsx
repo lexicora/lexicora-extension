@@ -5,17 +5,20 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
 import { EntryList } from "@/components/entry-list";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
-import { ArchiveIcon, SearchIcon, StarIcon, XIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ArchiveIcon, PlusIcon, SearchIcon, StarIcon, XIcon } from "lucide-react";
 import { useDeferredValue, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
 
 function TopicEntriesPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const topicsCollection = useRxCollection("topics");
 
   const [search, setSearch] = useState("");
@@ -121,6 +124,32 @@ function TopicEntriesPage() {
           />
         </main>
       )}
+
+      {/* Floating create entry button */}
+      <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20 pointer-events-none">
+        <div className="shrink-0 flex items-center justify-end max-w-315 mx-auto inset-x-0">
+          <Button
+            size="icon"
+            title="Create Entry"
+            draggable={false}
+            className={cn(
+              "pointer-events-auto",
+              "text-lc-light-foreground bg-green-500 hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800",
+              "ring-1 ring-inset ring-black/20 dark:ring-white/30 hover:ring-black/25 dark:hover:ring-white/25",
+              "size-9 rounded-[12px] shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)]",
+              "focus-visible:ring-offset-1",
+            )}
+            onClick={() =>
+              navigate(
+                `/library/entries/new?topicId=${encodeURIComponent(id ?? "")}`,
+                { viewTransition: true },
+              )
+            }
+          >
+            <PlusIcon className="size-5" />
+          </Button>
+        </div>
+      </div>
     </PageContainer>
   );
 }

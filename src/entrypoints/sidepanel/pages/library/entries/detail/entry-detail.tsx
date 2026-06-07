@@ -323,7 +323,7 @@ function EntryDetailPage() {
         {/* Description */}
         <p
           className={cn(
-            "text-sm leading-relaxed whitespace-pre-wrap wrap-break-word text-pretty mt-3.75",
+            "text-sm leading-relaxed whitespace-pre-wrap wrap-break-word text-pretty mt-4",
             !entry.description && "italic text-muted-foreground select-none",
           )}
         >

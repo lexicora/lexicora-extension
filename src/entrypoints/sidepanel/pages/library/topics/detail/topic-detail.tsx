@@ -33,6 +33,7 @@ import {
   FileTextIcon,
   LayoutListIcon,
   PinIcon,
+  PlusIcon,
   SquarePenIcon,
   StarIcon,
   Trash2Icon,
@@ -416,6 +417,32 @@ function TopicDetailPage() {
           /> */}
         </section>
       )}
+
+      {/* Floating create entry button */}
+      <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20 pointer-events-none">
+        <div className="shrink-0 flex items-center justify-end max-w-315 mx-auto inset-x-0">
+          <Button
+            size="icon"
+            title="Create Entry"
+            draggable={false}
+            className={cn(
+              "pointer-events-auto",
+              "text-lc-light-foreground bg-green-500 hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800",
+              "ring-1 ring-inset ring-black/20 dark:ring-white/30 hover:ring-black/25 dark:hover:ring-white/25",
+              "size-9 rounded-[12px] shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)]",
+              "focus-visible:ring-offset-1",
+            )}
+            onClick={() =>
+              navigate(
+                `/library/entries/new?topicId=${encodeURIComponent(topic.id)}`,
+                { viewTransition: true },
+              )
+            }
+          >
+            <PlusIcon className="size-5" />
+          </Button>
+        </div>
+      </div>
 
       {/* Delete confirmation */}
       <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>

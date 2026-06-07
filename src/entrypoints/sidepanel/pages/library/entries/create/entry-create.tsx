@@ -225,6 +225,7 @@ function EntryCreatePage() {
               overrideExisting={capturedData?.misc?.overrideExisting ?? true}
               initialData={{
                 title: capturedData?.title || searchParams.get("title") || "",
+                topicId: searchParams.get("topicId") || "",
                 faviconUrl: capturedData?.metadata?.faviconUrl || "",
                 url: capturedData?.location?.href || "",
                 siteName:
