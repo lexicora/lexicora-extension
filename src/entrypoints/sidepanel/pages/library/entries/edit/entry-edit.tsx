@@ -17,8 +17,9 @@ import {
 } from "@/lib/utils/block-converter";
 import { useScrollPos } from "@/providers/scroll-observer";
 import { ArrowUpIcon, SaveIcon } from "lucide-react";
+import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
 import { useCreateBlockNote } from "@blocknote/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
 import { uuidv7 } from "uuidv7";
@@ -42,6 +43,28 @@ function EntryEditContent({
     ...appBlockNoteConfig,
     initialContent: initialBlocks.length > 0 ? initialBlocks : undefined,
   });
+
+  const capturedData = useCaptureData();
+
+  useLayoutEffect(() => {
+    if (!capturedData?.content) return;
+    const blocks = editor.tryParseHTMLToBlocks(capturedData.content);
+    if (capturedData.misc.overrideExisting) {
+      editor.replaceBlocks(editor.document, blocks);
+    } else {
+      const current = editor.document;
+      const isEmpty =
+        current.length === 1 &&
+        current[0].type === "paragraph" &&
+        (!current[0].content || current[0].content.length === 0) &&
+        (!current[0].children || current[0].children.length === 0);
+      if (isEmpty) {
+        editor.replaceBlocks(current, blocks);
+      } else {
+        editor.insertBlocks(blocks, current[current.length - 1].id, "after");
+      }
+    }
+  }, [capturedData, editor]);
 
   const formId = "entry-edit-form";
 
