@@ -162,11 +162,7 @@ function EntryDetailPage() {
   };
 
   const handleCopyEntryMarkdown = async (entry: EntryDocType) => {
-    if (!editorRef.current) return;
     try {
-      const contentMd = await editorRef.current.blocksToMarkdownLossy(
-        editorRef.current.document,
-      );
       const lines: string[] = [];
       lines.push("**Entry**", "");
       lines.push(`# ${entry.title}`, "");
@@ -186,8 +182,13 @@ function EntryDetailPage() {
         `**Created:** ${formatDate(entry.createdAt)} | **Updated:** ${formatDate(entry.updatedAt)}`,
         "",
       );
-      if (contentMd.trim()) {
-        lines.push("---", "", contentMd);
+      if (editorRef.current) {
+        const contentMd = await editorRef.current.blocksToMarkdownLossy(
+          editorRef.current.document,
+        );
+        if (contentMd.trim()) {
+          lines.push("---", "", contentMd);
+        }
       }
       await navigator.clipboard.writeText(lines.join("\n"));
     } catch (e) {
@@ -451,7 +452,6 @@ function EntryDetailPage() {
               </DropdownMenuLabel>
               <DropdownMenuItem
                 className="cursor-pointer"
-                disabled={!hasContent}
                 onClick={() => handleCopyEntryMarkdown(entry)}
               >
                 <ClipboardIcon className="size-4 mr-2" />
