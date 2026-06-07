@@ -38,6 +38,7 @@ function TopicEntriesPage() {
   );
   // true once we've read the topic's archived state and set the default filter.
   const [filterReady, setFilterReady] = useState(false);
+  const [topicIsArchived, setTopicIsArchived] = useState(false);
   const filter = {
     onlyFavorites: showFavorites,
     onlyArchived: showArchived,
@@ -45,15 +46,19 @@ function TopicEntriesPage() {
 
   useEffect(() => {
     if (!topicsCollection || !id) return;
-    // Capture mount-time URL state — user's explicit filter choice always wins over the auto-default.
+    // Check mount-time URL — the archived param's *presence* (any value) means the user
+    // explicitly chose a state, so the auto-default should not override it.
     const hasExplicitFilter =
       searchParams.get("favorites") === "true" ||
-      searchParams.get("archived") === "true";
+      searchParams.get("archived") !== null;
     topicsCollection
       .findOne({ selector: { id } })
       .exec()
       .then((doc) => {
-        if (doc?.isArchived && !hasExplicitFilter) setShowArchived(true);
+        if (doc?.isArchived) {
+          setTopicIsArchived(true);
+          if (!hasExplicitFilter) setShowArchived(true);
+        }
         setFilterReady(true);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,11 +78,9 @@ function TopicEntriesPage() {
         } else {
           newParams.delete("favorites");
         }
-        if (showArchived) {
-          newParams.set("archived", "true");
-        } else {
-          newParams.delete("archived");
-        }
+        // Always store the archived state (even false) so returning to the page after
+        // explicitly turning off the filter doesn't re-trigger the archived auto-default.
+        newParams.set("archived", showArchived ? "true" : "false");
         return newParams;
       },
       { replace: true },
@@ -166,12 +169,13 @@ function TopicEntriesPage() {
             filter={filter}
             scrollStorageKey={`entryList:${id}`}
             topUIScrollOffset={190}
+            disableCreate={topicIsArchived}
           />
         </main>
       )}
 
-      {/* Floating create entry button */}
-      <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20 pointer-events-none">
+      {/* Floating create entry button — hidden for archived topics */}
+      {!topicIsArchived && <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20 pointer-events-none">
         <div className="shrink-0 flex items-center justify-end max-w-315 mx-auto inset-x-0">
           <Button
             size="icon"
@@ -194,7 +198,7 @@ function TopicEntriesPage() {
             <PlusIcon className="size-5" />
           </Button>
         </div>
-      </div>
+      </div>}
     </PageContainer>
   );
 }

@@ -369,6 +369,8 @@ interface EntryListProps {
   // sessionStorage key for scroll restoration. Override to namespace lists that
   // can coexist across routes (e.g. the per-topic embedded list).
   scrollStorageKey?: string;
+  // When true, hides the "Create Entry" buttons in empty-state UI.
+  disableCreate?: boolean;
 }
 
 export function EntryList({
@@ -377,6 +379,7 @@ export function EntryList({
   topicId,
   topUIScrollOffset,
   scrollStorageKey = "entryListScrollTop",
+  disableCreate = false,
 }: EntryListProps) {
   const [entries, setEntries] = useState<EntryDocType[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -491,41 +494,49 @@ export function EntryList({
                 </span>
                 . <br /> Try changing your search query.
               </p>
-              <div className="flex justify-center items-center gap-3 w-1/6 max-w-24 mx-auto mb-1">
-                <Separator />
-                <span className="text-muted-foreground">or</span>
-                <Separator />
-              </div>
-              <Button
-                variant="link"
-                onClick={() =>
-                  navigate(
-                    `/library/entries/new?title=${encodeURIComponent(search)}${topicId ? `&topicId=${encodeURIComponent(topicId)}` : ""}`,
-                    { viewTransition: true },
-                  )
-                }
-              >
-                Create Entry{" "}
-                <span className="inline-block max-w-34 truncate align-bottom text-lc-muted-foreground-hover">
-                  "{search}"
-                </span>
-              </Button>
+              {!disableCreate && (
+                <>
+                  <div className="flex justify-center items-center gap-3 w-1/6 max-w-24 mx-auto mb-1">
+                    <Separator />
+                    <span className="text-muted-foreground">or</span>
+                    <Separator />
+                  </div>
+                  <Button
+                    variant="link"
+                    onClick={() =>
+                      navigate(
+                        `/library/entries/new?title=${encodeURIComponent(search)}${topicId ? `&topicId=${encodeURIComponent(topicId)}` : ""}`,
+                        { viewTransition: true },
+                      )
+                    }
+                  >
+                    Create Entry{" "}
+                    <span className="inline-block max-w-34 truncate align-bottom text-lc-muted-foreground-hover">
+                      "{search}"
+                    </span>
+                  </Button>
+                </>
+              )}
             </>
           ) : (
             <>
               <p className="text-muted-foreground mb-3">No entries found.</p>
-              <Separator className="max-w-24 mx-auto mb-1" />
-              <Button
-                variant="link"
-                onClick={() =>
-                  navigate(
-                    `/library/entries/new${topicId ? `?topicId=${encodeURIComponent(topicId)}` : ""}`,
-                    { viewTransition: true },
-                  )
-                }
-              >
-                Create Entry
-              </Button>
+              {!disableCreate && (
+                <>
+                  <Separator className="max-w-24 mx-auto mb-1" />
+                  <Button
+                    variant="link"
+                    onClick={() =>
+                      navigate(
+                        `/library/entries/new${topicId ? `?topicId=${encodeURIComponent(topicId)}` : ""}`,
+                        { viewTransition: true },
+                      )
+                    }
+                  >
+                    Create Entry
+                  </Button>
+                </>
+              )}
             </>
           )}
         </div>

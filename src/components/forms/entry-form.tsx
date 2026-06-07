@@ -163,6 +163,7 @@ export function EntryForm({
       topicDisplayInitialized.current = true;
     }
   }, [topics, watchTopicId]);
+
   const currentDescription = watch("description") || "";
 
   useEffect(() => {
@@ -325,6 +326,9 @@ export function EntryForm({
             name="topicId"
             render={({ field }) => {
               const typed = topicInputValue.trim();
+
+              // Only non-archived topics are selectable; check all topics for name uniqueness.
+              const availableTopics = topics.filter((t) => !t.isArchived);
               const hasExactTopicMatch = topics.some(
                 (t) => t.name.toLowerCase() === typed.toLowerCase(),
               );
@@ -332,15 +336,46 @@ export function EntryForm({
               const isCustomValue =
                 field.value && !topics.some((t) => t.id === field.value);
 
+              // The original archived topic from initialData — always kept in the list so
+              // the user can revert back to it after switching away.
+              const originalArchivedTopic = initialData?.topicId
+                ? topics.find((t) => t.id === initialData.topicId && t.isArchived)
+                : undefined;
+
+              // If the *current* selection (after a change) is a different archived topic,
+              // include it too — but keep it disabled since it wasn't the original.
+              const currentArchivedTopic =
+                field.value && field.value !== originalArchivedTopic?.id
+                  ? topics.find((t) => t.id === field.value && t.isArchived)
+                  : undefined;
+
+              // When typing matches archived topic names, surface them as disabled items
+              // so the user understands why nothing is selectable and "Create" is blocked.
+              const typedMatchingArchivedTopics = typed
+                ? topics.filter(
+                    (t) =>
+                      t.isArchived &&
+                      t.name.toLowerCase().includes(typed.toLowerCase()) &&
+                      (!currentArchivedTopic || t.id !== currentArchivedTopic.id) &&
+                      (!originalArchivedTopic || t.id !== originalArchivedTopic.id),
+                  )
+                : [];
+
               const comboboxItems = [
-                ...topics,
+                ...availableTopics,
                 ...(typed && !hasExactTopicMatch
                   ? [{ id: typed, name: `Create "${typed}"` }]
                   : []),
                 ...(isCustomValue && field.value !== typed
                   ? [{ id: field.value, name: field.value }]
                   : []),
+                ...(originalArchivedTopic ? [originalArchivedTopic] : []),
+                ...(currentArchivedTopic ? [currentArchivedTopic] : []),
+                ...typedMatchingArchivedTopics,
               ];
+
+              const selectedValue =
+                comboboxItems.find((t) => t.id === field.value) || null;
 
               return (
                 <Combobox
@@ -349,9 +384,7 @@ export function EntryForm({
                   itemToStringLabel={(topic) =>
                     topic.name.startsWith('Create "') ? topic.id : topic.name
                   }
-                  value={
-                    comboboxItems.find((t) => t.id === field.value) || null
-                  }
+                  value={selectedValue}
                   onValueChange={(val) => {
                     field.onChange(val?.id || "");
                     if (val?.id) setTopicInputValue("");
@@ -374,11 +407,28 @@ export function EntryForm({
                   <ComboboxContent className="z-50 scrollbar-bg-transparent w-[--radix-popover-trigger-width]">
                     <ComboboxEmpty>Type to create a new topic.</ComboboxEmpty>
                     <ComboboxList>
-                      {(topic) => (
-                        <ComboboxItem key={topic.id} value={topic}>
-                          {topic.name}
-                        </ComboboxItem>
-                      )}
+                      {(topic) => {
+                        const isArchived =
+                          "isArchived" in topic &&
+                          (topic as TopicDocType).isArchived === true;
+                        const isRevertable = isArchived && topic.id === originalArchivedTopic?.id;
+                        return (
+                          <ComboboxItem
+                            key={topic.id}
+                            value={topic}
+                            disabled={isArchived && !isRevertable}
+                          >
+                            <span className="truncate min-w-0 flex-1">
+                              {topic.name}
+                            </span>
+                            {isArchived && (
+                              <span className="shrink-0 text-xs text-muted-foreground italic">
+                                Archived
+                              </span>
+                            )}
+                          </ComboboxItem>
+                        );
+                      }}
                     </ComboboxList>
                   </ComboboxContent>
                 </Combobox>
