@@ -28,10 +28,12 @@ import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
 import {
   ArchiveIcon,
+  ChevronRightIcon,
   CodeIcon,
   EllipsisIcon,
   FileTextIcon,
   LayoutListIcon,
+  ListIcon,
   PinIcon,
   PlusIcon,
   SquarePenIcon,
@@ -93,11 +95,13 @@ function TopicDetailPage() {
 
   useEffect(() => {
     if (!entriesCollection || !id) return;
-    entriesCollection
-      .count({ selector: { topicId: id } })
-      .exec()
-      .then(setEntriesCount)
-      .catch(() => setEntriesCount(0));
+    const sub = entriesCollection
+      .count({ selector: { topicId: id, isArchived: false } })
+      .$.subscribe({
+        next: setEntriesCount,
+        error: () => setEntriesCount(0),
+      });
+    return () => sub.unsubscribe();
   }, [entriesCollection, id]);
 
   const handleAttributeToggle = async (
@@ -394,27 +398,29 @@ function TopicDetailPage() {
       {favoriteEntries.length > 0 && (
         <section className="px-0.75 mx-auto w-full mt-2 mb-2.25">
           <Separator className="mx-auto max-w-[calc(100%-8px)] mt-0 mb-3 opacity-60" />
-          <div className="flex items-center gap-1.5 mb-1.5 px-1.25">
+          <div className="flex items-center gap-1.5 mb-2 px-1.25">
             <StarIcon className="size-3.5 text-muted-foreground" />
             <span className="text-xs font-medium text-muted-foreground tracking-wide">
               Favorites
             </span>
+            <button
+              className="ml-auto flex items-center gap-1 text-xs text-muted-foreground hover:text-lc-muted-foreground-hover hover:underline underline-offset-2 transition-colors cursor-pointer"
+              onClick={() =>
+                navigate(`/library/topics/${topic.id}/entries`, {
+                  viewTransition: true,
+                })
+              }
+            >
+              {/* <ListIcon className="size-3.5 shrink-0" /> */}
+              <span className="font-normal">Total {entriesCount}</span>
+              <ChevronRightIcon className="size-3.5 shrink-0 opacity-70" />
+            </button>
           </div>
           <div className="flex flex-col gap-3">
             {favoriteEntries.map((entry) => (
               <EntryItem key={entry.id} entry={entry} disableScrollRestore />
             ))}
           </div>
-          {/* <Virtuoso
-            useWindowScroll
-            data={favoriteEntries}
-            overscan={200}
-            itemContent={(_, entry) => (
-              <div className="px-1.25 py-1.5">
-                <EntryItem entry={entry} disableScrollRestore />
-              </div>
-            )}
-          /> */}
         </section>
       )}
 

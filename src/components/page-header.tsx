@@ -25,6 +25,7 @@ interface PageHeaderProps {
   headerTextAlignment?: "center" | "left";
   goBackButton?: boolean;
   goBackButtonVariant?: "ghost" | "tinted";
+  goBackButtonTitle?: string;
   rightActionButton?: ActionButtonConfig;
   classNameHeaderElement?: string;
   heavyTeardown?: boolean;
@@ -37,6 +38,7 @@ export function PageHeader({
   headerTextAlignment = "center",
   goBackButton = false,
   goBackButtonVariant = "ghost",
+  goBackButtonTitle = "Go back",
   rightActionButton,
   classNameHeaderElement,
   heavyTeardown = false,
@@ -72,7 +74,7 @@ export function PageHeader({
           <Button
             variant="ghost"
             size="icon"
-            title="Go back"
+            title={goBackButtonTitle}
             className={cn(
               "shrink-0 size-10 rounded-lg",
               goBackButtonVariant === "ghost" &&
@@ -168,7 +170,7 @@ export function PageHeader({
             <Button
               variant="ghost"
               size="icon"
-              title="Go back"
+              title={goBackButtonTitle}
               className={cn(
                 goBackButtonVariant === "ghost" &&
                   "hover:bg-gray-200 dark:hover:bg-gray-800 hover:ring-1 ring-inset ring-gray-300 dark:ring-gray-700",
@@ -244,7 +246,7 @@ export function PageHeader({
           <Button
             variant="ghost"
             size="icon"
-            title="Go back"
+            title={goBackButtonTitle}
             className={cn(
               "shrink-0 size-10 rounded-lg",
               goBackButtonVariant === "ghost" &&

@@ -88,7 +88,7 @@ function TopicEntriesPage() {
 
   return (
     <PageContainer id="lc-topic-entries-page">
-      <PageHeader title="Entries" goBackButton />
+      <PageHeader title="Entries" goBackButton goBackButtonTitle="Back to Topic" />
 
       <div className="flex items-center gap-1.5 px-1.5 pt-0.5 pb-1.5 dark:scheme-dark">
         <div className="flex-1">
