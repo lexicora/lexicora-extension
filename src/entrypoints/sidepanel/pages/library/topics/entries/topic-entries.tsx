@@ -13,18 +13,19 @@ import { PageHeader } from "@/components/page-header";
 import { cn } from "@/lib/utils";
 import { ArchiveIcon, PlusIcon, SearchIcon, StarIcon, XIcon } from "lucide-react";
 import { useDeferredValue, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
 
 function TopicEntriesPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const topicsCollection = useRxCollection("topics");
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(searchParams.get("q") || "");
   const deferredSearch = useDeferredValue(search);
-  const [showFavorites, setShowFavorites] = useState(false);
-  const [showArchived, setShowArchived] = useState(false);
+  const [showFavorites, setShowFavorites] = useState(searchParams.get("favorites") === "true");
+  const [showArchived, setShowArchived] = useState(searchParams.get("archived") === "true");
   // true once we've read the topic's archived state and set the default filter.
   const [filterReady, setFilterReady] = useState(false);
   const filter = {
@@ -34,14 +35,43 @@ function TopicEntriesPage() {
 
   useEffect(() => {
     if (!topicsCollection || !id) return;
+    // Capture mount-time URL state — user's explicit filter choice always wins over the auto-default.
+    const hasExplicitFilter =
+      searchParams.get("favorites") === "true" || searchParams.get("archived") === "true";
     topicsCollection
       .findOne({ selector: { id } })
       .exec()
       .then((doc) => {
-        if (doc?.isArchived) setShowArchived(true);
+        if (doc?.isArchived && !hasExplicitFilter) setShowArchived(true);
         setFilterReady(true);
       });
-  }, [topicsCollection, id]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [topicsCollection, id]); // searchParams intentionally omitted — we only want the mount-time value
+
+  useEffect(() => {
+    setSearchParams(
+      (prev) => {
+        const newParams = new URLSearchParams(prev);
+        if (deferredSearch) {
+          newParams.set("q", deferredSearch);
+        } else {
+          newParams.delete("q");
+        }
+        if (showFavorites) {
+          newParams.set("favorites", "true");
+        } else {
+          newParams.delete("favorites");
+        }
+        if (showArchived) {
+          newParams.set("archived", "true");
+        } else {
+          newParams.delete("archived");
+        }
+        return newParams;
+      },
+      { replace: true },
+    );
+  }, [deferredSearch, showFavorites, showArchived, setSearchParams]);
 
   const handleToggleFilter = (
     type: "favorites" | "archived",
