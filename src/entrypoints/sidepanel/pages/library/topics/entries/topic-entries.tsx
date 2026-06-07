@@ -11,7 +11,13 @@ import { EntryList } from "@/components/entry-list";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { cn } from "@/lib/utils";
-import { ArchiveIcon, PlusIcon, SearchIcon, StarIcon, XIcon } from "lucide-react";
+import {
+  ArchiveIcon,
+  PlusIcon,
+  SearchIcon,
+  StarIcon,
+  XIcon,
+} from "lucide-react";
 import { useDeferredValue, useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
@@ -24,8 +30,12 @@ function TopicEntriesPage() {
 
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const deferredSearch = useDeferredValue(search);
-  const [showFavorites, setShowFavorites] = useState(searchParams.get("favorites") === "true");
-  const [showArchived, setShowArchived] = useState(searchParams.get("archived") === "true");
+  const [showFavorites, setShowFavorites] = useState(
+    searchParams.get("favorites") === "true",
+  );
+  const [showArchived, setShowArchived] = useState(
+    searchParams.get("archived") === "true",
+  );
   // true once we've read the topic's archived state and set the default filter.
   const [filterReady, setFilterReady] = useState(false);
   const filter = {
@@ -37,7 +47,8 @@ function TopicEntriesPage() {
     if (!topicsCollection || !id) return;
     // Capture mount-time URL state — user's explicit filter choice always wins over the auto-default.
     const hasExplicitFilter =
-      searchParams.get("favorites") === "true" || searchParams.get("archived") === "true";
+      searchParams.get("favorites") === "true" ||
+      searchParams.get("archived") === "true";
     topicsCollection
       .findOne({ selector: { id } })
       .exec()
@@ -45,7 +56,7 @@ function TopicEntriesPage() {
         if (doc?.isArchived && !hasExplicitFilter) setShowArchived(true);
         setFilterReady(true);
       });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topicsCollection, id]); // searchParams intentionally omitted — we only want the mount-time value
 
   useEffect(() => {
@@ -88,9 +99,13 @@ function TopicEntriesPage() {
 
   return (
     <PageContainer id="lc-topic-entries-page">
-      <PageHeader title="Entries" goBackButton goBackButtonTitle="Back to Topic" />
+      <PageHeader
+        title="Entries"
+        goBackButton
+        goBackButtonTitle="Back to Topic"
+      />
 
-      <div className="flex items-center gap-1.5 px-1.5 pt-0.5 pb-1.5 dark:scheme-dark">
+      <div className="flex items-center gap-1.75 px-1.5 pt-0.5 pb-1.5 dark:scheme-dark">
         <div className="flex-1">
           <Field orientation="horizontal">
             <InputGroup>
