@@ -236,7 +236,7 @@ function EntryDetailPage() {
     iconLarge: <FolderIcon className="size-5.5" />,
     variant: "default" as const,
     onClick: () =>
-      navigate(`/library/topics/${entry.topicId}?hideEntries=true`, {
+      navigate(`/library/topics/${entry.topicId}`, {
         viewTransition: true,
       }),
     title: "View parent topic",

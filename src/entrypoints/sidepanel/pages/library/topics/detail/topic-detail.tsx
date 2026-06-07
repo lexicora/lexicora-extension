@@ -38,7 +38,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
 
 function TopicDetailPage() {
@@ -53,12 +53,6 @@ function TopicDetailPage() {
     undefined,
   );
   const [deleteOpen, setDeleteOpen] = useState(false);
-
-  const [searchParams] = useSearchParams();
-  // Navigating here from an entry's "parent topic" link passes
-  // ?hideEntries=true, which suppresses every entry-list display so a
-  // topic → entry → topic → entry navigation loop can't form.
-  const hideEntries = searchParams.get("hideEntries") === "true";
 
   const [favoriteEntries, setFavoriteEntries] = useState<EntryDocType[]>([]);
   const [entriesCount, setEntriesCount] = useState<number>(0);
@@ -235,7 +229,7 @@ function TopicDetailPage() {
         classNameHeaderElement="mb-3"
         goBackButton
         goBackButtonVariant="tinted"
-        rightActionButton={hideEntries ? undefined : viewEntriesButton}
+        rightActionButton={viewEntriesButton}
       />
 
       <section className="px-1 mx-auto w-full text-left select-text">
@@ -396,7 +390,7 @@ function TopicDetailPage() {
       </section>
 
       {/* Favorite entries preview */}
-      {!hideEntries && favoriteEntries.length > 0 && (
+      {favoriteEntries.length > 0 && (
         <section className="px-0.75 mx-auto w-full mt-2 mb-2.25">
           <Separator className="mx-auto max-w-[calc(100%-8px)] mt-0 mb-3 opacity-60" />
           <div className="flex items-center gap-1.5 mb-1.5 px-1.25">
