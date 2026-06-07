@@ -144,6 +144,15 @@ html:has(
   video::selection {
     background-color: #2382e27c;
   }
+  & .bn-block-content[data-content-type="table"] {
+    & th::after,
+    td::after {
+      background-color: transparent; /*Maybe change later*/
+    }
+  }
+  & .bn-code-content .bn-block-content[data-content-type="codeBlock"] select {
+    cursor: default;
+  }
 }
 
 .bn-root[data-color-scheme] .bn-editor[contenteditable="true"] img,
