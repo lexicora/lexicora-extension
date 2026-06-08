@@ -2,10 +2,21 @@ import styles from "./entry-create.module.css";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { appBlockNoteConfig } from "@/components/editor/config";
 import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
 import { useEffect, useState, useLayoutEffect, useRef } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useBlocker, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
@@ -35,7 +46,10 @@ function EntryCreatePage() {
   const [promptText, setPromptText] = useState("");
   const [isPromptFocused, setIsPromptFocused] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [formIsDirty, setFormIsDirty] = useState(false);
   const [topics, setTopics] = useState<TopicDocType[]>([]);
+
+  const blocker = useBlocker(formIsDirty && !isSaving);
   const topicsCollection = useRxCollection("topics");
   const db = useRxDatabase();
 
@@ -138,10 +152,11 @@ function EntryCreatePage() {
         await db.blocks.bulkInsert(dbBlocks);
       }
 
+      toast.success("Entry created");
       navigate(`/library/entries/${entryId}`, {
         replace: true,
         viewTransition: true,
-      }); // or wherever appropriate
+      });
     } catch (e) {
       console.error("Failed to save entry:", e);
     } finally {
@@ -250,6 +265,7 @@ function EntryCreatePage() {
               }}
               onSubmit={handleEntrySubmit}
               isLoading={isSaving}
+              onDirtyChange={setFormIsDirty}
             />
 
             <Label
@@ -406,6 +422,24 @@ function EntryCreatePage() {
           </div>
         </section>
       </footer>
+      <AlertDialog open={blocker.state === "blocked"}>
+        <AlertDialogContent size="sm" className="select-none p-4">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Discard changes?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. If you leave, they will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex gap-3.5">
+            <AlertDialogCancel variant="outline" onClick={() => blocker.reset?.()}>
+              Keep editing
+            </AlertDialogCancel>
+            <AlertDialogAction variant="destructive" className="-mr-px" onClick={() => blocker.proceed?.()}>
+              Discard
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </PageContainer>
   );
 }

@@ -1,10 +1,21 @@
 import { TopicForm, type TopicFormData } from "@/components/forms/topic-form";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { TopicDocType } from "@/db/schemas/topic";
 import { SaveIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useBlocker, useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 import { useRxCollection } from "rxdb/plugins/react";
 
 function TopicEditPage() {
@@ -12,11 +23,14 @@ function TopicEditPage() {
   const navigate = useNavigate();
   const collection = useRxCollection("topics");
   const [isSaving, setIsSaving] = useState(false);
+  const [formIsDirty, setFormIsDirty] = useState(false);
 
   // undefined = still loading, null = not found, otherwise the topic.
   const [topic, setTopic] = useState<TopicDocType | null | undefined>(
     undefined,
   );
+
+  const blocker = useBlocker(formIsDirty && !isSaving);
 
   useEffect(() => {
     if (!collection || !id) return;
@@ -53,11 +67,10 @@ function TopicEditPage() {
         updatedAt: new Date().toISOString(),
       });
 
-      //navigate(`/library/topics/${id}`, { replace: true });
-      navigate(-1); // Go back to the previous page (ideally the detail view)
+      toast("Changes saved");
+      navigate(-1);
     } catch (err) {
       console.error("Failed to update topic:", err);
-      // TODO: toast notification
     } finally {
       setIsSaving(false);
     }
@@ -113,10 +126,29 @@ function TopicEditPage() {
               }}
               onSubmit={handleUpdate}
               isLoading={isSaving}
+              onDirtyChange={setFormIsDirty}
             />
           )}
         </section>
       </main>
+      <AlertDialog open={blocker.state === "blocked"}>
+        <AlertDialogContent size="sm" className="select-none p-4">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Discard changes?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. If you leave, they will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex gap-3.5">
+            <AlertDialogCancel variant="outline" onClick={() => blocker.reset?.()}>
+              Keep editing
+            </AlertDialogCancel>
+            <AlertDialogAction variant="destructive" className="-mr-px" onClick={() => blocker.proceed?.()}>
+              Discard
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </PageContainer>
   );
 }

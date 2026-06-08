@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -66,6 +67,7 @@ interface TopicFormProps {
   initialData?: Partial<TopicFormData>;
   onSubmit: (data: TopicFormData) => void | Promise<void>;
   isLoading?: boolean;
+  onDirtyChange?: (isDirty: boolean) => void;
 }
 
 export function TopicForm({
@@ -73,6 +75,7 @@ export function TopicForm({
   initialData,
   onSubmit,
   isLoading,
+  onDirtyChange,
 }: TopicFormProps) {
   const schema = createFormSchema(id);
 
@@ -81,7 +84,7 @@ export function TopicForm({
     handleSubmit,
     control,
     watch,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<FormValues>({
     resolver: zodResolver(schema), // Applying the dynamically generated zodResolver
     defaultValues: {
@@ -91,6 +94,10 @@ export function TopicForm({
       isFavorite: initialData?.isFavorite || false,
     },
   });
+
+  useEffect(() => {
+    onDirtyChange?.(isDirty);
+  }, [isDirty]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const currentDescription = watch("description") || "";
 

@@ -102,6 +102,7 @@ interface EntryFormProps {
   onSubmit: (data: EntryFormData) => void | Promise<void>;
   isLoading?: boolean;
   onFormReady?: (api: EntryFormApi) => void;
+  onDirtyChange?: (isDirty: boolean) => void;
 }
 
 export function EntryForm({
@@ -112,6 +113,7 @@ export function EntryForm({
   onSubmit,
   isLoading,
   onFormReady,
+  onDirtyChange,
 }: EntryFormProps) {
   const { isSupported } = useTabSupport();
   const {
@@ -121,7 +123,7 @@ export function EntryForm({
     setValue,
     getValues,
     watch,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema), // Applying the zodResolver
     defaultValues: {
@@ -140,6 +142,10 @@ export function EntryForm({
   const prevInitialDataId = useRef<string | null>(null);
   const [topicInputValue, setTopicInputValue] = useState("");
   const topicDisplayInitialized = useRef(false);
+
+  useEffect(() => {
+    onDirtyChange?.(isDirty);
+  }, [isDirty]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     onFormReady?.({

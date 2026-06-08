@@ -2,6 +2,16 @@ import styles from "./entry-edit.module.css";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { appBlockNoteConfig } from "@/components/editor/config";
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { PageContainer } from "@/components/page-container";
@@ -24,7 +34,8 @@ import { ArrowUpIcon, SaveIcon } from "lucide-react";
 import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
 import { useCreateBlockNote } from "@blocknote/react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useBlocker, useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 import { useRxCollection } from "rxdb/plugins/react";
 import { uuidv7 } from "uuidv7";
 
@@ -50,6 +61,8 @@ function EntryEditContent({
 
   const capturedData = useCaptureData();
   const formApiRef = useRef<EntryFormApi | null>(null);
+  const [formIsDirty, setFormIsDirty] = useState(false);
+  const blocker = useBlocker(formIsDirty && !isSaving);
 
   useLayoutEffect(() => {
     if (!capturedData?.content) return;
@@ -142,6 +155,7 @@ function EntryEditContent({
               }}
               onSubmit={handleSubmit}
               isLoading={isSaving}
+              onDirtyChange={setFormIsDirty}
             />
             <Label
               htmlFor="lc-blocknote-view-entry-edit"
@@ -158,6 +172,24 @@ function EntryEditContent({
           </div>
         </section>
       </main>
+      <AlertDialog open={blocker.state === "blocked"}>
+        <AlertDialogContent size="sm" className="select-none p-4">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Discard changes?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. If you leave, they will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex gap-3.5">
+            <AlertDialogCancel variant="outline" onClick={() => blocker.reset?.()}>
+              Keep editing
+            </AlertDialogCancel>
+            <AlertDialogAction variant="destructive" className="-mr-px" onClick={() => blocker.proceed?.()}>
+              Discard
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
@@ -305,6 +337,7 @@ function EntryEditPage() {
         await blocksCollection.bulkUpsert(newDbBlocks);
       }
 
+      toast("Changes saved");
       navigate(-1);
     } catch (e) {
       console.error("Failed to update entry:", e);
