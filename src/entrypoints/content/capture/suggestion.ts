@@ -1,4 +1,3 @@
-import { sendMessage } from "webext-bridge/content-script";
 import { sendMessageCore } from "@/lib/messaging";
 import { MSG } from "@/constants/messaging";
 import {

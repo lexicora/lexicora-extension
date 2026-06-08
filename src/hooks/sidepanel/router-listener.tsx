@@ -1,12 +1,13 @@
 import { MSG } from "@/constants/messaging";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";
+import { sendMessageCore, onMessageCore } from "@/lib/messaging";
+import { useSidePanelWindowId } from "@/providers/sidepanel-messaging";
 
 export function RouterListener() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { sendMessage, onMessage } = useSidePanelMessaging();
+  const windowId = useSidePanelWindowId();
 
   const [pushEnabled, setPushEnabled] = useState(false);
 
@@ -18,24 +19,24 @@ export function RouterListener() {
   useEffect(() => {
     if (!pushEnabled) return;
     // Listen only for the navigation message
-    const unsubscribe = onMessage(MSG.NAVIGATE_IN_SIDEPANEL, (msg) => {
-      if (!msg.data) return null;
+    const unsubscribe = onMessageCore(MSG.NAVIGATE_IN_SIDEPANEL, (msg) => {
+      if (msg.data.windowId !== windowId) return null;
+
+      const { path } = msg.data;
 
       // If the user is currently editing an entry, absorb capture-triggered
       // navigation to entry-create so the captured data goes into the open editor.
       const isOnEntryEdit = /^\/library\/entries\/[^/]+\/edit$/.test(
         location.pathname,
       );
-      if (msg.data.path === "/library/entries/new" && isOnEntryEdit) {
+      if (path === "/library/entries/new" && isOnEntryEdit) {
         return true; // Signal background to clear pending navigation; skip navigate()
       }
 
       // If already on path, replace history so that navigate(-1) works as expected
-      const isAlreadyOnPath = location.pathname === msg.data.path;
-      const isCapturePending = pathToSetIsCapturePending.includes(
-        msg.data.path,
-      );
-      navigate(msg.data.path, {
+      const isAlreadyOnPath = location.pathname === path;
+      const isCapturePending = pathToSetIsCapturePending.includes(path);
+      navigate(path, {
         replace: isAlreadyOnPath, // Replace history if already on the target path to prevent navigation loops and ensure back button works as expected
         flushSync: isAlreadyOnPath, // Ensure the navigation happens immediately to trigger specific logic in the destination component if needed
         viewTransition: true,
@@ -54,10 +55,9 @@ export function RouterListener() {
 
   useEffect(() => {
     const initNavigateToLocation = async () => {
-      const path = await sendMessage(
+      const path = await sendMessageCore(
         MSG.REQUEST_PENDING_NAVIGATION,
         null,
-        "background", //destination,
       ).catch(() => null);
       if (path) {
         const isOnEntryEdit = /^\/library\/entries\/[^/]+\/edit$/.test(
@@ -75,10 +75,6 @@ export function RouterListener() {
       setPushEnabled(true);
     };
     initNavigateToLocation();
-    // parameter: destination: "background" | "popup" | "content",
-    // navigateToLocation("background");
-    // navigateToLocation("content");
-    // navigateToLocation("popup");
   }, []);
 
   return null;

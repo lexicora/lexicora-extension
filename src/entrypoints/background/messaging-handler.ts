@@ -1,4 +1,3 @@
-import { onMessage } from "webext-bridge/background";
 import { onMessageCore } from "@/lib/messaging";
 import { MSG } from "@/constants/messaging";
 import { PageData } from "@/types/page-data.types";
@@ -21,13 +20,13 @@ export const setPendingNavigation = (path: string | null) => {
  * Sets up message handlers for pending data and navigation requests
  */
 export function setupMessagingHandlers() {
-  onMessage(MSG.REQUEST_PENDING_DATA, () => {
+  onMessageCore(MSG.REQUEST_PENDING_DATA, () => {
     const data = pendingCapture;
     pendingCapture = null; // Clear after delivery to prevent stale data
     return data;
   });
 
-  onMessage(MSG.REQUEST_PENDING_NAVIGATION, () => {
+  onMessageCore(MSG.REQUEST_PENDING_NAVIGATION, () => {
     const path = pendingNavigation;
     pendingNavigation = null; // Clear after delivery to prevent stale navigation
     return path;
@@ -43,9 +42,8 @@ export function setupMessagingHandlers() {
     }
   });
 
-  // TODO: Later change to pass the windowId
-  onMessage(MSG.REQUEST_PAGE_CAPTURE, async ({ sender, data }) =>
-    handleCaptureRequest(sender.context, data),
+  onMessageCore(MSG.REQUEST_PAGE_CAPTURE, async ({ data }) =>
+    handleCaptureRequest(data.fromContext, data),
   );
 
   // Native messaging, not needed for this currently

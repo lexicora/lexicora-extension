@@ -1,14 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { PageData } from "@/types/page-data.types";
-import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";
+import { sendMessageCore, onMessageCore } from "@/lib/messaging";
+import { useSidePanelWindowId } from "@/providers/sidepanel-messaging";
 import { MSG } from "@/constants/messaging";
 
 export function useCaptureData() {
   const [capturedData, setCapturedData] = useState<PageData | null>(null);
-  const { sendMessage, onMessage } = useSidePanelMessaging();
-
-  // The deduplicator ref: protects the editor from double-renders
-  //const lastProcessedContent = useRef<string | null>(null);
+  const windowId = useSidePanelWindowId();
 
   useEffect(() => {
     // Core logic to safely update data only if it is genuinely new
@@ -21,18 +19,18 @@ export function useCaptureData() {
     };
 
     // Push Listener: Catches data if the Side Panel is already open
-    const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
-      if (!msg.data) return null;
-      handleIncomingData(msg.data);
+    const unsubscribe = onMessageCore(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
+      if (msg.data.windowId !== windowId) return null;
+      if (!msg.data.payload) return null;
+      handleIncomingData(msg.data.payload);
       return true; // Signal to background to clear its pending data
     });
 
     // Pull Logic: Fetches data if the Side Panel was just opened
     const pullData = async () => {
-      const pendingData = await sendMessage(
+      const pendingData = await sendMessageCore(
         MSG.REQUEST_PENDING_DATA,
         null,
-        "background",
       ).catch(() => null);
 
       if (pendingData) {
@@ -44,7 +42,7 @@ export function useCaptureData() {
 
     // Cleanup the listener when the hook unmounts
     return () => unsubscribe();
-  }, [onMessage, sendMessage]); // Assuming these are stable context references
+  }, [windowId]);
 
   return capturedData;
 }

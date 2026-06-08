@@ -1,4 +1,3 @@
-import { onMessage, sendMessage } from "webext-bridge/background";
 import { sendMessageCore } from "@/lib/messaging";
 import { MSG } from "@/constants/messaging";
 import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/constants/context-menu-items";
@@ -23,11 +22,12 @@ export function setupContextMenuActions() {
         break;
       }
       case CMI_ID.CAPTURE_SELECTION_AI_ASSISTED: {
-        // @ts-ignore: Article does not satisfy JsonValue
-        const pageSelectionArticle = await sendMessage(
+        // TODO: Content script handler for GET_PAGE_SELECTION_ARTICLE needs implementing when this feature is built
+        if (!tab?.id) break;
+        const pageSelectionArticle = await sendMessageCore(
           MSG.GET_PAGE_SELECTION_ARTICLE,
           null,
-          "content-script@" + tab?.id,
+          { tabId: tab.id },
         );
         if (!pageSelectionArticle) break;
         // Todo: Future implementation for AI-assisted saving
@@ -68,10 +68,9 @@ export function setupContextMenuActions() {
 
           // Push logic if side panel is already open
           // TODO: Maybe move this right after calling the opening of the sidepanel.
-          const clearPendingNavigation = await sendMessage(
+          const clearPendingNavigation = await sendMessageCore(
             MSG.NAVIGATE_IN_SIDEPANEL,
-            { path: "/library/entries/new" },
-            "side-panel@" + tab.windowId,
+            { windowId: tab.windowId, path: "/library/entries/new" },
           ).catch(() => null);
 
           if (clearPendingNavigation === true) {
@@ -79,10 +78,9 @@ export function setupContextMenuActions() {
           }
 
           // Push logic if side panel is already open
-          const clearPendingCaptureData = await sendMessage(
+          const clearPendingCaptureData = await sendMessageCore(
             MSG.SEND_PAGE_SELECTION_DATA,
-            pageSelectionData, //TODO: Handle null case in sidepanel editor component.
-            "side-panel@" + tab.windowId,
+            { windowId: tab.windowId, payload: pageSelectionData },
           ).catch(() => null);
 
           if (clearPendingCaptureData === true) {
@@ -122,10 +120,9 @@ export function setupContextMenuActions() {
           setPendingCapture(pageSelectionData);
 
           // Push logic if side panel is already open
-          const clearPendingNavigation = await sendMessage(
+          const clearPendingNavigation = await sendMessageCore(
             MSG.NAVIGATE_IN_SIDEPANEL,
-            { path: "/library/entries/new" },
-            "side-panel@" + tab.windowId,
+            { windowId: tab.windowId, path: "/library/entries/new" },
           ).catch(() => null);
 
           if (clearPendingNavigation === true) {
@@ -133,10 +130,9 @@ export function setupContextMenuActions() {
           }
 
           // Push logic if side panel is already open
-          const clearPendingCaptureData = await sendMessage(
+          const clearPendingCaptureData = await sendMessageCore(
             MSG.SEND_PAGE_SELECTION_DATA,
-            pageSelectionData, //TODO: Handle null case in sidepanel editor component.
-            "side-panel@" + tab.windowId,
+            { windowId: tab.windowId, payload: pageSelectionData },
           ).catch(() => null);
 
           if (clearPendingCaptureData === true) {

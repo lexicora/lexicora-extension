@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowUpRightIcon, PanelRightIcon, UserIcon } from "lucide-react";
-import { sendMessage } from "webext-bridge/popup";
+import { sendMessageCore } from "@/lib/messaging";
 
 import { MSG } from "@/constants/messaging";
 import { useTabSupport } from "@/hooks/use-tab-support";
@@ -69,9 +69,10 @@ function HomePage() {
       //title: finalTab.title,
       //url: finalTab.url,
     };
-    sendMessage(MSG.REQUEST_PAGE_CAPTURE, tabData, "background").catch(
-      () => null,
-    );
+    sendMessageCore(MSG.REQUEST_PAGE_CAPTURE, {
+      ...tabData,
+      fromContext: "popup",
+    }).catch(() => null);
     window.close();
   };
 
