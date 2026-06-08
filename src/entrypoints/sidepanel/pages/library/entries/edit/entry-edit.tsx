@@ -365,7 +365,7 @@ function EntryEditPage() {
         await blocksCollection.bulkUpsert(newDbBlocks);
       }
 
-      toast("Changes saved");
+      toast.success("Changes saved");
       navigate(-1);
     } catch (e) {
       console.error("Failed to update entry:", e);

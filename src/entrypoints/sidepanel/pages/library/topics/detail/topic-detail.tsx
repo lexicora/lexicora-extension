@@ -260,13 +260,16 @@ function TopicDetailPage() {
               topic.isFavorite ? "Remove from favorites" : "Add to favorites"
             }
             onClick={() => handleAttributeToggle("isFavorite")}
-            className="size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
+            className={cn(
+              "size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800",
+              topic.isArchived && "opacity-40 pointer-events-none",
+            )}
           >
             <StarIcon
               className={cn(
                 "size-4.5",
                 topic.isFavorite
-                  ? "text-yellow-600/80 fill-yellow-600/85 dark:text-yellow-500 dark:fill-yellow-500"
+                  ? "text-yellow-600 fill-yellow-600 dark:text-yellow-500 dark:fill-yellow-500"
                   : "text-muted-foreground",
               )}
             />
@@ -276,13 +279,16 @@ function TopicDetailPage() {
             size="icon"
             title={topic.isPinned ? "Unpin topic" : "Pin topic"}
             onClick={() => handleAttributeToggle("isPinned")}
-            className="size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
+            className={cn(
+              "size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800",
+              topic.isArchived && "opacity-40 pointer-events-none",
+            )}
           >
             <PinIcon
               className={cn(
                 "size-4.5",
                 topic.isPinned
-                  ? "text-blue-600/80 fill-blue-600/85 dark:text-blue-500 dark:fill-blue-500"
+                  ? "text-blue-600 fill-blue-600 dark:text-blue-500 dark:fill-blue-500"
                   : "text-muted-foreground",
               )}
             />
@@ -297,9 +303,7 @@ function TopicDetailPage() {
             <ArchiveIcon
               className={cn(
                 "size-4.5",
-                topic.isArchived
-                  ? "text-green-600/80 dark:text-green-600"
-                  : "text-muted-foreground",
+                topic.isArchived ? "text-green-600" : "text-muted-foreground",
               )}
             />
           </Button>
@@ -309,7 +313,7 @@ function TopicDetailPage() {
             size="icon"
             title="Copy topic as Markdown"
             onClick={handleCopyMarkdown}
-            className="ml-auto size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 text-muted-foreground"
+            className="ml-auto size-9 rounded-lg hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-950/50 dark:hover:text-blue-400 text-muted-foreground"
           >
             <ClipboardIcon className="size-4.5" />
           </Button>
@@ -322,7 +326,7 @@ function TopicDetailPage() {
                 viewTransition: true,
               })
             }
-            className="size-9 rounded-lg text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="size-9 rounded-lg text-muted-foreground hover:bg-green-100 hover:text-green-600 dark:hover:bg-green-950/50 dark:hover:text-green-400"
           >
             <SquarePenIcon className="size-4.5" />
           </Button>

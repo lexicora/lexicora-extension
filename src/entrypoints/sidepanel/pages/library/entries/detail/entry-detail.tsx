@@ -358,13 +358,16 @@ function EntryDetailPage() {
               entry.isFavorite ? "Remove from favorites" : "Add to favorites"
             }
             onClick={() => handleAttributeToggle("isFavorite")}
-            className="size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
+            className={cn(
+              "size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800",
+              entry.isArchived && "opacity-40 pointer-events-none",
+            )}
           >
             <StarIcon
               className={cn(
                 "size-4.5",
                 entry.isFavorite
-                  ? "text-yellow-600/80 fill-yellow-600/85 dark:text-yellow-500 dark:fill-yellow-500"
+                  ? "text-yellow-600 fill-yellow-600 dark:text-yellow-500 dark:fill-yellow-500"
                   : "text-muted-foreground",
               )}
             />
@@ -374,13 +377,16 @@ function EntryDetailPage() {
             size="icon"
             title={entry.isPinned ? "Unpin entry" : "Pin entry"}
             onClick={() => handleAttributeToggle("isPinned")}
-            className="size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
+            className={cn(
+              "size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800",
+              entry.isArchived && "opacity-40 pointer-events-none",
+            )}
           >
             <PinIcon
               className={cn(
                 "size-4.5",
                 entry.isPinned
-                  ? "text-blue-600/80 fill-blue-600/85 dark:text-blue-500 dark:fill-blue-500"
+                  ? "text-blue-600 fill-blue-600 dark:text-blue-500 dark:fill-blue-500"
                   : "text-muted-foreground",
               )}
             />
@@ -395,9 +401,7 @@ function EntryDetailPage() {
             <ArchiveIcon
               className={cn(
                 "size-4.5",
-                entry.isArchived
-                  ? "text-green-600/80 dark:text-green-600"
-                  : "text-muted-foreground",
+                entry.isArchived ? "text-green-600" : "text-muted-foreground",
               )}
             />
           </Button>
@@ -408,7 +412,11 @@ function EntryDetailPage() {
                 variant="ghost"
                 size="icon"
                 title="Copy actions"
-                className="ml-auto size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 not-hover:text-muted-foreground not-active:text-muted-foreground"
+                className={cn(
+                  "ml-auto size-9 rounded-lg not-hover:text-muted-foreground",
+                  "hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-950/50 dark:hover:text-blue-400",
+                  "data-open:bg-blue-100 data-open:text-blue-600 dark:data-open:bg-blue-950/50 dark:data-open:text-blue-400",
+                )}
               >
                 <EllipsisIcon className="size-4.5" />
               </Button>
@@ -422,7 +430,7 @@ function EntryDetailPage() {
                 disabled={!hasContent}
                 onClick={handleCopyContentMarkdown}
               >
-                <FileTextIcon className="size-4 mr-2" />
+                <FileTextIcon className="size-4 mr-2 text-blue-500" />
                 As Markdown
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -430,7 +438,7 @@ function EntryDetailPage() {
                 className="cursor-pointer"
                 onClick={() => handleCopyEntryMarkdown(entry)}
               >
-                <ClipboardIcon className="size-4 mr-2" />
+                <ClipboardIcon className="size-4 mr-2 text-blue-500" />
                 With metadata
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -444,7 +452,7 @@ function EntryDetailPage() {
                 viewTransition: true,
               })
             }
-            className="size-9 rounded-lg text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="size-9 rounded-lg text-muted-foreground hover:bg-green-100 hover:text-green-600 dark:hover:bg-green-950/50 dark:hover:text-green-400"
           >
             <SquarePenIcon className="size-4.5" />
           </Button>

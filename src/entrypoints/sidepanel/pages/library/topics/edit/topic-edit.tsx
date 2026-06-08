@@ -67,7 +67,7 @@ function TopicEditPage() {
         updatedAt: new Date().toISOString(),
       });
 
-      toast("Changes saved");
+      toast.success("Changes saved");
       navigate(-1);
     } catch (err) {
       console.error("Failed to update topic:", err);
@@ -140,10 +140,17 @@ function TopicEditPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-3.5">
-            <AlertDialogCancel variant="outline" onClick={() => blocker.reset?.()}>
+            <AlertDialogCancel
+              variant="outline"
+              onClick={() => blocker.reset?.()}
+            >
               Keep editing
             </AlertDialogCancel>
-            <AlertDialogAction variant="destructive" className="-mr-px" onClick={() => blocker.proceed?.()}>
+            <AlertDialogAction
+              variant="destructive"
+              className="-mr-px"
+              onClick={() => blocker.proceed?.()}
+            >
               Discard
             </AlertDialogAction>
           </AlertDialogFooter>

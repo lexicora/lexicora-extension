@@ -184,7 +184,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
                   className={cn(
                     "size-4 transition-colors",
                     topic.isArchived
-                      ? "text-green-500/75 dark:text-green-600"
+                      ? "text-green-600"
                       : "text-gray-400/75 dark:text-gray-600 group-hover:text-gray-500/75 dark:group-hover:text-gray-400",
                   )}
                 />
@@ -197,8 +197,8 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
                       role="button"
                       tabIndex={0}
                       className={cn(
-                        "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-red-100 dark:hover:bg-red-950/50",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
+                        "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-red-300/75 dark:hover:bg-red-900/50",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-red-500 dark:focus-visible:ring-offset-red-400 focus-visible:ring-red-500/50",
                       )}
                       onClick={stopPropagation}
                       onKeyDown={(e) => {
@@ -211,7 +211,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
                         }
                       }}
                     >
-                      <Trash2Icon className="size-4 text-gray-400/75 dark:text-gray-600 group-hover:text-red-500 dark:group-hover:text-red-400 transition-colors" />
+                      <Trash2Icon className="size-4 text-gray-400/75 dark:text-gray-600 group-hover:text-red-700 dark:group-hover:text-red-300 transition-colors" />
                     </div>
                   </AlertDialogTrigger>
                   <AlertDialogContent
