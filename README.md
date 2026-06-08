@@ -79,7 +79,7 @@ Most interactions happen inside the **browser side panel**, keeping context and 
 | Routing | [React Router](https://reactrouter.com/) |
 | Editor | [BlockNote](https://www.blocknotejs.org//) |
 | Local database | [RxDB](https://rxdb.info/) + [Dexie](https://dexie.org/) |
-| Messaging | [@webext-core/messaging](https://github.com/webext-core/messaging) |
+| Messaging | [@webext-core/messaging](https://github.com/aklinker1/webext-core) |
 | Content parsing | [Mozilla Readability](https://github.com/mozilla/readability), [Turndown](https://github.com/mixmark-io/turndown) |
 | Forms | [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) |
 | Testing | [Vitest](https://vitest.dev/) + WXT's `fakeBrowser` |

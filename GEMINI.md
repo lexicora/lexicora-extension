@@ -9,7 +9,7 @@ Lexicora Extension is a browser extension for the Lexicora platform, designed to
 - **Styling:** Tailwind CSS 4, Radix UI, CSS Modules
 - **Database:** [RxDB](https://rxdb.info/) with Dexie (IndexedDB) storage
 - **Editor:** [BlockNote](https://www.blocknotejs.org/) (built on Prosemirror/Tiptap)
-- **Messaging:** `@webext-core/messaging` and `webext-bridge`
+- **Messaging:** `@webext-core/messaging`
 - **Routing:** React Router (MemoryRouter for sidepanel)
 
 ## Building and Running
