@@ -1,19 +1,15 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getSidePanel } from "webext-bridge/side-panel";
 
-type SidePanelBridge = ReturnType<typeof getSidePanel>;
-type SidePanelMessagingContextType = SidePanelBridge | null;
-//* NOTE: If windowId is needed in the future switch to the below type/code
-//type SidePanelMessagingContextType = (SidePanelBridge & { windowId: number | string }) | null;
+type SidePanelWindowIdContextType = number | string | null;
 
-const SidePanelMessagingContext =
-  createContext<SidePanelMessagingContextType>(null);
+const SidePanelWindowIdContext =
+  createContext<SidePanelWindowIdContextType>(null);
 
-export function useSidePanelMessaging() {
-  const context = useContext(SidePanelMessagingContext);
-  if (!context) {
+export function useSidePanelWindowId() {
+  const context = useContext(SidePanelWindowIdContext);
+  if (context === null) {
     throw new Error(
-      "useSidePanelMessaging must be used within a SidePanelMessagingProvider",
+      "useSidePanelWindowId must be used within a SidePanelMessagingProvider",
     );
   }
   return context;
@@ -24,50 +20,24 @@ export function SidePanelMessagingProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [contextValue, setContextValue] =
-    useState<SidePanelMessagingContextType>(null);
+  const [windowId, setWindowId] =
+    useState<SidePanelWindowIdContextType>(null);
 
   useEffect(() => {
-    const initSidePanel = async () => {
-      try {
-        // const [tab] = await browser.tabs.query({
-        //   active: true,
-        //   currentWindow: true,
-        // });
-        const windowId = await browser.windows
-          .getCurrent()
-          .then((win) => win.id);
-
-        if (windowId) {
-          setContextValue(getSidePanel(windowId));
-          //* NOTE: If windowId is needed in the future switch to the below type/code
-          //setContextValue({ ...getSidePanel(windowId), windowId });
-        } else {
-          // Fallback for contexts where a tab might not be active,
-          setContextValue(getSidePanel("")); // 0 works too
-          //* NOTE: If windowId is needed in the future switch to the below type/code
-          //setContextValue({ ...getSidePanel(""), windowId: "" }); // 0 works too
-        }
-      } catch (error) {
-        console.error("Failed to initialize side panel messaging:", error);
-        // Fallback if tabs query fails
-        setContextValue(getSidePanel("")); // 0 works too
-        //* NOTE: If windowId is needed in the future switch to the below type/code
-        //setContextValue({ ...getSidePanel(""), windowId: "" }); // 0 works too
-      }
-    };
-
-    initSidePanel();
+    browser.windows
+      .getCurrent()
+      .then((win) => setWindowId(win.id ?? ""))
+      .catch(() => setWindowId(""));
   }, []);
 
-  if (!contextValue) {
+  if (windowId === null) {
     // You can render a loading spinner here if you'd like
     return null;
   }
 
   return (
-    <SidePanelMessagingContext.Provider value={contextValue}>
+    <SidePanelWindowIdContext.Provider value={windowId}>
       {children}
-    </SidePanelMessagingContext.Provider>
+    </SidePanelWindowIdContext.Provider>
   );
 }

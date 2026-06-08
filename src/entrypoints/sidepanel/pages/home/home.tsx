@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import styles from "./home.module.css";
 //import reactLogo from "@/assets/logos/react.svg";
 //import wxtLogo from "/wxt.svg";
@@ -11,12 +11,11 @@ import { ArrowUpRightIcon } from "lucide-react";
 import { useTabSupport } from "@/hooks/use-tab-support";
 import { MSG } from "@/constants/messaging";
 import type { TabData } from "@/types/tab-data.types";
-import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";
+import { sendMessage } from "@/lib/messaging";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 function HomePage() {
-  const { sendMessage } = useSidePanelMessaging();
   const navigate = useNavigate();
   const { isSupported, activeTab } = useTabSupport();
   const [promptText, setPromptText] = useState("");
@@ -41,9 +40,10 @@ function HomePage() {
       tabId: finalTab.id,
       windowId: finalTab.windowId,
     };
-    sendMessage(MSG.REQUEST_PAGE_CAPTURE, tabData, "background").catch(
-      () => null,
-    );
+    sendMessage(MSG.REQUEST_PAGE_CAPTURE, {
+      ...tabData,
+      fromContext: "side-panel",
+    }).catch(() => null);
     navigate("/library/entries/new", {
       viewTransition: true,
       state: { isCapturePending: true },

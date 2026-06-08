@@ -1,5 +1,4 @@
-import { onMessage } from "webext-bridge/background";
-import { onMessageCore } from "@/lib/messaging";
+import { onMessage } from "@/lib/messaging";
 import { MSG } from "@/constants/messaging";
 import { PageData } from "@/types/page-data.types";
 import { handleCaptureRequest } from "./capture-request";
@@ -33,7 +32,7 @@ export function setupMessagingHandlers() {
     return path;
   });
 
-  onMessageCore(MSG.OPEN_SIDEPANEL, (/*message.*/ { sender }) => {
+  onMessage(MSG.OPEN_SIDEPANEL, (/*message.*/ { sender }) => {
     if (import.meta.env.FIREFOX) {
       // NOTE (feature parity discrepancy): Not supported on Firefox due to quicker loss of the direct user context action.
       // @ts-ignore: Firefox specific API
@@ -43,9 +42,8 @@ export function setupMessagingHandlers() {
     }
   });
 
-  // TODO: Later change to pass the windowId
-  onMessage(MSG.REQUEST_PAGE_CAPTURE, async ({ sender, data }) =>
-    handleCaptureRequest(sender.context, data),
+  onMessage(MSG.REQUEST_PAGE_CAPTURE, async ({ data }) =>
+    handleCaptureRequest(data.fromContext, data),
   );
 
   // Native messaging, not needed for this currently

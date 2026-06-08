@@ -1,5 +1,4 @@
-import { sendMessage } from "webext-bridge/content-script";
-import { sendMessageCore } from "@/lib/messaging";
+import { sendMessage } from "@/lib/messaging";
 import { MSG } from "@/constants/messaging";
 import {
   createShadowRootUi,
@@ -242,7 +241,7 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
 
         const capture = () => {
           //browser.runtime.sendMessage({ type: MSG.OPEN_SIDEPANEL });
-          sendMessageCore(MSG.OPEN_SIDEPANEL);
+          sendMessage(MSG.OPEN_SIDEPANEL);
           close();
         };
 

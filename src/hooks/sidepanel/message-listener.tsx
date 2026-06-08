@@ -1,13 +1,9 @@
-import { MSG } from "@/constants/messaging";
 import { useEffect } from "react";
-import { useSidePanelMessaging } from "@/providers/sidepanel-messaging";
 
 export function MessageListener() {
-  const { sendMessage, onMessage } = useSidePanelMessaging();
-
   useEffect(() => {
     // const listenforStateRequest = () =>
-    //   onMessage(MSG.REQUEST_SIDEPANEL_STATE, async () => {
+    //   onMessageCore(MSG.REQUEST_SIDEPANEL_STATE, async () => {
     //     return { isOpen: true };
     //   });
     //listenforStateRequest();

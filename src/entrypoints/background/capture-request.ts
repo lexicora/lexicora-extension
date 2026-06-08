@@ -1,30 +1,19 @@
 import { MSG } from "@/constants/messaging";
-import { sendMessage } from "webext-bridge/background";
-import { sendMessageCore } from "@/lib/messaging";
+import { sendMessage } from "@/lib/messaging";
 import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
 import { TabData } from "@/types/tab-data.types";
 
-type RuntimeContext =
-  | "devtools"
-  | "background"
-  | "popup"
-  | "options"
-  | "content-script"
-  | "window"
-  | "side-panel";
-
 export async function handleCaptureRequest(
-  senderContext: RuntimeContext,
+  fromContext: string,
   tabData: TabData,
 ) {
-  if (senderContext === "popup") {
+  if (fromContext === "popup") {
     setPendingNavigation("/library/entries/new");
 
     // Push logic if side panel is already open
     const clearPendingNavigation = await sendMessage(
       MSG.NAVIGATE_IN_SIDEPANEL,
-      { path: "/library/entries/new" },
-      "side-panel@" + tabData.windowId,
+      { windowId: tabData.windowId, path: "/library/entries/new" },
     ).catch(() => false);
     // Will fail silently if side-panel is not open yet, which is expected
 
@@ -33,22 +22,20 @@ export async function handleCaptureRequest(
     }
   }
 
-  // Request page selection data from content script (maybe query tab, if the tab.id is null, realistically it should never be null here)
+  // Request page data from content script via native messaging (faster than @webext-core/messaging)
   const pageSelectionData = await browser.tabs
     .sendMessage(tabData.tabId ?? 0, { type: MSG.GET_PAGE_DATA })
-    .catch(() => null); // Native messaging (faster than below)
-  //const pageSelectionData = await sendMessageCore(MSG.GET_PAGE_DATA, null, tabData?.tabId,);
+    .catch(() => null);
 
   if (!pageSelectionData) return;
 
   // Store for pull logic in side panel
-  setPendingCapture(pageSelectionData); //MAYBE: disable when the senderContext is the side-panel (already open so pull logic is irrelevant).
+  setPendingCapture(pageSelectionData);
 
   // Push logic if side panel is already open
   const clearPendingCaptureData = await sendMessage(
     MSG.SEND_PAGE_SELECTION_DATA,
-    pageSelectionData, //TODO: Handle null case in sidepanel editor component.
-    "side-panel@" + tabData.windowId,
+    { windowId: tabData.windowId, payload: pageSelectionData },
   ).catch(() => null);
 
   if (clearPendingCaptureData === true) {
