@@ -291,7 +291,7 @@ export function EntryItem({
                       className={cn(
                         "size-4",
                         entry.isFavorite
-                          ? "text-yellow-600/60 fill-yellow-600/85 dark:text-yellow-500 dark:fill-yellow-500"
+                          ? "text-yellow-600 fill-yellow-600 dark:text-yellow-500 dark:fill-yellow-500"
                           : "text-gray-500/75 dark:text-gray-400",
                       )}
                     />
@@ -475,7 +475,7 @@ export function EntryList({
   // TODO: For wider screens or the windowed app, maybe add a two column layout.
   return (
     <>
-      <div className="flex items-center gap-2.5 w-full px-2 pb-0.5">
+      <div className="flex items-center gap-2.5 w-full px-1.75 pb-0.5">
         <Separator className="flex-1" />
         <span className="text-xs text-muted-foreground font-medium tracking-widest">
           <FilesIcon className="size-3.5 inline -mt-0.5" /> {entries.length}
@@ -484,7 +484,7 @@ export function EntryList({
         <Separator className="flex-1" />
       </div>
       {isDataLoaded && entries.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+        <div className="flex flex-col items-center justify-center py-10 px-3 text-center">
           {search.trim() ? (
             <>
               <p className="text-muted-foreground mb-3">
@@ -549,7 +549,7 @@ export function EntryList({
           data={entries}
           overscan={200} // potentially increase
           itemContent={(_, entry) => (
-            <div className="px-1.25 py-1.5">
+            <div className="px-1 py-1.5">
               <EntryItem
                 entry={entry}
                 topUIScrollOffset={topUIScrollOffset}

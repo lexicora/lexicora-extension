@@ -1,15 +1,27 @@
 #root {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0;
-    padding-bottom: 0;
-    text-align: center;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0;
+  padding-bottom: 0;
+  text-align: center;
 }
 
 html {
-    max-width: calc(var(--spacing) * 86);
-    /*good as is with only home page*/
-    scroll-padding-top: 72px;
-    scroll-padding-bottom: 72px;
-    /*scrollbar-width: none !important;*/
+  max-width: calc(var(--spacing) * 86);
+  /*good as is with only home page*/
+  scroll-padding-top: 72px;
+  scroll-padding-bottom: 72px;
+  /*scrollbar-width: none !important;*/
+  &.light {
+    scrollbar-color: #afafaf #ededed;
+    &::-webkit-scrollbar-track {
+      background-color: #ededed;
+    }
+  }
+  &.dark {
+    scrollbar-color: #4d5359 #0d111b;
+    &::-webkit-scrollbar-track {
+      background-color: #0d111b;
+    }
+  }
 }

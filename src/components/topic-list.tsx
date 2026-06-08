@@ -292,7 +292,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
                       className={cn(
                         "size-4",
                         topic.isFavorite
-                          ? "text-yellow-600/60 fill-yellow-600/85 dark:text-yellow-500 dark:fill-yellow-500"
+                          ? "text-yellow-600 fill-yellow-600 dark:text-yellow-500 dark:fill-yellow-500"
                           : "text-gray-500/75 dark:text-gray-400",
                       )}
                     />
@@ -423,7 +423,7 @@ export function TopicList({
 
   return (
     <>
-      <div className="flex items-center gap-2.5 w-full px-2 pb-0.5">
+      <div className="flex items-center gap-2.5 w-full px-1.75 pb-0.5">
         <Separator className="flex-1" />
         <span className="text-xs text-muted-foreground font-medium /uppercase tracking-widest">
           <FoldersIcon className="size-3.5 inline -mt-0.5" /> {topics.length}
@@ -432,7 +432,7 @@ export function TopicList({
         <Separator className="flex-1" />
       </div>
       {isDataLoaded && topics.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+        <div className="flex flex-col items-center justify-center py-10 px-3 text-center">
           {/*TODO: Potentially reset search params, except for topic or entry tab, when navigating to create a new topic or entry */}
           {search.trim() ? (
             <>
@@ -487,7 +487,7 @@ export function TopicList({
           data={topics}
           overscan={200} // potentially increase
           itemContent={(_, topic) => (
-            <div className="px-1.25 py-1.5">
+            <div className="px-1 py-1.5">
               <TopicItem topic={topic} topUIScrollOffset={topUIScrollOffset} />
             </div>
           )}
