@@ -360,7 +360,9 @@ function TopicDetailPage() {
               }
             >
               {/* <ListIcon className="size-3.5 shrink-0" /> */}
-              <span className="font-normal">Total {entriesCount}</span>
+              <span className="font-normal" title="View all">
+                Total {entriesCount}
+              </span>
               <ChevronRightIcon className="size-3.5 shrink-0 opacity-70" />
             </button>
           </div>
