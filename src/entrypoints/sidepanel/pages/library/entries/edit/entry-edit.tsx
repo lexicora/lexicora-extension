@@ -62,7 +62,17 @@ function EntryEditContent({
   const capturedData = useCaptureData();
   const formApiRef = useRef<EntryFormApi | null>(null);
   const [formIsDirty, setFormIsDirty] = useState(false);
-  const blocker = useBlocker(formIsDirty && !isSaving);
+  const [editorIsDirty, setEditorIsDirty] = useState(false);
+  const initialDocJsonRef = useRef(JSON.stringify(editor.document));
+  const blocker = useBlocker((formIsDirty || editorIsDirty) && !isSaving);
+
+  useEffect(() => {
+    return editor.onChange(() => {
+      setEditorIsDirty(
+        JSON.stringify(editor.document) !== initialDocJsonRef.current,
+      );
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useLayoutEffect(() => {
     if (!capturedData?.content) return;
@@ -96,11 +106,20 @@ function EntryEditContent({
       }
       // For selection capture, all metadata fields only written if currently empty
       if (api) {
-        if (!api.getFieldValue("url")) api.setFieldValue("url", capturedData.location.href || "");
+        if (!api.getFieldValue("url"))
+          api.setFieldValue("url", capturedData.location.href || "");
         if (!api.getFieldValue("siteName"))
-          api.setFieldValue("siteName", capturedData.metadata.siteName || capturedData.location.hostname || "");
+          api.setFieldValue(
+            "siteName",
+            capturedData.metadata.siteName ||
+              capturedData.location.hostname ||
+              "",
+          );
         if (!api.getFieldValue("faviconUrl"))
-          api.setFieldValue("faviconUrl", capturedData.metadata.faviconUrl || "");
+          api.setFieldValue(
+            "faviconUrl",
+            capturedData.metadata.faviconUrl || "",
+          );
         if (!api.getFieldValue("languageCode"))
           api.setFieldValue("languageCode", capturedData.lang || "");
         if (!api.getFieldValue("description"))
@@ -140,7 +159,9 @@ function EntryEditContent({
             <EntryForm
               id={formId}
               topics={topics}
-              onFormReady={(api) => { formApiRef.current = api; }}
+              onFormReady={(api) => {
+                formApiRef.current = api;
+              }}
               overrideExisting={true}
               initialData={{
                 title: entry.title,
@@ -181,10 +202,17 @@ function EntryEditContent({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-3.5">
-            <AlertDialogCancel variant="outline" onClick={() => blocker.reset?.()}>
+            <AlertDialogCancel
+              variant="outline"
+              onClick={() => blocker.reset?.()}
+            >
               Keep editing
             </AlertDialogCancel>
-            <AlertDialogAction variant="destructive" className="-mr-px" onClick={() => blocker.proceed?.()}>
+            <AlertDialogAction
+              variant="destructive"
+              className="-mr-px"
+              onClick={() => blocker.proceed?.()}
+            >
               Discard
             </AlertDialogAction>
           </AlertDialogFooter>

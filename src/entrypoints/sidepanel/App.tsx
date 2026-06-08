@@ -117,7 +117,12 @@ function App() {
     <ThemeProvider defaultTheme="system">
       <RxDBProvider>
         <RouterProvider router={router} />
-        <Toaster />
+        <Toaster
+          mobileOffset={13}
+          //className="py-3.5!"
+          position="top-right"
+          offset={16}
+        />
       </RxDBProvider>
     </ThemeProvider>
   );

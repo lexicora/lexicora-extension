@@ -15,7 +15,12 @@ import {
 import { appBlockNoteConfig } from "@/components/editor/config";
 import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
 import { useEffect, useState, useLayoutEffect, useRef } from "react";
-import { useBlocker, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  useBlocker,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { toast } from "sonner";
 
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
@@ -431,10 +436,17 @@ function EntryCreatePage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-3.5">
-            <AlertDialogCancel variant="outline" onClick={() => blocker.reset?.()}>
+            <AlertDialogCancel
+              variant="outline"
+              onClick={() => blocker.reset?.()}
+            >
               Keep editing
             </AlertDialogCancel>
-            <AlertDialogAction variant="destructive" className="-mr-px" onClick={() => blocker.proceed?.()}>
+            <AlertDialogAction
+              variant="destructive"
+              className="-mr-px"
+              onClick={() => blocker.proceed?.()}
+            >
               Discard
             </AlertDialogAction>
           </AlertDialogFooter>
