@@ -23,7 +23,7 @@ const topicSchemaLiteral = {
     createdAt: { type: 'string', format: 'date-time' },
     updatedAt: { type: 'string', format: 'date-time' },
     // INTERNAL:
-    searchBlob: { type: 'string', maxLength: 2000 }, // Auto-populated denormalized search field (name + tags + description snippet)
+    searchBlob: { type: 'string', maxLength: 2020 }, // Auto-populated denormalized search field (name + tags + description snippet + updatedAt date tokens)
   },
   required: ['id', 'userId', 'name', 'tags', 'isFavorite', 'isPinned', 'isArchived', 'createdAt', 'updatedAt'],
   indexes: ['userId', ['isPinned', 'updatedAt'], ['isArchived', 'isPinned', 'updatedAt']]

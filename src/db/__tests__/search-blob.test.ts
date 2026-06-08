@@ -42,6 +42,18 @@ describe("buildEntrySearchBlob", () => {
   it("returns empty string when all fields are missing", () => {
     expect(buildEntrySearchBlob({})).toBe("");
   });
+
+  it("includes updatedAt date tokens (DD.MM.YY, month name, year)", () => {
+    const blob = buildEntrySearchBlob({ title: "test", updatedAt: "2026-05-20T10:00:00.000Z" });
+    expect(blob).toContain("20.05.26");
+    expect(blob).toContain("may");
+    expect(blob).toContain("2026");
+  });
+
+  it("omits date tokens when updatedAt is absent", () => {
+    const blob = buildEntrySearchBlob({ title: "test" });
+    expect(blob).toBe("test");
+  });
 });
 
 describe("buildTopicSearchBlob", () => {
@@ -65,5 +77,12 @@ describe("buildTopicSearchBlob", () => {
   it("handles empty tags array", () => {
     const blob = buildTopicSearchBlob({ name: "Solo", tags: [] });
     expect(blob).toBe("solo");
+  });
+
+  it("includes updatedAt date tokens", () => {
+    const blob = buildTopicSearchBlob({ name: "test", updatedAt: "2026-01-15T08:00:00.000Z" });
+    expect(blob).toContain("15.01.26");
+    expect(blob).toContain("january");
+    expect(blob).toContain("2026");
   });
 });
