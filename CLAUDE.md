@@ -50,11 +50,11 @@ Schema migrations are versioned (currently `version: 0` on all collections). RxD
 
 ### Messaging
 
-Two messaging libraries are used in parallel:
+All extension messaging uses **`@webext-core/messaging`** (`src/lib/messaging.ts`). Message types are defined in `src/constants/messaging.ts` (`MSG` constants) and typed in the `ProtocolMap` interface. `sendMessage` and `onMessage` are the two exported functions used everywhere.
 
-1. **`webext-bridge`** — structured bridge for sidepanel ↔ background and content ↔ background communication. Message types are defined in `src/constants/messaging.ts` (`MSG` constants). The sidepanel obtains its bridge instance from `SidePanelMessagingProvider` (`src/providers/sidepanel-messaging.tsx`) via the `useSidePanelMessaging()` hook.
+For background → sidepanel push messages (`NAVIGATE_IN_SIDEPANEL`, `SEND_PAGE_SELECTION_DATA`), the background embeds `windowId` in the data envelope. The sidepanel compares `msg.data.windowId` to its own windowId (obtained via `useSidePanelWindowId()` from `SidePanelMessagingProvider`) to filter messages intended for the correct window.
 
-2. **`@webext-core/messaging`** (`src/lib/messaging.ts`) — used for the typed `OPEN_SIDEPANEL` message sent from content scripts to the background. The `ProtocolMap` interface defines all message types for this system.
+For content script messaging (`GET_PAGE_DATA`, `GET_PAGE_SELECTION_DATA`), native `browser.tabs.sendMessage` / `browser.runtime.onMessage` is used directly for lower latency.
 
 ### Settings / Storage
 
@@ -68,7 +68,7 @@ Use the `useAppStorage` hook (`src/hooks/use-app-storage.ts`) for reactive acces
 
 The sidepanel uses `react-router-dom` with a **MemoryRouter** (not URL-based). Routes are declared in `src/entrypoints/sidepanel/App.tsx`. Navigation is driven by messages from the background via `RouterListener` (`src/hooks/sidepanel/router-listener.tsx`).
 
-Layout wraps every route: `TopBar` → `Outlet` → `BottomNavigation`, all inside `ScrollObserverProvider` and `SidePanelMessagingProvider`.
+Layout wraps every route: `TopBar` → `Outlet` → `BottomNavigation`, all inside `ScrollObserverProvider` and `SidePanelMessagingProvider` (which resolves and provides the current `windowId`).
 
 ### Capture Suggestion Feature
 

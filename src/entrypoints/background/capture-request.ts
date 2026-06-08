@@ -1,5 +1,5 @@
 import { MSG } from "@/constants/messaging";
-import { sendMessageCore } from "@/lib/messaging";
+import { sendMessage } from "@/lib/messaging";
 import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
 import { TabData } from "@/types/tab-data.types";
 
@@ -11,7 +11,7 @@ export async function handleCaptureRequest(
     setPendingNavigation("/library/entries/new");
 
     // Push logic if side panel is already open
-    const clearPendingNavigation = await sendMessageCore(
+    const clearPendingNavigation = await sendMessage(
       MSG.NAVIGATE_IN_SIDEPANEL,
       { windowId: tabData.windowId, path: "/library/entries/new" },
     ).catch(() => false);
@@ -33,7 +33,7 @@ export async function handleCaptureRequest(
   setPendingCapture(pageSelectionData);
 
   // Push logic if side panel is already open
-  const clearPendingCaptureData = await sendMessageCore(
+  const clearPendingCaptureData = await sendMessage(
     MSG.SEND_PAGE_SELECTION_DATA,
     { windowId: tabData.windowId, payload: pageSelectionData },
   ).catch(() => null);

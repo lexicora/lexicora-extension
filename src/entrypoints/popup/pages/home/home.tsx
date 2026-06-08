@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowUpRightIcon, PanelRightIcon, UserIcon } from "lucide-react";
-import { sendMessageCore } from "@/lib/messaging";
+import { sendMessage } from "@/lib/messaging";
 
 import { MSG } from "@/constants/messaging";
 import { useTabSupport } from "@/hooks/use-tab-support";
@@ -69,7 +69,7 @@ function HomePage() {
       //title: finalTab.title,
       //url: finalTab.url,
     };
-    sendMessageCore(MSG.REQUEST_PAGE_CAPTURE, {
+    sendMessage(MSG.REQUEST_PAGE_CAPTURE, {
       ...tabData,
       fromContext: "popup",
     }).catch(() => null);

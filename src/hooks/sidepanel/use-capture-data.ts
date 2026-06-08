@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { PageData } from "@/types/page-data.types";
-import { sendMessageCore, onMessageCore } from "@/lib/messaging";
+import { sendMessage, onMessage } from "@/lib/messaging";
 import { useSidePanelWindowId } from "@/providers/sidepanel-messaging";
 import { MSG } from "@/constants/messaging";
 
@@ -19,7 +19,7 @@ export function useCaptureData() {
     };
 
     // Push Listener: Catches data if the Side Panel is already open
-    const unsubscribe = onMessageCore(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
+    const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
       if (msg.data.windowId !== windowId) return null;
       if (!msg.data.payload) return null;
       handleIncomingData(msg.data.payload);
@@ -28,7 +28,7 @@ export function useCaptureData() {
 
     // Pull Logic: Fetches data if the Side Panel was just opened
     const pullData = async () => {
-      const pendingData = await sendMessageCore(
+      const pendingData = await sendMessage(
         MSG.REQUEST_PENDING_DATA,
         null,
       ).catch(() => null);

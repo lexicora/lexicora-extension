@@ -20,4 +20,4 @@ interface ProtocolMap {
 }
 
 const { sendMessage, onMessage } = defineExtensionMessaging<ProtocolMap>();
-export { sendMessage as sendMessageCore, onMessage as onMessageCore };
+export { sendMessage, onMessage };

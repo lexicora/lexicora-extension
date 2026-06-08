@@ -11,7 +11,7 @@ import { ArrowUpRightIcon } from "lucide-react";
 import { useTabSupport } from "@/hooks/use-tab-support";
 import { MSG } from "@/constants/messaging";
 import type { TabData } from "@/types/tab-data.types";
-import { sendMessageCore } from "@/lib/messaging";
+import { sendMessage } from "@/lib/messaging";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -40,7 +40,7 @@ function HomePage() {
       tabId: finalTab.id,
       windowId: finalTab.windowId,
     };
-    sendMessageCore(MSG.REQUEST_PAGE_CAPTURE, {
+    sendMessage(MSG.REQUEST_PAGE_CAPTURE, {
       ...tabData,
       fromContext: "side-panel",
     }).catch(() => null);

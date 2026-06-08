@@ -1,4 +1,4 @@
-import { onMessageCore } from "@/lib/messaging";
+import { onMessage } from "@/lib/messaging";
 import { MSG } from "@/constants/messaging";
 import { PageData } from "@/types/page-data.types";
 import { handleCaptureRequest } from "./capture-request";
@@ -20,19 +20,19 @@ export const setPendingNavigation = (path: string | null) => {
  * Sets up message handlers for pending data and navigation requests
  */
 export function setupMessagingHandlers() {
-  onMessageCore(MSG.REQUEST_PENDING_DATA, () => {
+  onMessage(MSG.REQUEST_PENDING_DATA, () => {
     const data = pendingCapture;
     pendingCapture = null; // Clear after delivery to prevent stale data
     return data;
   });
 
-  onMessageCore(MSG.REQUEST_PENDING_NAVIGATION, () => {
+  onMessage(MSG.REQUEST_PENDING_NAVIGATION, () => {
     const path = pendingNavigation;
     pendingNavigation = null; // Clear after delivery to prevent stale navigation
     return path;
   });
 
-  onMessageCore(MSG.OPEN_SIDEPANEL, (/*message.*/ { sender }) => {
+  onMessage(MSG.OPEN_SIDEPANEL, (/*message.*/ { sender }) => {
     if (import.meta.env.FIREFOX) {
       // NOTE (feature parity discrepancy): Not supported on Firefox due to quicker loss of the direct user context action.
       // @ts-ignore: Firefox specific API
@@ -42,7 +42,7 @@ export function setupMessagingHandlers() {
     }
   });
 
-  onMessageCore(MSG.REQUEST_PAGE_CAPTURE, async ({ data }) =>
+  onMessage(MSG.REQUEST_PAGE_CAPTURE, async ({ data }) =>
     handleCaptureRequest(data.fromContext, data),
   );
 

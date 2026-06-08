@@ -1,7 +1,7 @@
 import { MSG } from "@/constants/messaging";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { sendMessageCore, onMessageCore } from "@/lib/messaging";
+import { sendMessage, onMessage } from "@/lib/messaging";
 import { useSidePanelWindowId } from "@/providers/sidepanel-messaging";
 
 export function RouterListener() {
@@ -19,7 +19,7 @@ export function RouterListener() {
   useEffect(() => {
     if (!pushEnabled) return;
     // Listen only for the navigation message
-    const unsubscribe = onMessageCore(MSG.NAVIGATE_IN_SIDEPANEL, (msg) => {
+    const unsubscribe = onMessage(MSG.NAVIGATE_IN_SIDEPANEL, (msg) => {
       if (msg.data.windowId !== windowId) return null;
 
       const { path } = msg.data;
@@ -55,7 +55,7 @@ export function RouterListener() {
 
   useEffect(() => {
     const initNavigateToLocation = async () => {
-      const path = await sendMessageCore(
+      const path = await sendMessage(
         MSG.REQUEST_PENDING_NAVIGATION,
         null,
       ).catch(() => null);

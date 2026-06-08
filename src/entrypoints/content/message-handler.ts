@@ -1,4 +1,3 @@
-import { onMessageCore } from "@/lib/messaging";
 import { MSG } from "@/constants/messaging";
 import { getPageData } from "./capture/page";
 import { getSelectionPageData } from "./capture/selection";
@@ -21,11 +20,11 @@ export function setupMessagingHandlers() {
     }
   });
 
-  // onMessageCore(MSG.GET_PAGE_SELECTION_DATA, async (message) => {
+  // onMessage(MSG.GET_PAGE_SELECTION_DATA, async (message) => {
   //   return await getSelectionPageData();
   // });
 
-  // onMessageCore(MSG.GET_PAGE_DATA, async () => {
+  // onMessage(MSG.GET_PAGE_DATA, async () => {
   //   return await getPageData();
   // });
 }
