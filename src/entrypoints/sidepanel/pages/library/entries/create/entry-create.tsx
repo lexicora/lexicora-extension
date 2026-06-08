@@ -138,7 +138,10 @@ function EntryCreatePage() {
         await db.blocks.bulkInsert(dbBlocks);
       }
 
-      navigate(`/library/entries/${entryId}`); // or wherever appropriate
+      navigate(`/library/entries/${entryId}`, {
+        replace: true,
+        viewTransition: true,
+      }); // or wherever appropriate
     } catch (e) {
       console.error("Failed to save entry:", e);
     } finally {
