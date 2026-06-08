@@ -19,5 +19,4 @@ interface ProtocolMap {
   [MSG.GET_PAGE_SELECTION_ARTICLE](data: null): Article | null;
 }
 
-const { sendMessage, onMessage } = defineExtensionMessaging<ProtocolMap>();
-export { sendMessage, onMessage };
+export const { sendMessage, onMessage } = defineExtensionMessaging<ProtocolMap>();
