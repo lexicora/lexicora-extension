@@ -1,5 +1,4 @@
 import { MSG } from "@/constants/messaging";
-import type { Article } from "@/types/mozilla-article.types";
 import type { PageData } from "@/types/page-data.types";
 import type { TabData } from "@/types/tab-data.types";
 import { defineExtensionMessaging } from "@webext-core/messaging";
@@ -16,7 +15,7 @@ interface ProtocolMap {
   [MSG.SEND_PAGE_SELECTION_DATA](data: { windowId: number | string; payload: PageData | null }): boolean | null;
 
   // Content-targeted (AI feature, pending full implementation)
-  [MSG.GET_PAGE_SELECTION_ARTICLE](data: null): Article | null;
+  [MSG.GET_PAGE_SELECTION_ARTICLE](data: null): PageData | null;
 }
 
 export const { sendMessage, onMessage } = defineExtensionMessaging<ProtocolMap>();

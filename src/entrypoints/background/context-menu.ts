@@ -2,7 +2,6 @@ import { sendMessage } from "@/lib/messaging";
 import { MSG } from "@/constants/messaging";
 import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/constants/context-menu-items";
 import { PageData } from "@/types/page-data.types";
-import { Article } from "@/types/mozilla-article.types";
 import turndownService from "@/lib/turndown";
 import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
 import { UNSUPPORTED_URL_REGEX } from "@/constants/support-capture-sites";
@@ -24,12 +23,12 @@ export function setupContextMenuActions() {
       case CMI_ID.CAPTURE_SELECTION_AI_ASSISTED: {
         // TODO: Content script handler for GET_PAGE_SELECTION_ARTICLE needs implementing when this feature is built
         if (!tab?.id) break;
-        const pageSelectionArticle = await sendMessage(
+        const pageSelectionData = await sendMessage(
           MSG.GET_PAGE_SELECTION_ARTICLE,
           null,
           { tabId: tab.id },
         );
-        if (!pageSelectionArticle) break;
+        if (!pageSelectionData) break;
         // Todo: Future implementation for AI-assisted saving
         //* pageSelectionData.pageHTML -> mozilla readability -> markdown -> Backend(self to AI to self) -> markdown ->
 
@@ -37,11 +36,11 @@ export function setupContextMenuActions() {
         if (import.meta.env.DEV) {
           console.log(
             "TEST: \nURL:",
-            pageSelectionArticle.siteName,
+            pageSelectionData.metadata.siteName,
             "\nSelected HTML:",
-            pageSelectionArticle.content,
+            pageSelectionData.content,
           );
-          //console.log("Readability article:", pageSelectionArticle);
+          //console.log("Readability article:", pageSelectionData);
         }
         //console.log("AI-Assisted save not implemented yet.");
         break;
