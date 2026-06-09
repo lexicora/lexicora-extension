@@ -15,6 +15,7 @@ import { SparklesIcon } from "@heroicons/react/24/solid";
 import {
   CameraIcon,
   ChevronRightIcon,
+  DatabaseIcon,
   EllipsisIcon,
   FileTextIcon,
   HeartPlusIcon,
@@ -37,6 +38,8 @@ import { Link } from "react-router-dom";
 import { SettingsItem } from "@/components/settings";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
+
+// TODO: Maybe convert this whole page full of options to a data list, that gets iterated over.
 
 function SettingsPage() {
   return (
@@ -141,6 +144,19 @@ function SettingsPage() {
             <div className="flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-slate-300/75 dark:border-t-muted"></div>
             <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
           </div>*/}
+        </section>
+        <section id="data-settings">
+          <Label htmlFor="" className="text-sm ml-2 mb-0.5">
+            <DatabaseIcon className="size-3.5 text-emerald-400" /> Data
+          </Label>
+          <SettingsItem
+            to="/settings/data"
+            size="sm"
+            MediaIcon={DatabaseIcon}
+            mediaIconColor="text-emerald-500"
+            itemTitle="Data Management"
+            roundingClass=""
+          />
         </section>
         <section id="general-settings">
           <Label htmlFor="" className="text-sm ml-2 mb-0.5">
