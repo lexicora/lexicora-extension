@@ -47,13 +47,7 @@ const FAQ_ITEMS = [
   },
 ] as const;
 
-function FaqItem({
-  question,
-  answer,
-}: {
-  question: string;
-  answer: string;
-}) {
+function FaqItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -75,7 +69,7 @@ function FaqItem({
         />
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <div className="px-3 pb-3 pt-2.5 text-sm text-muted-foreground bg-slate-100/75 dark:bg-muted/30 rounded-b-2xl leading-relaxed">
+        <div className="px-3 pb-3 pt-2.5 text-sm text-muted-foreground bg-slate-100/75 dark:bg-muted/30 rounded-b-2xl leading-relaxed text-pretty">
           {answer}
         </div>
       </CollapsibleContent>
@@ -87,9 +81,13 @@ function FaqPage() {
   return (
     <PageContainer>
       <PageHeader title="FAQ" goBackButton />
-      <main className="flex flex-col gap-2 w-full pt-4.5 px-1.25 mb-1">
+      <main className="flex flex-col gap-3.5 w-full pt-4.5 px-1.25 mb-2">
         {FAQ_ITEMS.map((item) => (
-          <FaqItem key={item.question} question={item.question} answer={item.answer} />
+          <FaqItem
+            key={item.question}
+            question={item.question}
+            answer={item.answer}
+          />
         ))}
       </main>
     </PageContainer>

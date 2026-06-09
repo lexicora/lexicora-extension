@@ -92,7 +92,6 @@ function ThemePersonalizationSettingsPage() {
           </p>
         </section>
       </main>
-      <footer>{/* Footer content if needed */}</footer>
     </PageContainer>
   );
 }

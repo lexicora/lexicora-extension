@@ -74,7 +74,7 @@ function TipsAndTricksPage() {
   return (
     <PageContainer>
       <PageHeader title="Tips & Tricks" goBackButton />
-      <main className="flex flex-col gap-0 w-full pt-4.5 px-1.25 mb-1">
+      <main className="flex flex-col gap-0 w-full pt-4.5 px-1.25 mb-2">
         <section>
           {TIPS.map((tip, i) => {
             const isFirst = i === 0;
@@ -98,7 +98,7 @@ function TipsAndTricksPage() {
                   </ItemMedia>
                   <ItemContent>
                     <ItemTitle>{tip.title}</ItemTitle>
-                    <ItemDescription className="line-clamp-none">
+                    <ItemDescription className="line-clamp-none text-pretty">
                       {tip.description}
                     </ItemDescription>
                   </ItemContent>

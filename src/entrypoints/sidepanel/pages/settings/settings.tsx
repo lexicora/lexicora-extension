@@ -39,6 +39,8 @@ import { SettingsItem } from "@/components/settings";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 
+// TODO: Maybe convert this whole page full of options to a data list, that gets iterated over.
+
 function SettingsPage() {
   return (
     <PageContainer>

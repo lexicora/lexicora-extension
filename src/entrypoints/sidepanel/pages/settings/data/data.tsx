@@ -114,25 +114,32 @@ function DataSettingsPage() {
   return (
     <PageContainer>
       <PageHeader title="Data Management" goBackButton />
-      <main className="flex flex-col gap-6.5 w-full pt-4.5 px-1.25 mb-1">
-        <section>
-          <Item
-            variant="muted"
-            size="sm"
-            className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl rounded-b-none hover:cursor-pointer"
-            onClick={handleExport}
-          >
-            <ItemMedia variant="icon">
-              <DownloadIcon className="size-5 text-emerald-500" />
-            </ItemMedia>
-            <ItemContent>
-              <ItemTitle>Export All Data</ItemTitle>
-              <ItemDescription>
-                Download all your topics, entries, and notes as a JSON file
-              </ItemDescription>
-            </ItemContent>
-          </Item>
-          <SettingsItemSeperator />
+      <main className="flex flex-col gap-6.5 w-full pt-4.5 px-1.25 mb-2">
+        <section className="flex flex-col gap-8">
+          <article>
+            <Item
+              variant="muted"
+              size="sm"
+              className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl hover:cursor-pointer /*bg-clip-padding*/"
+              asChild
+            >
+              <button onClick={handleExport}>
+                <ItemMedia variant="icon">
+                  <DownloadIcon className="size-5 text-emerald-500" />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>Export All Data</ItemTitle>
+                  {/*<ItemDescription>
+                Download all your topics, entries, and notes as a JSON file.
+              </ItemDescription>*/}
+                </ItemContent>
+              </button>
+            </Item>
+            <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-1">
+              Download all your topics, entries, and notes as a JSON file.
+            </p>
+          </article>
+          {/*<SettingsItemSeperator />*/}
           {/* Clear All Data — temporarily disabled: RxDB soft-delete does not
               physically remove documents from IndexedDB, causing data to reappear
               after reopening the extension. See the TODO comment above. */}
@@ -156,24 +163,30 @@ function DataSettingsPage() {
             </ItemContent>
           </Item>
           */}
-          <Item
-            variant="muted"
-            size="sm"
-            className="opacity-65 grayscale-30 bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-t-none"
-          >
-            <ItemMedia variant="icon">
-              <Trash2Icon className="size-5 text-red-500" />
-            </ItemMedia>
-            <ItemContent>
-              <ItemTitle className="text-red-600 dark:text-red-400">
-                Clear All Data
-              </ItemTitle>
-              <ItemDescription className="line-clamp-none">
-                To clear all data, remove and reinstall the extension. This
-                feature will be re-enabled in a future update.
-              </ItemDescription>
-            </ItemContent>
-          </Item>
+          <article className="opacity-65 grayscale-30">
+            <Item
+              variant="muted"
+              size="sm"
+              className="bg-slate-200/75 dark:bg-muted/50 rounded-2xl"
+            >
+              <ItemMedia variant="icon">
+                <Trash2Icon className="size-5 text-red-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle className="text-red-600 dark:text-red-400">
+                  Clear All Data
+                </ItemTitle>
+                {/*<ItemDescription className="line-clamp-none">
+                  To clear all data, remove and reinstall the extension. This
+                  feature will be re-enabled in a future update.
+                </ItemDescription>*/}
+              </ItemContent>
+            </Item>
+            <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-1">
+              To clear all data, remove and reinstall the extension. This
+              feature will be re-enabled in a future update.
+            </p>
+          </article>
         </section>
       </main>
 
