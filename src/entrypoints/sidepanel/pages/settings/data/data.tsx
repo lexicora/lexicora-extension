@@ -54,7 +54,12 @@ function DataSettingsPage() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `lexicora-export-${new Date().toISOString().slice(0, 10)}.json`;
+      const timestamp = new Date()
+        .toISOString()
+        .slice(0, 19)
+        .replace("T", "_")
+        .replace(/:/g, "-");
+      a.download = `lexicora-export-${timestamp}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
