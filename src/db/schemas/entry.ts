@@ -46,9 +46,10 @@ const entrySchemaLiteral = {
     'topicId', 
     'title', 
     'tags', 
-    'isFavorite', 
+    'isFavorite',
     'isPinned',
     'isArchived',
+    'archivedExplicitly',
     'languageCode', 
     'url', // (not strictly required, empty allowed)
     'hostnameUrl', // (not strictly required, empty allowed)
