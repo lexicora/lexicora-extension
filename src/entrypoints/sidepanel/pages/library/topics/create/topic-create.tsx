@@ -19,6 +19,7 @@ import { PageHeader } from "@/components/page-header";
 import { useRxCollection } from "rxdb/plugins/react";
 import { useBlocker, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
+import { navLock } from "@/lib/navigation-lock";
 import { uuidv7 } from "uuidv7";
 
 function TopicCreatePage() {
@@ -33,6 +34,7 @@ function TopicCreatePage() {
   const handleCreateTopic = async (data: TopicFormData) => {
     if (!collection) return;
     setIsCreating(true);
+    navLock.lock();
 
     const promise = collection.insert({
       id: uuidv7(),
@@ -62,6 +64,7 @@ function TopicCreatePage() {
       console.error("Failed to create topic:", err);
     } finally {
       setIsCreating(false);
+      navLock.unlock();
     }
   };
 
@@ -81,7 +84,13 @@ function TopicCreatePage() {
         </section>
       </main>
       <AlertDialog open={blocker.state === "blocked"}>
-        <AlertDialogContent size="sm" className="select-none p-4">
+        <AlertDialogContent
+          size="sm"
+          className="select-none p-4"
+          onKeyDown={(e) => {
+            if (e.key === "Escape") blocker.reset?.();
+          }}
+        >
           <AlertDialogHeader>
             <AlertDialogTitle>Discard changes?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -89,10 +98,17 @@ function TopicCreatePage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-3.5">
-            <AlertDialogCancel variant="outline" onClick={() => blocker.reset?.()}>
+            <AlertDialogCancel
+              variant="outline"
+              onClick={() => blocker.reset?.()}
+            >
               Keep editing
             </AlertDialogCancel>
-            <AlertDialogAction variant="destructive" className="-mr-px" onClick={() => blocker.proceed?.()}>
+            <AlertDialogAction
+              variant="destructive"
+              className="-mr-px"
+              onClick={() => blocker.proceed?.()}
+            >
               Discard
             </AlertDialogAction>
           </AlertDialogFooter>

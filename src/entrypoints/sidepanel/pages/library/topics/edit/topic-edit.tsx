@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { useBlocker, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useRxCollection } from "rxdb/plugins/react";
+import { navLock } from "@/lib/navigation-lock";
 
 function TopicEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -55,6 +56,7 @@ function TopicEditPage() {
   const handleUpdate = async (data: TopicFormData) => {
     if (!collection || !id) return;
     setIsSaving(true);
+    navLock.lock();
 
     const promise = (async () => {
       const doc = await collection.findOne({ selector: { id } }).exec();
@@ -81,13 +83,9 @@ function TopicEditPage() {
       console.error("Failed to update topic:", err);
     } finally {
       setIsSaving(false);
+      navLock.unlock();
     }
   };
-
-  // TopicForm uses its `id` prop both as the <form> element id and as the
-  // topic id to exclude from the duplicate-name check, so it must be the real
-  // topic id. The header's submit button references that same id via `form`.
-  const formId = topic?.id;
 
   if (topic === null) {
     return (
@@ -104,16 +102,12 @@ function TopicEditPage() {
 
   return (
     <PageContainer id="lc-edit-topic-page" className="mb-0!">
-      <PageHeader
-        title="Edit Topic"
-        goBackButton
-        //rightActionButton={saveButton}
-      />
+      <PageHeader title="Edit Topic" goBackButton />
       <main className="flex-1 px-0.5 max-w-2xl mx-auto w-full">
         <section className="mx-px">
           {topic && (
             <TopicForm
-              id={topic.id}
+              id="topic-edit-form"
               initialData={{
                 name: topic.name,
                 description: topic.description,
@@ -128,7 +122,13 @@ function TopicEditPage() {
         </section>
       </main>
       <AlertDialog open={blocker.state === "blocked"}>
-        <AlertDialogContent size="sm" className="select-none p-4">
+        <AlertDialogContent
+          size="sm"
+          className="select-none p-4"
+          onKeyDown={(e) => {
+            if (e.key === "Escape") blocker.reset?.();
+          }}
+        >
           <AlertDialogHeader>
             <AlertDialogTitle>Discard changes?</AlertDialogTitle>
             <AlertDialogDescription>

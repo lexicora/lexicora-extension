@@ -33,6 +33,7 @@ import { useCreateBlockNote } from "@blocknote/react";
 
 import { useRxCollection, useRxDatabase } from "rxdb/plugins/react";
 import { EntryForm, type EntryFormData } from "@/components/forms/entry-form";
+import { navLock } from "@/lib/navigation-lock";
 import { type TopicDocType } from "@/db/schemas/topic";
 import { convertBlockNoteBlocks } from "@/lib/utils/block-converter";
 import { uuidv7 } from "uuidv7";
@@ -91,6 +92,7 @@ function EntryCreatePage() {
   const handleEntrySubmit = async (data: EntryFormData) => {
     if (!db) return;
     setIsSaving(true);
+    navLock.lock();
     const editorBlocks = editor.document;
 
     const promise = (async () => {
@@ -173,6 +175,7 @@ function EntryCreatePage() {
       console.error("Failed to save entry:", e);
     } finally {
       setIsSaving(false);
+      navLock.unlock();
     }
   };
 
@@ -435,7 +438,13 @@ function EntryCreatePage() {
         </section>
       </footer>
       <AlertDialog open={blocker.state === "blocked"}>
-        <AlertDialogContent size="sm" className="select-none p-4">
+        <AlertDialogContent
+          size="sm"
+          className="select-none p-4"
+          onKeyDown={(e) => {
+            if (e.key === "Escape") blocker.reset?.();
+          }}
+        >
           <AlertDialogHeader>
             <AlertDialogTitle>Discard changes?</AlertDialogTitle>
             <AlertDialogDescription>

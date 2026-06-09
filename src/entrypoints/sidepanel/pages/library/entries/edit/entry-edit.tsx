@@ -38,6 +38,7 @@ import { useBlocker, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useRxCollection } from "rxdb/plugins/react";
 import { uuidv7 } from "uuidv7";
+import { navLock } from "@/lib/navigation-lock";
 
 interface EntryEditContentProps {
   entry: EntryDocType;
@@ -140,9 +141,7 @@ function EntryEditContent({
     form: formId,
   };
 
-  const handleSubmit = (data: EntryFormData) => {
-    onSave(data, editor.document);
-  };
+  const handleSubmit = (data: EntryFormData) => onSave(data, editor.document);
 
   return (
     <>
@@ -194,7 +193,13 @@ function EntryEditContent({
         </section>
       </main>
       <AlertDialog open={blocker.state === "blocked"}>
-        <AlertDialogContent size="sm" className="select-none p-4">
+        <AlertDialogContent
+          size="sm"
+          className="select-none p-4"
+          onKeyDown={(e) => {
+            if (e.key === "Escape") blocker.reset?.();
+          }}
+        >
           <AlertDialogHeader>
             <AlertDialogTitle>Discard changes?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -303,6 +308,7 @@ function EntryEditPage() {
   const handleSave = async (data: EntryFormData, editorBlocks: any[]) => {
     if (!entriesCollection || !blocksCollection || !entry) return;
     setIsSaving(true);
+    navLock.lock();
 
     const promise = (async () => {
       let finalTopicId = data.topicId;
@@ -380,6 +386,7 @@ function EntryEditPage() {
       console.error("Failed to update entry:", e);
     } finally {
       setIsSaving(false);
+      navLock.unlock();
     }
   };
 
