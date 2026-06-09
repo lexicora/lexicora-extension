@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useScrollPos } from "@/providers/scroll-observer";
 import { cn } from "@/lib/utils";
-import { Spinner } from "./ui/spinner";
 
 interface ActionButtonConfig {
   iconSmall: React.ReactNode;
@@ -116,11 +115,7 @@ export function PageHeader({
               onClick={rightActionButton.onClick}
               disabled={rightActionButton.isLoading}
             >
-              {rightActionButton.isLoading ? (
-                <Spinner data-icon="inline-start" className="size-5.5" />
-              ) : (
-                rightActionButton.iconLarge
-              )}
+              {rightActionButton.iconLarge}
             </Button>
           )}
           {/* Children rendered at the end of the flex container */}
@@ -215,11 +210,7 @@ export function PageHeader({
                 onClick={rightActionButton.onClick}
                 disabled={rightActionButton.isLoading}
               >
-                {rightActionButton.isLoading ? (
-                  <Spinner className="size-4.5" />
-                ) : (
-                  rightActionButton.iconSmall
-                )}
+                {rightActionButton.iconSmall}
               </Button>
             )}
           </div>
@@ -285,11 +276,7 @@ export function PageHeader({
               onClick={rightActionButton.onClick}
               disabled={rightActionButton.isLoading}
             >
-              {rightActionButton.isLoading ? (
-                <Spinner className="size-5.5" />
-              ) : (
-                rightActionButton.iconLarge
-              )}
+              {rightActionButton.iconLarge}
             </Button>
           )}
         </div>

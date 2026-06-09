@@ -11,7 +11,6 @@ import {
   InputGroupTextarea,
 } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/spinner";
 import { Toggle } from "@/components/ui/toggle";
 import { getDb } from "@/db";
 import { cn } from "@/lib/utils";
@@ -224,8 +223,7 @@ export function TopicForm({
 
         <Field>
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading && <Spinner data-icon="inline-start" />}
-            {isLoading ? "Saving..." : "Save Topic"}
+            Save Topic
           </Button>
         </Field>
       </FieldGroup>
