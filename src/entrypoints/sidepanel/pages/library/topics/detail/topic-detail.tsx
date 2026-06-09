@@ -69,7 +69,7 @@ function TopicDetailPage() {
 
     const sub = entriesCollection
       .find({
-        selector: { topicId: id, isFavorite: true, isArchived: { $ne: true } },
+        selector: { topicId: id, isFavorite: true, isArchived: false },
         sort: [{ updatedAt: "desc" }],
       })
       .$.subscribe({
@@ -108,7 +108,7 @@ function TopicDetailPage() {
     if (attribute === "isArchived" && entriesCollection) {
       const implicitEntries = await entriesCollection
         .find({
-          selector: { topicId: topic.id, archivedExplicitly: { $ne: true } },
+          selector: { topicId: topic.id, archivedExplicitly: false },
         })
         .exec();
       await Promise.all(
