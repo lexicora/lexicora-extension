@@ -46,6 +46,11 @@ import SettingsPage from "./pages/settings/settings";
 // Sub-settings pages
 import ThemePersonalizationSettingsPage from "./pages/settings/personalization/theme";
 import CaptureSuggestionsSettingsPage from "./pages/settings/features/capture-suggestions";
+import DataSettingsPage from "./pages/settings/data/data";
+import FaqPage from "./pages/settings/help/faq";
+import TipsAndTricksPage from "./pages/settings/help/tips-and-tricks";
+import AboutPage from "./pages/settings/about/about";
+import LicensesPage from "./pages/settings/about/licenses";
 // import NotificationsSettingsPage from "./pages/settings/notifications";
 
 function RootLayout() {
@@ -108,6 +113,14 @@ const router = createMemoryRouter([
         path: "settings/capture-suggestions",
         element: <CaptureSuggestionsSettingsPage />,
       },
+      { path: "settings/data", element: <DataSettingsPage /> },
+      { path: "settings/help/faq", element: <FaqPage /> },
+      {
+        path: "settings/help/tips-and-tricks",
+        element: <TipsAndTricksPage />,
+      },
+      { path: "settings/about", element: <AboutPage /> },
+      { path: "settings/about/licenses", element: <LicensesPage /> },
     ],
   },
 ]);
