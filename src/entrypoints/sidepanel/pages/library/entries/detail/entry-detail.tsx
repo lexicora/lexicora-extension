@@ -430,7 +430,7 @@ function EntryDetailPage() {
                 disabled={!hasContent}
                 onClick={handleCopyContentMarkdown}
               >
-                <FileTextIcon className="size-4 mr-2 text-blue-500" />
+                <FileTextIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
                 As Markdown
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -438,7 +438,7 @@ function EntryDetailPage() {
                 className="cursor-pointer"
                 onClick={() => handleCopyEntryMarkdown(entry)}
               >
-                <ClipboardIcon className="size-4 mr-2 text-blue-500" />
+                <ClipboardIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
                 With metadata
               </DropdownMenuItem>
             </DropdownMenuContent>

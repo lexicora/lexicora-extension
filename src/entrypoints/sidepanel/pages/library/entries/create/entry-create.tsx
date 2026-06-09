@@ -91,7 +91,9 @@ function EntryCreatePage() {
   const handleEntrySubmit = async (data: EntryFormData) => {
     if (!db) return;
     setIsSaving(true);
-    try {
+    const editorBlocks = editor.document;
+
+    const promise = (async () => {
       const entryId = uuidv7();
 
       let finalTopicId = data.topicId;
@@ -122,7 +124,7 @@ function EntryCreatePage() {
         }
       }
 
-      const newEntryDoc = {
+      await db.entries.insert({
         id: entryId,
         topicId: finalTopicId,
         title: data.title,
@@ -141,23 +143,28 @@ function EntryCreatePage() {
         searchUrl: urlObj?.search || "",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        // Potentially other fields can go here based on EntryDocType schema
-      };
+      });
 
-      await db.entries.insert(newEntryDoc);
-
-      const mainBlocks = editor.document;
       const dbBlocks = convertBlockNoteBlocks(
-        mainBlocks,
+        editorBlocks,
         entryId,
-        "00000000-0000-0000-0000-000000000000", // using nil UUID for userId
+        "00000000-0000-0000-0000-000000000000",
       );
-
       if (dbBlocks.length > 0) {
         await db.blocks.bulkInsert(dbBlocks);
       }
 
-      toast.success("Entry created");
+      return entryId;
+    })();
+
+    toast.promise(promise, {
+      loading: "Creating entry...",
+      success: "Entry created",
+      error: "Failed to create entry",
+    });
+
+    try {
+      const entryId = await promise;
       navigate(`/library/entries/${entryId}`, {
         replace: true,
         viewTransition: true,

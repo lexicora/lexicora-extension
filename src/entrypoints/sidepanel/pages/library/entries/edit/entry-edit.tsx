@@ -303,7 +303,8 @@ function EntryEditPage() {
   const handleSave = async (data: EntryFormData, editorBlocks: any[]) => {
     if (!entriesCollection || !blocksCollection || !entry) return;
     setIsSaving(true);
-    try {
+
+    const promise = (async () => {
       let finalTopicId = data.topicId;
       const isExistingTopic = topics.some((t) => t.id === finalTopicId);
 
@@ -333,7 +334,7 @@ function EntryEditPage() {
       const doc = await entriesCollection
         .findOne({ selector: { id: entry.id } })
         .exec();
-      if (!doc) return;
+      if (!doc) throw new Error("Entry not found");
 
       await doc.incrementalPatch({
         title: data.title,
@@ -364,8 +365,16 @@ function EntryEditPage() {
       if (newDbBlocks.length > 0) {
         await blocksCollection.bulkUpsert(newDbBlocks);
       }
+    })();
 
-      toast.success("Changes saved");
+    toast.promise(promise, {
+      loading: "Saving changes...",
+      success: "Changes saved",
+      error: "Failed to save changes",
+    });
+
+    try {
+      await promise;
       navigate(-1);
     } catch (e) {
       console.error("Failed to update entry:", e);

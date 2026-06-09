@@ -12,7 +12,7 @@ import {
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { TopicDocType } from "@/db/schemas/topic";
-import { SaveIcon } from "lucide-react";
+import { CheckCircle2Icon, CircleCheckIcon, SaveIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useBlocker, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -54,11 +54,11 @@ function TopicEditPage() {
 
   const handleUpdate = async (data: TopicFormData) => {
     if (!collection || !id) return;
-    try {
-      setIsSaving(true);
-      const doc = await collection.findOne({ selector: { id } }).exec();
-      if (!doc) return;
+    setIsSaving(true);
 
+    const promise = (async () => {
+      const doc = await collection.findOne({ selector: { id } }).exec();
+      if (!doc) throw new Error("Topic not found");
       await doc.incrementalPatch({
         name: data.name,
         description: data.description,
@@ -66,8 +66,16 @@ function TopicEditPage() {
         isFavorite: data.isFavorite,
         updatedAt: new Date().toISOString(),
       });
+    })();
 
-      toast.success("Changes saved");
+    toast.promise(promise, {
+      loading: "Saving changes...",
+      success: "Changes saved",
+      error: "Failed to save changes",
+    });
+
+    try {
+      await promise;
       navigate(-1);
     } catch (err) {
       console.error("Failed to update topic:", err);
@@ -80,18 +88,6 @@ function TopicEditPage() {
   // topic id to exclude from the duplicate-name check, so it must be the real
   // topic id. The header's submit button references that same id via `form`.
   const formId = topic?.id;
-
-  const saveButton = formId
-    ? {
-        iconSmall: <SaveIcon className="size-4.5" />,
-        iconLarge: <SaveIcon className="size-5.5" />,
-        isLoading: isSaving,
-        variant: "default" as const,
-        title: "Save Topic",
-        type: "submit" as const,
-        form: formId,
-      }
-    : undefined;
 
   if (topic === null) {
     return (

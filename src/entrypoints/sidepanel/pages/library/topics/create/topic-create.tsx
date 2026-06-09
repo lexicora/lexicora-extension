@@ -32,20 +32,28 @@ function TopicCreatePage() {
 
   const handleCreateTopic = async (data: TopicFormData) => {
     if (!collection) return;
+    setIsCreating(true);
+
+    const promise = collection.insert({
+      id: uuidv7(),
+      name: data.name,
+      description: data.description,
+      tags: data.tags,
+      isFavorite: data.isFavorite,
+      isPinned: false,
+      isArchived: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    toast.promise(promise, {
+      loading: "Creating topic...",
+      success: "Topic created",
+      error: "Failed to create topic",
+    });
+
     try {
-      setIsCreating(true);
-      const newDoc = await collection.insert({
-        id: uuidv7(),
-        name: data.name,
-        description: data.description,
-        tags: data.tags,
-        isFavorite: data.isFavorite,
-        isPinned: false,
-        isArchived: false,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-      toast.success("Topic created");
+      const newDoc = await promise;
       navigate(`/library/topics/${newDoc.id}`, {
         replace: true,
         viewTransition: true,
