@@ -4,42 +4,62 @@ import "./topic-create.module.css";
 
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { TopicForm, type TopicFormData } from "@/components/forms/topic-form";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { useRxCollection } from "rxdb/plugins/react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useBlocker, useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 import { uuidv7 } from "uuidv7";
-// TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 
 function TopicCreatePage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [isCreating, setIsCreating] = useState(false);
+  const [formIsDirty, setFormIsDirty] = useState(false);
   const collection = useRxCollection("topics");
+
+  const blocker = useBlocker(formIsDirty && !isCreating);
 
   const handleCreateTopic = async (data: TopicFormData) => {
     if (!collection) return;
+    setIsCreating(true);
+
+    const promise = collection.insert({
+      id: uuidv7(),
+      name: data.name,
+      description: data.description,
+      tags: data.tags,
+      isFavorite: data.isFavorite,
+      isPinned: false,
+      isArchived: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    toast.promise(promise, {
+      loading: "Creating topic...",
+      success: "Topic created",
+      error: "Failed to create topic",
+    });
+
     try {
-      setIsCreating(true);
-      const newDoc = await collection.insert({
-        id: uuidv7(),
-        name: data.name,
-        description: data.description,
-        tags: data.tags,
-        isFavorite: data.isFavorite,
-        isPinned: false,
-        isArchived: false,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-      // Navigate to the newly created topic, or topics list
+      const newDoc = await promise;
       navigate(`/library/topics/${newDoc.id}`, {
         replace: true,
         viewTransition: true,
       });
     } catch (err) {
       console.error("Failed to create topic:", err);
-      // TODO: toast notification
     } finally {
       setIsCreating(false);
     }
@@ -56,10 +76,28 @@ function TopicCreatePage() {
             initialData={{ name: searchParams.get("name") || "" }}
             onSubmit={handleCreateTopic}
             isLoading={isCreating}
+            onDirtyChange={setFormIsDirty}
           />
         </section>
       </main>
-      {/* Footer */}
+      <AlertDialog open={blocker.state === "blocked"}>
+        <AlertDialogContent size="sm" className="select-none p-4">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Discard changes?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. If you leave, they will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex gap-3.5">
+            <AlertDialogCancel variant="outline" onClick={() => blocker.reset?.()}>
+              Keep editing
+            </AlertDialogCancel>
+            <AlertDialogAction variant="destructive" className="-mr-px" onClick={() => blocker.proceed?.()}>
+              Discard
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </PageContainer>
   );
 }

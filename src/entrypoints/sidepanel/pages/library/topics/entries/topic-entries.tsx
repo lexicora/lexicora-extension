@@ -108,7 +108,7 @@ function TopicEntriesPage() {
         goBackButtonTitle="Back to Topic"
       />
 
-      <div className="flex items-center gap-1.75 px-1.5 pt-0.5 pb-1.5 dark:scheme-dark">
+      <div className="flex items-center gap-1.75 px-1.25 pt-0.5 pb-1.5 dark:scheme-dark">
         <div className="flex-1">
           <Field orientation="horizontal">
             <InputGroup>
@@ -145,7 +145,7 @@ function TopicEntriesPage() {
               handleToggleFilter("favorites", pressed)
             }
           >
-            <StarIcon className="group-data-[state=on]/toggle:text-yellow-500 group-data-[state=on]/toggle:fill-yellow-500" />
+            <StarIcon className="group-data-[state=on]/toggle:text-yellow-600 group-data-[state=on]/toggle:fill-yellow-600 dark:group-data-[state=on]/toggle:text-yellow-500 dark:group-data-[state=on]/toggle:fill-yellow-500" />
           </Toggle>
           <Toggle
             title={showArchived ? "Show all" : "Show only Archived"}
@@ -175,30 +175,32 @@ function TopicEntriesPage() {
       )}
 
       {/* Floating create entry button — hidden for archived topics */}
-      {!topicIsArchived && <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20 pointer-events-none">
-        <div className="shrink-0 flex items-center justify-end max-w-315 mx-auto inset-x-0">
-          <Button
-            size="icon"
-            title="Create Entry"
-            draggable={false}
-            className={cn(
-              "pointer-events-auto",
-              "text-lc-light-foreground bg-green-500 hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800",
-              "ring-1 ring-inset ring-black/20 dark:ring-white/30 hover:ring-black/25 dark:hover:ring-white/25",
-              "size-9 rounded-[12px] shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)]",
-              "focus-visible:ring-offset-1",
-            )}
-            onClick={() =>
-              navigate(
-                `/library/entries/new?topicId=${encodeURIComponent(id ?? "")}`,
-                { viewTransition: true },
-              )
-            }
-          >
-            <PlusIcon className="size-5" />
-          </Button>
+      {!topicIsArchived && (
+        <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20 pointer-events-none">
+          <div className="shrink-0 flex items-center justify-end max-w-315 mx-auto inset-x-0">
+            <Button
+              size="icon"
+              title="Create Entry"
+              draggable={false}
+              className={cn(
+                "pointer-events-auto",
+                "text-lc-light-foreground bg-green-500 hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800",
+                "ring-1 ring-inset ring-black/20 dark:ring-white/30 hover:ring-black/25 dark:hover:ring-white/25",
+                "size-9 rounded-[12px] shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)]",
+                "focus-visible:ring-offset-1",
+              )}
+              onClick={() =>
+                navigate(
+                  `/library/entries/new?topicId=${encodeURIComponent(id ?? "")}`,
+                  { viewTransition: true },
+                )
+              }
+            >
+              <PlusIcon className="size-5" />
+            </Button>
+          </div>
         </div>
-      </div>}
+      )}
     </PageContainer>
   );
 }

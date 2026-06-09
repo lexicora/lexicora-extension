@@ -2,6 +2,16 @@ import styles from "./entry-edit.module.css";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { appBlockNoteConfig } from "@/components/editor/config";
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { PageContainer } from "@/components/page-container";
@@ -24,7 +34,8 @@ import { ArrowUpIcon, SaveIcon } from "lucide-react";
 import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
 import { useCreateBlockNote } from "@blocknote/react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useBlocker, useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 import { useRxCollection } from "rxdb/plugins/react";
 import { uuidv7 } from "uuidv7";
 
@@ -50,6 +61,18 @@ function EntryEditContent({
 
   const capturedData = useCaptureData();
   const formApiRef = useRef<EntryFormApi | null>(null);
+  const [formIsDirty, setFormIsDirty] = useState(false);
+  const [editorIsDirty, setEditorIsDirty] = useState(false);
+  const initialDocJsonRef = useRef(JSON.stringify(editor.document));
+  const blocker = useBlocker((formIsDirty || editorIsDirty) && !isSaving);
+
+  useEffect(() => {
+    return editor.onChange(() => {
+      setEditorIsDirty(
+        JSON.stringify(editor.document) !== initialDocJsonRef.current,
+      );
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useLayoutEffect(() => {
     if (!capturedData?.content) return;
@@ -83,11 +106,20 @@ function EntryEditContent({
       }
       // For selection capture, all metadata fields only written if currently empty
       if (api) {
-        if (!api.getFieldValue("url")) api.setFieldValue("url", capturedData.location.href || "");
+        if (!api.getFieldValue("url"))
+          api.setFieldValue("url", capturedData.location.href || "");
         if (!api.getFieldValue("siteName"))
-          api.setFieldValue("siteName", capturedData.metadata.siteName || capturedData.location.hostname || "");
+          api.setFieldValue(
+            "siteName",
+            capturedData.metadata.siteName ||
+              capturedData.location.hostname ||
+              "",
+          );
         if (!api.getFieldValue("faviconUrl"))
-          api.setFieldValue("faviconUrl", capturedData.metadata.faviconUrl || "");
+          api.setFieldValue(
+            "faviconUrl",
+            capturedData.metadata.faviconUrl || "",
+          );
         if (!api.getFieldValue("languageCode"))
           api.setFieldValue("languageCode", capturedData.lang || "");
         if (!api.getFieldValue("description"))
@@ -127,7 +159,9 @@ function EntryEditContent({
             <EntryForm
               id={formId}
               topics={topics}
-              onFormReady={(api) => { formApiRef.current = api; }}
+              onFormReady={(api) => {
+                formApiRef.current = api;
+              }}
               overrideExisting={true}
               initialData={{
                 title: entry.title,
@@ -142,6 +176,7 @@ function EntryEditContent({
               }}
               onSubmit={handleSubmit}
               isLoading={isSaving}
+              onDirtyChange={setFormIsDirty}
             />
             <Label
               htmlFor="lc-blocknote-view-entry-edit"
@@ -158,6 +193,31 @@ function EntryEditContent({
           </div>
         </section>
       </main>
+      <AlertDialog open={blocker.state === "blocked"}>
+        <AlertDialogContent size="sm" className="select-none p-4">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Discard changes?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. If you leave, they will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex gap-3.5">
+            <AlertDialogCancel
+              variant="outline"
+              onClick={() => blocker.reset?.()}
+            >
+              Keep editing
+            </AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              className="-mr-px"
+              onClick={() => blocker.proceed?.()}
+            >
+              Discard
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
@@ -243,7 +303,8 @@ function EntryEditPage() {
   const handleSave = async (data: EntryFormData, editorBlocks: any[]) => {
     if (!entriesCollection || !blocksCollection || !entry) return;
     setIsSaving(true);
-    try {
+
+    const promise = (async () => {
       let finalTopicId = data.topicId;
       const isExistingTopic = topics.some((t) => t.id === finalTopicId);
 
@@ -273,7 +334,7 @@ function EntryEditPage() {
       const doc = await entriesCollection
         .findOne({ selector: { id: entry.id } })
         .exec();
-      if (!doc) return;
+      if (!doc) throw new Error("Entry not found");
 
       await doc.incrementalPatch({
         title: data.title,
@@ -304,7 +365,16 @@ function EntryEditPage() {
       if (newDbBlocks.length > 0) {
         await blocksCollection.bulkUpsert(newDbBlocks);
       }
+    })();
 
+    toast.promise(promise, {
+      loading: "Saving changes...",
+      success: "Changes saved",
+      error: "Failed to save changes",
+    });
+
+    try {
+      await promise;
       navigate(-1);
     } catch (e) {
       console.error("Failed to update entry:", e);

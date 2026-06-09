@@ -184,7 +184,7 @@ export function EntryItem({
                   className={cn(
                     "size-4 transition-colors",
                     entry.isArchived
-                      ? "text-green-500/75 dark:text-green-600"
+                      ? "text-green-600"
                       : "text-gray-400/75 dark:text-gray-600 group-hover:text-gray-500/75 dark:group-hover:text-gray-400",
                   )}
                 />
@@ -197,7 +197,7 @@ export function EntryItem({
                       role="button"
                       tabIndex={0}
                       className={cn(
-                        "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-red-200 dark:hover:bg-red-950/50",
+                        "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-red-300/75 dark:hover:bg-red-900/50",
                         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-red-500 dark:focus-visible:ring-offset-red-400 focus-visible:ring-red-500/50",
                       )}
                       onClick={stopPropagation}
@@ -211,7 +211,7 @@ export function EntryItem({
                         }
                       }}
                     >
-                      <Trash2Icon className="size-4 text-gray-400/75 dark:text-gray-600 group-hover:text-red-500 dark:group-hover:text-red-400 transition-colors" />
+                      <Trash2Icon className="size-4 text-gray-400/75 dark:text-gray-600 group-hover:text-red-700 dark:group-hover:text-red-300 transition-colors" />
                     </div>
                   </AlertDialogTrigger>
                   <AlertDialogContent
@@ -291,7 +291,7 @@ export function EntryItem({
                       className={cn(
                         "size-4",
                         entry.isFavorite
-                          ? "text-yellow-600/60 fill-yellow-600/85 dark:text-yellow-500 dark:fill-yellow-500"
+                          ? "text-yellow-600 fill-yellow-600 dark:text-yellow-500 dark:fill-yellow-500"
                           : "text-gray-500/75 dark:text-gray-400",
                       )}
                     />
@@ -475,7 +475,7 @@ export function EntryList({
   // TODO: For wider screens or the windowed app, maybe add a two column layout.
   return (
     <>
-      <div className="flex items-center gap-2.5 w-full px-2 pb-0.5">
+      <div className="flex items-center gap-2.5 w-full px-1.75 pb-0.5">
         <Separator className="flex-1" />
         <span className="text-xs text-muted-foreground font-medium tracking-widest">
           <FilesIcon className="size-3.5 inline -mt-0.5" /> {entries.length}
@@ -484,7 +484,7 @@ export function EntryList({
         <Separator className="flex-1" />
       </div>
       {isDataLoaded && entries.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+        <div className="flex flex-col items-center justify-center py-10 px-3 text-center">
           {search.trim() ? (
             <>
               <p className="text-muted-foreground mb-3">
@@ -549,7 +549,7 @@ export function EntryList({
           data={entries}
           overscan={200} // potentially increase
           itemContent={(_, entry) => (
-            <div className="px-1.25 py-1.5">
+            <div className="px-1 py-1.5">
               <EntryItem
                 entry={entry}
                 topUIScrollOffset={topUIScrollOffset}

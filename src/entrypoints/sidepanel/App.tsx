@@ -18,6 +18,7 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import RxDBProvider from "@/providers/rxdb-provider";
 import { TopBar } from "@/components/top-bar";
 import { BottomNavigation } from "@/components/bottom-navigation";
+import { Toaster } from "@/components/ui/sonner";
 
 // Pages
 import HomePage from "./pages/home/home";
@@ -116,6 +117,12 @@ function App() {
     <ThemeProvider defaultTheme="system">
       <RxDBProvider>
         <RouterProvider router={router} />
+        <Toaster
+          mobileOffset={13}
+          //className="py-3.5!"
+          position="top-right"
+          offset={16}
+        />
       </RxDBProvider>
     </ThemeProvider>
   );

@@ -2,10 +2,26 @@ import styles from "./entry-create.module.css";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { appBlockNoteConfig } from "@/components/editor/config";
 import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
 import { useEffect, useState, useLayoutEffect, useRef } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  useBlocker,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
+import { toast } from "sonner";
 
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
@@ -35,7 +51,10 @@ function EntryCreatePage() {
   const [promptText, setPromptText] = useState("");
   const [isPromptFocused, setIsPromptFocused] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [formIsDirty, setFormIsDirty] = useState(false);
   const [topics, setTopics] = useState<TopicDocType[]>([]);
+
+  const blocker = useBlocker(formIsDirty && !isSaving);
   const topicsCollection = useRxCollection("topics");
   const db = useRxDatabase();
 
@@ -72,7 +91,9 @@ function EntryCreatePage() {
   const handleEntrySubmit = async (data: EntryFormData) => {
     if (!db) return;
     setIsSaving(true);
-    try {
+    const editorBlocks = editor.document;
+
+    const promise = (async () => {
       const entryId = uuidv7();
 
       let finalTopicId = data.topicId;
@@ -103,7 +124,7 @@ function EntryCreatePage() {
         }
       }
 
-      const newEntryDoc = {
+      await db.entries.insert({
         id: entryId,
         topicId: finalTopicId,
         title: data.title,
@@ -122,26 +143,32 @@ function EntryCreatePage() {
         searchUrl: urlObj?.search || "",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        // Potentially other fields can go here based on EntryDocType schema
-      };
+      });
 
-      await db.entries.insert(newEntryDoc);
-
-      const mainBlocks = editor.document;
       const dbBlocks = convertBlockNoteBlocks(
-        mainBlocks,
+        editorBlocks,
         entryId,
-        "00000000-0000-0000-0000-000000000000", // using nil UUID for userId
+        "00000000-0000-0000-0000-000000000000",
       );
-
       if (dbBlocks.length > 0) {
         await db.blocks.bulkInsert(dbBlocks);
       }
 
+      return entryId;
+    })();
+
+    toast.promise(promise, {
+      loading: "Creating entry...",
+      success: "Entry created",
+      error: "Failed to create entry",
+    });
+
+    try {
+      const entryId = await promise;
       navigate(`/library/entries/${entryId}`, {
         replace: true,
         viewTransition: true,
-      }); // or wherever appropriate
+      });
     } catch (e) {
       console.error("Failed to save entry:", e);
     } finally {
@@ -250,6 +277,7 @@ function EntryCreatePage() {
               }}
               onSubmit={handleEntrySubmit}
               isLoading={isSaving}
+              onDirtyChange={setFormIsDirty}
             />
 
             <Label
@@ -406,6 +434,31 @@ function EntryCreatePage() {
           </div>
         </section>
       </footer>
+      <AlertDialog open={blocker.state === "blocked"}>
+        <AlertDialogContent size="sm" className="select-none p-4">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Discard changes?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. If you leave, they will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex gap-3.5">
+            <AlertDialogCancel
+              variant="outline"
+              onClick={() => blocker.reset?.()}
+            >
+              Keep editing
+            </AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              className="-mr-px"
+              onClick={() => blocker.proceed?.()}
+            >
+              Discard
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </PageContainer>
   );
 }

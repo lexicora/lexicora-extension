@@ -12,15 +12,14 @@
 
 Get the side-panel to a releasable, polished offline state. The components built here will be reused by the windowed extension in Phase 2.
 
-| Priority | Issue(s) | Description |
-|---|---|---|
-| 1 | [#140](https://github.com/tgmaurer/lexicora-extension/issues/140), [#139](https://github.com/tgmaurer/lexicora-extension/issues/139), [#123](https://github.com/tgmaurer/lexicora-extension/issues/123), [#89](https://github.com/tgmaurer/lexicora-extension/issues/89) | **Toast / notification layer** — install Sonner, wire up: unsaved changes dialogue, undo-archive toast, create-confirmation toasts |
-| 2 | [#100](https://github.com/tgmaurer/lexicora-extension/issues/100) | **Block navigation in forms** — use react-router's `useBlocker` to prevent accidental data loss |
-| 3 | [#143](https://github.com/tgmaurer/lexicora-extension/issues/143), [#82](https://github.com/tgmaurer/lexicora-extension/issues/82), [#52](https://github.com/tgmaurer/lexicora-extension/issues/52) | **Settings page** — user-adjustable prefs: theme, capture suggestion toggle/delay, disable-all-AI toggle, data management |
-| 4 | [#134](https://github.com/tgmaurer/lexicora-extension/issues/134), [#85](https://github.com/tgmaurer/lexicora-extension/issues/85), [#75](https://github.com/tgmaurer/lexicora-extension/issues/75), [#78](https://github.com/tgmaurer/lexicora-extension/issues/78), **new** | **Layout / max-width pass** — see note below. Do this before windowed work so the windowed layout inherits sane constraints. |
-| 5 | [#142](https://github.com/tgmaurer/lexicora-extension/issues/142), [#135](https://github.com/tgmaurer/lexicora-extension/issues/135) | **Home page redesign + light theme** — redesign side-panel home page; adjust light theme background to ~gray-50 instead of pure white |
-| 6 | [#45](https://github.com/tgmaurer/lexicora-extension/issues/45), [#136](https://github.com/tgmaurer/lexicora-extension/issues/136) | **Persistence polish** — persist entries tab state (URL/search) across navigation; add dates to `searchBlob` |
-| 7 | [#84](https://github.com/tgmaurer/lexicora-extension/issues/84), [#86](https://github.com/tgmaurer/lexicora-extension/issues/86), [#48](https://github.com/tgmaurer/lexicora-extension/issues/48) | **Infrastructure cleanup** — add RxDB schema indexes on queried fields; remove unused browser permissions; prune unused packages |
+| Priority | Issue(s) | Description | Status |
+|---|---|---|---|
+| 1 | [#140](https://github.com/tgmaurer/lexicora-extension/issues/140), [#139](https://github.com/tgmaurer/lexicora-extension/issues/139), [#123](https://github.com/tgmaurer/lexicora-extension/issues/123), [#89](https://github.com/tgmaurer/lexicora-extension/issues/89) | **Toast / notification layer** — install Sonner, wire up: unsaved changes dialogue, create-confirmation toasts | ✅ Done |
+| 2 | [#100](https://github.com/tgmaurer/lexicora-extension/issues/100) | **Block navigation in forms** — use react-router's `useBlocker` to prevent accidental data loss | ✅ Done |
+| 3 | [#143](https://github.com/tgmaurer/lexicora-extension/issues/143), [#82](https://github.com/tgmaurer/lexicora-extension/issues/82), [#52](https://github.com/tgmaurer/lexicora-extension/issues/52) | **Settings page** — user-adjustable prefs: theme, capture suggestion toggle/delay, disable-all-AI toggle, data management | |
+| 4 | [#134](https://github.com/tgmaurer/lexicora-extension/issues/134), [#85](https://github.com/tgmaurer/lexicora-extension/issues/85), [#75](https://github.com/tgmaurer/lexicora-extension/issues/75), [#78](https://github.com/tgmaurer/lexicora-extension/issues/78), **new** | **Layout / max-width pass** — see note below. Do this before windowed work so the windowed layout inherits sane constraints. | |
+| 5 | [#142](https://github.com/tgmaurer/lexicora-extension/issues/142), [#135](https://github.com/tgmaurer/lexicora-extension/issues/135) | **Home page redesign + light theme** — redesign side-panel home page; adjust light theme background to ~gray-50 instead of pure white | |
+| 6 | [#84](https://github.com/tgmaurer/lexicora-extension/issues/84), [#86](https://github.com/tgmaurer/lexicora-extension/issues/86), [#48](https://github.com/tgmaurer/lexicora-extension/issues/48) | **Infrastructure cleanup** — add RxDB schema indexes on queried fields; remove unused browser permissions; prune unused packages | |
 
 ### Layout / max-width note (Priority 4)
 

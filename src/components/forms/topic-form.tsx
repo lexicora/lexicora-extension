@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -10,7 +11,6 @@ import {
   InputGroupTextarea,
 } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/spinner";
 import { Toggle } from "@/components/ui/toggle";
 import { getDb } from "@/db";
 import { cn } from "@/lib/utils";
@@ -66,6 +66,7 @@ interface TopicFormProps {
   initialData?: Partial<TopicFormData>;
   onSubmit: (data: TopicFormData) => void | Promise<void>;
   isLoading?: boolean;
+  onDirtyChange?: (isDirty: boolean) => void;
 }
 
 export function TopicForm({
@@ -73,6 +74,7 @@ export function TopicForm({
   initialData,
   onSubmit,
   isLoading,
+  onDirtyChange,
 }: TopicFormProps) {
   const schema = createFormSchema(id);
 
@@ -81,7 +83,7 @@ export function TopicForm({
     handleSubmit,
     control,
     watch,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<FormValues>({
     resolver: zodResolver(schema), // Applying the dynamically generated zodResolver
     defaultValues: {
@@ -91,6 +93,10 @@ export function TopicForm({
       isFavorite: initialData?.isFavorite || false,
     },
   });
+
+  useEffect(() => {
+    onDirtyChange?.(isDirty);
+  }, [isDirty]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const currentDescription = watch("description") || "";
 
@@ -217,8 +223,7 @@ export function TopicForm({
 
         <Field>
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading && <Spinner data-icon="inline-start" />}
-            {isLoading ? "Saving..." : "Save Topic"}
+            Save Topic
           </Button>
         </Field>
       </FieldGroup>

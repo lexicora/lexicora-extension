@@ -129,7 +129,7 @@ function LibraryPage() {
     <PageContainer className="pb-2.25!">
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <PageHeader title="Library" classNameHeaderElement="mb-0">
-          <div className="mt-3 mx-1.5">
+          <div className="mt-3 mx-1.25">
             <div id="search" className="dark:scheme-dark">
               <Field orientation="horizontal">
                 <InputGroup>
@@ -171,7 +171,7 @@ function LibraryPage() {
                   handleToggleFilter("favorites", pressed)
                 }
               >
-                <StarIcon className="group-data-[state=on]/toggle:text-yellow-500 group-data-[state=on]/toggle:fill-yellow-500" />
+                <StarIcon className="group-data-[state=on]/toggle:text-yellow-600 group-data-[state=on]/toggle:fill-yellow-600 dark:group-data-[state=on]/toggle:text-yellow-500 dark:group-data-[state=on]/toggle:fill-yellow-500" />
               </Toggle>
               {/*Group Tabs of pure entries and topics (grouping of entries) and sites (grouping of entries based on their sites url grouped and matched) */}
               <div className="flex-1 /*mr-7.5*/">
