@@ -72,7 +72,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
             .find({
               selector: {
                 topicId: topic.id,
-                archivedExplicitly: { $ne: true },
+                archivedExplicitly: false,
               },
             })
             .exec();
@@ -377,7 +377,7 @@ export function TopicList({
     if (onlyArchived) {
       selector.isArchived = true;
     } else {
-      selector.isArchived = { $ne: true };
+      selector.isArchived = false;
     }
 
     if (onlyFavorites) {

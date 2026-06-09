@@ -425,7 +425,7 @@ export function EntryList({
     if (onlyArchived) {
       selector.isArchived = true;
     } else {
-      selector.isArchived = { $ne: true };
+      selector.isArchived = false;
     }
 
     if (onlyFavorites) {
