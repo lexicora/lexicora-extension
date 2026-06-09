@@ -32,6 +32,16 @@ The fix: apply a max-width wrapper to metadata field groups only (not the editor
 
 A focused GitHub issue should be filed for the entry-form field width specifically.
 
+### Phase 1 cleanup pass
+
+Before starting Phase 2, do a short focused refactor:
+
+- Extract shared component abstractions that the windowed extension will reuse (nav items, page header variants, form field wrappers)
+- Split any side-panel component over ~200 lines that grew too large during the polish pass
+- Extract inline logic into `use*` hooks where it belongs
+- Remove dead code, unused imports, stale TODO comments
+- Tighten loose TypeScript types, remove any `any`
+
 ---
 
 ## Phase 2 — Windowed extension entrypoint
@@ -48,6 +58,14 @@ Build order:
 3. Adapted pages — reuse side-panel route components where possible, swap in larger variants where the layout differs
 4. Background messaging for the window instance — unique window ID handling ([#103](https://github.com/lexicora/lexicora-extension/issues/103))
 
+### Phase 2 cleanup pass
+
+Before starting Phase 3, do a short focused refactor:
+
+- Consolidate anything duplicated between the side-panel and windowed entrypoints into shared components/hooks
+- Clean up routing and messaging patterns that became awkward when the second entrypoint was added
+- Audit `src/entrypoints/` for any copy-pasted structure that should be extracted to `src/components/` or `src/hooks/`
+
 ---
 
 ## Phase 3 — Offline feature completeness
@@ -62,6 +80,16 @@ Build order:
 | [#51](https://github.com/lexicora/lexicora-extension/issues/51) | Inconsistent font in capture suggestion toast |
 | [#25](https://github.com/lexicora/lexicora-extension/issues/25) | Remove unnecessary `title` attributes on obvious interactive elements |
 | [#10](https://github.com/lexicora/lexicora-extension/issues/10) | Extract Lexicora SVG logo into its own exportable component |
+
+### Phase 3 cleanup pass (critical — pre-Supabase gate)
+
+This is the most important cleanup. Before any Supabase code is written, the data layer must be solid — sync bugs are the hardest to debug, and messy offline code compounds that significantly:
+
+- `src/db/` — ensure collection hooks, middleware, and query patterns are clean and consistent
+- RxDB schema and migration strategies reviewed and tidy
+- Settings storage patterns consistent across all `WxtStorageItem` usage
+- Remove any soft-delete / orphaned data that accumulated during Phase 3
+- Final dead code sweep across the whole codebase
 
 ---
 
