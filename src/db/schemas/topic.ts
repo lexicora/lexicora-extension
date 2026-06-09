@@ -10,7 +10,7 @@ const topicSchemaLiteral = {
   properties: {
     id: uuidSchema,
     userId: uuidWithNilDefault,
-    name: { type: 'string', maxLength: 255 }, // TODO: Potentially index this field.
+    name: { type: 'string', maxLength: 255 },
     description: { type: 'string', maxLength: 1000 },
     tags: {
       type: 'array',
@@ -26,7 +26,12 @@ const topicSchemaLiteral = {
     searchBlob: { type: 'string', maxLength: 2020 }, // Auto-populated denormalized search field (name + tags + description snippet + updatedAt date tokens)
   },
   required: ['id', 'userId', 'name', 'tags', 'isFavorite', 'isPinned', 'isArchived', 'createdAt', 'updatedAt'],
-  indexes: ['userId', ['isPinned', 'updatedAt'], ['isArchived', 'isPinned', 'updatedAt']]
+  indexes: [
+    'userId',
+    ['isPinned', 'updatedAt'],
+    ['isArchived', 'isPinned', 'updatedAt'],
+    ['isFavorite', 'isArchived', 'isPinned', 'updatedAt'],
+  ]
 } as const;
 
 export const topicSchema = toTypedRxJsonSchema(topicSchemaLiteral);

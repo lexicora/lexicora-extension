@@ -57,7 +57,16 @@ const entrySchemaLiteral = {
     'createdAt',
     'updatedAt'
   ],
-  indexes: ['topicId', 'userId', ['isPinned', 'updatedAt'], ['topicId', 'isArchived', 'isPinned', 'updatedAt']] // TODO: Adjust compound indexes as needed based on query patterns (e.g., topicId + createdAt for sorting entries within a topic)
+  indexes: [
+    'topicId',
+    'userId',
+    ['isPinned', 'updatedAt'],
+    ['isArchived', 'isPinned', 'updatedAt'],
+    ['isFavorite', 'isArchived', 'isPinned', 'updatedAt'],
+    ['topicId', 'isArchived', 'isPinned', 'updatedAt'],
+    ['topicId', 'isFavorite', 'isArchived', 'isPinned', 'updatedAt'],
+    ['topicId', 'archivedExplicitly'],
+  ]
 } as const;
 
 export const entrySchema = toTypedRxJsonSchema(entrySchemaLiteral);
