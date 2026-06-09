@@ -45,7 +45,7 @@ Location: `src/entrypoints/window/` (mirrors `src/entrypoints/sidepanel/` struct
 Reuse the same `react-router-dom` routes and page components from the side-panel where possible. The windowed entrypoint gets its own `App.tsx` with:
 - A different layout wrapper (sidebar instead of top-bar + bottom-nav)
 - The same `RouterListener` for background-driven navigation
-- Its own `windowId` resolution (see [#103](https://github.com/tgmaurer/lexicora-extension/issues/103))
+- Its own `windowId` resolution (see [#103](https://github.com/lexicora/lexicora-extension/issues/103))
 
 ## Pages — reuse vs. adapt
 
@@ -60,20 +60,20 @@ Reuse the same `react-router-dom` routes and page components from the side-panel
 
 ## Messaging
 
-Background → window push messages need a `windowId` discriminator, same as the side-panel. The windowed entrypoint registers its own `windowId` via a dedicated message type (see [#103](https://github.com/tgmaurer/lexicora-extension/issues/103) for the ID strategy).
+Background → window push messages need a `windowId` discriminator, same as the side-panel. The windowed entrypoint registers its own `windowId` via a dedicated message type (see [#103](https://github.com/lexicora/lexicora-extension/issues/103) for the ID strategy).
 
 ## Component strategy
 
 Prefer building **layout-aware variants** of existing components rather than forking them:
-- `PageHeader` — already has a compact/expanded scroll variant; add a `size` prop for the windowed large variant ([#98](https://github.com/tgmaurer/lexicora-extension/issues/98))
+- `PageHeader` — already has a compact/expanded scroll variant; add a `size` prop for the windowed large variant ([#98](https://github.com/lexicora/lexicora-extension/issues/98))
 - Form field containers — use the max-width wrapper established in the Phase 1 layout pass
 - Navigation — extract a shared `NavItems` list so both the bottom tab bar (side-panel) and the left sidebar (windowed) consume the same items
 
 ## Related issues
 
-- [#47](https://github.com/tgmaurer/lexicora-extension/issues/47) — Make sidepanel UI be its own window
-- [#115](https://github.com/tgmaurer/lexicora-extension/issues/115) — New app with similar pages but different layout
-- [#112](https://github.com/tgmaurer/lexicora-extension/issues/112) — Optimize for wider size with sidebar navigation
-- [#103](https://github.com/tgmaurer/lexicora-extension/issues/103) — Window instance ID in messaging
-- [#98](https://github.com/tgmaurer/lexicora-extension/issues/98) — Larger page-header variant
-- [#59](https://github.com/tgmaurer/lexicora-extension/issues/59) — Hide link hint when running as window
+- [#47](https://github.com/lexicora/lexicora-extension/issues/47) — Make sidepanel UI be its own window
+- [#115](https://github.com/lexicora/lexicora-extension/issues/115) — New app with similar pages but different layout
+- [#112](https://github.com/lexicora/lexicora-extension/issues/112) — Optimize for wider size with sidebar navigation
+- [#103](https://github.com/lexicora/lexicora-extension/issues/103) — Window instance ID in messaging
+- [#98](https://github.com/lexicora/lexicora-extension/issues/98) — Larger page-header variant
+- [#59](https://github.com/lexicora/lexicora-extension/issues/59) — Hide link hint when running as window
