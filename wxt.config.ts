@@ -39,8 +39,6 @@ export default defineConfig({
         "scripting",
         "contextMenus",
         "clipboardRead",
-        "alarms",
-        "notifications",
         "sidePanel",
       ],
       //host_permissions: ["<all_urls>"], //* NOTE: Not needed, activeTab should be enough
