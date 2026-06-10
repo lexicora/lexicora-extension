@@ -63,6 +63,7 @@ export interface TopicFormData {
 
 interface TopicFormProps {
   id?: string;
+  topicId?: string;
   initialData?: Partial<TopicFormData>;
   onSubmit: (data: TopicFormData) => void | Promise<void>;
   isLoading?: boolean;
@@ -71,12 +72,13 @@ interface TopicFormProps {
 
 export function TopicForm({
   id,
+  topicId,
   initialData,
   onSubmit,
   isLoading,
   onDirtyChange,
 }: TopicFormProps) {
-  const schema = createFormSchema(id);
+  const schema = createFormSchema(topicId);
 
   const {
     register,

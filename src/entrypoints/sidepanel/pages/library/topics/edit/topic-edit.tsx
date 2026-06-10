@@ -108,6 +108,7 @@ function TopicEditPage() {
           {topic && (
             <TopicForm
               id="topic-edit-form"
+              topicId={id}
               initialData={{
                 name: topic.name,
                 description: topic.description,
