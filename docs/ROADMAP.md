@@ -14,14 +14,15 @@ Get the side-panel to a releasable, polished offline state. The components built
 
 | Priority | Issue(s) | Description | Status |
 |---|---|---|---|
-| 1 | [#140](https://github.com/lexicora/lexicora-extension/issues/140), [#139](https://github.com/lexicora/lexicora-extension/issues/139), [#123](https://github.com/lexicora/lexicora-extension/issues/123), [#89](https://github.com/lexicora/lexicora-extension/issues/89) | **Toast / notification layer** — install Sonner, wire up: unsaved changes dialogue, create-confirmation toasts | ✅ Done |
+| 1 | [#140](https://github.com/lexicora/lexicora-extension/issues/140), [#139](https://github.com/lexicora/lexicora-extension/issues/139), [#123](https://github.com/lexicora/lexicora-extension/issues/123), [#89](https://github.com/lexicora/lexicora-extension/issues/89) | **Toast / notification layer** — install Sonner, wire up: unsaved changes dialogue, undo-archive toast, create-confirmation toasts | ✅ Done |
 | 2 | [#100](https://github.com/lexicora/lexicora-extension/issues/100) | **Block navigation in forms** — use react-router's `useBlocker` to prevent accidental data loss | ✅ Done |
-| 3 | [#143](https://github.com/lexicora/lexicora-extension/issues/143), [#82](https://github.com/lexicora/lexicora-extension/issues/82), [#52](https://github.com/lexicora/lexicora-extension/issues/52) | **Settings page** — user-adjustable prefs: theme, capture suggestion toggle/delay, disable-all-AI toggle, data management | ✅ Done |
-| 4 | [#134](https://github.com/lexicora/lexicora-extension/issues/134), [#85](https://github.com/lexicora/lexicora-extension/issues/85), [#75](https://github.com/lexicora/lexicora-extension/issues/75), [#78](https://github.com/lexicora/lexicora-extension/issues/78), **new** | **Layout / max-width pass** — see note below. Do this before windowed work so the windowed layout inherits sane constraints. | |
-| 5 | [#142](https://github.com/lexicora/lexicora-extension/issues/142), [#135](https://github.com/lexicora/lexicora-extension/issues/135) | **Home page redesign + light theme** — redesign side-panel home page; adjust light theme background to ~gray-50 instead of pure white | |
-| 6 | [#84](https://github.com/lexicora/lexicora-extension/issues/84), [#86](https://github.com/lexicora/lexicora-extension/issues/86), [#48](https://github.com/lexicora/lexicora-extension/issues/48) | **Infrastructure cleanup** — add RxDB schema indexes on queried fields; remove unused browser permissions; prune unused packages | ✅ Done |
+| 3 | [#143](https://github.com/lexicora/lexicora-extension/issues/143), [#82](https://github.com/lexicora/lexicora-extension/issues/82) | **Settings page** — user-adjustable prefs: theme, capture suggestion toggle/delay, data management | ✅ Done |
+| 4 | [#84](https://github.com/lexicora/lexicora-extension/issues/84), [#86](https://github.com/lexicora/lexicora-extension/issues/86), [#48](https://github.com/lexicora/lexicora-extension/issues/48) | **Infrastructure cleanup** — RxDB schema indexes, remove unused permissions, prune unused packages | ✅ Done |
+| 5 | [#134](https://github.com/lexicora/lexicora-extension/issues/134), [#85](https://github.com/lexicora/lexicora-extension/issues/85), [#75](https://github.com/lexicora/lexicora-extension/issues/75), [#78](https://github.com/lexicora/lexicora-extension/issues/78), **new** | **Layout / max-width pass** — see note below. Do this before windowed work so the windowed layout inherits sane constraints. | |
+| 6 | [#3](https://github.com/lexicora/lexicora-extension/issues/3) | **Stylize shadcn UI theme** — finalize the overall component theme; sets the visual foundation before the home page redesign | |
+| 7 | [#142](https://github.com/lexicora/lexicora-extension/issues/142), [#135](https://github.com/lexicora/lexicora-extension/issues/135), [#155](https://github.com/lexicora/lexicora-extension/issues/155) | **Home page redesign + visual polish** — redesign side-panel home page; adjust light theme to ~gray-50; add topic name above entry title in entry detail | |
 
-### Layout / max-width note (Priority 4)
+### Layout / max-width note (Priority 5)
 
 When the side-panel is narrow, the current layout is fine. When it is wide, two problems emerge:
 
@@ -39,7 +40,8 @@ Before starting Phase 2, do a short focused refactor:
 - Extract shared component abstractions that the windowed extension will reuse (nav items, page header variants, form field wrappers)
 - Split any side-panel component over ~200 lines that grew too large during the polish pass
 - Extract inline logic into `use*` hooks where it belongs
-- Remove dead code, unused imports, stale TODO comments
+- Investigate and resolve TODO comments in the codebase ([#148](https://github.com/lexicora/lexicora-extension/issues/148))
+- Remove dead code, unused imports, stale comments
 - Tighten loose TypeScript types, remove any `any`
 
 ---
@@ -72,11 +74,14 @@ Before starting Phase 3, do a short focused refactor:
 
 | Issue(s) | Description |
 |---|---|
+| [#144](https://github.com/lexicora/lexicora-extension/issues/144) | Filter dropdown / popover UI for more complex list filtering |
+| [#145](https://github.com/lexicora/lexicora-extension/issues/145) | Hot-key support |
 | [#61](https://github.com/lexicora/lexicora-extension/issues/61) | YouTube video block in editor |
 | [#56](https://github.com/lexicora/lexicora-extension/issues/56) | Custom code syntax highlighting in editor |
 | [#62](https://github.com/lexicora/lexicora-extension/issues/62) | Show toolbar when drag handle is clicked |
+| [#60](https://github.com/lexicora/lexicora-extension/issues/60) | Adjust per-block margins (top/bottom) |
+| [#8](https://github.com/lexicora/lexicora-extension/issues/8) | Update BlockNote editor to use shadcn components |
 | [#44](https://github.com/lexicora/lexicora-extension/issues/44) | Onboarding flow on first install |
-| [#131](https://github.com/lexicora/lexicora-extension/issues/131) | Deleted data cleanup (RxDB soft-delete purge) |
 | [#51](https://github.com/lexicora/lexicora-extension/issues/51) | Inconsistent font in capture suggestion toast |
 | [#25](https://github.com/lexicora/lexicora-extension/issues/25) | Remove unnecessary `title` attributes on obvious interactive elements |
 | [#10](https://github.com/lexicora/lexicora-extension/issues/10) | Extract Lexicora SVG logo into its own exportable component |
@@ -93,13 +98,28 @@ This is the most important cleanup. Before any Supabase code is written, the dat
 
 ---
 
+## DB preparation — focused data layer effort (before Supabase)
+
+A dedicated pass to get the data layer solid before any sync code is written. Sync bugs are the hardest to debug — messy offline DB code compounds that significantly.
+
+| Issue(s) | Description |
+|---|---|
+| [#153](https://github.com/lexicora/lexicora-extension/issues/153) | Fix RxDB soft-delete so "clear all data" actually purges documents |
+| [#152](https://github.com/lexicora/lexicora-extension/issues/152) | Replace per-document remove loops with `bulkRemove`; audit RxDB operator usage |
+| [#131](https://github.com/lexicora/lexicora-extension/issues/131) | Deleted data cleanup — soft-delete purge strategy |
+
+This overlaps with the Phase 3 cleanup pass for DB concerns — run them together as one focused effort.
+
+---
+
 ## Phase 4 — Sync + AI (after offline is solid)
 
 | Issue(s) | Description |
 |---|---|
 | [#69](https://github.com/lexicora/lexicora-extension/issues/69) | Integrate Supabase with extension + web-app |
 | [#68](https://github.com/lexicora/lexicora-extension/issues/68) | Create web-app (Supabase, auth, sync) |
-| [#52](https://github.com/lexicora/lexicora-extension/issues/52) | Disable/enable all AI setting (already in Phase 1 settings; full AI integration here) |
+| [#146](https://github.com/lexicora/lexicora-extension/issues/146) | Minimize updating unchanged data to reduce sync payload |
+| [#52](https://github.com/lexicora/lexicora-extension/issues/52) | Disable/enable all AI setting |
 
 ---
 
@@ -107,12 +127,8 @@ This is the most important cleanup. Before any Supabase code is written, the dat
 
 Issues that need more thought before scheduling:
 
-- [#130](https://github.com/lexicora/lexicora-extension/issues/130) — Potentially consolidate all messaging to `@webext-core/messaging`
-- [#115](https://github.com/lexicora/lexicora-extension/issues/115) — Windowed extension: new pages with different layout (→ Phase 2)
-- [#112](https://github.com/lexicora/lexicora-extension/issues/112) — Windowed extension: sidebar nav layout (→ Phase 2)
 - [#104](https://github.com/lexicora/lexicora-extension/issues/104) — Optimize React with AI
 - [#102](https://github.com/lexicora/lexicora-extension/issues/102) — Prompt input as its own window
-- [#99](https://github.com/lexicora/lexicora-extension/issues/99) — Disable UI during save
 - [#87](https://github.com/lexicora/lexicora-extension/issues/87) — Rename "Entries" tab
 - [#83](https://github.com/lexicora/lexicora-extension/issues/83) — Remove settings from bottom nav
 - [#80](https://github.com/lexicora/lexicora-extension/issues/80) — Auto-create topic from site metadata
@@ -123,4 +139,3 @@ Issues that need more thought before scheduling:
 - [#59](https://github.com/lexicora/lexicora-extension/issues/59) — Hide link hint when side-panel is its own window
 - [#53](https://github.com/lexicora/lexicora-extension/issues/53) — Setting: how new captures replace editor content
 - [#37](https://github.com/lexicora/lexicora-extension/issues/37) — Drag-and-drop selected content bug in editor
-- [#110](https://github.com/lexicora/lexicora-extension/issues/110) — Icons in dropdown items
