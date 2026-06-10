@@ -252,7 +252,7 @@ function EntryDetailPage() {
         heavyTeardown
       />
 
-      <section className="px-1 mx-auto w-full text-left select-text">
+      <section className="px-1 mx-auto w-full max-w-[var(--lc-content-max-width)] text-left select-text">
         {/* Title */}
         <h1 className="text-2xl font-semibold leading-tight wrap-break-word text-pretty">
           {entry.title}
@@ -470,7 +470,7 @@ function EntryDetailPage() {
 
       {/* Rich content */}
       {blocks !== null && (
-        <section className="mx-auto w-full mt-2 mb-2">
+        <section className="mx-auto w-full max-w-[var(--lc-content-max-width)] mt-2 mb-2">
           {/* <Separator className="mx-auto max-w-[calc(100%-8px)] mb-5 opacity-60" /> */}
           {hasContent ? (
             <EntryContentViewer

@@ -249,85 +249,85 @@ function EntryCreatePage() {
         heavyTeardown={true}
       />
       <main>
-        <section className="mx-px">
-          {/*TODO: Maybe add relative and overflow-x-hidden later, when it is guaranteed to fill the entire page (height wise) */}
-          <div className="text-start">
-            <EntryForm
-              id="entry-create-form"
-              topics={topics}
-              overrideExisting={capturedData?.misc?.overrideExisting ?? true}
-              initialData={{
-                title: capturedData?.title || searchParams.get("title") || "",
-                topicId: searchParams.get("topicId") || "",
-                faviconUrl: capturedData?.metadata?.faviconUrl || "",
-                url: capturedData?.location?.href || "",
-                siteName:
-                  capturedData?.metadata?.siteName ||
-                  capturedData?.location?.hostname ||
-                  "",
-                languageCode: capturedData?.lang || navigator.language || "en",
-                description: capturedData?.metadata?.excerpt || "",
-                // capturedData?.textContent
-                //   ? capturedData?.textContent?.trim().slice(0, 400) + "..."
-                //   : "",
-                // [
-                //   capturedData?.metadata?.byline ? `By ${capturedData.metadata.byline}` : null,
-                //   capturedData?.metadata?.publishedTime ? `Published: ${capturedData.metadata.publishedTime}` : null,
-                //   capturedData?.metadata?.excerpt || null,
-                // ]
-                //   .filter(Boolean)
-                //   .join("\n\n") || "",
-              }}
-              onSubmit={handleEntrySubmit}
-              isLoading={isSaving}
-              onDirtyChange={setFormIsDirty}
-            />
-
-            <Label
-              htmlFor="lc-blocknote-view-new-entry"
-              onClick={() => {
-                editor.focus();
-              }}
-              className="text-sm ml-1 mb-1 mt-0"
-            >
-              Content
-            </Label>
-            <div className="relative">
-              {/*Unused css classes for div className="relative overflow-x-hidden min-h-[55vh] mt-1" */}
-              {/* --- SKELETON LOADER OVERLAY (update to shadcn-ui component later)--- */}
-              {showSkeleton && (
-                <div className="absolute inset-0 z-10 p-2 space-y-4 animate-pulse">
-                  <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-3/4"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-5/6"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-4/5"></div>
-                </div>
-              )}
-              {/* --- ACTUAL EDITOR --- */}
-              {/* It is ALWAYS mounted to prevent the Floating UI crash. We just hide it visually until ready. */}
-              <div
-                className={cn(
-                  "transition-opacity duration-150", //MAYBE: Reduce duration a bit more, dont use will-change-opacity, because editor ui elements are covered by top and bottom ui.
-                  showSkeleton
-                    ? "opacity-0 pointer-events-none"
-                    : "opacity-100",
-                )}
+        <div className="max-w-2xl mx-auto w-full px-0.5">
+          <section className="mx-px">
+            {/*TODO: Maybe add relative and overflow-x-hidden later, when it is guaranteed to fill the entire page (height wise) */}
+            <div className="text-start">
+              <EntryForm
+                id="entry-create-form"
+                topics={topics}
+                overrideExisting={capturedData?.misc?.overrideExisting ?? true}
+                initialData={{
+                  title: capturedData?.title || searchParams.get("title") || "",
+                  topicId: searchParams.get("topicId") || "",
+                  faviconUrl: capturedData?.metadata?.faviconUrl || "",
+                  url: capturedData?.location?.href || "",
+                  siteName:
+                    capturedData?.metadata?.siteName ||
+                    capturedData?.location?.hostname ||
+                    "",
+                  languageCode:
+                    capturedData?.lang || navigator.language || "en",
+                  description: capturedData?.metadata?.excerpt || "",
+                  // capturedData?.textContent
+                  //   ? capturedData?.textContent?.trim().slice(0, 400) + "..."
+                  //   : "",
+                  // [
+                  //   capturedData?.metadata?.byline ? `By ${capturedData.metadata.byline}` : null,
+                  //   capturedData?.metadata?.publishedTime ? `Published: ${capturedData.metadata.publishedTime}` : null,
+                  //   capturedData?.metadata?.excerpt || null,
+                  // ]
+                  //   .filter(Boolean)
+                  //   .join("\n\n") || "",
+                }}
+                onSubmit={handleEntrySubmit}
+                isLoading={isSaving}
+                onDirtyChange={setFormIsDirty}
+              />
+              <Label
+                htmlFor="lc-blocknote-view-new-entry"
+                onClick={() => {
+                  editor.focus();
+                }}
+                className="text-sm ml-1 mb-1 mt-0"
               >
-                {/*TODO: maybe add max width of maybe around 1000px or so */}
-                <BlockNoteView
-                  editor={editor}
-                  lang={language}
-                  id="lc-blocknote-view-new-entry"
-                  //className=""
-                  //editable={false}
-                />
-              </div>
+                Content
+              </Label>
             </div>
-            {/*TODO: maybe add max width of maybe around 1000px or so */}
+          </section>
+        </div>
+        <div className="max-w-[var(--lc-content-max-width)] mx-auto w-full">
+          <div className="relative">
+            {/*Unused css classes for div className="relative overflow-x-hidden min-h-[55vh] mt-1" */}
+            {/* --- SKELETON LOADER OVERLAY (update to shadcn-ui component later)--- */}
+            {showSkeleton && (
+              <div className="absolute inset-0 z-10 p-2 space-y-4 animate-pulse">
+                <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-5/6"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-4/5"></div>
+              </div>
+            )}
+            {/* --- ACTUAL EDITOR --- */}
+            {/* It is ALWAYS mounted to prevent the Floating UI crash. We just hide it visually until ready. */}
+            <div
+              className={cn(
+                "transition-opacity duration-150", //MAYBE: Reduce duration a bit more, dont use will-change-opacity, because editor ui elements are covered by top and bottom ui.
+                showSkeleton ? "opacity-0 pointer-events-none" : "opacity-100",
+              )}
+            >
+              <BlockNoteView
+                editor={editor}
+                lang={language}
+                id="lc-blocknote-view-new-entry"
+                //className=""
+                //editable={false}
+              />
+            </div>
           </div>
-        </section>
+        </div>
       </main>
       <footer
         //id="lc-new-entry-bottom-footer"
@@ -341,7 +341,12 @@ function EntryCreatePage() {
           className="fixed bottom-0 left-0 min-h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-30
                 lc-bottom-bar-styled-bg"
         >
-          <div className="pb-[0.08rem] px-px max-w-200 mx-auto inset-x-0 relative flex items-end">
+          <div
+            className={cn(
+              "pb-[0.08rem] px-px mx-auto inset-x-0 relative flex items-end transition-all duration-150",
+              isPromptActive ? "max-w-148" : "max-w-lg",
+            )}
+          >
             <Textarea
               id="ai-prompt-textarea"
               ref={aiPromptTextareaRef}

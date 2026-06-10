@@ -148,7 +148,7 @@ function HomePage() {
       <footer className={styles.bottomFooter}>
         <section className="fixed bottom-14.75 left-0 h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-10 lc-bottom-bar-styled-bg">
           {/*MAYBE: Remove the animation disabling motion-reduce, because it is a very noticeable and maybe not optimal for accessibility*/}
-          <div className="flex gap-0 items-center justify-between w-full max-w-314 mx-auto inset-x-0">
+          <div className="flex gap-0 items-center justify-between w-full max-w-2xl mx-auto inset-x-0">
             <div
               className={`flex justify-start transition-all motion-reduce:transition-none duration-300 ease-in-out /*overflow-visible*/ ${
                 promptText.trimEnd() === ""

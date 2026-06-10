@@ -153,44 +153,48 @@ function EntryEditContent({
         heavyTeardown={true}
       />
       <main>
-        <section className="mx-px">
-          <div className="text-start">
-            <EntryForm
-              id={formId}
-              topics={topics}
-              onFormReady={(api) => {
-                formApiRef.current = api;
-              }}
-              overrideExisting={true}
-              initialData={{
-                title: entry.title,
-                topicId: entry.topicId,
-                description: entry.description || "",
-                tags: entry.tags,
-                faviconUrl: entry.faviconUrl || "",
-                url: entry.url,
-                siteName: entry.siteName || "",
-                languageCode: entry.languageCode,
-                isFavorite: entry.isFavorite,
-              }}
-              onSubmit={handleSubmit}
-              isLoading={isSaving}
-              onDirtyChange={setFormIsDirty}
-            />
-            <Label
-              htmlFor="lc-blocknote-view-entry-edit"
-              onClick={() => editor.focus()}
-              className="text-sm ml-1 mb-1 mt-0"
-            >
-              Content
-            </Label>
-            <BlockNoteView
-              editor={editor}
-              lang={entry.languageCode}
-              id="lc-blocknote-view-entry-edit"
-            />
-          </div>
-        </section>
+        <div className="max-w-2xl mx-auto w-full px-0.5">
+          <section className="mx-px">
+            <div className="text-start">
+              <EntryForm
+                id={formId}
+                topics={topics}
+                onFormReady={(api) => {
+                  formApiRef.current = api;
+                }}
+                overrideExisting={true}
+                initialData={{
+                  title: entry.title,
+                  topicId: entry.topicId,
+                  description: entry.description || "",
+                  tags: entry.tags,
+                  faviconUrl: entry.faviconUrl || "",
+                  url: entry.url,
+                  siteName: entry.siteName || "",
+                  languageCode: entry.languageCode,
+                  isFavorite: entry.isFavorite,
+                }}
+                onSubmit={handleSubmit}
+                isLoading={isSaving}
+                onDirtyChange={setFormIsDirty}
+              />
+              <Label
+                htmlFor="lc-blocknote-view-entry-edit"
+                onClick={() => editor.focus()}
+                className="text-sm ml-1 mb-1 mt-0"
+              >
+                Content
+              </Label>
+            </div>
+          </section>
+        </div>
+        <div className="max-w-[var(--lc-content-max-width)] mx-auto w-full">
+          <BlockNoteView
+            editor={editor}
+            lang={entry.languageCode}
+            id="lc-blocknote-view-entry-edit"
+          />
+        </div>
       </main>
       <AlertDialog open={blocker.state === "blocked"}>
         <AlertDialogContent
