@@ -16,6 +16,7 @@ web-ext.config.ts
 
 # Editor directories and files
 .antigravitycli
+.claude/worktrees/
 .vscode/*
 .zed/*
 # !.vscode/mcp.json
