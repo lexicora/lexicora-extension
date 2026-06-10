@@ -249,7 +249,7 @@ function EntryCreatePage() {
         heavyTeardown={true}
       />
       <main>
-        <div className="max-w-2xl mx-auto w-full px-0.5">
+        <div className="max-w-(--lc-content-max-width) mx-auto w-full px-0.5">
           <section className="mx-px">
             {/*TODO: Maybe add relative and overflow-x-hidden later, when it is guaranteed to fill the entire page (height wise) */}
             <div className="text-start">
@@ -296,7 +296,7 @@ function EntryCreatePage() {
             </div>
           </section>
         </div>
-        <div className="max-w-[var(--lc-content-max-width)] mx-auto w-full">
+        <div className="max-w-(--lc-content-max-width) px-px mx-auto w-full">
           <div className="relative">
             {/*Unused css classes for div className="relative overflow-x-hidden min-h-[55vh] mt-1" */}
             {/* --- SKELETON LOADER OVERLAY (update to shadcn-ui component later)--- */}
@@ -405,14 +405,18 @@ function EntryCreatePage() {
                 "transition-all duration-150 z-10",
                 "absolute right-0 /*right-2.5 bottom-2.5*/ flex items-center /*justify-end*/",
                 isPromptActive ? "mr-2.25 mb-2 h-7.5" : "mb-1.25 mr-1.5 h-9",
+                isPromptActive &&
+                  promptText.trim() === "" &&
+                  "pointer-events-none",
               )}
             >
               <Button
                 title="Refine Entry with AI"
                 size="default"
                 variant="default"
+                disabled={isPromptActive && promptText.trim() === ""}
                 className={cn(
-                  "transition-all duration-200 h-full rounded-sm overflow-hidden",
+                  "data-disabled:pointer-events-none transition-all duration-200 h-full rounded-sm overflow-hidden",
                   isPromptActive ? "w-7.5 px-0" : "w-31",
                   promptText.trim() !== "" && "backdrop-blur-xs",
                 )}

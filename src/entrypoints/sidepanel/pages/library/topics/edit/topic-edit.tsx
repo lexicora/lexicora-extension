@@ -103,7 +103,7 @@ function TopicEditPage() {
   return (
     <PageContainer id="lc-edit-topic-page" className="mb-0!">
       <PageHeader title="Edit Topic" goBackButton />
-      <main className="flex-1 px-0.5 max-w-2xl mx-auto w-full">
+      <main className="flex-1 px-0.5 max-w-(--lc-content-max-width) mx-auto w-full">
         <section className="mx-px">
           {topic && (
             <TopicForm

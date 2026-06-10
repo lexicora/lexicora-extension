@@ -203,7 +203,7 @@ function TopicDetailPage() {
         rightActionButton={viewEntriesButton}
       />
 
-      <section className="px-1 mx-auto w-full max-w-[var(--lc-content-max-width)] text-left select-text">
+      <section className="px-1 mx-auto w-full max-w-(--lc-content-max-width) text-left select-text">
         {/* Title */}
         <h1 className="text-2xl font-semibold leading-tight wrap-break-word text-pretty">
           {topic.name}
@@ -344,7 +344,7 @@ function TopicDetailPage() {
 
       {/* Favorite entries preview */}
       {favoriteEntries.length > 0 && (
-        <section className="px-1 mx-auto w-full max-w-[var(--lc-content-max-width)] mt-2 mb-2.25">
+        <section className="px-1 mx-auto w-full max-w-(--lc-content-max-width) mt-2 mb-2.25">
           <Separator className="mx-auto max-w-[calc(100%-8px)] mt-0 mb-3 opacity-60" />
           <div className="flex items-center gap-1.5 mb-2 px-1.25">
             <StarIcon className="size-3.5 text-muted-foreground" />
@@ -377,18 +377,12 @@ function TopicDetailPage() {
       {/* Floating create entry button — hidden for archived topics */}
       {!topic.isArchived && (
         <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20 pointer-events-none">
-          <div className="shrink-0 flex items-center justify-end max-w-315 mx-auto inset-x-0">
+          <div className="shrink-0 flex items-center justify-end max-w-169 mx-auto inset-x-0">
             <Button
               size="icon"
               title="Create Entry"
               draggable={false}
-              className={cn(
-                "pointer-events-auto",
-                "text-lc-light-foreground bg-green-500 hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800",
-                "ring-1 ring-inset ring-black/20 dark:ring-white/30 hover:ring-black/25 dark:hover:ring-white/25",
-                "size-9 rounded-[12px] shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)]",
-                "focus-visible:ring-offset-1",
-              )}
+              className="pointer-events-auto button-create"
               onClick={() =>
                 navigate(
                   `/library/entries/new?topicId=${encodeURIComponent(topic.id)}`,

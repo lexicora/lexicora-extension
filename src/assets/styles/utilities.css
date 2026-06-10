@@ -34,11 +34,6 @@
   animation: none !important;
 }
 
-.btn-green-ring {
-  @apply text-lc-light-foreground bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800
-    ring-1 ring-inset ring-black/25 dark:ring-white/30 hover:ring-black/30 dark:hover:ring-white/25;
-}
-
 .transition-transform-opacity-blur {
   will-change: transform, translate, opacity, filter;
   transition-property: transform, translate, opacity, filter;
@@ -58,4 +53,10 @@
 
 .button-default {
   @apply focus-visible:border-ring focus-visible:ring-ring/50 border border-transparent bg-clip-padding focus-visible:ring-[3px] whitespace-nowrap transition-all outline-none select-none;
+}
+
+.button-create {
+  @apply text-lc-light-foreground bg-green-500 hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800 
+    ring-1 ring-inset ring-black/20 dark:ring-white/30 hover:ring-black/25 dark:hover:ring-white/25 
+    size-9 rounded-[12px] shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)] focus-visible:ring-offset-1;
 }

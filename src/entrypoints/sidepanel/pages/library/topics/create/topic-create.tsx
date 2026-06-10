@@ -72,7 +72,7 @@ function TopicCreatePage() {
     <PageContainer id="lc-new-topic-page" className="mb-0! /*pr-3!*/">
       {/*Make the inner container as tall (min-height) as the vh (but not overflowing) to prevent issues with editor*/}
       <PageHeader title="New Topic" goBackButton />
-      <main className="flex-1 px-0.5 max-w-2xl mx-auto w-full">
+      <main className="flex-1 px-0.5 max-w-(--lc-content-max-width) mx-auto w-full">
         <section className="mx-px">
           <TopicForm
             id="topic-create-form"

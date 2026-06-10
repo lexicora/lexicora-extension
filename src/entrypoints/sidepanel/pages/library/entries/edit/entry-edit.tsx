@@ -153,7 +153,7 @@ function EntryEditContent({
         heavyTeardown={true}
       />
       <main>
-        <div className="max-w-2xl mx-auto w-full px-0.5">
+        <div className="max-w-(--lc-content-max-width) mx-auto w-full px-0.5">
           <section className="mx-px">
             <div className="text-start">
               <EntryForm
@@ -188,7 +188,7 @@ function EntryEditContent({
             </div>
           </section>
         </div>
-        <div className="max-w-[var(--lc-content-max-width)] mx-auto w-full">
+        <div className="max-w-(--lc-content-max-width) mx-auto w-full">
           <BlockNoteView
             editor={editor}
             lang={entry.languageCode}
