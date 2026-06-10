@@ -2,5 +2,5 @@
 # ignoreScripts = true 
 
 [install]
-# 24 hours = 86,400 seconds, maybe double to 48 hours
-minimumReleaseAge = 86400
+# 24 hours = 86,400 seconds
+minimumReleaseAge = 172800
