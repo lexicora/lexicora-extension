@@ -243,10 +243,13 @@ function EntryDetailPage() {
     );
 
   return (
-    <PageContainer id="lc-entry-detail-page">
+    <PageContainer
+      id="lc-entry-detail-page"
+      classNameInner="max-w-[calc(var(--lc-content-max-width)+0.75rem)]!"
+    >
       <PageHeader
         title="Entry"
-        classNameHeaderElement="mb-3"
+        classNameHeaderElement="max-w-(--lc-content-max-width) mx-auto mb-3"
         goBackButton
         goBackButtonVariant="tinted"
         rightActionButton={editButton}
@@ -416,7 +419,7 @@ function EntryDetailPage() {
                 className={cn(
                   "ml-auto size-9 rounded-lg not-hover:text-muted-foreground",
                   "hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-950/50 dark:hover:text-blue-400",
-                  "data-open:bg-blue-100! data-open:text-blue-600! dark:data-open:bg-blue-950/50 dark:data-open:text-blue-400",
+                  "aria-expanded:bg-blue-100 aria-expanded:text-blue-600 dark:aria-expanded:bg-blue-950/50 dark:aria-expanded:text-blue-400",
                 )}
               >
                 <EllipsisIcon className="size-4.5" />
@@ -471,7 +474,7 @@ function EntryDetailPage() {
 
       {/* Rich content */}
       {blocks !== null && (
-        <section className="mx-auto w-full max-w-(--lc-content-max-width) mt-2 mb-2">
+        <section className="mx-auto w-full /*max-w-[calc(var(--lc-content-max-width)+0.25rem)]*/ mt-2 mb-2">
           {/* <Separator className="mx-auto max-w-[calc(100%-8px)] mb-5 opacity-60" /> */}
           {hasContent ? (
             <EntryContentViewer
