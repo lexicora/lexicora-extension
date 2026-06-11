@@ -371,6 +371,9 @@ interface EntryListProps {
   scrollStorageKey?: string;
   // When true, hides the "Create Entry" buttons in empty-state UI.
   disableCreate?: boolean;
+  // Pre-computed scroll position to restore. Pass when the parent captures the
+  // position during render before any effects can change the navigation type.
+  restoredScrollTop?: number;
 }
 
 export function EntryList({
@@ -380,6 +383,7 @@ export function EntryList({
   topUIScrollOffset,
   scrollStorageKey = "entryListScrollTop",
   disableCreate = false,
+  restoredScrollTop: restoredScrollTopProp,
 }: EntryListProps) {
   const [entries, setEntries] = useState<EntryDocType[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -391,11 +395,14 @@ export function EntryList({
   const onlyFavorites = filter?.onlyFavorites ?? false;
   const onlyArchived = filter?.onlyArchived ?? false;
 
-  // On POP, restore the scroll position (plain number, no JSON overhead)
+  // On POP, restore the scroll position (plain number, no JSON overhead).
+  // When the parent pre-computes the value (restoredScrollTopProp), use it directly —
+  // the parent captures it before any useEffect can change navigationType.
   const savedScrollTop = useMemo(() => {
+    if (restoredScrollTopProp !== undefined) return restoredScrollTopProp;
     if (navigationType !== "POP") return 0;
     return parseInt(sessionStorage.getItem(scrollStorageKey) || "0", 10);
-  }, [navigationType, scrollStorageKey]);
+  }, [navigationType, scrollStorageKey, restoredScrollTopProp]);
 
   // If we arrived here via standard navigation (not back/POP), reset the Virtuoso state
   useEffect(() => {

@@ -19,14 +19,29 @@ import {
   XIcon,
 } from "lucide-react";
 import { useDeferredValue, useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import {
+  useNavigate,
+  useNavigationType,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
 
 function TopicEntriesPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const navigationType = useNavigationType();
   const [searchParams, setSearchParams] = useSearchParams();
   const topicsCollection = useRxCollection("topics");
+
+  // Capture scroll position NOW, during render, before any useEffect (e.g. setSearchParams
+  // with { replace: true }) fires and changes navigationType from "POP" to "REPLACE".
+  // By the time EntryList mounts (after the async filterReady gate), navigationType would
+  // already be "REPLACE", causing EntryList's internal check to miss the saved position.
+  const [restoredScrollTop] = useState<number | undefined>(() => {
+    if (navigationType !== "POP") return undefined;
+    return parseInt(sessionStorage.getItem(`entryList:${id ?? ""}`) || "0", 10);
+  });
 
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const deferredSearch = useDeferredValue(search);
@@ -167,9 +182,10 @@ function TopicEntriesPage() {
             topicId={id}
             search={deferredSearch}
             filter={filter}
-            scrollStorageKey={`entryList:${id}`} // Possibly include seconds/milliseconds to not override anything if the user goes multiple navigation levels deep.
-            topUIScrollOffset={190}
+            scrollStorageKey={`entryList:${id}`} // TODO: Possibly include seconds/milliseconds to not override anything if the user goes multiple navigation levels deep.
+            topUIScrollOffset={184}
             disableCreate={topicIsArchived}
+            restoredScrollTop={restoredScrollTop}
           />
         </main>
       )}
