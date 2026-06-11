@@ -104,10 +104,10 @@ function TopicEntriesPage() {
     <PageContainer id="lc-topic-entries-page">
       <PageHeader
         title="Entries"
+        classNameHeaderElement="mb-2.5"
         goBackButton
         goBackButtonTitle="Back to Topic"
       />
-
       <div className="flex items-center gap-1.75 px-1.25 pt-0.5 pb-1.5 dark:scheme-dark">
         <div className="flex-1">
           <Field orientation="horizontal">
@@ -167,7 +167,7 @@ function TopicEntriesPage() {
             topicId={id}
             search={deferredSearch}
             filter={filter}
-            scrollStorageKey={`entryList:${id}`}
+            scrollStorageKey={`entryList:${id}`} // Possibly include seconds/milliseconds to not override anything if the user goes multiple navigation levels deep.
             topUIScrollOffset={190}
             disableCreate={topicIsArchived}
           />

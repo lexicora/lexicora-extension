@@ -1,19 +1,19 @@
 :root {
-    --lc-content-max-width: 42rem; /* 672px */
+  --lc-content-max-width: 42rem; /* 672px */
 }
 
 #root {
-    /*max-width: 1280px;*/
-    margin: 0 auto;
-    padding: 0;
-    text-align: center;
+  /*max-width: 1280px;*/
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
 }
 
 html {
-    overflow-x: hidden;
-    scroll-padding-top: 102px; /*was 58px, increase to account for hover-able page header*/
-    scroll-padding-bottom: 64px;
-    /*&::-webkit-scrollbar-button {
+  overflow-x: hidden;
+  scroll-padding-top: 102px; /*was 58px, increase to account for hover-able page header*/
+  scroll-padding-bottom: 64px;
+  /*&::-webkit-scrollbar-button {
         height: 10px;
         width: 10px;
     }
@@ -28,33 +28,33 @@ html {
 /*Account for BottomNavigation height. was: 60px (opt out on a page level)*/
 
 #lc-body {
-    margin-right: 0 !important;
-    /*Prevents layout shift when editing with editor*/
+  margin-right: 0 !important;
+  /*Prevents layout shift when editing with editor*/
 }
 
 /*NOTE: Prevents layout shift when editing with editor*/
 body[data-scroll-locked] {
-    /*margin-right: 0 !important;*/
-    --removed-body-scroll-bar-size: 0;
-    /*Does no longer prevent layout shift by dropdown (shadcn-ui/radix), must put this as a style property in the body with !important declaration
+  /*margin-right: 0 !important;*/
+  --removed-body-scroll-bar-size: 0;
+  /*Does no longer prevent layout shift by dropdown (shadcn-ui/radix), must put this as a style property in the body with !important declaration
     to do this, set margin-right to 0 !important. Do this only if no layout shift is needed (via id might work too)*/
 }
 
 .lc-page-container {
-    /*max-width: 1280px;*/
-    padding: 12px;
-    padding-right: calc(var(--lc-scrollbar-offset) + 2px);
-    /*margin-inline: auto;*/
-    margin-top: 58px; /*Account for TopBar height. was: 60px*/
-    margin-bottom: 58px; /*Account for BottomNavigation height. was: 60px (opt out on a page level)*/
-    /*inset-inline: 0;*/
-    -webkit-user-select: none;
-    user-select: none;
+  /*max-width: 1280px;*/
+  padding: 12px;
+  padding-right: calc(var(--lc-scrollbar-offset) + 2px);
+  /*margin-inline: auto;*/
+  margin-top: 58px; /*Account for TopBar height. was: 60px*/
+  margin-bottom: 58px; /*Account for BottomNavigation height. was: 60px (opt out on a page level)*/
+  /*inset-inline: 0;*/
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .lc-page-container-inner {
-    max-width: var(--lc-content-max-width);
-    margin-inline: auto;
-    /*inset-inline: 0;*/
+  max-width: var(--lc-content-max-width);
+  margin-inline: auto;
+  /*inset-inline: 0;*/
 }
 /* TODO: page-header.tsx compact scroll strip also uses max-w-317.25 — update manually to var(--lc-content-max-width) */
