@@ -182,7 +182,7 @@ function TopicEntriesPage() {
             topicId={id}
             search={deferredSearch}
             filter={filter}
-            scrollStorageKey={`entryList:${id}`} // TODO: Possibly include seconds/milliseconds to not override anything if the user goes multiple navigation levels deep.
+            scrollStorageKey={`entryList:${id}`}
             topUIScrollOffset={184}
             disableCreate={topicIsArchived}
             restoredScrollTop={restoredScrollTop}
