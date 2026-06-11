@@ -114,7 +114,7 @@ function HomePage() {
             ref={aiPromptTextareaRef}
             placeholder="Type your desired AI prompt here."
             // Adjust default height to full height minus top and bottom bars and content above
-            className="field-sizing-content resize-y min-h-[max(138px,calc(100vh-478px))] /*min-h-34.5*/ /*max-h-300*/ w-[calc(100%-2px)] max-w-313.5 mx-auto scrollbar-thin
+            className="field-sizing-content resize-y min-h-[max(138px,calc(100vh-478px))] /*min-h-34.5*/ /*max-h-300*/ w-[calc(100%-2px)] mx-auto scrollbar-thin
             transition-colors duration-150 focus-visible:ring-0"
             maxLength={1000}
             disabled={!isSupported}

@@ -333,7 +333,7 @@ function EntryDetailPage() {
         )}
 
         {/* Dates */}
-        <div className="flex flex-wrap max-w-lg justify-between gap-x-6 gap-y-1 mt-5 text-xs text-muted-foreground">
+        <div className="flex flex-wrap justify-between gap-x-6 gap-y-1 mt-5 text-xs text-muted-foreground">
           <span>
             <span className="font-medium text-lc-muted-foreground-hover">
               Created

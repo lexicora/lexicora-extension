@@ -235,7 +235,7 @@ function TopicDetailPage() {
         )}
 
         {/* Dates */}
-        <div className="flex flex-wrap max-w-lg justify-between gap-x-6 gap-y-1 mt-5 text-xs text-muted-foreground">
+        <div className="flex flex-wrap justify-between gap-x-6 gap-y-1 mt-5 text-xs text-muted-foreground">
           <span>
             <span className="font-medium text-lc-muted-foreground-hover">
               Created
@@ -377,7 +377,7 @@ function TopicDetailPage() {
       {/* Floating create entry button — hidden for archived topics */}
       {!topic.isArchived && (
         <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20 pointer-events-none">
-          <div className="shrink-0 flex items-center justify-end max-w-169 mx-auto inset-x-0">
+          <div className="shrink-0 flex items-center justify-end max-w-[calc(var(--lc-content-max-width)+0.25rem)] mx-auto inset-x-0">
             <Button
               size="icon"
               title="Create Entry"
