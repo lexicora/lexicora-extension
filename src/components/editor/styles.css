@@ -588,14 +588,12 @@ html:has(
   border-top: 1px solid #5a6270;
 }
 
-@media (min-width: 728px) {
+/* @media (min-width: 728px) {
   .bn-root[data-color-scheme] .bn-editor[contenteditable="true"] {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    padding-inline-start: 50px; /*TODO: Maybe increase to 52px later*/
+    padding-inline-start: 50px;
     padding-inline-end: 50px !important;
   }
-}
+} */
 
 /*TODO: Maybe change colors of links in editor.*/
 

@@ -554,7 +554,7 @@ export function EntryList({
           useWindowScroll
           initialScrollTop={savedScrollTop}
           data={entries}
-          overscan={200} // potentially increase
+          overscan={220} // TODO: potentially increase/decrease (was initially 200)
           itemContent={(_, entry) => (
             <div className="px-1 py-1.5">
               <EntryItem

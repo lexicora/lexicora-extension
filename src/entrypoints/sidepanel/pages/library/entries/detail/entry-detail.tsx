@@ -243,13 +243,10 @@ function EntryDetailPage() {
     );
 
   return (
-    <PageContainer
-      id="lc-entry-detail-page"
-      classNameInner="max-w-[calc(var(--lc-content-max-width)+0.75rem)]!"
-    >
+    <PageContainer id="lc-entry-detail-page">
       <PageHeader
         title="Entry"
-        classNameHeaderElement="max-w-(--lc-content-max-width) mx-auto mb-3"
+        classNameHeaderElement="mb-3"
         goBackButton
         goBackButtonVariant="tinted"
         rightActionButton={editButton}

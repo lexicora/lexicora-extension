@@ -485,7 +485,7 @@ export function TopicList({
           useWindowScroll
           initialScrollTop={savedScrollTop}
           data={topics}
-          overscan={200} // potentially increase
+          overscan={220} // TODO: potentially increase/decrease (was initially 200)
           itemContent={(_, topic) => (
             <div className="px-1 py-1.5">
               <TopicItem topic={topic} topUIScrollOffset={topUIScrollOffset} />

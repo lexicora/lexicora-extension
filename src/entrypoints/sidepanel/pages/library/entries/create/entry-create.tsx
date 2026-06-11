@@ -239,15 +239,10 @@ function EntryCreatePage() {
 
   return (
     //* NOTE: Opt in for now, because of editor styles being changed
-    <PageContainer
-      id="lc-new-entry-page"
-      className="mb-0!"
-      classNameInner="max-w-200!"
-    >
+    <PageContainer id="lc-new-entry-page" className="mb-0!">
       {/*Make the inner container as tall (min-height) as the vh (but not overflowing) to prevent issues with editor*/}
       <PageHeader
         title="New Entry"
-        classNameHeaderElement="max-w-(--lc-content-max-width) mx-auto"
         goBackButton
         goBackButtonVariant="tinted"
         rightActionButton={rightActionButton}
@@ -292,7 +287,7 @@ function EntryCreatePage() {
             </div>
           </section>
         </div>
-        <div className="/*max-w-(--lc-content-max-width)*/ mx-auto w-full">
+        <div className="max-w-(--lc-content-max-width) mx-auto w-full">
           <Label
             htmlFor="lc-blocknote-view-new-entry"
             onClick={() => {
@@ -422,7 +417,7 @@ function EntryCreatePage() {
                 variant="default"
                 disabled={isPromptActive && promptText.trim() === ""}
                 className={cn(
-                  "data-disabled:pointer-events-none transition-all duration-200 h-full rounded-sm overflow-hidden",
+                  "transition-all duration-200 h-full rounded-sm overflow-hidden",
                   isPromptActive ? "w-7.5 px-0" : "w-31",
                   promptText.trim() !== "" && "backdrop-blur-xs",
                 )}
