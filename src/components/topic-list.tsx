@@ -156,7 +156,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
             <ItemTitle className="line-clamp-1 truncate max-w-full">
               {topic.name}
             </ItemTitle>
-            <ItemDescription className="line-clamp-2 mt-px truncate max-w-[min(100%,550px)]">
+            <ItemDescription className="line-clamp-2 mt-px truncate max-w-[min(100%,600px)]">
               {topic.description || <MinusIcon className="inline size-2.5" />}
             </ItemDescription>
           </ItemContent>

@@ -136,6 +136,7 @@ html:has(
   /* pointer-events: none; */
   padding-inline: 8px !important;
   padding-top: 0px;
+  padding-bottom: 2px;
   & .bn-file-block-content-wrapper {
     outline: none;
     cursor: default;
@@ -587,8 +588,8 @@ html:has(
   border-top: 1px solid #5a6270;
 }
 
-@media (min-width: 1280px) {
-  .bn-root[data-color-scheme] .bn-editor {
+@media (min-width: 728px) {
+  .bn-root[data-color-scheme] .bn-editor[contenteditable="true"] {
     padding-top: 8px;
     padding-bottom: 8px;
     padding-inline-start: 50px; /*TODO: Maybe increase to 52px later*/

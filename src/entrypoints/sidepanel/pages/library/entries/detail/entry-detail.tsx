@@ -106,6 +106,7 @@ function EntryDetailPage() {
   }, [entriesCollection, id]);
 
   // Load blocks once — read-only view doesn't need live updates
+  // TODO: Maybe live updates are needed, when the windowed interface is implemented an blocks are updated.
   useEffect(() => {
     if (!blocksCollection || !id) return;
     blocksCollection
@@ -415,7 +416,7 @@ function EntryDetailPage() {
                 className={cn(
                   "ml-auto size-9 rounded-lg not-hover:text-muted-foreground",
                   "hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-950/50 dark:hover:text-blue-400",
-                  "data-open:bg-blue-100 data-open:text-blue-600 dark:data-open:bg-blue-950/50 dark:data-open:text-blue-400",
+                  "data-open:bg-blue-100! data-open:text-blue-600! dark:data-open:bg-blue-950/50 dark:data-open:text-blue-400",
                 )}
               >
                 <EllipsisIcon className="size-4.5" />

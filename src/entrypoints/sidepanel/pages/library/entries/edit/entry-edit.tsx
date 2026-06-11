@@ -193,6 +193,7 @@ function EntryEditContent({
             editor={editor}
             lang={entry.languageCode}
             id="lc-blocknote-view-entry-edit"
+            className="text-left"
           />
         </div>
       </main>

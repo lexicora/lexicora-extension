@@ -239,10 +239,15 @@ function EntryCreatePage() {
 
   return (
     //* NOTE: Opt in for now, because of editor styles being changed
-    <PageContainer id="lc-new-entry-page" className="mb-0! /*pr-3!*/">
+    <PageContainer
+      id="lc-new-entry-page"
+      className="mb-0!"
+      classNameInner="max-w-200!"
+    >
       {/*Make the inner container as tall (min-height) as the vh (but not overflowing) to prevent issues with editor*/}
       <PageHeader
         title="New Entry"
+        classNameHeaderElement="max-w-(--lc-content-max-width) mx-auto"
         goBackButton
         goBackButtonVariant="tinted"
         rightActionButton={rightActionButton}
@@ -284,19 +289,19 @@ function EntryCreatePage() {
                 isLoading={isSaving}
                 onDirtyChange={setFormIsDirty}
               />
-              <Label
-                htmlFor="lc-blocknote-view-new-entry"
-                onClick={() => {
-                  editor.focus();
-                }}
-                className="text-sm ml-1 mb-1 mt-0"
-              >
-                Content
-              </Label>
             </div>
           </section>
         </div>
-        <div className="max-w-(--lc-content-max-width) px-px mx-auto w-full">
+        <div className="/*max-w-(--lc-content-max-width)*/ mx-auto w-full">
+          <Label
+            htmlFor="lc-blocknote-view-new-entry"
+            onClick={() => {
+              editor.focus();
+            }}
+            className="text-sm ml-1.75 mb-1 mt-0"
+          >
+            Content
+          </Label>
           <div className="relative">
             {/*Unused css classes for div className="relative overflow-x-hidden min-h-[55vh] mt-1" */}
             {/* --- SKELETON LOADER OVERLAY (update to shadcn-ui component later)--- */}
@@ -322,7 +327,8 @@ function EntryCreatePage() {
                 editor={editor}
                 lang={language}
                 id="lc-blocknote-view-new-entry"
-                //className=""
+                className="text-left"
+                // TODO: Make prop to control min height of editor.
                 //editable={false}
               />
             </div>
@@ -344,7 +350,7 @@ function EntryCreatePage() {
           <div
             className={cn(
               "pb-[0.08rem] px-px mx-auto inset-x-0 relative flex items-end transition-all duration-150",
-              isPromptActive ? "max-w-148" : "max-w-lg",
+              isPromptActive ? "max-w-150" : "max-w-130",
             )}
           >
             <Textarea

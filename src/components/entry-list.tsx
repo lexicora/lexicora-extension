@@ -153,7 +153,7 @@ export function EntryItem({
             <ItemTitle className="line-clamp-1 truncate max-w-full">
               {entry.title}
             </ItemTitle>
-            <ItemDescription className="line-clamp-2 mt-px truncate max-w-[min(100%,550px)]">
+            <ItemDescription className="line-clamp-2 mt-px truncate max-w-[min(100%,600px)]">
               {entry.description || <MinusIcon className="inline size-2.5" />}
             </ItemDescription>
           </ItemContent>
