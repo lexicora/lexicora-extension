@@ -39,7 +39,7 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
         all: initial;
         /*display: block;*/
         font-size: 16px;
-        /* DEFAULT (DARK MODE) - Matches .dark in global.css */
+        /* DEFAULT (DARK MODE) - Matches .dark in globals.css */
         --lexicora-fg: #ffffff;
         --lexicora-bg: oklch(0.19 0.034 264.665); /*was:(0.21) oklch(0.1296 0.0274 261.69)*/
         --lexicora-border: oklch(1 0 0 / 0.15);
@@ -52,7 +52,7 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
         --lexicora-font-sans: "Wix Madefor Text", system-ui, "Segoe UI", -apple-system, Avenir, Helvetica, Arial, sans-serif;
       }
 
-      /* LIGHT MODE OVERRIDES - Matches :root in global.css */
+      /* LIGHT MODE OVERRIDES - Matches :root in globals.css */
       @media (prefers-color-scheme: light) {
         :host {
           --lexicora-fg: #00143d;
