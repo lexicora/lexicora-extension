@@ -46,7 +46,8 @@ export function TopBar() {
         { "shadow-md/4 dark:shadow-md/26": !isAtTop },
       )}
     >
-      <div className="flex gap-0 items-center justify-between w-full max-w-317 mx-auto inset-x-0">
+      {/* was: max-w-[calc(var(--lc-content-max-width)+1rem)] */}
+      <div className="flex gap-0 items-center justify-between w-full max-w-(--lc-content-max-width) mx-auto inset-x-0">
         <div className="flex justify-start flex-1">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

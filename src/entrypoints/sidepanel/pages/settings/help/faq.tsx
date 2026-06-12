@@ -81,7 +81,7 @@ function FaqPage() {
   return (
     <PageContainer>
       <PageHeader title="FAQ" goBackButton />
-      <main className="flex flex-col gap-3.5 w-full pt-4.5 px-1.25 mb-2">
+      <main className="flex flex-col gap-3.5 w-full pt-4.5 px-1 mb-1.75">
         {FAQ_ITEMS.map((item) => (
           <FaqItem
             key={item.question}

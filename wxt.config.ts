@@ -39,6 +39,7 @@ export default defineConfig({
         "scripting",
         "contextMenus",
         "clipboardRead",
+        "clipboardWrite",
         "sidePanel",
       ],
       //host_permissions: ["<all_urls>"], //* NOTE: Not needed, activeTab should be enough

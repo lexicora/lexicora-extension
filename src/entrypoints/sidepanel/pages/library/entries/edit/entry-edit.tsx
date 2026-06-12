@@ -153,44 +153,49 @@ function EntryEditContent({
         heavyTeardown={true}
       />
       <main>
-        <section className="mx-px">
-          <div className="text-start">
-            <EntryForm
-              id={formId}
-              topics={topics}
-              onFormReady={(api) => {
-                formApiRef.current = api;
-              }}
-              overrideExisting={true}
-              initialData={{
-                title: entry.title,
-                topicId: entry.topicId,
-                description: entry.description || "",
-                tags: entry.tags,
-                faviconUrl: entry.faviconUrl || "",
-                url: entry.url,
-                siteName: entry.siteName || "",
-                languageCode: entry.languageCode,
-                isFavorite: entry.isFavorite,
-              }}
-              onSubmit={handleSubmit}
-              isLoading={isSaving}
-              onDirtyChange={setFormIsDirty}
-            />
-            <Label
-              htmlFor="lc-blocknote-view-entry-edit"
-              onClick={() => editor.focus()}
-              className="text-sm ml-1 mb-1 mt-0"
-            >
-              Content
-            </Label>
-            <BlockNoteView
-              editor={editor}
-              lang={entry.languageCode}
-              id="lc-blocknote-view-entry-edit"
-            />
-          </div>
-        </section>
+        <div className="max-w-(--lc-content-max-width) mx-auto w-full px-0.5">
+          <section className="mx-px">
+            <div className="text-start">
+              <EntryForm
+                id={formId}
+                topics={topics}
+                onFormReady={(api) => {
+                  formApiRef.current = api;
+                }}
+                overrideExisting={true}
+                initialData={{
+                  title: entry.title,
+                  topicId: entry.topicId,
+                  description: entry.description || "",
+                  tags: entry.tags,
+                  faviconUrl: entry.faviconUrl || "",
+                  url: entry.url,
+                  siteName: entry.siteName || "",
+                  languageCode: entry.languageCode,
+                  isFavorite: entry.isFavorite,
+                }}
+                onSubmit={handleSubmit}
+                isLoading={isSaving}
+                onDirtyChange={setFormIsDirty}
+              />
+              <Label
+                htmlFor="lc-blocknote-view-entry-edit"
+                onClick={() => editor.focus()}
+                className="text-sm ml-1 mb-1 mt-0"
+              >
+                Content
+              </Label>
+            </div>
+          </section>
+        </div>
+        <div className="max-w-(--lc-content-max-width) /*px-px*/ mx-auto w-full">
+          <BlockNoteView
+            editor={editor}
+            lang={entry.languageCode}
+            id="lc-blocknote-view-entry-edit"
+            className="text-left"
+          />
+        </div>
       </main>
       <AlertDialog open={blocker.state === "blocked"}>
         <AlertDialogContent
@@ -426,7 +431,12 @@ function EntryEditPage() {
           className="fixed bottom-0 left-0 min-h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-30
                 lc-bottom-bar-styled-bg"
         >
-          <div className="pb-[0.08rem] px-px max-w-200 mx-auto inset-x-0 relative flex items-end">
+          <div
+            className={cn(
+              "pb-[0.08rem] px-px max-w-200 mx-auto inset-x-0 relative flex items-end transition-all duration-150",
+              isPromptActive ? "max-w-150" : "max-w-130",
+            )}
+          >
             <Textarea
               id="ai-prompt-textarea-edit"
               ref={aiPromptTextareaRef}
@@ -483,12 +493,16 @@ function EntryEditPage() {
                 "transition-all duration-150 z-10",
                 "absolute right-0 flex items-center",
                 isPromptActive ? "mr-2.25 mb-2 h-7.5" : "mb-1.25 mr-1.5 h-9",
+                isPromptActive &&
+                  promptText.trim() === "" &&
+                  "pointer-events-none",
               )}
             >
               <Button
                 title="Refine Entry with AI"
                 size="default"
                 variant="default"
+                disabled={isPromptActive && promptText.trim() === ""}
                 className={cn(
                   "transition-all duration-200 h-full rounded-sm overflow-hidden",
                   isPromptActive ? "w-7.5 px-0" : "w-31",

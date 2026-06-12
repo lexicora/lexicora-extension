@@ -19,14 +19,29 @@ import {
   XIcon,
 } from "lucide-react";
 import { useDeferredValue, useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import {
+  useNavigate,
+  useNavigationType,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
 
 function TopicEntriesPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const navigationType = useNavigationType();
   const [searchParams, setSearchParams] = useSearchParams();
   const topicsCollection = useRxCollection("topics");
+
+  // Capture scroll position NOW, during render, before any useEffect (e.g. setSearchParams
+  // with { replace: true }) fires and changes navigationType from "POP" to "REPLACE".
+  // By the time EntryList mounts (after the async filterReady gate), navigationType would
+  // already be "REPLACE", causing EntryList's internal check to miss the saved position.
+  const [restoredScrollTop] = useState<number | undefined>(() => {
+    if (navigationType !== "POP") return undefined;
+    return parseInt(sessionStorage.getItem(`entryList:${id ?? ""}`) || "0", 10);
+  });
 
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const deferredSearch = useDeferredValue(search);
@@ -104,11 +119,11 @@ function TopicEntriesPage() {
     <PageContainer id="lc-topic-entries-page">
       <PageHeader
         title="Entries"
+        classNameHeaderElement="mb-2.5"
         goBackButton
         goBackButtonTitle="Back to Topic"
       />
-
-      <div className="flex items-center gap-1.75 px-1.25 pt-0.5 pb-1.5 dark:scheme-dark">
+      <div className="flex items-center gap-1.75 px-1 pt-0.5 pb-1.5 dark:scheme-dark">
         <div className="flex-1">
           <Field orientation="horizontal">
             <InputGroup>
@@ -162,14 +177,15 @@ function TopicEntriesPage() {
       </div>
 
       {filterReady && (
-        <main className="mb-1.25 mt-px">
+        <main className="mb-0.75 mt-px">
           <EntryList
             topicId={id}
             search={deferredSearch}
             filter={filter}
             scrollStorageKey={`entryList:${id}`}
-            topUIScrollOffset={190}
+            topUIScrollOffset={185}
             disableCreate={topicIsArchived}
+            restoredScrollTop={restoredScrollTop}
           />
         </main>
       )}
@@ -177,18 +193,12 @@ function TopicEntriesPage() {
       {/* Floating create entry button — hidden for archived topics */}
       {!topicIsArchived && (
         <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20 pointer-events-none">
-          <div className="shrink-0 flex items-center justify-end max-w-315 mx-auto inset-x-0">
+          <div className="shrink-0 flex items-center justify-end max-w-[calc(var(--lc-content-max-width)+0.25rem)] mx-auto inset-x-0">
             <Button
               size="icon"
               title="Create Entry"
               draggable={false}
-              className={cn(
-                "pointer-events-auto",
-                "text-lc-light-foreground bg-green-500 hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800",
-                "ring-1 ring-inset ring-black/20 dark:ring-white/30 hover:ring-black/25 dark:hover:ring-white/25",
-                "size-9 rounded-[12px] shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)]",
-                "focus-visible:ring-offset-1",
-              )}
+              className="pointer-events-auto button-create"
               onClick={() =>
                 navigate(
                   `/library/entries/new?topicId=${encodeURIComponent(id ?? "")}`,

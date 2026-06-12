@@ -106,6 +106,7 @@ function EntryDetailPage() {
   }, [entriesCollection, id]);
 
   // Load blocks once — read-only view doesn't need live updates
+  // TODO: Maybe live updates are needed, when the windowed interface is implemented an blocks are updated.
   useEffect(() => {
     if (!blocksCollection || !id) return;
     blocksCollection
@@ -252,7 +253,7 @@ function EntryDetailPage() {
         heavyTeardown
       />
 
-      <section className="px-1 mx-auto w-full text-left select-text">
+      <section className="px-1 mx-auto w-full max-w-(--lc-content-max-width) text-left select-text">
         {/* Title */}
         <h1 className="text-2xl font-semibold leading-tight wrap-break-word text-pretty">
           {entry.title}
@@ -333,7 +334,7 @@ function EntryDetailPage() {
         )}
 
         {/* Dates */}
-        <div className="flex flex-wrap max-w-lg justify-between gap-x-6 gap-y-1 mt-5 text-xs text-muted-foreground">
+        <div className="flex flex-wrap justify-between gap-x-6 gap-y-1 mt-5 text-xs text-muted-foreground">
           <span>
             <span className="font-medium text-lc-muted-foreground-hover">
               Created
@@ -415,7 +416,7 @@ function EntryDetailPage() {
                 className={cn(
                   "ml-auto size-9 rounded-lg not-hover:text-muted-foreground",
                   "hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-950/50 dark:hover:text-blue-400",
-                  "data-open:bg-blue-100 data-open:text-blue-600 dark:data-open:bg-blue-950/50 dark:data-open:text-blue-400",
+                  "aria-expanded:bg-blue-100 aria-expanded:text-blue-600 dark:aria-expanded:bg-blue-950/50 dark:aria-expanded:text-blue-400",
                 )}
               >
                 <EllipsisIcon className="size-4.5" />
@@ -470,7 +471,7 @@ function EntryDetailPage() {
 
       {/* Rich content */}
       {blocks !== null && (
-        <section className="mx-auto w-full mt-2 mb-2">
+        <section className="mx-auto w-full /*max-w-[calc(var(--lc-content-max-width)+0.25rem)]*/ mt-2 mb-2">
           {/* <Separator className="mx-auto max-w-[calc(100%-8px)] mb-5 opacity-60" /> */}
           {hasContent ? (
             <EntryContentViewer

@@ -114,7 +114,7 @@ function HomePage() {
             ref={aiPromptTextareaRef}
             placeholder="Type your desired AI prompt here."
             // Adjust default height to full height minus top and bottom bars and content above
-            className="field-sizing-content resize-y min-h-[max(138px,calc(100vh-478px))] /*min-h-34.5*/ /*max-h-300*/ w-[calc(100%-2px)] max-w-313.5 mx-auto scrollbar-thin
+            className="field-sizing-content resize-y min-h-[max(138px,calc(100vh-478px))] /*min-h-34.5*/ /*max-h-300*/ w-[calc(100%-2px)] mx-auto scrollbar-thin
             transition-colors duration-150 focus-visible:ring-0"
             maxLength={1000}
             disabled={!isSupported}
@@ -148,7 +148,7 @@ function HomePage() {
       <footer className={styles.bottomFooter}>
         <section className="fixed bottom-14.75 left-0 h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-10 lc-bottom-bar-styled-bg">
           {/*MAYBE: Remove the animation disabling motion-reduce, because it is a very noticeable and maybe not optimal for accessibility*/}
-          <div className="flex gap-0 items-center justify-between w-full max-w-314 mx-auto inset-x-0">
+          <div className="flex gap-0 items-center justify-between w-full max-w-(--lc-content-max-width) mx-auto inset-x-0">
             <div
               className={`flex justify-start transition-all motion-reduce:transition-none duration-300 ease-in-out /*overflow-visible*/ ${
                 promptText.trimEnd() === ""

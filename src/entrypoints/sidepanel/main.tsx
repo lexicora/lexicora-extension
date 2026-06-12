@@ -14,7 +14,7 @@ import "@fontsource/wix-madefor-text/800-italic.css";
 //import "@fontsource/jetbrains-mono/200.css";
 import "@fontsource/jetbrains-mono/300.css";
 import "@fontsource/jetbrains-mono/400.css";
-import "../../assets/styles/global.css";
+import "../../assets/styles/globals.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

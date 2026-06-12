@@ -69,7 +69,7 @@
     "Liberation Mono", "Courier New", monospace;
 
   /* Colors: */
-  --lc-text-color-monospace: oklch(54.19% 0.152 23.67);
+  --lc-text-color-monospace: oklch(50.153% 0.19988 28.587);
   --lc-muted-foreground-hover: oklch(0.34 0.027 263);
   --lc-light-foreground-color: oklch(0.985 0.002 247.839);
   --lc-logo-foreground: #00143d; /*Similar to tw gray 900 or 950, maybe change hsl or oklch*/

@@ -158,7 +158,7 @@ export function PageHeader({
           <div
             //className="flex mt-1.25 w-full max-w-317.25 relative"
             className={cn(
-              "flex mt-1.25 w-full max-w-317.25 mr-(--lc-scrollbar-offset)",
+              "flex mt-1.25 w-full /*max-w-317.25*/ max-w-[calc(var(--lc-content-max-width)+0.8125rem)] mr-(--lc-scrollbar-offset)",
               rightActionButton ? "justify-between" : "justify-start",
             )}
           >
@@ -180,9 +180,9 @@ export function PageHeader({
               <ArrowLeftIcon className="size-4.5" />
             </Button>
             <span
-              // was 25px, now 1.5625em
+              // was 25px, now 1.5625em, max-w-298.5
               className={cn(
-                "flex-1 mt-0.5 w-full max-w-298.5 text-base font-semibold transition-transform-opacity-blur duration-300 active-view-transition:transition-none text-center",
+                "flex-1 mt-0.5 w-full /*max-w-298.5*/ max-w-[calc(var(--lc-content-max-width)-3.875rem)] text-base font-semibold transition-transform-opacity-blur duration-300 active-view-transition:transition-none text-center",
                 !rightActionButton &&
                   "mr-[calc(var(--lc-scrollbar-offset)+2.0625em)]",
                 isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,

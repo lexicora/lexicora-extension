@@ -153,7 +153,7 @@ export function EntryItem({
             <ItemTitle className="line-clamp-1 truncate max-w-full">
               {entry.title}
             </ItemTitle>
-            <ItemDescription className="line-clamp-2 mt-px truncate max-w-[min(100%,550px)]">
+            <ItemDescription className="line-clamp-2 mt-px truncate max-w-[min(100%,600px)]">
               {entry.description || <MinusIcon className="inline size-2.5" />}
             </ItemDescription>
           </ItemContent>
@@ -371,6 +371,9 @@ interface EntryListProps {
   scrollStorageKey?: string;
   // When true, hides the "Create Entry" buttons in empty-state UI.
   disableCreate?: boolean;
+  // Pre-computed scroll position to restore. Pass when the parent captures the
+  // position during render before any effects can change the navigation type.
+  restoredScrollTop?: number;
 }
 
 export function EntryList({
@@ -380,6 +383,7 @@ export function EntryList({
   topUIScrollOffset,
   scrollStorageKey = "entryListScrollTop",
   disableCreate = false,
+  restoredScrollTop: restoredScrollTopProp,
 }: EntryListProps) {
   const [entries, setEntries] = useState<EntryDocType[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -391,11 +395,14 @@ export function EntryList({
   const onlyFavorites = filter?.onlyFavorites ?? false;
   const onlyArchived = filter?.onlyArchived ?? false;
 
-  // On POP, restore the scroll position (plain number, no JSON overhead)
+  // On POP, restore the scroll position (plain number, no JSON overhead).
+  // When the parent pre-computes the value (restoredScrollTopProp), use it directly —
+  // the parent captures it before any useEffect can change navigationType.
   const savedScrollTop = useMemo(() => {
+    if (restoredScrollTopProp !== undefined) return restoredScrollTopProp;
     if (navigationType !== "POP") return 0;
     return parseInt(sessionStorage.getItem(scrollStorageKey) || "0", 10);
-  }, [navigationType, scrollStorageKey]);
+  }, [navigationType, scrollStorageKey, restoredScrollTopProp]);
 
   // If we arrived here via standard navigation (not back/POP), reset the Virtuoso state
   useEffect(() => {
@@ -475,7 +482,7 @@ export function EntryList({
   // TODO: For wider screens or the windowed app, maybe add a two column layout.
   return (
     <>
-      <div className="flex items-center gap-2.5 w-full px-1.75 pb-0.5">
+      <div className="flex items-center gap-2.5 w-full px-1.5 pb-0.75">
         <Separator className="flex-1" />
         <span className="text-xs text-muted-foreground font-medium tracking-widest">
           <FilesIcon className="size-3.5 inline -mt-0.5" /> {entries.length}
@@ -547,9 +554,9 @@ export function EntryList({
           useWindowScroll
           initialScrollTop={savedScrollTop}
           data={entries}
-          overscan={200} // potentially increase
+          overscan={220} // TODO: potentially increase/decrease (was initially 200)
           itemContent={(_, entry) => (
-            <div className="px-1 py-1.5">
+            <div className="px-0.75 py-1.25">
               <EntryItem
                 entry={entry}
                 topUIScrollOffset={topUIScrollOffset}

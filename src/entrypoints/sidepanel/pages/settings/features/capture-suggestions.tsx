@@ -29,7 +29,7 @@ function CaptureSuggestionsSettingsPage() {
   return (
     <PageContainer>
       <PageHeader title="Capture Suggestions" goBackButton />
-      <main className="flex flex-col gap-6.5 w-full pt-4.5 px-1.25 mb-1">
+      <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-1">
         <section>
           <Item
             variant="muted"
