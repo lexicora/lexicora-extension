@@ -344,9 +344,9 @@ function TopicDetailPage() {
 
       {/* Favorite entries preview */}
       {favoriteEntries.length > 0 && (
-        <section className="px-1 mx-auto w-full max-w-(--lc-content-max-width) mt-2 mb-2.25">
+        <section className="px-0.75 mx-auto w-full max-w-(--lc-content-max-width) mt-2 mb-1.5">
           <Separator className="mx-auto max-w-[calc(100%-8px)] mt-0 mb-3 opacity-60" />
-          <div className="flex items-center gap-1.5 mb-2 px-1.25">
+          <div className="flex items-center gap-1.5 mb-2.5 px-1.5">
             <StarIcon className="size-3.5 text-muted-foreground" />
             <span className="text-xs font-medium text-muted-foreground tracking-wide">
               Favorites
@@ -366,7 +366,7 @@ function TopicDetailPage() {
               <ChevronRightIcon className="size-3.5 shrink-0 opacity-70" />
             </button>
           </div>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2.5">
             {favoriteEntries.map((entry) => (
               <EntryItem key={entry.id} entry={entry} disableScrollRestore />
             ))}

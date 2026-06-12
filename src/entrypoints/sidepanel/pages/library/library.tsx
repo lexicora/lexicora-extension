@@ -126,10 +126,10 @@ function LibraryPage() {
   };
 
   return (
-    <PageContainer className="pb-2.25!">
+    <PageContainer className="pb-1.75!">
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <PageHeader title="Library" classNameHeaderElement="mb-0">
-          <div className="mt-4 mx-1.25">
+          <div className="mt-4 mx-1">
             <div id="search" className="dark:scheme-dark">
               <Field orientation="horizontal">
                 <InputGroup>
@@ -237,7 +237,7 @@ function LibraryPage() {
             <EntryList
               search={deferredSearch}
               filter={filter}
-              topUIScrollOffset={233}
+              topUIScrollOffset={234}
             />
           </main>
         </TabsContent>
@@ -246,7 +246,7 @@ function LibraryPage() {
             <TopicList
               search={deferredSearch}
               filter={filter}
-              topUIScrollOffset={233}
+              topUIScrollOffset={234}
             />
           </main>
         </TabsContent>

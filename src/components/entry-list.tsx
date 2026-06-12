@@ -482,7 +482,7 @@ export function EntryList({
   // TODO: For wider screens or the windowed app, maybe add a two column layout.
   return (
     <>
-      <div className="flex items-center gap-2.5 w-full px-1.75 pb-0.5">
+      <div className="flex items-center gap-2.5 w-full px-1.5 pb-0.75">
         <Separator className="flex-1" />
         <span className="text-xs text-muted-foreground font-medium tracking-widest">
           <FilesIcon className="size-3.5 inline -mt-0.5" /> {entries.length}
@@ -556,7 +556,7 @@ export function EntryList({
           data={entries}
           overscan={220} // TODO: potentially increase/decrease (was initially 200)
           itemContent={(_, entry) => (
-            <div className="px-1 py-1.5">
+            <div className="px-0.75 py-1.25">
               <EntryItem
                 entry={entry}
                 topUIScrollOffset={topUIScrollOffset}

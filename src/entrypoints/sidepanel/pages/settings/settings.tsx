@@ -45,7 +45,7 @@ function SettingsPage() {
   return (
     <PageContainer>
       <PageHeader title="Settings" />
-      <main className="flex flex-col gap-6 w-full px-1.25">
+      <main className="flex flex-col gap-5.75 w-full px-1">
         <section id="account-settings">
           <Label htmlFor="" className="text-sm ml-2 mb-0.5">
             <UserRoundIcon className="size-3.5 text-fuchsia-400" /> Account
@@ -228,7 +228,7 @@ function SettingsPage() {
           />
           {/*TODO: Terms of service Item */}
         </section>
-        <section id="about-license-section" className="mb-2.5">
+        <section id="about-license-section" className="mb-1.75">
           <Label htmlFor="" className="text-sm ml-2 mb-0.5">
             <HeroInformationCircleIcon className="size-3.5 text-teal-400" />{" "}
             About

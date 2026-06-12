@@ -19,7 +19,7 @@ function AboutPage() {
   return (
     <PageContainer>
       <PageHeader title="About" goBackButton />
-      <main className="flex flex-col gap-6 w-full pt-4.5 px-1.25 mb-2">
+      <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-1">
         <section>
           <Item
             variant="muted"

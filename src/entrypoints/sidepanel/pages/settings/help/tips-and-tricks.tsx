@@ -74,7 +74,7 @@ function TipsAndTricksPage() {
   return (
     <PageContainer>
       <PageHeader title="Tips & Tricks" goBackButton />
-      <main className="flex flex-col gap-0 w-full pt-4.5 px-1.25 mb-2">
+      <main className="flex flex-col gap-0 w-full pt-4.5 px-1 mb-1.75">
         <section>
           {TIPS.map((tip, i) => {
             const isFirst = i === 0;

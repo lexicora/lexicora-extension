@@ -423,9 +423,9 @@ export function TopicList({
 
   return (
     <>
-      <div className="flex items-center gap-2.5 w-full px-1.75 pb-0.5">
+      <div className="flex items-center gap-2.5 w-full px-1.5 pb-0.75">
         <Separator className="flex-1" />
-        <span className="text-xs text-muted-foreground font-medium /uppercase tracking-widest">
+        <span className="text-xs text-muted-foreground font-medium tracking-widest">
           <FoldersIcon className="size-3.5 inline -mt-0.5" /> {topics.length}
           {/* {topics.length === 1 ? " item" : " items"} */}
         </span>
@@ -487,7 +487,7 @@ export function TopicList({
           data={topics}
           overscan={220} // TODO: potentially increase/decrease (was initially 200)
           itemContent={(_, topic) => (
-            <div className="px-1 py-1.5">
+            <div className="px-0.75 py-1.25">
               <TopicItem topic={topic} topUIScrollOffset={topUIScrollOffset} />
             </div>
           )}

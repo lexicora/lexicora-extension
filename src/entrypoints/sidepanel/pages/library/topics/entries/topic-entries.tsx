@@ -123,7 +123,7 @@ function TopicEntriesPage() {
         goBackButton
         goBackButtonTitle="Back to Topic"
       />
-      <div className="flex items-center gap-1.75 px-1.25 pt-0.5 pb-1.5 dark:scheme-dark">
+      <div className="flex items-center gap-1.75 px-1 pt-0.5 pb-1.5 dark:scheme-dark">
         <div className="flex-1">
           <Field orientation="horizontal">
             <InputGroup>
@@ -177,13 +177,13 @@ function TopicEntriesPage() {
       </div>
 
       {filterReady && (
-        <main className="mb-1.25 mt-px">
+        <main className="mb-0.75 mt-px">
           <EntryList
             topicId={id}
             search={deferredSearch}
             filter={filter}
             scrollStorageKey={`entryList:${id}`}
-            topUIScrollOffset={184}
+            topUIScrollOffset={185}
             disableCreate={topicIsArchived}
             restoredScrollTop={restoredScrollTop}
           />
