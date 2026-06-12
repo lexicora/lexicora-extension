@@ -258,7 +258,7 @@ function LibraryPage() {
         <footer></footer>
       </Tabs>
       <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] /*WAS:pr-[calc(var(--lc-scrollbar-offset)+7px)]*/ z-20 pointer-events-none">
-        <div className="shrink-0 flex items-center justify-end /max-w-169 max-w-[calc(var(--lc-content-max-width)+0.25rem)] mx-auto inset-x-0">
+        <div className="shrink-0 flex items-center justify-end max-w-[calc(var(--lc-content-max-width)+0.25rem)] mx-auto inset-x-0">
           {/*MAYBE: Make smaller and also maybe a bit darker */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

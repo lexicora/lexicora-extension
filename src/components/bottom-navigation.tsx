@@ -59,7 +59,7 @@ export function BottomNavigation() {
       )}
     >
       <div
-        className="flex items-center justify-between text-center w-full /max-w-172 max-w-[calc(var(--lc-content-max-width)+1rem)] h-full /*max-w-7xl*/ mx-auto inset-x-0"
+        className="flex items-center justify-between text-center w-full max-w-[calc(var(--lc-content-max-width)+1rem)] h-full mx-auto inset-x-0"
         // had classes: lc-bottom-navigation-animate-blur ${isHidden ? "lc-bottom-navigation-animate-blur--hidden" : ""}
       >
         {/*ml-2.5 for the outer most link (left) (change, when four items are present)*/}

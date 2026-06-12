@@ -188,7 +188,7 @@ function EntryEditContent({
             </div>
           </section>
         </div>
-        <div className="max-w-(--lc-content-max-width) mx-auto w-full">
+        <div className="max-w-(--lc-content-max-width) /*px-px*/ mx-auto w-full">
           <BlockNoteView
             editor={editor}
             lang={entry.languageCode}

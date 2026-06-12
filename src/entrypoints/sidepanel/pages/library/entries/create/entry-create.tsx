@@ -287,7 +287,7 @@ function EntryCreatePage() {
             </div>
           </section>
         </div>
-        <div className="max-w-(--lc-content-max-width) mx-auto w-full">
+        <div className="max-w-(--lc-content-max-width) /*px-px*/ mx-auto w-full">
           <Label
             htmlFor="lc-blocknote-view-new-entry"
             onClick={() => {
