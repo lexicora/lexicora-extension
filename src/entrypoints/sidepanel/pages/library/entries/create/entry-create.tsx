@@ -55,7 +55,16 @@ function EntryCreatePage() {
   const [formIsDirty, setFormIsDirty] = useState(false);
   const [topics, setTopics] = useState<TopicDocType[]>([]);
 
-  const blocker = useBlocker(formIsDirty && !isSaving);
+  const [editorIsDirty, setEditorIsDirty] = useState(false);
+  const initialDocJsonRef = useRef(JSON.stringify(editor.document));
+  // Exclude same-pathname navigations (e.g. the router-state cleanup after capture) from the blocker
+  const blocker = useBlocker(({ currentLocation, nextLocation }) => {
+    return (
+      (formIsDirty || editorIsDirty) &&
+      !isSaving &&
+      nextLocation.pathname !== currentLocation.pathname
+    );
+  });
   const topicsCollection = useRxCollection("topics");
   const db = useRxDatabase();
 
@@ -80,6 +89,14 @@ function EntryCreatePage() {
     type: "submit" as const,
     form: "entry-create-form",
   };
+
+  useEffect(() => {
+    return editor.onChange(() => {
+      setEditorIsDirty(
+        JSON.stringify(editor.document) !== initialDocJsonRef.current,
+      );
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!topicsCollection) return;
