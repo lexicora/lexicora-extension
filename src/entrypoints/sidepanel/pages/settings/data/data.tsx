@@ -135,7 +135,7 @@ function DataSettingsPage() {
                 </ItemContent>
               </button>
             </Item>
-            <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-1">
+            <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
               Download all your topics, entries, and notes as a JSON file.
             </p>
           </article>
@@ -182,7 +182,7 @@ function DataSettingsPage() {
                 </ItemDescription>*/}
               </ItemContent>
             </Item>
-            <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-1">
+            <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
               To clear all data, remove and reinstall the extension. This
               feature will be re-enabled in a future update.
             </p>

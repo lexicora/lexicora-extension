@@ -87,7 +87,7 @@ function ThemePersonalizationSettingsPage() {
               </ItemActions>
             </Item>
           </RadioGroup>
-          <p className="mt-2 text-muted-foreground">
+          <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
             Customize the theme of the extension.
           </p>
         </section>

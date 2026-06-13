@@ -105,7 +105,7 @@ function AboutPage() {
               <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
             </Link>
           </Item>
-          <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-1">
+          <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
             Libraries and tools that make Lexicora possible.
           </p>
         </section>
