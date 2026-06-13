@@ -149,7 +149,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
         <div className="flex w-full justify-between items-start gap-3.5">
           <ItemContent
             className={cn(
-              "flex-3 flex-col justify-between items-start gap-2 max-w-[calc(100%-100px)]",
+              "flex-1 min-w-0 flex-col justify-between items-start gap-2",
               !topic.tags?.length && "gap-2.25",
             )}
           >
@@ -162,7 +162,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
           </ItemContent>
           <ItemContent
             className={cn(
-              "flex-1 flex-col justify-between items-end gap-3.25 mt-0.5",
+              "flex-none flex-col justify-between items-end gap-3.25 mt-0.5",
               !topic.tags?.length && "gap-3.75",
             )}
           >
