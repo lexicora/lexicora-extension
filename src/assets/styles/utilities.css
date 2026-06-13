@@ -11,12 +11,6 @@
   display: none;
 }
 
-/* Can be removed, tailwind now supports this natively*/
-.scrollbar-thin {
-  scrollbar-width: thin;
-  /*scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);*/
-}
-
 /*Has default specified scrollbar foreground colors*/
 .scrollbar-bg-transparent {
   scrollbar-color: #b2b2b2 transparent; /*was: light-dark(#b2b2b2, #646464)*/
