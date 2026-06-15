@@ -20,7 +20,11 @@ function ThemePersonalizationSettingsPage() {
       <PageHeader title="Theme" goBackButton />
       <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1">
         <section>
-          <RadioGroup value={theme} defaultValue="system" className="gap-0">
+          <RadioGroup
+            value={theme}
+            defaultValue="system"
+            className="gap-0 not-dark:shadow-xs rounded-2xl"
+          >
             <Item
               variant="muted"
               size="sm"
@@ -38,7 +42,7 @@ function ThemePersonalizationSettingsPage() {
               <ItemActions>
                 <RadioGroupItem
                   value="system"
-                  className="not-dark:bg-gray-300 not-dark:border-gray-400"
+                  className="not-dark:bg-gray-200 not-dark:border-gray-400/50"
                 />
               </ItemActions>
             </Item>
@@ -60,7 +64,7 @@ function ThemePersonalizationSettingsPage() {
               <ItemActions>
                 <RadioGroupItem
                   value="dark"
-                  className="not-dark:bg-gray-300 not-dark:border-gray-400"
+                  className="not-dark:bg-gray-200 not-dark:border-gray-400/50"
                 />
               </ItemActions>
             </Item>
@@ -82,7 +86,7 @@ function ThemePersonalizationSettingsPage() {
               <ItemActions>
                 <RadioGroupItem
                   value="light"
-                  className="not-dark:bg-gray-300 not-dark:border-gray-400"
+                  className="not-dark:bg-gray-200 not-dark:border-gray-400/50"
                 />
               </ItemActions>
             </Item>

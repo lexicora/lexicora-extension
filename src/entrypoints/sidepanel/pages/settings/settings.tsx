@@ -53,7 +53,7 @@ function SettingsPage() {
           <Item
             variant="muted"
             size="default"
-            className="group transition-colors duration-150 bg-card hover:bg-card-hover! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl /*rounded-b-none*/"
+            className="group transition-colors duration-150 bg-card hover:bg-card-hover! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl /*rounded-b-none*/ not-dark:shadow-xs"
             asChild
           >
             <Link to="/settings/account" draggable={false} viewTransition>
@@ -95,137 +95,141 @@ function SettingsPage() {
           <Label htmlFor="" className="text-sm ml-2 mb-0.5">
             <Settings2Icon className="size-3.5 text-cyan-400" /> Features
           </Label>
-          <SettingsItem
-            to="/settings/ai"
-            size="sm"
-            MediaIcon={SparklesIcon}
-            mediaIconColor="text-purple-500"
-            itemTitle="AI Settings"
-            roundingClass="rounded-b-none"
-          />
-          {import.meta.env.FIREFOX ? (
+          <div className="rounded-2xl not-dark:shadow-xs">
             <SettingsItem
-              to="/not-supported"
+              to="/settings/ai"
               size="sm"
-              MediaIcon={CameraIcon}
-              mediaIconColor="text-red-500"
-              itemTitle="Capture Suggestions"
-              roundingClass="rounded-t-none"
-              disabled
-              disabledReason="Not supported in Firefox based browsers"
+              MediaIcon={SparklesIcon}
+              mediaIconColor="text-purple-500"
+              itemTitle="AI Settings"
+              roundingClass="rounded-b-none"
             />
-          ) : (
-            <SettingsItem
-              to="/settings/capture-suggestions"
-              size="sm"
-              MediaIcon={CameraIcon}
-              mediaIconColor="text-red-500"
-              itemTitle="Capture Suggestions"
-              roundingClass="rounded-t-none"
-            />
-            //Add reminder feature, that reminds the user if he already has an entry with the same URL of the current page.
-          )}
+            {import.meta.env.FIREFOX ? (
+              <SettingsItem
+                to="/not-supported"
+                size="sm"
+                MediaIcon={CameraIcon}
+                mediaIconColor="text-red-500"
+                itemTitle="Capture Suggestions"
+                roundingClass="rounded-t-none"
+                disabled
+                disabledReason="Not supported in Firefox based browsers"
+              />
+            ) : (
+              <SettingsItem
+                to="/settings/capture-suggestions"
+                size="sm"
+                MediaIcon={CameraIcon}
+                mediaIconColor="text-red-500"
+                itemTitle="Capture Suggestions"
+                roundingClass="rounded-t-none"
+              />
+              //Add reminder feature, that reminds the user if he already has an entry with the same URL of the current page.
+            )}
+          </div>
         </section>
         <section id="personalization-settings">
           <Label htmlFor="" className="text-sm ml-2 mb-0.5">
             <PaletteIcon className="size-3.5 text-blue-400" /> Personalization
           </Label>
-          <SettingsItem
-            to="/settings/personalization/theme"
-            size="sm"
-            MediaIcon={SunMoonIcon}
-            mediaIconColor="text-amber-500"
-            itemTitle="Theme"
-            roundingClass=""
-          />
-          {/*TODO: Maybe add option to style primary color. */}
-          {/*<div className="flex flex-row">
-            <div className="shrink-0 w-10.5 h-0 border-t border-t-slate-200/75  dark:border-t-muted/50"></div>
-            <div className="flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-slate-300/75 dark:border-t-muted"></div>
-            <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
-          </div>*/}
+          <div className="rounded-2xl not-dark:shadow-xs">
+            <SettingsItem
+              to="/settings/personalization/theme"
+              size="sm"
+              MediaIcon={SunMoonIcon}
+              mediaIconColor="text-amber-500"
+              itemTitle="Theme"
+              roundingClass=""
+            />
+          </div>
         </section>
         <section id="data-settings">
           <Label htmlFor="" className="text-sm ml-2 mb-0.5">
             <DatabaseIcon className="size-3.5 text-emerald-400" /> Data
           </Label>
-          <SettingsItem
-            to="/settings/data"
-            size="sm"
-            MediaIcon={DatabaseIcon}
-            mediaIconColor="text-emerald-500"
-            itemTitle="Data Management"
-            roundingClass=""
-          />
+          <div className="rounded-2xl not-dark:shadow-xs">
+            <SettingsItem
+              to="/settings/data"
+              size="sm"
+              MediaIcon={DatabaseIcon}
+              mediaIconColor="text-emerald-500"
+              itemTitle="Data Management"
+              roundingClass=""
+            />
+          </div>
         </section>
         <section id="general-settings">
           <Label htmlFor="" className="text-sm ml-2 mb-0.5">
             <HeroCogIcon className="size-3.5 text-gray-400" /> General
           </Label>
-          {/*MAYBE: Add General page in of itself  */}
-          <SettingsItem
-            to="/settings/general/accessibility"
-            size="sm"
-            MediaIcon={PersonStandingIcon}
-            mediaIconColor="text-teal-500"
-            itemTitle="Accessibility"
-            roundingClass="rounded-b-none"
-          />
-          <SettingsItem
-            to="/settings/general/language"
-            size="sm"
-            MediaIcon={LanguagesIcon}
-            mediaIconColor="text-sky-500"
-            itemTitle="Language"
-            roundingClass="rounded-none!"
-          />
-          <SettingsItem
-            //Maybe make this an external link
-            to="/settings/general/privacy-policy"
-            size="sm"
-            MediaIcon={ShieldCheckIcon}
-            mediaIconColor="text-indigo-500"
-            itemTitle="Privacy policy"
-            roundingClass="rounded-none!"
-          />
-          <SettingsItem
-            to="/settings/general/miscellaneous"
-            size="sm"
-            MediaIcon={EllipsisIcon}
-            mediaIconColor="text-slate-500"
-            itemTitle="Miscellaneous"
-            roundingClass="rounded-t-none"
-          />
+          <div className="rounded-2xl not-dark:shadow-xs">
+            {/*MAYBE: Add General page in of itself  */}
+            <SettingsItem
+              to="/settings/general/accessibility"
+              size="sm"
+              MediaIcon={PersonStandingIcon}
+              mediaIconColor="text-teal-500"
+              itemTitle="Accessibility"
+              roundingClass="rounded-b-none"
+            />
+            <SettingsItem
+              to="/settings/general/language"
+              size="sm"
+              MediaIcon={LanguagesIcon}
+              mediaIconColor="text-sky-500"
+              itemTitle="Language"
+              roundingClass="rounded-none!"
+            />
+            <SettingsItem
+              //Maybe make this an external link
+              to="/settings/general/privacy-policy"
+              size="sm"
+              MediaIcon={ShieldCheckIcon}
+              mediaIconColor="text-indigo-500"
+              itemTitle="Privacy policy"
+              roundingClass="rounded-none!"
+            />
+            <SettingsItem
+              to="/settings/general/miscellaneous"
+              size="sm"
+              MediaIcon={EllipsisIcon}
+              mediaIconColor="text-slate-500"
+              itemTitle="Miscellaneous"
+              roundingClass="rounded-t-none"
+            />
+          </div>
         </section>
         <section id="help-faq-tipsntricks-section">
           <Label htmlFor="" className="text-sm ml-2 mb-0.5">
             <LifeBuoyIcon className="size-3.5 text-pink-400" /> Help
           </Label>
-          <SettingsItem
-            // Maybe drop the /support and just have it link to settings/help
-            to="/settings/help/support"
-            size="sm"
-            MediaIcon={HeartPlusIcon}
-            mediaIconColor="text-rose-500"
-            itemTitle="Support"
-            roundingClass="rounded-b-none"
-          />
-          <SettingsItem
-            to="/settings/help/faq"
-            size="sm"
-            MediaIcon={MessageCircleQuestionMarkIcon}
-            mediaIconColor="text-violet-500"
-            itemTitle="FAQ"
-            roundingClass="rounded-none!"
-          />
-          <SettingsItem
-            to="/settings/help/tips-and-tricks"
-            size="sm"
-            MediaIcon={LightbulbIcon}
-            mediaIconColor="text-yellow-500"
-            itemTitle="Tips & Tricks"
-            roundingClass="rounded-t-none"
-          />
+          <div className="rounded-2xl not-dark:shadow-xs">
+            <SettingsItem
+              // Maybe drop the /support and just have it link to settings/help
+              to="/settings/help/support"
+              size="sm"
+              MediaIcon={HeartPlusIcon}
+              mediaIconColor="text-rose-500"
+              itemTitle="Support"
+              roundingClass="rounded-b-none"
+            />
+            <SettingsItem
+              to="/settings/help/faq"
+              size="sm"
+              MediaIcon={MessageCircleQuestionMarkIcon}
+              mediaIconColor="text-violet-500"
+              itemTitle="FAQ"
+              roundingClass="rounded-none!"
+            />
+            <SettingsItem
+              to="/settings/help/tips-and-tricks"
+              size="sm"
+              MediaIcon={LightbulbIcon}
+              mediaIconColor="text-yellow-500"
+              itemTitle="Tips & Tricks"
+              roundingClass="rounded-t-none"
+            />
+          </div>
           {/*TODO: Terms of service Item */}
         </section>
         <section id="about-license-section" className="mb-1.75">
@@ -233,22 +237,24 @@ function SettingsPage() {
             <HeroInformationCircleIcon className="size-3.5 text-teal-400" />{" "}
             About
           </Label>
-          <SettingsItem
-            to="/settings/about"
-            size="sm"
-            MediaIcon={InfoIcon}
-            mediaIconColor="text-blue-500"
-            itemTitle="About"
-            roundingClass="rounded-b-none"
-          />
-          <SettingsItem
-            to="/settings/about/licenses"
-            size="sm"
-            MediaIcon={FileTextIcon}
-            mediaIconColor="text-emerald-500"
-            itemTitle="Licenses"
-            roundingClass="rounded-t-none"
-          />
+          <div className="rounded-2xl not-dark:shadow-xs">
+            <SettingsItem
+              to="/settings/about"
+              size="sm"
+              MediaIcon={InfoIcon}
+              mediaIconColor="text-blue-500"
+              itemTitle="About"
+              roundingClass="rounded-b-none"
+            />
+            <SettingsItem
+              to="/settings/about/licenses"
+              size="sm"
+              MediaIcon={FileTextIcon}
+              mediaIconColor="text-emerald-500"
+              itemTitle="Licenses"
+              roundingClass="rounded-t-none"
+            />
+          </div>
         </section>
         {/*<SettingsItem
           to="/settings/general/terms-of-service"

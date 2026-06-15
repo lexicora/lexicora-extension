@@ -51,7 +51,11 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <Collapsible open={open} onOpenChange={setOpen}>
+    <Collapsible
+      open={open}
+      onOpenChange={setOpen}
+      className="not-dark:shadow-xs rounded-2xl"
+    >
       <CollapsibleTrigger
         className={cn(
           "w-full text-left flex items-center justify-between gap-2.5 px-3 py-2.5",
@@ -69,7 +73,7 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
         />
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <div className="px-3 pb-3 pt-2.5 text-sm text-muted-foreground bg-slate-100/75 dark:bg-muted/30 rounded-b-2xl leading-relaxed text-pretty">
+        <div className="px-3 pb-3 pt-2.5 text-sm text-muted-foreground bg-slate-50/80 dark:bg-muted/30 rounded-b-2xl leading-relaxed text-pretty">
           {answer}
         </div>
       </CollapsibleContent>
@@ -81,7 +85,7 @@ function FaqPage() {
   return (
     <PageContainer>
       <PageHeader title="FAQ" goBackButton />
-      <main className="flex flex-col gap-3.5 w-full pt-4.5 px-1 mb-1.75">
+      <main className="flex flex-col gap-4 w-full pt-4.5 px-1 mb-1.75">
         {FAQ_ITEMS.map((item) => (
           <FaqItem
             key={item.question}

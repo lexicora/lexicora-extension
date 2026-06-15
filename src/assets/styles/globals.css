@@ -26,20 +26,25 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.955 0.004 264.5); /* slightly above gray-100/200 midpoint */
+  --background: oklch(
+    0.955 0.004 264.5
+  ); /* slightly above gray-100/200 midpoint */
   --foreground: oklch(0.13 0.028 261.692);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.13 0.028 261.692);
   --card-hover: oklch(0.967 0.003 264.542); /* gray-100 */
+  --input-bg: oklch(0.985 0.002 247.839); /* gray-50 — inputs sit between bg and card */
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.13 0.028 261.692);
   --primary: oklch(0.21 0.034 264.665);
   --primary-foreground: oklch(0.985 0.002 247.839);
-  --secondary: oklch(0.928 0.006 264.531); /* gray-200 */
+  --secondary: oklch(
+    0.883 0.009 260
+  ); /* gray-200 shifted -0.045 to match bg delta */
   --secondary-foreground: oklch(0.21 0.034 264.665);
-  --muted: oklch(0.928 0.006 264.531); /* gray-200 */
+  --muted: oklch(0.883 0.009 260); /* same */
   --muted-foreground: oklch(0.551 0.027 264.364);
-  --accent: oklch(0.928 0.006 264.531); /* gray-200 */
+  --accent: oklch(0.883 0.009 260); /* same */
   --accent-foreground: oklch(0.21 0.034 264.665);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
@@ -51,11 +56,15 @@
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.955 0.004 264.5); /* slightly above gray-100/200 midpoint */
+  --sidebar: oklch(
+    0.955 0.004 264.5
+  ); /* slightly above gray-100/200 midpoint */
   --sidebar-foreground: oklch(0.13 0.028 261.692);
   --sidebar-primary: oklch(0.21 0.034 264.665);
   --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-accent: oklch(0.928 0.006 264.531); /* gray-200 */
+  --sidebar-accent: oklch(
+    0.883 0.009 260
+  ); /* gray-200 shifted -0.045 to match bg delta */
   --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
   --sidebar-border: oklch(0.872 0.01 258.338); /* gray-300 */
   --sidebar-ring: oklch(0.707 0.022 261.325);
@@ -90,7 +99,9 @@
   --foreground: oklch(0.985 0.002 247.839);
   --card: oklch(0.21 0.034 264.665);
   --card-foreground: oklch(0.985 0.002 247.839);
-  --card-hover: oklch(0.278 0.033 256.848); /* TODO: Adjust the color value if needed */
+  --card-hover: oklch(
+    0.278 0.033 256.848
+  ); /* TODO: Adjust the color value if needed */
   --popover: oklch(0.21 0.034 264.665);
   --popover-foreground: oklch(0.985 0.002 247.839);
   --primary: oklch(0.928 0.006 264.531);
@@ -133,6 +144,7 @@
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-card-hover: var(--card-hover);
+  --color-input-bg: var(--input-bg);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);

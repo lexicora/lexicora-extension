@@ -31,7 +31,7 @@ function CaptureSuggestionsSettingsPage() {
     <PageContainer>
       <PageHeader title="Capture Suggestions" goBackButton />
       <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-1">
-        <section>
+        <section className="not-dark:shadow-xs rounded-2xl">
           <Item
             variant="muted"
             size="default"
@@ -43,7 +43,7 @@ function CaptureSuggestionsSettingsPage() {
               </ItemMedia>
             </ItemHeader>
             <ItemContent>
-              <ItemDescription className="line-clamp-none /*leading-relaxed*/">
+              <ItemDescription className="text-pretty line-clamp-none /*leading-relaxed*/">
                 Webpage prompts that suggest capturing content after you've
                 spent some time on a site.
                 {/*TODO: Later change when this feature becomes smart with analysis*/}
@@ -84,7 +84,7 @@ function CaptureSuggestionsSettingsPage() {
           <Item
             variant="muted"
             size="xs"
-            className="bg-card dark:bg-muted/50 rounded-2xl py-2.5"
+            className="bg-card dark:bg-muted/50 not-dark:shadow-xs rounded-2xl py-2.5"
           >
             <div className="flex flex-col w-full gap-4">
               <div className="flex justify-between items-center">

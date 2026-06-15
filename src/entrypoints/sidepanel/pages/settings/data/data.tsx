@@ -120,7 +120,7 @@ function DataSettingsPage() {
             <Item
               variant="muted"
               size="sm"
-              className="group transition-colors duration-150 bg-card hover:bg-card-hover! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl hover:cursor-pointer /*bg-clip-padding*/"
+              className="group transition-colors duration-150 bg-card hover:bg-card-hover! dark:bg-muted/50 dark:hover:bg-muted! not-dark:shadow-xs rounded-2xl hover:cursor-pointer /*bg-clip-padding*/"
               asChild
             >
               <button onClick={handleExport}>
@@ -167,7 +167,7 @@ function DataSettingsPage() {
             <Item
               variant="muted"
               size="sm"
-              className="bg-card dark:bg-muted/50 rounded-2xl"
+              className="bg-card dark:bg-muted/50 rounded-2xl not-dark:shadow-xs"
             >
               <ItemMedia variant="icon">
                 <Trash2Icon className="size-5 text-red-500" />

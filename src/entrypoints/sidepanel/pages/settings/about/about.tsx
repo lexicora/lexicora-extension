@@ -24,7 +24,7 @@ function AboutPage() {
           <Item
             variant="muted"
             size="default"
-            className="bg-card dark:bg-muted/50 rounded-2xl flex-col items-center py-6 gap-2 text-center"
+            className="bg-card dark:bg-muted/50 rounded-2xl not-dark:shadow-xs flex-col items-center py-6 gap-2 text-center"
           >
             <span className="flex justify-center gap-1.5 items-baseline mb-3">
               {/*Maybe add link to lexicora.com */}
@@ -52,7 +52,7 @@ function AboutPage() {
           </Item>
         </section>
 
-        <section>
+        <section className="not-dark:shadow-xs rounded-2xl">
           <Item
             variant="muted"
             size="sm"
@@ -88,7 +88,7 @@ function AboutPage() {
           <Item
             variant="muted"
             size="sm"
-            className="group transition-colors duration-150 bg-card hover:bg-card-hover! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl"
+            className="group transition-colors duration-150 bg-card hover:bg-card-hover! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl not-dark:shadow-xs"
             asChild
           >
             <Link

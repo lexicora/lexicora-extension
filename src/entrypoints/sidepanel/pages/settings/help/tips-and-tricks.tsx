@@ -75,7 +75,7 @@ function TipsAndTricksPage() {
     <PageContainer>
       <PageHeader title="Tips & Tricks" goBackButton />
       <main className="flex flex-col gap-0 w-full pt-4.5 px-1 mb-1.75">
-        <section>
+        <section className="not-dark:shadow-xs rounded-2xl">
           {TIPS.map((tip, i) => {
             const isFirst = i === 0;
             const isLast = i === TIPS.length - 1;
