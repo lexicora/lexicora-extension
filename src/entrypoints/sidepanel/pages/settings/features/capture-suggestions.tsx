@@ -1,5 +1,6 @@
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
+import { SettingsItemSeparator } from "@/components/settings";
 import {
   Item,
   ItemActions,
@@ -49,7 +50,7 @@ function CaptureSuggestionsSettingsPage() {
               </ItemDescription>
             </ItemContent>
           </Item>
-          <SettingsItemSeperator symmetric />
+          <SettingsItemSeparator symmetric />
           <Item
             variant="muted"
             size="sm"
