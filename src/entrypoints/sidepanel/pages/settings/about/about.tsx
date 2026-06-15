@@ -9,7 +9,7 @@ import {
   ItemTitle,
   ItemDescription,
 } from "@/components/ui/item";
-import { SettingsItemSeperator } from "@/components/settings";
+import { SettingsItemSeparator } from "@/components/settings";
 import { ChevronRightIcon, FileTextIcon, TagIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -66,7 +66,7 @@ function AboutPage() {
               </ItemDescription>
             </ItemContent>
           </Item>
-          <SettingsItemSeperator />
+          <SettingsItemSeparator />
           <Item
             variant="muted"
             size="sm"

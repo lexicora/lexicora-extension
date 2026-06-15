@@ -1,6 +1,6 @@
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
-import { SettingsItemSeperator } from "@/components/settings";
+import { SettingsItemSeparator } from "@/components/settings";
 import {
   Item,
   ItemActions,
@@ -42,7 +42,7 @@ function ThemePersonalizationSettingsPage() {
                 />
               </ItemActions>
             </Item>
-            <SettingsItemSeperator />
+            <SettingsItemSeparator />
             <Item
               variant="muted"
               size="sm"
@@ -64,7 +64,7 @@ function ThemePersonalizationSettingsPage() {
                 />
               </ItemActions>
             </Item>
-            <SettingsItemSeperator />
+            <SettingsItemSeparator />
             <Item
               variant="muted"
               size="sm"

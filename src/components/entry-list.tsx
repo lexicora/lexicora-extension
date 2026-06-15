@@ -343,7 +343,7 @@ export function EntryItem({
               entry.tags.map((tag, index) => (
                 <span
                   key={entry.id + "-tag-" + index}
-                  className="px-1.5 py-0.5 rounded-md bg-gray-400/37 dark:bg-gray-600/40 text-[11px] font-medium text-lc-muted-foreground-hover truncate max-w-30 min-w-0 shrink-0"
+                  className="px-1.5 py-0.5 rounded-md bg-gray-400/25 dark:bg-gray-600/40 text-[11px] font-medium text-lc-muted-foreground-hover truncate max-w-30 min-w-0 shrink-0"
                 >
                   {tag}
                 </span>

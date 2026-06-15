@@ -7,7 +7,7 @@ import {
   ItemTitle,
   ItemDescription,
 } from "@/components/ui/item";
-import { SettingsItemSeperator } from "@/components/settings";
+import { SettingsItemSeparator } from "@/components/settings";
 import {
   ArchiveIcon,
   BookmarkIcon,
@@ -87,7 +87,7 @@ function TipsAndTricksPage() {
 
             return (
               <div key={tip.title}>
-                {i > 0 && <SettingsItemSeperator />}
+                {i > 0 && <SettingsItemSeparator />}
                 <Item
                   variant="muted"
                   size="sm"
