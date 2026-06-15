@@ -53,7 +53,7 @@ function SettingsPage() {
           <Item
             variant="muted"
             size="default"
-            className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl /*rounded-b-none*/"
+            className="group transition-colors duration-150 bg-card hover:bg-card-hover! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl /*rounded-b-none*/"
             asChild
           >
             <Link to="/settings/account" draggable={false} viewTransition>

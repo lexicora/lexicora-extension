@@ -134,7 +134,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
         "button-default cursor-pointer",
         "h-full /*min-h-26.25*/ flex-col items-start py-2.75 px-3.25 rounded-2xl",
         !topic.tags?.length && "pb-2.5",
-        "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
+        "bg-card hover:bg-card-hover dark:bg-muted/50 dark:hover:bg-muted/80",
       )}
       asChild
     >

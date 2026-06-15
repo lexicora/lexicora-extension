@@ -42,7 +42,7 @@ export function SettingsItem({
         variant="muted"
         size={size}
         className={cn(
-          "group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl",
+          "group transition-colors duration-150 bg-card hover:bg-card-hover! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl",
           roundingClass,
           { "opacity-65 grayscale-30 pointer-events-none": disabled },
           //disabled && "opacity-65 grayscale-30 pointer-events-none", (works the same as above)

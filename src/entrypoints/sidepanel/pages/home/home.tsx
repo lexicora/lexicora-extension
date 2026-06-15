@@ -1,25 +1,59 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "./home.module.css";
-//import reactLogo from "@/assets/logos/react.svg";
-//import wxtLogo from "/wxt.svg";
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
 import { PageContainer } from "@/components/page-container";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowUpRightIcon } from "lucide-react";
+import { StarIcon } from "lucide-react";
 import { useTabSupport } from "@/hooks/use-tab-support";
 import { MSG } from "@/constants/messaging";
 import type { TabData } from "@/types/tab-data.types";
 import { sendMessage } from "@/lib/messaging";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useRxCollection } from "rxdb/plugins/react";
+import type { TopicDocType } from "@/db/schemas/topic";
+import type { EntryDocType } from "@/db/schemas/entry";
 
 function HomePage() {
   const navigate = useNavigate();
   const { isSupported, activeTab } = useTabSupport();
   const [promptText, setPromptText] = useState("");
   const aiPromptTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const topicsCollection = useRxCollection("topics");
+  const entriesCollection = useRxCollection("entries");
+  const [favoriteTopics, setFavoriteTopics] = useState<TopicDocType[]>([]);
+  const [favoriteEntries, setFavoriteEntries] = useState<EntryDocType[]>([]);
+
+  useEffect(() => {
+    if (!topicsCollection) return;
+    const sub = topicsCollection
+      .find({ selector: { isFavorite: true }, sort: [{ updatedAt: "desc" }] })
+      .$.subscribe({
+        next: (docs) =>
+          setFavoriteTopics(
+            docs.slice(0, 6).map((d) => d.toJSON() as TopicDocType),
+          ),
+        error: () => setFavoriteTopics([]),
+      });
+    return () => sub.unsubscribe();
+  }, [topicsCollection]);
+
+  useEffect(() => {
+    if (!entriesCollection) return;
+    const sub = entriesCollection
+      .find({ selector: { isFavorite: true }, sort: [{ updatedAt: "desc" }] })
+      .$.subscribe({
+        next: (docs) =>
+          setFavoriteEntries(
+            docs.slice(0, 6).map((d) => d.toJSON() as EntryDocType),
+          ),
+        error: () => setFavoriteEntries([]),
+      });
+    return () => sub.unsubscribe();
+  }, [entriesCollection]);
 
   const capturePage = async () => {
     if (!isSupported) return;
@@ -32,10 +66,6 @@ function HomePage() {
       finalTab = queriedTab;
     }
     if (!finalTab?.id || !finalTab?.windowId) return;
-    // const [tab] = await browser.tabs.query({
-    //   active: true,
-    //   currentWindow: true,
-    // });
     const tabData: TabData = {
       tabId: finalTab.id,
       windowId: finalTab.windowId,
@@ -54,7 +84,6 @@ function HomePage() {
     <PageContainer id="lc-home-page">
       <header className="mt-4">
         <span className="flex justify-center gap-3 items-baseline mb-3">
-          {/*Maybe add link to lexicora.com */}
           <img
             src={lexicoraLightThemeLogoNoBg}
             className="h-6.5 lc-display-light rounded-xs"
@@ -67,33 +96,80 @@ function HomePage() {
             alt="Lexicora logo"
             draggable="false"
           />
-          {/*#00143d is the Lexicora color */}
           <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground leading-0">
             Lexicora
           </h1>
         </span>
-        <div className="flex justify-center mt-1">
-          <a
-            href="https://lexicora.com"
-            target="_blank"
-            className="text-sm text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 hover:text-lc-muted-foreground-hover"
-            title="https://lexicora.com"
-          >
-            Visit Lexicora.com <ArrowUpRightIcon className="inline" size={16} />
-          </a>
-        </div>
-        <hr className="mt-3 mx-2" />
       </header>
       <main className="mb-12">
-        <section className="mt-4">
-          <h2 className="text-base font-semibold text-red-400 /*text-[#00143d]*/ /*dark:text-foreground*/">
-            Put other actions and stuff here!
-          </h2>
-          {/* Maybe add buttons for recent captures, settings, help, most recent entries, favorit entries etc. */}
-          <hr className="mt-3 mx-2" />
+        <section className="mt-3">
+          <div className="flex items-center gap-1.5 mb-2 px-1">
+            <StarIcon className="size-3.5 text-muted-foreground" />
+            <span className="text-xs font-medium text-muted-foreground tracking-wide">
+              Favorite Topics
+            </span>
+          </div>
+          {favoriteTopics.length > 0 ? (
+            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+              {favoriteTopics.map((topic) => (
+                <button
+                  key={topic.id}
+                  onClick={() =>
+                    navigate(`/library/topics/${topic.id}`, {
+                      viewTransition: true,
+                    })
+                  }
+                  className="flex-shrink-0 px-3 py-1.5 text-sm bg-card hover:bg-card-hover dark:bg-muted/50 dark:hover:bg-muted/80 rounded-full text-foreground truncate max-w-40 border border-border transition-colors duration-150"
+                >
+                  {topic.name}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground px-1 py-1">
+              No favorite topics yet.
+            </p>
+          )}
         </section>
-        <section>
-          {/*TODO: Maybe show indication (like in browsers bottom left of window), where this link leads */}
+
+        <section className="mt-4">
+          <div className="flex items-center gap-1.5 mb-2 px-1">
+            <StarIcon className="size-3.5 text-muted-foreground" />
+            <span className="text-xs font-medium text-muted-foreground tracking-wide">
+              Favorite Entries
+            </span>
+          </div>
+          {favoriteEntries.length > 0 ? (
+            <div className="flex flex-col gap-1.5">
+              {favoriteEntries.map((entry) => (
+                <button
+                  key={entry.id}
+                  onClick={() =>
+                    navigate(`/library/entries/${entry.id}`, {
+                      viewTransition: true,
+                    })
+                  }
+                  className="w-full flex items-center gap-2 px-3 py-2 bg-card hover:bg-card-hover dark:bg-muted/50 dark:hover:bg-muted/80 rounded-xl text-left border border-border transition-colors duration-150"
+                >
+                  {entry.faviconUrl && (
+                    <img
+                      src={entry.faviconUrl}
+                      className="size-4 shrink-0"
+                      alt=""
+                    />
+                  )}
+                  <span className="text-sm truncate">{entry.title}</span>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground px-1 py-1">
+              No favorite entries yet.
+            </p>
+          )}
+        </section>
+
+        <section className="mt-5">
           <article>
             <h2 className="text-lg font-medium mt-4 mb-1 text-[#00143d] dark:text-foreground">
               Describe what you want AI to do
@@ -113,8 +189,7 @@ function HomePage() {
             id="ai-prompt-textarea"
             ref={aiPromptTextareaRef}
             placeholder="Type your desired AI prompt here."
-            // Adjust default height to full height minus top and bottom bars and content above
-            className="field-sizing-content resize-y min-h-[max(138px,calc(100vh-478px))] /*min-h-34.5*/ /*max-h-300*/ w-[calc(100%-2px)] mx-auto scrollbar-thin
+            className="field-sizing-content resize-y min-h-[max(138px,calc(100vh-478px))] w-[calc(100%-2px)] mx-auto scrollbar-thin
             transition-colors duration-150 focus-visible:ring-0"
             maxLength={1000}
             disabled={!isSupported}
@@ -126,8 +201,7 @@ function HomePage() {
             value={promptText}
             onChange={(e) => {
               setPromptText(e.target.value);
-              // Makes sure shadow disappears
-            }} // 4. Update state on every keystroke
+            }}
             onKeyDown={(e) => {
               if (e.key === "Escape") {
                 e.preventDefault();
@@ -135,11 +209,9 @@ function HomePage() {
               }
               // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
               if (e.ctrlKey && e.key === "Enter") {
-                // Submit AI prompt logic here
                 e.preventDefault();
                 if (promptText.trim() === "") return;
                 alert("Submitted AI request successfully!");
-                // TODO: do more here
               }
             }}
           />
@@ -147,10 +219,9 @@ function HomePage() {
       </main>
       <footer className={styles.bottomFooter}>
         <section className="fixed bottom-14.75 left-0 h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-10 lc-bottom-bar-styled-bg">
-          {/*MAYBE: Remove the animation disabling motion-reduce, because it is a very noticeable and maybe not optimal for accessibility*/}
           <div className="flex gap-0 items-center justify-between w-full max-w-(--lc-content-max-width) mx-auto inset-x-0">
             <div
-              className={`flex justify-start transition-all motion-reduce:transition-none duration-300 ease-in-out /*overflow-visible*/ ${
+              className={`flex justify-start transition-all motion-reduce:transition-none duration-300 ease-in-out ${
                 promptText.trimEnd() === ""
                   ? "flex-1 max-w-[50%] mr-3"
                   : "flex-0 max-w-0 opacity-0 mr-0 blur-[6px]"
@@ -164,7 +235,7 @@ function HomePage() {
                     : "You are currently on a unsupported page for capturing."
                 }
                 className={cn(
-                  "w-full hover:bg-secondary hover:brightness-90 overflow-hidden disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:brightness-100 /*active:brightness-80*/",
+                  "w-full hover:bg-secondary hover:brightness-90 overflow-hidden disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:brightness-100",
                   {
                     "disabled:pointer-events-none": promptText.trimEnd() !== "",
                   },
@@ -182,7 +253,7 @@ function HomePage() {
                     ? "Capture page with AI"
                     : "You are currently on a unsupported page for capturing."
                 }
-                className="w-full hover:bg-primary hover:brightness-90 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:brightness-100 /*active:brightness-80*/"
+                className="w-full hover:bg-primary hover:brightness-90 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:brightness-100"
                 disabled={!isSupported}
               >
                 Capture with AI

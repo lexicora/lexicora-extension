@@ -26,6 +26,7 @@ import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { BlockDocType } from "@/db/schemas/block";
 import { EntryDocType } from "@/db/schemas/entry";
+import { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
 import { convertDbBlocksToBlockNote } from "@/lib/utils/block-converter";
@@ -83,11 +84,13 @@ function EntryDetailPage() {
   const navigate = useNavigate();
   const entriesCollection = useRxCollection("entries");
   const blocksCollection = useRxCollection("blocks");
+  const topicsCollection = useRxCollection("topics");
 
   // undefined = loading, null = not found
   const [entry, setEntry] = useState<EntryDocType | null | undefined>(
     undefined,
   );
+  const [topic, setTopic] = useState<TopicDocType | null>(null);
   const [blocks, setBlocks] = useState<any[] | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const editorRef = useRef<CopyableEditor | null>(null);
@@ -104,6 +107,17 @@ function EntryDetailPage() {
     });
     return () => sub.unsubscribe();
   }, [entriesCollection, id]);
+
+  useEffect(() => {
+    if (!topicsCollection || !entry?.topicId) return;
+    const sub = topicsCollection
+      .findOne({ selector: { id: entry.topicId } })
+      .$.subscribe({
+        next: (doc) => setTopic(doc ? (doc.toJSON() as TopicDocType) : null),
+        error: () => setTopic(null),
+      });
+    return () => sub.unsubscribe();
+  }, [topicsCollection, entry?.topicId]);
 
   // Load blocks once — read-only view doesn't need live updates
   // TODO: Maybe live updates are needed, when the windowed interface is implemented an blocks are updated.
@@ -255,6 +269,11 @@ function EntryDetailPage() {
 
       <section className="px-1 mx-auto w-full max-w-(--lc-content-max-width) text-left select-text">
         {/* Title */}
+        {topic && (
+          <p className="text-xs text-muted-foreground font-medium mb-1">
+            {topic.name}
+          </p>
+        )}
         <h1 className="text-2xl font-semibold leading-tight wrap-break-word text-pretty">
           {entry.title}
         </h1>

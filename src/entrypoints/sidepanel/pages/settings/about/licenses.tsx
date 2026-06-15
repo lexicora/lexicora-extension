@@ -42,7 +42,7 @@ function LicensesPage() {
           <Item
             variant="muted"
             size="xs"
-            className="bg-slate-200/75 dark:bg-muted/50 rounded-2xl flex-col gap-0 items-stretch p-0 overflow-hidden"
+            className="bg-card dark:bg-muted/50 rounded-2xl flex-col gap-0 items-stretch p-0 overflow-hidden"
           >
             {LICENSES.map((lib, i) => (
               <div
