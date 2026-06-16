@@ -5,7 +5,14 @@ import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.sv
 import { PageContainer } from "@/components/page-container";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowUpRightIcon, ChevronRightIcon, StarIcon } from "lucide-react";
+import {
+  ArrowUpRightIcon,
+  ChevronRightIcon,
+  HistoryIcon,
+  PinIcon,
+  PlusIcon,
+  StarIcon,
+} from "lucide-react";
 import { useTabSupport } from "@/hooks/use-tab-support";
 import { MSG } from "@/constants/messaging";
 import type { TabData } from "@/types/tab-data.types";
@@ -14,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useRxCollection } from "rxdb/plugins/react";
 import { Separator } from "@/components/ui/separator";
+import type { TopicDocType } from "@/db/schemas/topic";
 
 function formatFavoriteCount(count: number): string {
   if (count < 1000) return String(count);
@@ -34,6 +42,9 @@ function HomePage() {
   const entriesCollection = useRxCollection("entries");
   const [favoriteTopicsCount, setFavoriteTopicsCount] = useState(0);
   const [favoriteEntriesCount, setFavoriteEntriesCount] = useState(0);
+  const [totalTopicsCount, setTotalTopicsCount] = useState(0);
+  const [pinnedTopics, setPinnedTopics] = useState<TopicDocType[]>([]);
+  const [recentTopics, setRecentTopics] = useState<TopicDocType[]>([]);
 
   useEffect(() => {
     if (!topicsCollection) return;
@@ -45,6 +56,56 @@ function HomePage() {
       });
     return () => sub.unsubscribe();
   }, [topicsCollection]);
+
+  useEffect(() => {
+    if (!topicsCollection) return;
+    const sub = topicsCollection
+      .find({
+        selector: { isPinned: true, isArchived: false },
+        sort: [{ updatedAt: "desc" }],
+        limit: 3,
+      })
+      .$.subscribe({
+        next: (docs) =>
+          setPinnedTopics(docs.map((d) => d.toJSON() as TopicDocType)),
+        error: () => setPinnedTopics([]),
+      });
+    return () => sub.unsubscribe();
+  }, [topicsCollection]);
+
+  useEffect(() => {
+    if (!topicsCollection) return;
+    const sub = topicsCollection
+      .count({ selector: { isArchived: false } })
+      .$.subscribe({
+        next: setTotalTopicsCount,
+        error: () => setTotalTopicsCount(0),
+      });
+    return () => sub.unsubscribe();
+  }, [topicsCollection]);
+
+  useEffect(() => {
+    if (!topicsCollection) return;
+    const sub = topicsCollection
+      .find({
+        selector: { isArchived: false },
+        sort: [{ updatedAt: "desc" }],
+        limit: 6,
+      })
+      .$.subscribe({
+        next: (docs) =>
+          setRecentTopics(docs.map((d) => d.toJSON() as TopicDocType)),
+        error: () => setRecentTopics([]),
+      });
+    return () => sub.unsubscribe();
+  }, [topicsCollection]);
+
+  const combinedTopics = [
+    ...pinnedTopics,
+    ...recentTopics.filter(
+      (topic) => !pinnedTopics.some((pinned) => pinned.id === topic.id),
+    ),
+  ].slice(0, 3);
 
   useEffect(() => {
     if (!entriesCollection) return;
@@ -149,6 +210,42 @@ function HomePage() {
               </span>
               <ChevronRightIcon className="size-3 shrink-0 opacity-70" />
             </button>
+          </div>
+          <div className="h-30 flex flex-col items-center justify-center gap-1.5 mt-2.5">
+            {totalTopicsCount === 0 ? (
+              <button
+                onClick={() =>
+                  navigate("/library/topics/new", { viewTransition: true })
+                }
+                className="flex items-center justify-center gap-1.5 pl-2.5 pr-2 py-1.25 rounded-full bg-card hover:bg-card-hover text-sm text-foreground transition-colors duration-150 cursor-pointer"
+              >
+                <PlusIcon className="size-3.5 text-muted-foreground shrink-0" />
+                Create a topic
+                <ChevronRightIcon className="size-3 shrink-0 opacity-70" />
+              </button>
+            ) : (
+              combinedTopics.map((topic) => (
+                <button
+                  key={topic.id}
+                  onClick={() =>
+                    navigate(`/library/topics/${topic.id}`, {
+                      viewTransition: true,
+                    })
+                  }
+                  className="w-full flex items-center gap-2 px-3 py-2 bg-card hover:bg-card-hover not-dark:shadow-xs rounded-xl text-left transition-colors duration-150 cursor-pointer"
+                >
+                  {topic.isPinned ? (
+                    <PinIcon className="size-3.5 text-blue-600 fill-blue-600 dark:text-blue-500 dark:fill-blue-500 shrink-0" />
+                  ) : (
+                    <HistoryIcon className="size-3.5 text-muted-foreground shrink-0" />
+                  )}
+                  <span className="text-sm truncate flex-1">
+                    {topic.name}
+                  </span>
+                  <ChevronRightIcon className="size-3.5 text-muted-foreground shrink-0 opacity-70" />
+                </button>
+              ))
+            )}
           </div>
         </section>
         <Separator className="mt-5 mx-auto max-w-[calc(100%-8px)] opacity-60 shrink-0" />
