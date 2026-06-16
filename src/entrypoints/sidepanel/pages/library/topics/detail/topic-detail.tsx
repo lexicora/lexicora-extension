@@ -416,7 +416,7 @@ function TopicDetailPage() {
           <AlertDialogFooter className="flex gap-3.5">
             <AlertDialogCancel
               variant="outline"
-              className="not-dark:bg-muted/25 not-dark:hover:bg-muted/50"
+              className="not-dark:bg-muted/15 not-dark:hover:bg-muted/50"
             >
               Cancel
             </AlertDialogCancel>
