@@ -171,7 +171,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
                 role="button"
                 tabIndex={0}
                 className={cn(
-                  "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+                  "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-foreground/10 dark:hover:bg-foreground/12",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
                 )}
                 onClick={(e) => handleAttributeToggle(e, "isArchived")}
@@ -197,7 +197,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
                       role="button"
                       tabIndex={0}
                       className={cn(
-                        "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-red-300/75 dark:hover:bg-red-900/50",
+                        "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-destructive/20 dark:hover:bg-destructive/40",
                         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-red-500 dark:focus-visible:ring-offset-red-400 focus-visible:ring-red-500/50",
                       )}
                       onClick={stopPropagation}
@@ -258,7 +258,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
                     role="button"
                     tabIndex={0}
                     className={cn(
-                      "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+                      "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-foreground/10 dark:hover:bg-foreground/12",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
                     )}
                     onClick={async (e) => handleAttributeToggle(e, "isPinned")}
@@ -280,7 +280,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
                     role="button"
                     tabIndex={0}
                     className={cn(
-                      "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+                      "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-foreground/10 dark:hover:bg-foreground/12",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
                     )}
                     onClick={async (e) =>
