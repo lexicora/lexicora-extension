@@ -235,7 +235,10 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="flex gap-3.5">
-                      <AlertDialogCancel variant="outline">
+                      <AlertDialogCancel
+                        variant="outline"
+                        className="not-dark:bg-muted/15 not-dark:hover:bg-muted/50"
+                      >
                         Cancel
                       </AlertDialogCancel>
                       <AlertDialogAction

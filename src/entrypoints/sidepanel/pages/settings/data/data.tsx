@@ -202,7 +202,9 @@ function DataSettingsPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="not-dark:bg-muted/15 not-dark:hover:bg-muted/50">
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction variant="destructive" onClick={handleClear}>
               Clear All Data
             </AlertDialogAction>

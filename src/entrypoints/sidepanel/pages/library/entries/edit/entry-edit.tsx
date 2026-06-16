@@ -215,6 +215,7 @@ function EntryEditContent({
             <AlertDialogCancel
               variant="outline"
               onClick={() => blocker.reset?.()}
+              className="not-dark:bg-muted/15 not-dark:hover:bg-muted/50"
             >
               Keep editing
             </AlertDialogCancel>
