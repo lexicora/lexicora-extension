@@ -77,9 +77,9 @@ export function PageHeader({
             className={cn(
               "shrink-0 size-10 rounded-lg",
               goBackButtonVariant === "ghost" &&
-                "hover:bg-gray-200 dark:hover:bg-gray-800",
+                "hover:bg-gray-300/75 dark:hover:bg-gray-800",
               goBackButtonVariant === "tinted" &&
-                "bg-gray-300/75 hover:bg-gray-400/60 dark:bg-gray-800/75 dark:hover:bg-gray-700/60 hover:text-secondary-foreground/95",
+                "bg-gray-300 hover:bg-gray-400/60 dark:bg-gray-800/75 dark:hover:bg-gray-700/60 hover:text-secondary-foreground/95",
             )}
             onClick={handleGoBack}
             disabled={rightActionButton?.isLoading}
@@ -168,7 +168,7 @@ export function PageHeader({
               title={goBackButtonTitle}
               className={cn(
                 goBackButtonVariant === "ghost" &&
-                  "hover:bg-gray-200 dark:hover:bg-gray-800 hover:ring-1 ring-inset ring-gray-300 dark:ring-gray-700",
+                  "hover:bg-gray-200 dark:hover:bg-gray-800 hover:ring-1 ring-inset ring-gray-400/50 dark:ring-gray-700",
                 goBackButtonVariant === "tinted" &&
                   "backdrop-blur-sm hover:text-secondary-foreground/95 bg-gray-300/75 hover:bg-gray-300 dark:bg-gray-800/75 dark:hover:bg-gray-800 ring-1 ring-inset ring-gray-400/25 hover:ring-gray-400/80 dark:ring-gray-700/35 dark:hover:ring-gray-700",
                 "ml-3 shrink-0 size-7.5 transition-all duration-150 active-view-transition:transition-none",
@@ -241,9 +241,9 @@ export function PageHeader({
             className={cn(
               "shrink-0 size-10 rounded-lg",
               goBackButtonVariant === "ghost" &&
-                "hover:bg-gray-200 dark:hover:bg-gray-800",
+                "hover:bg-gray-300/75 dark:hover:bg-gray-800",
               goBackButtonVariant === "tinted" &&
-                "bg-gray-300/75 hover:bg-gray-400/60 dark:bg-gray-800/75 dark:hover:bg-gray-700/70 hover:text-secondary-foreground/95",
+                "bg-gray-300 hover:bg-gray-400/60 dark:bg-gray-800/75 dark:hover:bg-gray-700/70 hover:text-secondary-foreground/95",
             )}
             onClick={handleGoBack}
             disabled={rightActionButton?.isLoading}

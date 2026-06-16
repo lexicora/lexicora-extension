@@ -69,7 +69,7 @@ function SettingsPage() {
                   <AvatarFallback>TG</AvatarFallback>
                 </Avatar> */}
                 <div className="size-8 rounded-md flex items-center">
-                  <div className="flex items-center justify-center size-full rounded-full bg-secondary/50 ring ring-inset ring-black/20 dark:ring-white/20">
+                  <div className="flex items-center justify-center size-full rounded-full bg-secondary/25 dark:bg-secondary/50 ring ring-inset ring-black/20 dark:ring-white/20">
                     <UserIcon className="size-4.5" />
                     {/* TODO: If logged in, show user's avatar or initials */}
                   </div>

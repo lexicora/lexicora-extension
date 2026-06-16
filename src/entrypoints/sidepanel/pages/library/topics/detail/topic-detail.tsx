@@ -261,7 +261,7 @@ function TopicDetailPage() {
             }
             onClick={() => handleAttributeToggle("isFavorite")}
             className={cn(
-              "size-9 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-800",
+              "size-9 rounded-lg hover:bg-gray-300/75 dark:hover:bg-gray-800",
               topic.isArchived && "opacity-40 pointer-events-none",
             )}
           >
@@ -280,7 +280,7 @@ function TopicDetailPage() {
             title={topic.isPinned ? "Unpin topic" : "Pin topic"}
             onClick={() => handleAttributeToggle("isPinned")}
             className={cn(
-              "size-9 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-800",
+              "size-9 rounded-lg hover:bg-gray-300/75 dark:hover:bg-gray-800",
               topic.isArchived && "opacity-40 pointer-events-none",
             )}
           >
@@ -298,7 +298,7 @@ function TopicDetailPage() {
             size="icon"
             title={topic.isArchived ? "Restore topic" : "Archive topic"}
             onClick={() => handleAttributeToggle("isArchived")}
-            className="size-9 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-800"
+            className="size-9 rounded-lg hover:bg-gray-300/75 dark:hover:bg-gray-800"
           >
             <ArchiveIcon
               className={cn(
@@ -313,7 +313,7 @@ function TopicDetailPage() {
             size="icon"
             title="Copy topic as Markdown"
             onClick={handleCopyMarkdown}
-            className="ml-auto size-9 rounded-lg hover:bg-blue-200 hover:text-blue-700 dark:hover:bg-blue-950/50 dark:hover:text-blue-400 text-muted-foreground"
+            className="ml-auto size-9 rounded-lg hover:bg-blue-200/80 hover:text-blue-700 dark:hover:bg-blue-900/50 dark:hover:text-blue-400 text-muted-foreground"
           >
             <ClipboardIcon className="size-4.5" />
           </Button>
@@ -326,7 +326,7 @@ function TopicDetailPage() {
                 viewTransition: true,
               })
             }
-            className="size-9 rounded-lg text-muted-foreground hover:bg-green-200 hover:text-green-700 dark:hover:bg-green-950/50 dark:hover:text-green-400"
+            className="size-9 rounded-lg text-muted-foreground hover:bg-green-200/80 hover:text-green-700 dark:hover:bg-green-900/50 dark:hover:text-green-400"
           >
             <SquarePenIcon className="size-4.5" />
           </Button>
@@ -335,7 +335,7 @@ function TopicDetailPage() {
             size="icon"
             title="Delete topic"
             onClick={() => setDeleteOpen(true)}
-            className="size-9 rounded-lg text-muted-foreground hover:bg-red-200 hover:text-red-700 dark:hover:bg-red-950/50 dark:hover:text-red-400"
+            className="size-9 rounded-lg text-muted-foreground hover:bg-red-200/80 hover:text-red-700 dark:hover:bg-red-900/50 dark:hover:text-red-400"
           >
             <Trash2Icon className="size-4.5" />
           </Button>
@@ -414,7 +414,12 @@ function TopicDetailPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-3.5">
-            <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
+            <AlertDialogCancel
+              variant="outline"
+              className="not-dark:bg-muted/25 not-dark:hover:bg-muted/50"
+            >
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               className="-mr-px"
