@@ -379,7 +379,7 @@ function EntryDetailPage() {
             }
             onClick={() => handleAttributeToggle("isFavorite")}
             className={cn(
-              "size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800",
+              "size-9 rounded-lg hover:bg-gray-300/75 dark:hover:bg-gray-800",
               entry.isArchived && "opacity-40 pointer-events-none",
             )}
           >
@@ -398,7 +398,7 @@ function EntryDetailPage() {
             title={entry.isPinned ? "Unpin entry" : "Pin entry"}
             onClick={() => handleAttributeToggle("isPinned")}
             className={cn(
-              "size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800",
+              "size-9 rounded-lg hover:bg-gray-300/75 dark:hover:bg-gray-800",
               entry.isArchived && "opacity-40 pointer-events-none",
             )}
           >
@@ -416,7 +416,7 @@ function EntryDetailPage() {
             size="icon"
             title={entry.isArchived ? "Restore entry" : "Archive entry"}
             onClick={() => handleAttributeToggle("isArchived")}
-            className="size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="size-9 rounded-lg hover:bg-gray-300/75 dark:hover:bg-gray-800"
           >
             <ArchiveIcon
               className={cn(
@@ -434,8 +434,8 @@ function EntryDetailPage() {
                 title="Copy actions"
                 className={cn(
                   "ml-auto size-9 rounded-lg not-hover:text-muted-foreground",
-                  "hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-950/50 dark:hover:text-blue-400",
-                  "aria-expanded:bg-blue-100 aria-expanded:text-blue-600 dark:aria-expanded:bg-blue-950/50 dark:aria-expanded:text-blue-400",
+                  "hover:bg-blue-200/80 hover:text-blue-700 dark:hover:bg-blue-900/50 dark:hover:text-blue-400",
+                  "aria-expanded:bg-blue-200/80 aria-expanded:text-blue-700 dark:aria-expanded:bg-blue-900/50 dark:aria-expanded:text-blue-400",
                 )}
               >
                 <EllipsisIcon className="size-4.5" />
@@ -472,7 +472,7 @@ function EntryDetailPage() {
                 viewTransition: true,
               })
             }
-            className="size-9 rounded-lg text-muted-foreground hover:bg-green-100 hover:text-green-600 dark:hover:bg-green-950/50 dark:hover:text-green-400"
+            className="size-9 rounded-lg text-muted-foreground hover:bg-green-200/80 hover:text-green-700 dark:hover:bg-green-900/50 dark:hover:text-green-400"
           >
             <SquarePenIcon className="size-4.5" />
           </Button>
@@ -481,7 +481,7 @@ function EntryDetailPage() {
             size="icon"
             title="Delete entry"
             onClick={() => setDeleteOpen(true)}
-            className="size-9 rounded-lg text-muted-foreground hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-950/50 dark:hover:text-red-400"
+            className="size-9 rounded-lg text-muted-foreground hover:bg-red-200/80 hover:text-red-700 dark:hover:bg-red-900/50 dark:hover:text-red-400"
           >
             <Trash2Icon className="size-4.5" />
           </Button>
@@ -524,7 +524,12 @@ function EntryDetailPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-3.5">
-            <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
+            <AlertDialogCancel
+              variant="outline"
+              className="not-dark:bg-muted/25 not-dark:hover:bg-muted/50"
+            >
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               className="-mr-px"

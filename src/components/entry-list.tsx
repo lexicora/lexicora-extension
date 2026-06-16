@@ -128,7 +128,7 @@ export function EntryItem({
           !entry.hostnameUrl &&
           !entry.siteName &&
           "pb-2.5",
-        "bg-card hover:bg-card-hover dark:bg-muted/50 dark:hover:bg-muted/80 shadow-xs dark:shadow-none",
+        "bg-card hover:bg-card-hover dark:bg-muted/50 dark:hover:bg-muted/80 not-dark:shadow-xs",
       )}
       asChild
     >
