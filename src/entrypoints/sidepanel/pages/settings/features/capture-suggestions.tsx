@@ -35,7 +35,7 @@ function CaptureSuggestionsSettingsPage() {
           <Item
             variant="muted"
             size="default"
-            className="group py-2.5 gap-2 transition-none bg-card dark:bg-muted/50 rounded-2xl rounded-b-none"
+            className="group py-2.5 gap-2 transition-none bg-card rounded-2xl rounded-b-none"
           >
             <ItemHeader>
               <ItemMedia variant="icon">
@@ -54,7 +54,7 @@ function CaptureSuggestionsSettingsPage() {
           <Item
             variant="muted"
             size="sm"
-            className="group transition-none hover:cursor-pointer bg-card dark:bg-muted/50 rounded-2xl rounded-t-none"
+            className="group transition-none hover:cursor-pointer bg-card rounded-2xl rounded-t-none"
             onClick={() => {
               setEnabled(!enabled);
             }}
@@ -84,7 +84,7 @@ function CaptureSuggestionsSettingsPage() {
           <Item
             variant="muted"
             size="xs"
-            className="bg-card dark:bg-muted/50 not-dark:shadow-xs rounded-2xl py-2.5"
+            className="bg-card not-dark:shadow-xs rounded-2xl py-2.5"
           >
             <div className="flex flex-col w-full gap-4">
               <div className="flex justify-between items-center">

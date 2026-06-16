@@ -59,7 +59,7 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
       <CollapsibleTrigger
         className={cn(
           "w-full text-left flex items-center justify-between gap-2.5 px-3 py-2.5",
-          "bg-card hover:bg-card-hover dark:bg-muted/50 dark:hover:bg-muted",
+          "bg-card hover:bg-card-hover",
           "transition-colors duration-150",
           open ? "rounded-t-2xl" : "rounded-2xl",
         )}

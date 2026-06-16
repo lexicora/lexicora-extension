@@ -91,7 +91,7 @@ function TipsAndTricksPage() {
                 <Item
                   variant="muted"
                   size="sm"
-                  className={`bg-card dark:bg-muted/50 ${roundingClass}`}
+                  className={`bg-card ${roundingClass}`}
                 >
                   <ItemMedia variant="icon">
                     <tip.icon className={`size-5 ${tip.iconColor}`} />

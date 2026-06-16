@@ -28,7 +28,7 @@ function ThemePersonalizationSettingsPage() {
             <Item
               variant="muted"
               size="sm"
-              className="group transition-none hover:cursor-pointer bg-card dark:bg-muted/50 rounded-2xl rounded-b-none"
+              className="group transition-none hover:cursor-pointer bg-card rounded-2xl rounded-b-none"
               onClick={() => setTheme("system")}
             >
               <ItemMedia variant="icon">
@@ -50,7 +50,7 @@ function ThemePersonalizationSettingsPage() {
             <Item
               variant="muted"
               size="sm"
-              className="group transition-none hover:cursor-pointer bg-card dark:bg-muted/50 rounded-none"
+              className="group transition-none hover:cursor-pointer bg-card rounded-none"
               onClick={() => setTheme("dark")}
             >
               <ItemMedia variant="icon">
@@ -72,7 +72,7 @@ function ThemePersonalizationSettingsPage() {
             <Item
               variant="muted"
               size="sm"
-              className="group transition-none hover:cursor-pointer bg-card dark:bg-muted/50 rounded-2xl rounded-t-none"
+              className="group transition-none hover:cursor-pointer bg-card rounded-2xl rounded-t-none"
               onClick={() => setTheme("light")}
             >
               <ItemMedia variant="icon">

@@ -24,7 +24,7 @@ function AboutPage() {
           <Item
             variant="muted"
             size="default"
-            className="bg-card dark:bg-muted/50 rounded-2xl not-dark:shadow-xs flex-col items-center py-6 gap-2 text-center"
+            className="bg-card rounded-2xl not-dark:shadow-xs flex-col items-center py-6 gap-2 text-center"
           >
             <span className="flex justify-center gap-1.5 items-baseline mb-3">
               {/*Maybe add link to lexicora.com */}
@@ -56,7 +56,7 @@ function AboutPage() {
           <Item
             variant="muted"
             size="sm"
-            className="bg-card dark:bg-muted/50 rounded-2xl rounded-b-none"
+            className="bg-card rounded-2xl rounded-b-none"
           >
             <ItemContent>
               <ItemDescription className="line-clamp-none text-foreground/80 text-pretty">
@@ -70,7 +70,7 @@ function AboutPage() {
           <Item
             variant="muted"
             size="sm"
-            className="bg-card dark:bg-muted/50 rounded-2xl rounded-t-none"
+            className="bg-card rounded-2xl rounded-t-none"
           >
             <ItemMedia variant="icon">
               <TagIcon className="size-5 text-muted-foreground" />
@@ -88,7 +88,7 @@ function AboutPage() {
           <Item
             variant="muted"
             size="sm"
-            className="group transition-colors duration-150 bg-card hover:bg-card-hover! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl not-dark:shadow-xs"
+            className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl not-dark:shadow-xs"
             asChild
           >
             <Link

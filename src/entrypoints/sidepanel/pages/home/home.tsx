@@ -119,7 +119,7 @@ function HomePage() {
                       viewTransition: true,
                     })
                   }
-                  className="flex-shrink-0 px-3 py-1.5 text-sm bg-card hover:bg-card-hover dark:bg-muted/50 dark:hover:bg-muted/80 rounded-full text-foreground truncate max-w-40 border border-border transition-colors duration-150"
+                  className="shrink-0 px-3 py-1.5 text-sm bg-card hover:bg-card-hover rounded-full text-foreground truncate max-w-40 border border-border transition-colors duration-150"
                 >
                   {topic.name}
                 </button>
@@ -149,7 +149,7 @@ function HomePage() {
                       viewTransition: true,
                     })
                   }
-                  className="w-full flex items-center gap-2 px-3 py-2 bg-card hover:bg-card-hover dark:bg-muted/50 dark:hover:bg-muted/80 rounded-xl text-left border border-border transition-colors duration-150"
+                  className="w-full flex items-center gap-2 px-3 py-2 bg-card hover:bg-card-hover rounded-xl text-left border border-border transition-colors duration-150"
                 >
                   {entry.faviconUrl && (
                     <img
