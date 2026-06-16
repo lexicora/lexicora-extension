@@ -32,10 +32,10 @@ import { formatDate } from "@/lib/utils/date-formatter";
 import { convertDbBlocksToBlockNote } from "@/lib/utils/block-converter";
 import {
   ArchiveIcon,
+  ChevronRightIcon,
   ClipboardIcon,
   EllipsisIcon,
   FileTextIcon,
-  FolderIcon,
   PinIcon,
   SquarePenIcon,
   StarIcon,
@@ -168,6 +168,9 @@ function EntryDetailPage() {
       const lines: string[] = [];
       lines.push("**Entry**", "");
       lines.push(`# ${entry.title}`, "");
+      if (topic) {
+        lines.push(`**Topic:** ${topic.name}`, "");
+      }
       if (entry.url) {
         const label = entry.siteName || entry.hostnameUrl || entry.url;
         lines.push(`**Source:** [${label}](${entry.url})`, "");
@@ -234,18 +237,6 @@ function EntryDetailPage() {
     );
   }
 
-  const editButton = {
-    iconSmall: <FolderIcon className="size-4.5" />,
-    iconLarge: <FolderIcon className="size-5.5" />,
-    variant: "default" as const,
-    onClick: () =>
-      navigate(`/library/topics/${entry.topicId}`, {
-        viewTransition: true,
-      }),
-    title: "View parent topic",
-    type: "button" as const,
-  };
-
   const hasContent =
     !!blocks &&
     !(
@@ -262,17 +253,23 @@ function EntryDetailPage() {
         title="Entry"
         classNameHeaderElement="mb-3"
         goBackButton
-        goBackButtonVariant="tinted"
-        rightActionButton={editButton}
         heavyTeardown
       />
 
       <section className="px-1 mx-auto w-full max-w-(--lc-content-max-width) text-left select-text">
         {/* Title */}
         {topic && (
-          <p className="text-xs text-muted-foreground font-medium mb-1">
-            {topic.name}
-          </p>
+          <button
+            className="flex items-center gap-0.5 ml-px mb-1 max-w-full text-xs font-medium text-muted-foreground hover:text-lc-muted-foreground-hover hover:underline underline-offset-2 transition-colors cursor-pointer"
+            onClick={() =>
+              navigate(`/library/topics/${topic.id}`, {
+                viewTransition: true,
+              })
+            }
+          >
+            <span className="truncate max-w-50">{topic.name}</span>
+            <ChevronRightIcon className="size-3 shrink-0 opacity-70" />
+          </button>
         )}
         <h1 className="text-2xl font-semibold leading-tight wrap-break-word text-pretty">
           {entry.title}
