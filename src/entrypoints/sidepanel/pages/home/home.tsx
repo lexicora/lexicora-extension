@@ -5,7 +5,7 @@ import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.sv
 import { PageContainer } from "@/components/page-container";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { StarIcon } from "lucide-react";
+import { ArrowUpRightIcon, ChevronRightIcon, StarIcon } from "lucide-react";
 import { useTabSupport } from "@/hooks/use-tab-support";
 import { MSG } from "@/constants/messaging";
 import type { TabData } from "@/types/tab-data.types";
@@ -13,8 +13,16 @@ import { sendMessage } from "@/lib/messaging";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useRxCollection } from "rxdb/plugins/react";
-import type { TopicDocType } from "@/db/schemas/topic";
-import type { EntryDocType } from "@/db/schemas/entry";
+import { Separator } from "@/components/ui/separator";
+
+function formatFavoriteCount(count: number): string {
+  if (count < 1000) return String(count);
+  if (count < 10000) {
+    const value = count / 1000;
+    return `${value % 1 === 0 ? value : value.toFixed(1)}k`;
+  }
+  return `${Math.floor(count / 1000)}k+`;
+}
 
 function HomePage() {
   const navigate = useNavigate();
@@ -24,19 +32,16 @@ function HomePage() {
 
   const topicsCollection = useRxCollection("topics");
   const entriesCollection = useRxCollection("entries");
-  const [favoriteTopics, setFavoriteTopics] = useState<TopicDocType[]>([]);
-  const [favoriteEntries, setFavoriteEntries] = useState<EntryDocType[]>([]);
+  const [favoriteTopicsCount, setFavoriteTopicsCount] = useState(0);
+  const [favoriteEntriesCount, setFavoriteEntriesCount] = useState(0);
 
   useEffect(() => {
     if (!topicsCollection) return;
     const sub = topicsCollection
-      .find({ selector: { isFavorite: true }, sort: [{ updatedAt: "desc" }] })
+      .count({ selector: { isFavorite: true } })
       .$.subscribe({
-        next: (docs) =>
-          setFavoriteTopics(
-            docs.slice(0, 6).map((d) => d.toJSON() as TopicDocType),
-          ),
-        error: () => setFavoriteTopics([]),
+        next: setFavoriteTopicsCount,
+        error: () => setFavoriteTopicsCount(0),
       });
     return () => sub.unsubscribe();
   }, [topicsCollection]);
@@ -44,13 +49,10 @@ function HomePage() {
   useEffect(() => {
     if (!entriesCollection) return;
     const sub = entriesCollection
-      .find({ selector: { isFavorite: true }, sort: [{ updatedAt: "desc" }] })
+      .count({ selector: { isFavorite: true } })
       .$.subscribe({
-        next: (docs) =>
-          setFavoriteEntries(
-            docs.slice(0, 6).map((d) => d.toJSON() as EntryDocType),
-          ),
-        error: () => setFavoriteEntries([]),
+        next: setFavoriteEntriesCount,
+        error: () => setFavoriteEntriesCount(0),
       });
     return () => sub.unsubscribe();
   }, [entriesCollection]);
@@ -81,8 +83,11 @@ function HomePage() {
   };
 
   return (
-    <PageContainer id="lc-home-page">
-      <header className="mt-4">
+    <PageContainer
+      id="lc-home-page"
+      classNameInner="flex flex-col h-[calc(100vh-142px)]"
+    >
+      <header className="mt-4 shrink-0">
         <span className="flex justify-center gap-3 items-baseline mb-3">
           <img
             src={lexicoraLightThemeLogoNoBg}
@@ -100,96 +105,67 @@ function HomePage() {
             Lexicora
           </h1>
         </span>
+        <div className="flex justify-center mt-1">
+          <a
+            href="https://lexicora.com"
+            target="_blank"
+            className="text-sm text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 hover:text-lc-muted-foreground-hover"
+            title="https://lexicora.com"
+          >
+            Visit Lexicora.com <ArrowUpRightIcon className="inline" size={16} />
+          </a>
+        </div>
       </header>
-      <main className="mb-12">
-        <section className="mt-3">
-          <div className="flex items-center gap-1.5 mb-2 px-1">
-            <StarIcon className="size-3.5 text-muted-foreground" />
-            <span className="text-xs font-medium text-muted-foreground tracking-wide">
-              Favorite Topics
-            </span>
+      <main className="flex-1 min-h-0 flex flex-col pb-12">
+        <section className="mt-3 shrink-0">
+          <div className="flex items-center justify-center gap-2.5">
+            <button
+              onClick={() =>
+                navigate("/library?tab=topics&favorites=true", {
+                  viewTransition: true,
+                })
+              }
+              className="flex items-center justify-center gap-1.5 pl-2.5 pr-2 py-1.25 rounded-full bg-card hover:bg-card-hover text-sm text-foreground transition-colors duration-150 cursor-pointer"
+            >
+              <StarIcon className="size-3.5 text-yellow-600 fill-yellow-600 dark:text-yellow-500 dark:fill-yellow-500 shrink-0" />
+              Topics
+              <span className="text-xs text-muted-foreground">
+                {formatFavoriteCount(favoriteTopicsCount)}
+              </span>
+              <ChevronRightIcon className="size-3 shrink-0 opacity-70" />
+            </button>
+            <button
+              onClick={() =>
+                navigate("/library?tab=entries&favorites=true", {
+                  viewTransition: true,
+                })
+              }
+              className="flex items-center justify-center gap-1.5 pl-2.5 pr-2 py-1.25 rounded-full bg-card hover:bg-card-hover text-sm text-foreground transition-colors duration-150 cursor-pointer"
+            >
+              <StarIcon className="size-3.5 text-yellow-600 fill-yellow-600 dark:text-yellow-500 dark:fill-yellow-500 shrink-0" />
+              Entries
+              <span className="text-xs text-muted-foreground">
+                {formatFavoriteCount(favoriteEntriesCount)}
+              </span>
+              <ChevronRightIcon className="size-3 shrink-0 opacity-70" />
+            </button>
           </div>
-          {favoriteTopics.length > 0 ? (
-            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-              {favoriteTopics.map((topic) => (
-                <button
-                  key={topic.id}
-                  onClick={() =>
-                    navigate(`/library/topics/${topic.id}`, {
-                      viewTransition: true,
-                    })
-                  }
-                  className="shrink-0 px-3 py-1.5 text-sm bg-card hover:bg-card-hover rounded-full text-foreground truncate max-w-40 border border-border transition-colors duration-150"
-                >
-                  {topic.name}
-                </button>
-              ))}
-            </div>
-          ) : (
-            <p className="text-xs text-muted-foreground px-1 py-1">
-              No favorite topics yet.
-            </p>
-          )}
         </section>
-
-        <section className="mt-4">
-          <div className="flex items-center gap-1.5 mb-2 px-1">
-            <StarIcon className="size-3.5 text-muted-foreground" />
-            <span className="text-xs font-medium text-muted-foreground tracking-wide">
-              Favorite Entries
-            </span>
-          </div>
-          {favoriteEntries.length > 0 ? (
-            <div className="flex flex-col gap-1.5">
-              {favoriteEntries.map((entry) => (
-                <button
-                  key={entry.id}
-                  onClick={() =>
-                    navigate(`/library/entries/${entry.id}`, {
-                      viewTransition: true,
-                    })
-                  }
-                  className="w-full flex items-center gap-2 px-3 py-2 bg-card hover:bg-card-hover rounded-xl text-left border border-border transition-colors duration-150"
-                >
-                  {entry.faviconUrl && (
-                    <img
-                      src={entry.faviconUrl}
-                      className="size-4 shrink-0"
-                      alt=""
-                    />
-                  )}
-                  <span className="text-sm truncate">{entry.title}</span>
-                </button>
-              ))}
-            </div>
-          ) : (
-            <p className="text-xs text-muted-foreground px-1 py-1">
-              No favorite entries yet.
-            </p>
-          )}
+        <Separator className="mt-5 mx-auto max-w-[calc(100%-8px)] opacity-60 shrink-0" />
+        <section className="mt-5 shrink-0">
+          <h2 className="text-lg font-medium mb-1 text-[#00143d] dark:text-foreground">
+            Describe what you want AI to do
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            Optional — leave blank to capture the page as-is.
+          </p>
         </section>
-
-        <section className="mt-5">
-          <article>
-            <h2 className="text-lg font-medium mt-4 mb-1 text-[#00143d] dark:text-foreground">
-              Describe what you want AI to do
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Provide instructions for capturing and enhancing the content of
-              the current page using AI.
-            </p>
-            <hr className="mx-24 mt-2.75" />
-            <p className="text-sm text-muted-foreground mt-2">
-              Or, leave it blank to capture the page as-is.
-            </p>
-          </article>
-        </section>
-        <section className="mt-5">
+        <section className="mt-5 flex-1 min-h-0 flex flex-col">
           <Textarea
             id="ai-prompt-textarea"
             ref={aiPromptTextareaRef}
             placeholder="Type your desired AI prompt here."
-            className="field-sizing-content resize-y min-h-[max(138px,calc(100vh-478px))] w-[calc(100%-2px)] mx-auto scrollbar-thin
+            className="flex-1 min-h-[90px] resize-y w-[calc(100%-2px)] mx-auto scrollbar-thin
             transition-colors duration-150 focus-visible:ring-0"
             maxLength={1000}
             disabled={!isSupported}
