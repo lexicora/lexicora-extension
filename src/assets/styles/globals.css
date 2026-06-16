@@ -30,7 +30,7 @@
   --foreground: oklch(0.13 0.028 261.692);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.13 0.028 261.692);
-  --card-hover: oklch(0.967 0.003 264.542); /* gray-100 */
+  --card-hover: oklch(0.915 0.007 263); /* between gray-200 and gray-300, ~gray-225 */
   --input-bg: oklch(0.985 0.002 247.839); /* gray-50 — inputs sit between bg and card */
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.13 0.028 261.692);

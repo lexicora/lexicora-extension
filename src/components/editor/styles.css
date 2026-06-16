@@ -58,10 +58,11 @@
 
 .bn-root[data-color-scheme="light"] {
   color-scheme: light;
-  /*Editor text color*/
-  /*TODO: Maybe add a subtile blue hue to it.*/
+  /* Potentially change transparency to 30% */
   --accent: color-mix(in oklab, var(--color-accent) 35%, transparent);
   --muted: color-mix(in oklab, var(--color-muted) 35%, transparent);
+  /*TODO: Maybe add a subtile blue hue to it.*/
+  /*Editor text color*/
   --bn-colors-editor-text: #3d3d3d; /*was #3f3f3f then 3e3e3e*/
 }
 
