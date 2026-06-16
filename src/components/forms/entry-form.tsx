@@ -694,7 +694,7 @@ export function EntryForm({
                   size="sm"
                   title="Fetch current tab's metadata"
                   onClick={handleFetchMetadata}
-                  className="shrink-0 text-muted-foreground"
+                  className="shrink-0 text-muted-foreground not-dark:hover:bg-muted/50"
                   disabled={!isSupported}
                 >
                   <RefreshCw className="size-4" /> Refresh Metadata
