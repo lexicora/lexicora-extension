@@ -247,20 +247,16 @@ function HomePage() {
                 onClick={() =>
                   navigate("/library/topics/new", { viewTransition: true })
                 }
-                className={cn(
-                  "self-center -mb-2",
-                  //combinedTopics.length > 0 && "-mb-1",
-                  //combinedTopics.length === 0 && "-mt-1.5",
-                )}
+                className="self-center -mb-2"
               >
                 Create a topic
               </Button>
             )}
           </div>
         </section>
-        <Separator className="mt-4 mx-auto max-w-[calc(100%-8px)] shrink-0" />
+        <Separator className="mt-4 mx-auto max-w-[calc(100%-8px)] shrink-0 [@media(min-height:950px)]:hidden" />
         <section className="flex-1 flex flex-col">
-          <div className="flex-1 flex flex-col items-center justify-center text-center py-5">
+          <div className="flex-1 flex flex-col items-center justify-end text-center py-5">
             <h2 className="text-lg font-medium mb-1 text-[#00143d] dark:text-foreground">
               Describe what you want AI to do
             </h2>
@@ -319,10 +315,8 @@ function HomePage() {
                     : "You are currently on a unsupported page for capturing."
                 }
                 className={cn(
-                  "w-full hover:bg-secondary hover:brightness-90 overflow-hidden disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:brightness-100",
-                  {
-                    "disabled:pointer-events-none": promptText.trimEnd() !== "",
-                  },
+                  "w-full hover:bg-[color-mix(in_oklab,var(--secondary),black_7%)] dark:hover:bg-[color-mix(in_oklab,var(--secondary)80%,var(--background))] overflow-hidden",
+                  "disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-secondary",
                 )}
                 disabled={promptText.trimEnd() !== "" || !isSupported}
                 onClick={capturePage}
@@ -337,7 +331,7 @@ function HomePage() {
                     ? "Capture page with AI"
                     : "You are currently on a unsupported page for capturing."
                 }
-                className="w-full hover:bg-primary hover:brightness-90 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:brightness-100"
+                className="w-full hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary"
                 disabled={!isSupported}
               >
                 Capture with AI
