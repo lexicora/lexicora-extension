@@ -2,8 +2,6 @@ import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.s
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
 // TODO: Potentially make Lexicora logos into components.
 
-import { useEffect, useState } from "react";
-//import styles from "./home.module.css";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,8 +12,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowUpRightIcon, PanelRightIcon, UserIcon } from "lucide-react";
 import { sendMessage } from "@/lib/messaging";
+import { ArrowUpRightIcon, PanelRightIcon, UserIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { MSG } from "@/constants/messaging";
 import { useTabSupport } from "@/hooks/use-tab-support";
@@ -23,7 +22,7 @@ import { cn } from "@/lib/utils";
 import { useScrollPos } from "@/providers/scroll-observer";
 import type { TabData } from "@/types/tab-data.types";
 
-function HomePage() {
+function Popup() {
   const { isAtTop } = useScrollPos();
   const { isSupported, activeTab } = useTabSupport();
   const [promptText, setPromptText] = useState("");
@@ -280,4 +279,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default Popup;
