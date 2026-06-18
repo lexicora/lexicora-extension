@@ -147,6 +147,7 @@ function HomePage() {
                 variant="ghost"
                 size="icon"
                 title="Open Side Panel"
+                // Maybe change title to "Open app (in side panel)", or similar. potentially leave out (in side panel).
               >
                 <PanelRightIcon className="size-4.5" />
               </Button>
