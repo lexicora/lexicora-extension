@@ -44,6 +44,8 @@ function HomePage() {
   const [favoriteEntriesCount, setFavoriteEntriesCount] = useState(0);
   const [pinnedTopics, setPinnedTopics] = useState<TopicDocType[]>([]);
   const [recentTopics, setRecentTopics] = useState<TopicDocType[]>([]);
+  const mainRef = useRef<HTMLElement>(null);
+  const topicsContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!topicsCollection) return;
@@ -106,6 +108,21 @@ function HomePage() {
     return () => sub.unsubscribe();
   }, [entriesCollection]);
 
+  useEffect(() => {
+    const el = topicsContainerRef.current;
+    const main = mainRef.current;
+    if (!el || !main) return;
+
+    const update = () => {
+      main.style.setProperty("--topics-h", `${el.offsetHeight}px`);
+    };
+
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    update();
+    return () => ro.disconnect();
+  }, []);
+
   const capturePage = async () => {
     if (!isSupported) return;
     let finalTab = activeTab;
@@ -132,11 +149,8 @@ function HomePage() {
   };
 
   return (
-    <PageContainer
-      id="lc-home-page"
-      classNameInner="flex flex-col h-[calc(100vh-142px)]"
-    >
-      <header className="mt-4 shrink-0">
+    <PageContainer id="lc-home-page" classNameInner="flex flex-col">
+      <header className="mt-4">
         <span className="flex justify-center gap-3 items-baseline mb-3">
           <img
             src={lexicoraLightThemeLogoNoBg}
@@ -165,8 +179,8 @@ function HomePage() {
           </a>
         </div>
       </header>
-      <main className="flex-1 min-h-0 flex flex-col pb-12">
-        <section className="mt-3 shrink-0">
+      <main ref={mainRef}>
+        <section className="mt-3">
           <div className="flex items-center justify-center gap-2.75">
             <Button
               size="sm"
@@ -205,7 +219,7 @@ function HomePage() {
               <ChevronRightIcon className="transition-opacity size-3 shrink-0 opacity-70 group-hover:opacity-90" />
             </Button>
           </div>
-          <div className="flex flex-col gap-1.75 mt-2">
+          <div ref={topicsContainerRef} className="flex flex-col gap-1.75 mt-2">
             {combinedTopics.map((topic, index) => (
               <Button
                 key={topic.id}
@@ -248,8 +262,8 @@ function HomePage() {
             )}
           </div>
         </section>
-        <Separator className="mt-4 mx-auto max-w-[calc(100%-8px)] shrink-0" />
-        <section className="mt-5 shrink-0">
+        <Separator className="mt-4 mx-auto max-w-[calc(100%-8px)]" />
+        <section className="mt-5">
           <h2 className="text-lg font-medium mb-1 text-[#00143d] dark:text-foreground">
             Describe what you want AI to do
           </h2>
@@ -257,13 +271,16 @@ function HomePage() {
             Optional — leave blank to capture the page as-is.
           </p>
         </section>
-        <section className="mt-5 flex-1 min-h-0 flex flex-col">
+        <section className="mt-5 pb-12">
           <Textarea
             id="ai-prompt-textarea"
             ref={aiPromptTextareaRef}
             placeholder="Type your desired AI prompt here."
-            className="flex-1 min-h-22.5 resize-y w-[calc(100%-2px)] mx-auto scrollbar-thin
-            transition-colors duration-150 focus-visible:ring-0"
+            style={{
+              minHeight:
+                "max(90px, calc(100vh - 425px - var(--topics-h, 135px)))",
+            }}
+            className="resize-y w-[calc(100%-2px)] mx-auto scrollbar-thin transition-colors duration-150 focus-visible:ring-0"
             maxLength={1000}
             disabled={!isSupported}
             title={
