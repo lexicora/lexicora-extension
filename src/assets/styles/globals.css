@@ -204,12 +204,12 @@
   html {
     scrollbar-width: thin;
     &.light {
-      scrollbar-color: #afafaf transparent; /*was: #ededed*/
+      scrollbar-color: #adadad transparent; /*was: #ededed*/
       &::-webkit-scrollbar-track {
         background-color: transparent;
       }
       &::-webkit-scrollbar-thumb {
-        background-color: #afafaf;
+        background-color: #adadad;
       }
       &::-webkit-scrollbar-thumb:hover {
         background-color: #5e5f61;

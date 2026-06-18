@@ -82,7 +82,7 @@ export function SettingsItemSeparator({
     <div className="flex flex-row">
       <div
         className={cn(
-          "shrink-0 w-10.5 h-0 border-t border-t-card dark:border-t-muted/50",
+          "shrink-0 w-10.5 h-0 border-t border-t-card",
           symmetric && "w-3.75",
         )}
       ></div>
@@ -92,7 +92,7 @@ export function SettingsItemSeparator({
           symmetric && "max-w-[calc(100%-30px)]",
         )}
       ></div>
-      <div className="shrink-0 w-3.75 h-0 border-t border-t-card dark:border-t-muted/50"></div>
+      <div className="shrink-0 w-3.75 h-0 border-t border-t-card"></div>
     </div>
   );
 }

@@ -42,7 +42,6 @@ function HomePage() {
   const entriesCollection = useRxCollection("entries");
   const [favoriteTopicsCount, setFavoriteTopicsCount] = useState(0);
   const [favoriteEntriesCount, setFavoriteEntriesCount] = useState(0);
-  const [totalTopicsCount, setTotalTopicsCount] = useState(0);
   const [pinnedTopics, setPinnedTopics] = useState<TopicDocType[]>([]);
   const [recentTopics, setRecentTopics] = useState<TopicDocType[]>([]);
 
@@ -69,17 +68,6 @@ function HomePage() {
         next: (docs) =>
           setPinnedTopics(docs.map((d) => d.toJSON() as TopicDocType)),
         error: () => setPinnedTopics([]),
-      });
-    return () => sub.unsubscribe();
-  }, [topicsCollection]);
-
-  useEffect(() => {
-    if (!topicsCollection) return;
-    const sub = topicsCollection
-      .count({ selector: { isArchived: false } })
-      .$.subscribe({
-        next: setTotalTopicsCount,
-        error: () => setTotalTopicsCount(0),
       });
     return () => sub.unsubscribe();
   }, [topicsCollection]);
@@ -186,11 +174,11 @@ function HomePage() {
                   viewTransition: true,
                 })
               }
-              className="flex items-center justify-center gap-1.5 pl-2.5 pr-2 py-1.25 rounded-full bg-card hover:bg-card-hover text-sm text-foreground transition-colors duration-150 cursor-pointer"
+              className="flex items-center justify-center min-w-36 gap-1.5 pl-2.5 pr-2 py-1.25 rounded-full bg-card hover:bg-card-hover not-dark:shadow-xs text-sm text-foreground transition-colors duration-150 cursor-pointer"
             >
               <StarIcon className="size-3.5 text-yellow-600 fill-yellow-600 dark:text-yellow-500 dark:fill-yellow-500 shrink-0" />
               Topics
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs text-muted-foreground mt-0.5">
                 {formatFavoriteCount(favoriteTopicsCount)}
               </span>
               <ChevronRightIcon className="size-3 shrink-0 opacity-70" />
@@ -201,54 +189,52 @@ function HomePage() {
                   viewTransition: true,
                 })
               }
-              className="flex items-center justify-center gap-1.5 pl-2.5 pr-2 py-1.25 rounded-full bg-card hover:bg-card-hover text-sm text-foreground transition-colors duration-150 cursor-pointer"
+              className="flex items-center justify-center min-w-36 gap-1.5 pl-2.5 pr-2 py-1.25 rounded-full bg-card hover:bg-card-hover not-dark:shadow-xs text-sm text-foreground transition-colors duration-150 cursor-pointer"
             >
               <StarIcon className="size-3.5 text-yellow-600 fill-yellow-600 dark:text-yellow-500 dark:fill-yellow-500 shrink-0" />
               Entries
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs text-muted-foreground mt-0.5">
                 {formatFavoriteCount(favoriteEntriesCount)}
               </span>
               <ChevronRightIcon className="size-3 shrink-0 opacity-70" />
             </button>
           </div>
-          <div className="h-30 flex flex-col items-center justify-center gap-1.5 mt-2.5">
-            {totalTopicsCount === 0 ? (
+          <div className="flex flex-col gap-1.75 mt-4">
+            {combinedTopics.map((topic) => (
               <button
+                key={topic.id}
+                onClick={() =>
+                  navigate(`/library/topics/${topic.id}`, {
+                    viewTransition: true,
+                  })
+                }
+                className="w-full flex items-center gap-2 px-3 py-2 bg-card hover:bg-card-hover not-dark:shadow-xs rounded-xl text-left transition-colors duration-150 cursor-pointer"
+              >
+                {topic.isPinned ? (
+                  <PinIcon className="size-3.5 text-blue-600 fill-blue-600 dark:text-blue-500 dark:fill-blue-500 shrink-0" />
+                ) : (
+                  <HistoryIcon className="size-3.5 text-muted-foreground shrink-0" />
+                )}
+                <span className="text-sm truncate flex-1">{topic.name}</span>
+                <ChevronRightIcon className="size-3.5 text-muted-foreground shrink-0 opacity-70" />
+              </button>
+            ))}
+            {combinedTopics.length < 3 && (
+              <Button
+                variant="link"
+                size="sm"
                 onClick={() =>
                   navigate("/library/topics/new", { viewTransition: true })
                 }
-                className="flex items-center justify-center gap-1.5 pl-2.5 pr-2 py-1.25 rounded-full bg-card hover:bg-card-hover text-sm text-foreground transition-colors duration-150 cursor-pointer"
+                className="self-center -mb-2"
               >
-                <PlusIcon className="size-3.5 text-muted-foreground shrink-0" />
+                {/* <PlusIcon className="size-3.5 shrink-0" /> */}
                 Create a topic
-                <ChevronRightIcon className="size-3 shrink-0 opacity-70" />
-              </button>
-            ) : (
-              combinedTopics.map((topic) => (
-                <button
-                  key={topic.id}
-                  onClick={() =>
-                    navigate(`/library/topics/${topic.id}`, {
-                      viewTransition: true,
-                    })
-                  }
-                  className="w-full flex items-center gap-2 px-3 py-2 bg-card hover:bg-card-hover not-dark:shadow-xs rounded-xl text-left transition-colors duration-150 cursor-pointer"
-                >
-                  {topic.isPinned ? (
-                    <PinIcon className="size-3.5 text-blue-600 fill-blue-600 dark:text-blue-500 dark:fill-blue-500 shrink-0" />
-                  ) : (
-                    <HistoryIcon className="size-3.5 text-muted-foreground shrink-0" />
-                  )}
-                  <span className="text-sm truncate flex-1">
-                    {topic.name}
-                  </span>
-                  <ChevronRightIcon className="size-3.5 text-muted-foreground shrink-0 opacity-70" />
-                </button>
-              ))
+              </Button>
             )}
           </div>
         </section>
-        <Separator className="mt-5 mx-auto max-w-[calc(100%-8px)] opacity-60 shrink-0" />
+        <Separator className="mt-4 mx-auto max-w-[calc(100%-8px)] opacity-60 shrink-0" />
         <section className="mt-5 shrink-0">
           <h2 className="text-lg font-medium mb-1 text-[#00143d] dark:text-foreground">
             Describe what you want AI to do
@@ -262,7 +248,7 @@ function HomePage() {
             id="ai-prompt-textarea"
             ref={aiPromptTextareaRef}
             placeholder="Type your desired AI prompt here."
-            className="flex-1 min-h-[90px] resize-y w-[calc(100%-2px)] mx-auto scrollbar-thin
+            className="flex-1 min-h-22.5 resize-y w-[calc(100%-2px)] mx-auto scrollbar-thin
             transition-colors duration-150 focus-visible:ring-0"
             maxLength={1000}
             disabled={!isSupported}

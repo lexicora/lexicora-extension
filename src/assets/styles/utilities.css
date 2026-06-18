@@ -54,3 +54,11 @@
     ring-1 ring-inset ring-black/20 dark:ring-white/30 hover:ring-black/25 dark:hover:ring-white/25 
     size-9 rounded-[12px] shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)] focus-visible:ring-offset-1;
 }
+
+.default-focus-ring {
+  @apply focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px];
+}
+
+.destructive-focus-ring {
+  @apply focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 focus-visible:border-destructive/40;
+}

@@ -13,7 +13,7 @@ html {
   scroll-padding-bottom: 72px;
   /*scrollbar-width: none !important;*/
   &.light {
-    scrollbar-color: #afafaf #ededed;
+    scrollbar-color: #adadad #e5e6e7;
     &::-webkit-scrollbar-track {
       background-color: #ededed;
     }
