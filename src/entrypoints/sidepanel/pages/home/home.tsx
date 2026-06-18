@@ -167,48 +167,59 @@ function HomePage() {
       </header>
       <main className="flex-1 min-h-0 flex flex-col pb-12">
         <section className="mt-3 shrink-0">
-          <div className="flex items-center justify-center gap-2.5">
-            <button
-              onClick={() =>
-                navigate("/library?tab=topics&favorites=true", {
-                  viewTransition: true,
-                })
-              }
-              className="flex items-center justify-center min-w-36 gap-1.5 pl-2.5 pr-2 py-1.25 rounded-full bg-card hover:bg-card-hover not-dark:shadow-xs text-sm text-foreground transition-colors duration-150 cursor-pointer"
-            >
-              <StarIcon className="size-3.5 text-yellow-600 fill-yellow-600 dark:text-yellow-500 dark:fill-yellow-500 shrink-0" />
-              Topics
-              <span className="text-xs text-muted-foreground mt-0.5">
-                {formatFavoriteCount(favoriteTopicsCount)}
-              </span>
-              <ChevronRightIcon className="size-3 shrink-0 opacity-70" />
-            </button>
-            <button
+          <div className="flex items-center justify-center gap-2.75">
+            <Button
+              size="sm"
+              variant="secondary"
+              className="group flex items-center justify-center min-w-34 gap-1.5 pl-2.5 pr-2 rounded-full bg-card hover:bg-card-hover not-dark:shadow-xs"
+              title="Favorite entries"
               onClick={() =>
                 navigate("/library?tab=entries&favorites=true", {
                   viewTransition: true,
                 })
               }
-              className="flex items-center justify-center min-w-36 gap-1.5 pl-2.5 pr-2 py-1.25 rounded-full bg-card hover:bg-card-hover not-dark:shadow-xs text-sm text-foreground transition-colors duration-150 cursor-pointer"
             >
               <StarIcon className="size-3.5 text-yellow-600 fill-yellow-600 dark:text-yellow-500 dark:fill-yellow-500 shrink-0" />
               Entries
               <span className="text-xs text-muted-foreground mt-0.5">
                 {formatFavoriteCount(favoriteEntriesCount)}
               </span>
-              <ChevronRightIcon className="size-3 shrink-0 opacity-70" />
-            </button>
+              <ChevronRightIcon className="transition-opacity size-3 shrink-0 opacity-70 group-hover:opacity-90" />
+            </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              className="group flex items-center justify-center min-w-34 gap-1.5 pl-2.5 pr-2 rounded-full bg-card hover:bg-card-hover not-dark:shadow-xs"
+              title="Favorite topics"
+              onClick={() =>
+                navigate("/library?tab=topics&favorites=true", {
+                  viewTransition: true,
+                })
+              }
+            >
+              <StarIcon className="size-3.5 text-yellow-600 fill-yellow-600 dark:text-yellow-500 dark:fill-yellow-500 shrink-0" />
+              Topics
+              <span className="text-xs text-muted-foreground mt-0.5">
+                {formatFavoriteCount(favoriteTopicsCount)}
+              </span>
+              <ChevronRightIcon className="transition-opacity size-3 shrink-0 opacity-70 group-hover:opacity-90" />
+            </Button>
           </div>
-          <div className="flex flex-col gap-1.75 mt-4">
-            {combinedTopics.map((topic) => (
-              <button
+          <div className="flex flex-col gap-1.75 mt-2">
+            {combinedTopics.map((topic, index) => (
+              <Button
                 key={topic.id}
+                variant="secondary"
+                className={cn(
+                  "group w-full flex items-center h-9.5 gap-2 px-3 bg-card hover:bg-card-hover not-dark:shadow-xs rounded-xl text-left",
+                  index === 0 && "mt-1.75",
+                )}
+                //title="View topic"
                 onClick={() =>
                   navigate(`/library/topics/${topic.id}`, {
                     viewTransition: true,
                   })
                 }
-                className="w-full flex items-center gap-2 px-3 py-2 bg-card hover:bg-card-hover not-dark:shadow-xs rounded-xl text-left transition-colors duration-150 cursor-pointer"
               >
                 {topic.isPinned ? (
                   <PinIcon className="size-3.5 text-blue-600 fill-blue-600 dark:text-blue-500 dark:fill-blue-500 shrink-0" />
@@ -216,8 +227,8 @@ function HomePage() {
                   <HistoryIcon className="size-3.5 text-muted-foreground shrink-0" />
                 )}
                 <span className="text-sm truncate flex-1">{topic.name}</span>
-                <ChevronRightIcon className="size-3.5 text-muted-foreground shrink-0 opacity-70" />
-              </button>
+                <ChevronRightIcon className="transition-opacity size-3.5 text-muted-foreground shrink-0 opacity-70 group-hover:opacity-100" />
+              </Button>
             ))}
             {combinedTopics.length < 3 && (
               <Button
@@ -228,10 +239,10 @@ function HomePage() {
                 }
                 className={cn(
                   "self-center -mb-2",
-                  combinedTopics.length === 0 && "-mt-1.5",
+                  //combinedTopics.length > 0 && "-mb-1",
+                  //combinedTopics.length === 0 && "-mt-1.5",
                 )}
               >
-                {/* <PlusIcon className="size-3.5 shrink-0" /> */}
                 Create a topic
               </Button>
             )}
