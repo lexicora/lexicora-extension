@@ -10,7 +10,6 @@ import {
   ChevronRightIcon,
   HistoryIcon,
   PinIcon,
-  PlusIcon,
   StarIcon,
 } from "lucide-react";
 import { useTabSupport } from "@/hooks/use-tab-support";
@@ -44,8 +43,10 @@ function HomePage() {
   const [favoriteEntriesCount, setFavoriteEntriesCount] = useState(0);
   const [pinnedTopics, setPinnedTopics] = useState<TopicDocType[]>([]);
   const [recentTopics, setRecentTopics] = useState<TopicDocType[]>([]);
-  const mainRef = useRef<HTMLElement>(null);
-  const topicsContainerRef = useRef<HTMLDivElement>(null);
+  const [maxTopicsToShow, setMaxTopicsToShow] = useState(() => {
+    const h = document.documentElement.clientHeight;
+    return h >= 870 ? 5 : h >= 825 ? 4 : 3;
+  });
 
   useEffect(() => {
     if (!topicsCollection) return;
@@ -64,7 +65,7 @@ function HomePage() {
       .find({
         selector: { isPinned: true, isArchived: false },
         sort: [{ updatedAt: "desc" }],
-        limit: 3,
+        limit: 5,
       })
       .$.subscribe({
         next: (docs) =>
@@ -95,7 +96,7 @@ function HomePage() {
     ...recentTopics.filter(
       (topic) => !pinnedTopics.some((pinned) => pinned.id === topic.id),
     ),
-  ].slice(0, 3);
+  ].slice(0, maxTopicsToShow);
 
   useEffect(() => {
     if (!entriesCollection) return;
@@ -109,17 +110,12 @@ function HomePage() {
   }, [entriesCollection]);
 
   useEffect(() => {
-    const el = topicsContainerRef.current;
-    const main = mainRef.current;
-    if (!el || !main) return;
-
     const update = () => {
-      main.style.setProperty("--topics-h", `${el.offsetHeight}px`);
+      const h = document.documentElement.clientHeight;
+      setMaxTopicsToShow(h >= 870 ? 5 : h >= 825 ? 4 : 3);
     };
-
     const ro = new ResizeObserver(update);
-    ro.observe(el);
-    update();
+    ro.observe(document.documentElement);
     return () => ro.disconnect();
   }, []);
 
@@ -150,7 +146,7 @@ function HomePage() {
 
   return (
     <PageContainer id="lc-home-page" classNameInner="flex flex-col">
-      <header className="mt-4">
+      <header className="mt-4 shrink-0">
         <span className="flex justify-center gap-3 items-baseline mb-3">
           <img
             src={lexicoraLightThemeLogoNoBg}
@@ -179,8 +175,8 @@ function HomePage() {
           </a>
         </div>
       </header>
-      <main ref={mainRef}>
-        <section className="mt-3">
+      <main className="flex-1 flex flex-col">
+        <section className="mt-3 shrink-0">
           <div className="flex items-center justify-center gap-2.75">
             <Button
               size="sm"
@@ -219,7 +215,7 @@ function HomePage() {
               <ChevronRightIcon className="transition-opacity size-3 shrink-0 opacity-70 group-hover:opacity-90" />
             </Button>
           </div>
-          <div ref={topicsContainerRef} className="flex flex-col gap-1.75 mt-2">
+          <div className="flex flex-col gap-1.75 mt-2">
             {combinedTopics.map((topic, index) => (
               <Button
                 key={topic.id}
@@ -244,7 +240,7 @@ function HomePage() {
                 <ChevronRightIcon className="transition-opacity size-3.5 text-muted-foreground shrink-0 opacity-70 group-hover:opacity-100" />
               </Button>
             ))}
-            {combinedTopics.length < 3 && (
+            {combinedTopics.length < maxTopicsToShow && (
               <Button
                 variant="link"
                 size="sm"
@@ -262,49 +258,50 @@ function HomePage() {
             )}
           </div>
         </section>
-        <Separator className="mt-4 mx-auto max-w-[calc(100%-8px)]" />
-        <section className="mt-5">
-          <h2 className="text-lg font-medium mb-1 text-[#00143d] dark:text-foreground">
-            Describe what you want AI to do
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Optional — leave blank to capture the page as-is.
-          </p>
-        </section>
-        <section className="mt-5 pb-12">
-          <Textarea
-            id="ai-prompt-textarea"
-            ref={aiPromptTextareaRef}
-            placeholder="Type your desired AI prompt here."
-            style={{
-              minHeight:
-                "max(90px, calc(100vh - 425px - var(--topics-h, 135px)))",
-            }}
-            className="resize-y w-[calc(100%-2px)] mx-auto scrollbar-thin transition-colors duration-150 focus-visible:ring-0"
-            maxLength={1000}
-            disabled={!isSupported}
-            title={
-              isSupported
-                ? ""
-                : "You are currently on a unsupported page for capturing."
-            }
-            value={promptText}
-            onChange={(e) => {
-              setPromptText(e.target.value);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Escape") {
-                e.preventDefault();
-                aiPromptTextareaRef.current?.blur();
+        <Separator className="mt-4 mx-auto max-w-[calc(100%-8px)] shrink-0" />
+        <section className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col items-center justify-center text-center py-5">
+            <h2 className="text-lg font-medium mb-1 text-[#00143d] dark:text-foreground">
+              Describe what you want AI to do
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Optional — leave blank to capture the page as-is.
+            </p>
+          </div>
+          <div className="pb-12">
+            <Textarea
+              id="ai-prompt-textarea"
+              ref={aiPromptTextareaRef}
+              placeholder="Type your desired AI prompt here."
+              style={{
+                height: "clamp(90px, calc(100dvh - 560px), 300px)",
+              }}
+              className="min-h-[90px] max-h-[300px] resize-y w-[calc(100%-2px)] mx-auto scrollbar-thin transition-colors duration-150 focus-visible:ring-0"
+              maxLength={1000}
+              disabled={!isSupported}
+              title={
+                isSupported
+                  ? ""
+                  : "You are currently on a unsupported page for capturing."
               }
-              // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
-              if (e.ctrlKey && e.key === "Enter") {
-                e.preventDefault();
-                if (promptText.trim() === "") return;
-                alert("Submitted AI request successfully!");
-              }
-            }}
-          />
+              value={promptText}
+              onChange={(e) => {
+                setPromptText(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  e.preventDefault();
+                  aiPromptTextareaRef.current?.blur();
+                }
+                // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
+                if (e.ctrlKey && e.key === "Enter") {
+                  e.preventDefault();
+                  if (promptText.trim() === "") return;
+                  alert("Submitted AI request successfully!");
+                }
+              }}
+            />
+          </div>
         </section>
       </main>
       <footer className={styles.bottomFooter}>
