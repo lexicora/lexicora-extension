@@ -60,6 +60,17 @@ function HomePage() {
   }, [topicsCollection]);
 
   useEffect(() => {
+    if (!entriesCollection) return;
+    const sub = entriesCollection
+      .count({ selector: { isFavorite: true } })
+      .$.subscribe({
+        next: setFavoriteEntriesCount,
+        error: () => setFavoriteEntriesCount(0),
+      });
+    return () => sub.unsubscribe();
+  }, [entriesCollection]);
+
+  useEffect(() => {
     if (!topicsCollection) return;
     const sub = topicsCollection
       .find({
@@ -97,17 +108,6 @@ function HomePage() {
       (topic) => !pinnedTopics.some((pinned) => pinned.id === topic.id),
     ),
   ].slice(0, maxTopicsToShow);
-
-  useEffect(() => {
-    if (!entriesCollection) return;
-    const sub = entriesCollection
-      .count({ selector: { isFavorite: true } })
-      .$.subscribe({
-        next: setFavoriteEntriesCount,
-        error: () => setFavoriteEntriesCount(0),
-      });
-    return () => sub.unsubscribe();
-  }, [entriesCollection]);
 
   useEffect(() => {
     const update = () => {
