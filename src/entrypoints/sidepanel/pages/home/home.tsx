@@ -273,10 +273,7 @@ function HomePage() {
               id="ai-prompt-textarea"
               ref={aiPromptTextareaRef}
               placeholder="Type your desired AI prompt here."
-              style={{
-                height: "clamp(90px, calc(100dvh - 560px), 300px)",
-              }}
-              className="min-h-[90px] max-h-[300px] resize-y w-[calc(100%-2px)] mx-auto scrollbar-thin transition-colors duration-150 focus-visible:ring-0"
+              className="max-h-75 field-sizing-content resize-y w-[calc(100%-2px)] mx-auto scrollbar-thin transition-colors duration-150 focus-visible:ring-0"
               maxLength={1000}
               disabled={!isSupported}
               title={
