@@ -226,7 +226,10 @@ function HomePage() {
                 onClick={() =>
                   navigate("/library/topics/new", { viewTransition: true })
                 }
-                className="self-center -mb-2"
+                className={cn(
+                  "self-center -mb-2",
+                  combinedTopics.length === 0 && "-mt-1.5",
+                )}
               >
                 {/* <PlusIcon className="size-3.5 shrink-0" /> */}
                 Create a topic
@@ -234,7 +237,7 @@ function HomePage() {
             )}
           </div>
         </section>
-        <Separator className="mt-4 mx-auto max-w-[calc(100%-8px)] opacity-60 shrink-0" />
+        <Separator className="mt-4 mx-auto max-w-[calc(100%-8px)] shrink-0" />
         <section className="mt-5 shrink-0">
           <h2 className="text-lg font-medium mb-1 text-[#00143d] dark:text-foreground">
             Describe what you want AI to do
