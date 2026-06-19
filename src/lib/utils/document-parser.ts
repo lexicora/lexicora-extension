@@ -591,9 +591,5 @@ export function parseSnippet(snippet: Element, doc: Document): ParseResult {
   };
 }
 
-//export function parseDocumentLight(doc: Document): any {}
-// A very lightweight parser that does not prune, but apply code block normalization and image URL resolution, and extracts metadata.
-// This can be used for the AI-assisted capture, where we want to preserve as much of the original structure as possible, and let the AI figure out what to keep or discard, though the full implementation might still be better
-
 // TODO: Maybe implement later, when needed
 //export function parseDocumentToMarkdown(doc: Document): string {}
