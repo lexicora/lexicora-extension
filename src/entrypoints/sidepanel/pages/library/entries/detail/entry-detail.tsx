@@ -26,15 +26,16 @@ import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { BlockDocType } from "@/db/schemas/block";
 import { EntryDocType } from "@/db/schemas/entry";
+import { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
 import { convertDbBlocksToBlockNote } from "@/lib/utils/block-converter";
 import {
   ArchiveIcon,
+  ChevronRightIcon,
   ClipboardIcon,
   EllipsisIcon,
   FileTextIcon,
-  FolderIcon,
   PinIcon,
   SquarePenIcon,
   StarIcon,
@@ -83,11 +84,13 @@ function EntryDetailPage() {
   const navigate = useNavigate();
   const entriesCollection = useRxCollection("entries");
   const blocksCollection = useRxCollection("blocks");
+  const topicsCollection = useRxCollection("topics");
 
   // undefined = loading, null = not found
   const [entry, setEntry] = useState<EntryDocType | null | undefined>(
     undefined,
   );
+  const [topic, setTopic] = useState<TopicDocType | null>(null);
   const [blocks, setBlocks] = useState<any[] | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const editorRef = useRef<CopyableEditor | null>(null);
@@ -104,6 +107,17 @@ function EntryDetailPage() {
     });
     return () => sub.unsubscribe();
   }, [entriesCollection, id]);
+
+  useEffect(() => {
+    if (!topicsCollection || !entry?.topicId) return;
+    const sub = topicsCollection
+      .findOne({ selector: { id: entry.topicId } })
+      .$.subscribe({
+        next: (doc) => setTopic(doc ? (doc.toJSON() as TopicDocType) : null),
+        error: () => setTopic(null),
+      });
+    return () => sub.unsubscribe();
+  }, [topicsCollection, entry?.topicId]);
 
   // Load blocks once — read-only view doesn't need live updates
   // TODO: Maybe live updates are needed, when the windowed interface is implemented an blocks are updated.
@@ -154,6 +168,9 @@ function EntryDetailPage() {
       const lines: string[] = [];
       lines.push("**Entry**", "");
       lines.push(`# ${entry.title}`, "");
+      if (topic) {
+        lines.push(`**Topic:** ${topic.name}`, "");
+      }
       if (entry.url) {
         const label = entry.siteName || entry.hostnameUrl || entry.url;
         lines.push(`**Source:** [${label}](${entry.url})`, "");
@@ -220,18 +237,6 @@ function EntryDetailPage() {
     );
   }
 
-  const editButton = {
-    iconSmall: <FolderIcon className="size-4.5" />,
-    iconLarge: <FolderIcon className="size-5.5" />,
-    variant: "default" as const,
-    onClick: () =>
-      navigate(`/library/topics/${entry.topicId}`, {
-        viewTransition: true,
-      }),
-    title: "View parent topic",
-    type: "button" as const,
-  };
-
   const hasContent =
     !!blocks &&
     !(
@@ -248,13 +253,24 @@ function EntryDetailPage() {
         title="Entry"
         classNameHeaderElement="mb-3"
         goBackButton
-        goBackButtonVariant="tinted"
-        rightActionButton={editButton}
         heavyTeardown
       />
 
       <section className="px-1 mx-auto w-full max-w-(--lc-content-max-width) text-left select-text">
         {/* Title */}
+        {topic && (
+          <button
+            className="flex items-center gap-0.5 ml-px mb-1 max-w-full text-xs font-medium text-muted-foreground hover:text-lc-muted-foreground-hover hover:underline underline-offset-2 transition-colors cursor-pointer"
+            onClick={() =>
+              navigate(`/library/topics/${topic.id}`, {
+                viewTransition: true,
+              })
+            }
+          >
+            <span className="truncate max-w-50">{topic.name}</span>
+            <ChevronRightIcon className="size-3 shrink-0 opacity-70" />
+          </button>
+        )}
         <h1 className="text-2xl font-semibold leading-tight wrap-break-word text-pretty">
           {entry.title}
         </h1>
@@ -360,7 +376,7 @@ function EntryDetailPage() {
             }
             onClick={() => handleAttributeToggle("isFavorite")}
             className={cn(
-              "size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800",
+              "size-9 rounded-lg hover:bg-gray-300/75 dark:hover:bg-gray-800",
               entry.isArchived && "opacity-40 pointer-events-none",
             )}
           >
@@ -379,7 +395,7 @@ function EntryDetailPage() {
             title={entry.isPinned ? "Unpin entry" : "Pin entry"}
             onClick={() => handleAttributeToggle("isPinned")}
             className={cn(
-              "size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800",
+              "size-9 rounded-lg hover:bg-gray-300/75 dark:hover:bg-gray-800",
               entry.isArchived && "opacity-40 pointer-events-none",
             )}
           >
@@ -397,7 +413,7 @@ function EntryDetailPage() {
             size="icon"
             title={entry.isArchived ? "Restore entry" : "Archive entry"}
             onClick={() => handleAttributeToggle("isArchived")}
-            className="size-9 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="size-9 rounded-lg hover:bg-gray-300/75 dark:hover:bg-gray-800"
           >
             <ArchiveIcon
               className={cn(
@@ -415,8 +431,8 @@ function EntryDetailPage() {
                 title="Copy actions"
                 className={cn(
                   "ml-auto size-9 rounded-lg not-hover:text-muted-foreground",
-                  "hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-950/50 dark:hover:text-blue-400",
-                  "aria-expanded:bg-blue-100 aria-expanded:text-blue-600 dark:aria-expanded:bg-blue-950/50 dark:aria-expanded:text-blue-400",
+                  "hover:bg-blue-200/80 hover:text-blue-700 dark:hover:bg-blue-900/50 dark:hover:text-blue-400",
+                  "aria-expanded:bg-blue-200/80 aria-expanded:text-blue-700 dark:aria-expanded:bg-blue-900/50 dark:aria-expanded:text-blue-400",
                 )}
               >
                 <EllipsisIcon className="size-4.5" />
@@ -453,7 +469,7 @@ function EntryDetailPage() {
                 viewTransition: true,
               })
             }
-            className="size-9 rounded-lg text-muted-foreground hover:bg-green-100 hover:text-green-600 dark:hover:bg-green-950/50 dark:hover:text-green-400"
+            className="size-9 rounded-lg text-muted-foreground hover:bg-green-200/80 hover:text-green-700 dark:hover:bg-green-900/50 dark:hover:text-green-400"
           >
             <SquarePenIcon className="size-4.5" />
           </Button>
@@ -462,7 +478,7 @@ function EntryDetailPage() {
             size="icon"
             title="Delete entry"
             onClick={() => setDeleteOpen(true)}
-            className="size-9 rounded-lg text-muted-foreground hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-950/50 dark:hover:text-red-400"
+            className="size-9 rounded-lg text-muted-foreground hover:bg-red-200/80 hover:text-red-700 dark:hover:bg-red-900/50 dark:hover:text-red-400"
           >
             <Trash2Icon className="size-4.5" />
           </Button>
@@ -505,7 +521,12 @@ function EntryDetailPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-3.5">
-            <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
+            <AlertDialogCancel
+              variant="outline"
+              className="not-dark:bg-muted/15 not-dark:hover:bg-muted/50"
+            >
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               className="-mr-px"

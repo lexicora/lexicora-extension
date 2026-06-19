@@ -75,7 +75,12 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-type SourceField = "url" | "siteName" | "faviconUrl" | "languageCode" | "description";
+type SourceField =
+  | "url"
+  | "siteName"
+  | "faviconUrl"
+  | "languageCode"
+  | "description";
 
 export type EntryFormApi = {
   setFieldValue: (name: SourceField, value: string) => void;
@@ -345,7 +350,9 @@ export function EntryForm({
               // The original archived topic from initialData — always kept in the list so
               // the user can revert back to it after switching away.
               const originalArchivedTopic = initialData?.topicId
-                ? topics.find((t) => t.id === initialData.topicId && t.isArchived)
+                ? topics.find(
+                    (t) => t.id === initialData.topicId && t.isArchived,
+                  )
                 : undefined;
 
               // If the *current* selection (after a change) is a different archived topic,
@@ -362,8 +369,10 @@ export function EntryForm({
                     (t) =>
                       t.isArchived &&
                       t.name.toLowerCase().includes(typed.toLowerCase()) &&
-                      (!currentArchivedTopic || t.id !== currentArchivedTopic.id) &&
-                      (!originalArchivedTopic || t.id !== originalArchivedTopic.id),
+                      (!currentArchivedTopic ||
+                        t.id !== currentArchivedTopic.id) &&
+                      (!originalArchivedTopic ||
+                        t.id !== originalArchivedTopic.id),
                   )
                 : [];
 
@@ -417,7 +426,8 @@ export function EntryForm({
                         const isArchived =
                           "isArchived" in topic &&
                           (topic as TopicDocType).isArchived === true;
-                        const isRevertable = isArchived && topic.id === originalArchivedTopic?.id;
+                        const isRevertable =
+                          isArchived && topic.id === originalArchivedTopic?.id;
                         return (
                           <ComboboxItem
                             key={topic.id}
@@ -652,7 +662,7 @@ export function EntryForm({
                     // }}
                   />
                   <Avatar.Fallback delayMs={500}>
-                    <div className="bg-gray-200 dark:bg-gray-800 size-8.5 rounded-md"></div>
+                    <div className="bg-gray-300/75 dark:bg-gray-800 size-8.5 rounded-md"></div>
                   </Avatar.Fallback>
                 </Avatar.Root>
                 <Input
@@ -684,7 +694,7 @@ export function EntryForm({
                   size="sm"
                   title="Fetch current tab's metadata"
                   onClick={handleFetchMetadata}
-                  className="shrink-0 text-muted-foreground"
+                  className="shrink-0 text-muted-foreground not-dark:hover:bg-muted/50"
                   disabled={!isSupported}
                 >
                   <RefreshCw className="size-4" /> Refresh Metadata

@@ -7,7 +7,7 @@ import {
   ItemTitle,
   ItemDescription,
 } from "@/components/ui/item";
-import { SettingsItemSeperator } from "@/components/settings";
+import { SettingsItemSeparator } from "@/components/settings";
 import {
   ArchiveIcon,
   BookmarkIcon,
@@ -74,8 +74,8 @@ function TipsAndTricksPage() {
   return (
     <PageContainer>
       <PageHeader title="Tips & Tricks" goBackButton />
-      <main className="flex flex-col gap-0 w-full pt-4.5 px-1 mb-1.75">
-        <section>
+      <main className="flex flex-col gap-0 w-full pt-4.5 px-1 mb-2">
+        <section className="not-dark:shadow-xs rounded-2xl">
           {TIPS.map((tip, i) => {
             const isFirst = i === 0;
             const isLast = i === TIPS.length - 1;
@@ -87,11 +87,11 @@ function TipsAndTricksPage() {
 
             return (
               <div key={tip.title}>
-                {i > 0 && <SettingsItemSeperator />}
+                {i > 0 && <SettingsItemSeparator />}
                 <Item
                   variant="muted"
                   size="sm"
-                  className={`bg-slate-200/75 dark:bg-muted/50 ${roundingClass}`}
+                  className={`bg-card ${roundingClass}`}
                 >
                   <ItemMedia variant="icon">
                     <tip.icon className={`size-5 ${tip.iconColor}`} />

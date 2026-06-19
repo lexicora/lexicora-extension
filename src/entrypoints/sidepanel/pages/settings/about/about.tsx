@@ -9,7 +9,7 @@ import {
   ItemTitle,
   ItemDescription,
 } from "@/components/ui/item";
-import { SettingsItemSeperator } from "@/components/settings";
+import { SettingsItemSeparator } from "@/components/settings";
 import { ChevronRightIcon, FileTextIcon, TagIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -24,7 +24,7 @@ function AboutPage() {
           <Item
             variant="muted"
             size="default"
-            className="bg-slate-200/75 dark:bg-muted/50 rounded-2xl flex-col items-center py-6 gap-2 text-center"
+            className="bg-card rounded-2xl not-dark:shadow-xs flex-col items-center py-6 gap-1 text-center"
           >
             <span className="flex justify-center gap-1.5 items-baseline mb-3">
               {/*Maybe add link to lexicora.com */}
@@ -52,11 +52,11 @@ function AboutPage() {
           </Item>
         </section>
 
-        <section>
+        <section className="not-dark:shadow-xs rounded-2xl">
           <Item
             variant="muted"
             size="sm"
-            className="bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-b-none"
+            className="bg-card rounded-2xl rounded-b-none"
           >
             <ItemContent>
               <ItemDescription className="line-clamp-none text-foreground/80 text-pretty">
@@ -66,11 +66,11 @@ function AboutPage() {
               </ItemDescription>
             </ItemContent>
           </Item>
-          <SettingsItemSeperator />
+          <SettingsItemSeparator />
           <Item
             variant="muted"
             size="sm"
-            className="bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-t-none"
+            className="bg-card rounded-2xl rounded-t-none"
           >
             <ItemMedia variant="icon">
               <TagIcon className="size-5 text-muted-foreground" />
@@ -88,7 +88,7 @@ function AboutPage() {
           <Item
             variant="muted"
             size="sm"
-            className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl"
+            className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl not-dark:shadow-xs"
             asChild
           >
             <Link

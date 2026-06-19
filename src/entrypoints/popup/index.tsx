@@ -2,8 +2,6 @@ import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.s
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
 // TODO: Potentially make Lexicora logos into components.
 
-import { useEffect, useState } from "react";
-//import styles from "./home.module.css";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,8 +12,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowUpRightIcon, PanelRightIcon, UserIcon } from "lucide-react";
 import { sendMessage } from "@/lib/messaging";
+import { ArrowUpRightIcon, PanelRightIcon, UserIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { MSG } from "@/constants/messaging";
 import { useTabSupport } from "@/hooks/use-tab-support";
@@ -23,7 +22,7 @@ import { cn } from "@/lib/utils";
 import { useScrollPos } from "@/providers/scroll-observer";
 import type { TabData } from "@/types/tab-data.types";
 
-function HomePage() {
+function Popup() {
   const { isAtTop } = useScrollPos();
   const { isSupported, activeTab } = useTabSupport();
   const [promptText, setPromptText] = useState("");
@@ -147,15 +146,14 @@ function HomePage() {
                 variant="ghost"
                 size="icon"
                 title="Open Side Panel"
+                // Maybe change title to "Open app (in side panel)", or similar. potentially leave out (in side panel).
               >
                 <PanelRightIcon className="size-4.5" />
               </Button>
             </div>
           </div>
         </nav>
-      </header>
-      <main>
-        <section>
+        <section className="mt-1">
           <span className="flex justify-center gap-3 items-baseline mb-3">
             {/*Maybe add link to lexicora.com */}
             <img
@@ -187,18 +185,17 @@ function HomePage() {
             </a>
           </div>
           {/*TODO: Maybe show indication (like in browsers bottom left of window), where this link leads */}
+        </section>
+      </header>
+      <main>
+        <section>
           <hr className="mt-3 mx-2" />
           <article>
             <h2 className="text-lg font-medium mt-4 mb-1 text-[#00143d] dark:text-foreground">
               Describe what you want AI to do
             </h2>
-            <p className="text-sm text-muted-foreground">
-              Provide instructions for capturing and enhancing the content of
-              the current page using AI.
-            </p>
-            <hr className="mx-24 mt-2.75" />
-            <p className="text-sm text-muted-foreground mt-2">
-              Or, leave it blank to capture the page as-is.
+            <p className="text-sm text-pretty text-muted-foreground">
+              Optional — leave blank to capture the page as-is.
             </p>
           </article>
         </section>
@@ -253,10 +250,8 @@ function HomePage() {
                     : "You are currently on a unsupported page for capturing."
                 }
                 className={cn(
-                  "w-full hover:bg-secondary hover:brightness-90 overflow-hidden disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:brightness-100 /*active:brightness-80*/",
-                  {
-                    "disabled:pointer-events-none": promptText.trimEnd() !== "",
-                  },
+                  "w-full hover:bg-[color-mix(in_oklab,var(--secondary),black_7%)] dark:hover:bg-[color-mix(in_oklab,var(--secondary)80%,var(--background))] overflow-hidden",
+                  "disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-secondary!",
                 )}
                 disabled={promptText.trimEnd() !== "" || !isSupported}
                 onClick={capturePage}
@@ -271,7 +266,7 @@ function HomePage() {
                     ? "Capture page with AI"
                     : "You are currently on a unsupported page for capturing."
                 }
-                className="w-full hover:bg-primary hover:brightness-90 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:brightness-100 /*active:brightness-80*/"
+                className="w-full hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary"
                 disabled={!isSupported}
               >
                 Capture with AI
@@ -284,4 +279,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default Popup;

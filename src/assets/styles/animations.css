@@ -22,6 +22,23 @@
   animation: icon-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; /*was: 0.25s without small bounce*/
 }
 
+/* .vt-topic-name {
+  view-transition-name: topic-name;
+}
+
+::view-transition-group(topic-name) {
+  animation-duration: 0.15s;
+  animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(topic-name),
+::view-transition-new(topic-name) {
+  animation: none;
+  mix-blend-mode: normal;
+  height: 100%;
+} */
+
 /*@view-transition {
     navigation: auto;
 }*/

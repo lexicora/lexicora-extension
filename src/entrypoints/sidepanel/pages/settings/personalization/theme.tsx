@@ -1,6 +1,6 @@
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
-import { SettingsItemSeperator } from "@/components/settings";
+import { SettingsItemSeparator } from "@/components/settings";
 import {
   Item,
   ItemActions,
@@ -18,13 +18,17 @@ function ThemePersonalizationSettingsPage() {
   return (
     <PageContainer>
       <PageHeader title="Theme" goBackButton />
-      <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1">
+      <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-1">
         <section>
-          <RadioGroup value={theme} defaultValue="system" className="gap-0">
+          <RadioGroup
+            value={theme}
+            defaultValue="system"
+            className="gap-0 not-dark:shadow-xs rounded-2xl"
+          >
             <Item
               variant="muted"
               size="sm"
-              className="group transition-none hover:cursor-pointer bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-b-none"
+              className="group transition-none hover:cursor-pointer bg-card rounded-2xl rounded-b-none"
               onClick={() => setTheme("system")}
             >
               <ItemMedia variant="icon">
@@ -38,15 +42,15 @@ function ThemePersonalizationSettingsPage() {
               <ItemActions>
                 <RadioGroupItem
                   value="system"
-                  className="not-dark:bg-gray-300 not-dark:border-gray-400"
+                  className="not-dark:bg-gray-200 not-dark:border-gray-400/50"
                 />
               </ItemActions>
             </Item>
-            <SettingsItemSeperator />
+            <SettingsItemSeparator />
             <Item
               variant="muted"
               size="sm"
-              className="group transition-none hover:cursor-pointer bg-slate-200/75 dark:bg-muted/50 rounded-none"
+              className="group transition-none hover:cursor-pointer bg-card rounded-none"
               onClick={() => setTheme("dark")}
             >
               <ItemMedia variant="icon">
@@ -60,15 +64,15 @@ function ThemePersonalizationSettingsPage() {
               <ItemActions>
                 <RadioGroupItem
                   value="dark"
-                  className="not-dark:bg-gray-300 not-dark:border-gray-400"
+                  className="not-dark:bg-gray-200 not-dark:border-gray-400/50"
                 />
               </ItemActions>
             </Item>
-            <SettingsItemSeperator />
+            <SettingsItemSeparator />
             <Item
               variant="muted"
               size="sm"
-              className="group transition-none hover:cursor-pointer bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-t-none"
+              className="group transition-none hover:cursor-pointer bg-card rounded-2xl rounded-t-none"
               onClick={() => setTheme("light")}
             >
               <ItemMedia variant="icon">
@@ -82,7 +86,7 @@ function ThemePersonalizationSettingsPage() {
               <ItemActions>
                 <RadioGroupItem
                   value="light"
-                  className="not-dark:bg-gray-300 not-dark:border-gray-400"
+                  className="not-dark:bg-gray-200 not-dark:border-gray-400/50"
                 />
               </ItemActions>
             </Item>

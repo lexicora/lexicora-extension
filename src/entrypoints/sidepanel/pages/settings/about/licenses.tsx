@@ -34,7 +34,7 @@ function LicensesPage() {
   return (
     <PageContainer>
       <PageHeader title="Licenses" goBackButton />
-      <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-1.75">
+      <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-2">
         <section>
           <p className="text-sm text-muted-foreground ml-2 mb-3 text-pretty">
             Lexicora is built on the shoulders of these open source projects.
@@ -42,7 +42,7 @@ function LicensesPage() {
           <Item
             variant="muted"
             size="xs"
-            className="bg-slate-200/75 dark:bg-muted/50 rounded-2xl flex-col gap-0 items-stretch p-0 overflow-hidden"
+            className="bg-card rounded-2xl not-dark:shadow-xs flex-col gap-0 items-stretch p-0 overflow-hidden"
           >
             {LICENSES.map((lib, i) => (
               <div

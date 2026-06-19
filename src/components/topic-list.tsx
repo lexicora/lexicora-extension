@@ -131,10 +131,10 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
       key={topic.id}
       variant="default"
       className={cn(
-        "button-default cursor-pointer",
+        "button-default cursor-pointer duration-150 ease-out",
         "h-full /*min-h-26.25*/ flex-col items-start py-2.75 px-3.25 rounded-2xl",
         !topic.tags?.length && "pb-2.5",
-        "bg-slate-200/75 hover:bg-slate-300/70 dark:bg-muted/50 dark:hover:bg-muted/80",
+        "bg-card hover:bg-card-hover not-dark:shadow-xs",
       )}
       asChild
     >
@@ -171,7 +171,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
                 role="button"
                 tabIndex={0}
                 className={cn(
-                  "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+                  "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-foreground/10 dark:hover:bg-foreground/12",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
                 )}
                 onClick={(e) => handleAttributeToggle(e, "isArchived")}
@@ -197,7 +197,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
                       role="button"
                       tabIndex={0}
                       className={cn(
-                        "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-red-300/75 dark:hover:bg-red-900/50",
+                        "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-destructive/20 dark:hover:bg-destructive/40",
                         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-red-500 dark:focus-visible:ring-offset-red-400 focus-visible:ring-red-500/50",
                       )}
                       onClick={stopPropagation}
@@ -235,7 +235,10 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="flex gap-3.5">
-                      <AlertDialogCancel variant="outline">
+                      <AlertDialogCancel
+                        variant="outline"
+                        className="not-dark:bg-muted/15 not-dark:hover:bg-muted/50"
+                      >
                         Cancel
                       </AlertDialogCancel>
                       <AlertDialogAction
@@ -255,7 +258,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
                     role="button"
                     tabIndex={0}
                     className={cn(
-                      "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+                      "group size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-foreground/10 dark:hover:bg-foreground/12",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
                     )}
                     onClick={async (e) => handleAttributeToggle(e, "isPinned")}
@@ -277,7 +280,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
                     role="button"
                     tabIndex={0}
                     className={cn(
-                      "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-slate-400/30 dark:hover:bg-slate-700",
+                      "size-6 min-w-6 flex justify-end p-1 -m-1 cursor-pointer rounded-md transition-colors hover:bg-foreground/10 dark:hover:bg-foreground/12",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-500 dark:focus-visible:ring-offset-gray-400 focus-visible:ring-gray-500/50",
                     )}
                     onClick={async (e) =>
@@ -310,7 +313,7 @@ function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
             {topic.tags.map((tag, index) => (
               <span
                 key={topic.id + "-tag-" + index}
-                className="px-1.5 py-0.5 rounded-md bg-gray-400/37 dark:bg-gray-600/40 text-[11px] font-medium text-lc-muted-foreground-hover truncate max-w-30 min-w-0 shrink-0"
+                className="px-1.5 py-0.5 rounded-md bg-gray-400/25 dark:bg-gray-600/40 text-[11px] font-medium text-lc-muted-foreground-hover truncate max-w-30 min-w-0 shrink-0"
               >
                 {tag}
               </span>

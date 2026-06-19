@@ -18,7 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { SettingsItemSeperator } from "@/components/settings";
+import { SettingsItemSeparator } from "@/components/settings";
 import { DownloadIcon, Trash2Icon } from "lucide-react";
 import { useRxCollection } from "rxdb/plugins/react";
 import { toast } from "sonner";
@@ -114,13 +114,13 @@ function DataSettingsPage() {
   return (
     <PageContainer>
       <PageHeader title="Data Management" goBackButton />
-      <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-2">
+      <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-1">
         <section className="flex flex-col gap-8">
           <article>
             <Item
               variant="muted"
               size="sm"
-              className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl hover:cursor-pointer /*bg-clip-padding*/"
+              className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl hover:cursor-pointer /*bg-clip-padding*/"
               asChild
             >
               <button onClick={handleExport}>
@@ -167,7 +167,7 @@ function DataSettingsPage() {
             <Item
               variant="muted"
               size="sm"
-              className="bg-slate-200/75 dark:bg-muted/50 rounded-2xl"
+              className="bg-card rounded-2xl not-dark:shadow-xs"
             >
               <ItemMedia variant="icon">
                 <Trash2Icon className="size-5 text-red-500" />
@@ -202,7 +202,9 @@ function DataSettingsPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="not-dark:bg-muted/15 not-dark:hover:bg-muted/50">
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction variant="destructive" onClick={handleClear}>
               Clear All Data
             </AlertDialogAction>

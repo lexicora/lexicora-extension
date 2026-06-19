@@ -1,22 +1,51 @@
 :global(html:has(#lc-home-page)) {
-    scroll-padding-top: 72px;
-    scroll-padding-bottom: 132px;
+  scroll-padding-top: 72px;
+  scroll-padding-bottom: 132px;
+}
+
+/* Give the home page inner container a floor height equal to the visible viewport
+   so flexbox can distribute space. min-height (not height) allows the container to
+   grow and the page to scroll normally if content overflows on small viewports.
+   142px = margin-top(58) + padding-top(12) + padding-bottom(12) + margin-bottom(58) + 2px border */
+:global(#lc-home-page .lc-page-container-inner) {
+  min-height: calc(100dvh - 142px);
+}
+
+/* Textarea height mirrors the original --topics-h logic in pure CSS.
+   The base offset (560px) accounts for all fixed overhead above the textarea when
+   3 topics are shown. Each breakpoint adds 45px (one topic row + gap) to the offset
+   so the textarea shrinks by exactly the amount the new topic row adds — keeping total
+   content height constant at the transition point and preventing a brief scroll flash. */
+:global(#lc-home-page #ai-prompt-textarea) {
+  min-height: clamp(90px, calc(100dvh - 560px), 300px);
+}
+
+@media (min-height: 825px) {
+  :global(#lc-home-page #ai-prompt-textarea) {
+    min-height: clamp(90px, calc(100dvh - 605px), 300px);
+  }
+}
+
+@media (min-height: 870px) {
+  :global(#lc-home-page #ai-prompt-textarea) {
+    min-height: clamp(90px, calc(100dvh - 650px), 300px);
+  }
 }
 
 .bottomFooter :global(.lc-bottom-bar-styled-bg) {
-    box-shadow: inset 0 -64px 16px -16px
-        color-mix(in srgb, var(--background), transparent 55%);
-    /*Maybe later change to 20% transparency, to match bottom-navigation*/
+  box-shadow: inset 0 -64px 16px -16px
+    color-mix(in srgb, var(--background), transparent 55%);
+  /*Maybe later change to 20% transparency, to match bottom-navigation*/
 }
 
 :global(.dark) .bottomFooter :global(.lc-bottom-bar-styled-bg) {
-    box-shadow: inset 0 -64px 16px -16px
-        color-mix(in srgb, var(--background), transparent 25%);
-    /*Maybe later change to 20% transparency, to match bottom-navigation*/
+  box-shadow: inset 0 -64px 16px -16px
+    color-mix(in srgb, var(--background), transparent 25%);
+  /*Maybe later change to 20% transparency, to match bottom-navigation*/
 }
 
 .bottomFooter :global(.lc-bottom-bar-styled-bg)::before {
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    /*Maybe later change to 16px blur, to match bottom-navigation*/
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  /*Maybe later change to 16px blur, to match bottom-navigation*/
 }

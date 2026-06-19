@@ -1,5 +1,6 @@
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
+import { SettingsItemSeparator } from "@/components/settings";
 import {
   Item,
   ItemActions,
@@ -30,11 +31,11 @@ function CaptureSuggestionsSettingsPage() {
     <PageContainer>
       <PageHeader title="Capture Suggestions" goBackButton />
       <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-1">
-        <section>
+        <section className="not-dark:shadow-xs rounded-2xl">
           <Item
             variant="muted"
             size="default"
-            className="group py-2.5 gap-2 transition-none bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-b-none"
+            className="group py-2.5 gap-2 transition-none bg-card rounded-2xl rounded-b-none"
           >
             <ItemHeader>
               <ItemMedia variant="icon">
@@ -42,22 +43,18 @@ function CaptureSuggestionsSettingsPage() {
               </ItemMedia>
             </ItemHeader>
             <ItemContent>
-              <ItemDescription className="line-clamp-none /*leading-relaxed*/">
+              <ItemDescription className="text-pretty line-clamp-none /*leading-relaxed*/">
                 Webpage prompts that suggest capturing content after you've
                 spent some time on a site.
                 {/*TODO: Later change when this feature becomes smart with analysis*/}
               </ItemDescription>
             </ItemContent>
           </Item>
-          <div className="flex flex-row">
-            <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
-            <div className="flex-1 w-full h-0 max-w-[calc(100%-30px)] border-t border-t-[#c4cbd4] dark:border-t-[#2b3b52]"></div>
-            <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
-          </div>
+          <SettingsItemSeparator symmetric />
           <Item
             variant="muted"
             size="sm"
-            className="group transition-none hover:cursor-pointer bg-slate-200/75 dark:bg-muted/50 rounded-2xl rounded-t-none"
+            className="group transition-none hover:cursor-pointer bg-card rounded-2xl rounded-t-none"
             onClick={() => {
               setEnabled(!enabled);
             }}
@@ -87,7 +84,7 @@ function CaptureSuggestionsSettingsPage() {
           <Item
             variant="muted"
             size="xs"
-            className="bg-slate-200/75 dark:bg-muted/50 rounded-2xl py-2.5"
+            className="bg-card not-dark:shadow-xs rounded-2xl py-2.5"
           >
             <div className="flex flex-col w-full gap-4">
               <div className="flex justify-between items-center">

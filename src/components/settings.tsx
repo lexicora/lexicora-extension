@@ -42,7 +42,7 @@ export function SettingsItem({
         variant="muted"
         size={size}
         className={cn(
-          "group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl",
+          "group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl",
           roundingClass,
           { "opacity-65 grayscale-30 pointer-events-none": disabled },
           //disabled && "opacity-65 grayscale-30 pointer-events-none", (works the same as above)
@@ -67,18 +67,32 @@ export function SettingsItem({
         </Link>
       </Item>
       {roundingClass !== "" && roundingClass !== "rounded-t-none" && (
-        <SettingsItemSeperator />
+        <SettingsItemSeparator />
       )}
     </div>
   );
 }
 
-export function SettingsItemSeperator() {
+export function SettingsItemSeparator({
+  symmetric = false,
+}: {
+  symmetric?: boolean;
+}) {
   return (
     <div className="flex flex-row">
-      <div className="shrink-0 w-10.5 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
-      <div className="flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-[#c4cbd4] dark:border-t-[#2b3b52]"></div>
-      <div className="shrink-0 w-3.75 h-0 border-t border-t-slate-200/75 dark:border-t-muted/50"></div>
+      <div
+        className={cn(
+          "shrink-0 w-10.5 h-0 border-t border-t-card",
+          symmetric && "w-3.75",
+        )}
+      ></div>
+      <div
+        className={cn(
+          "flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-[#cbd0d9] dark:border-t-[#2b3b52]",
+          symmetric && "max-w-[calc(100%-30px)]",
+        )}
+      ></div>
+      <div className="shrink-0 w-3.75 h-0 border-t border-t-card"></div>
     </div>
   );
 }
