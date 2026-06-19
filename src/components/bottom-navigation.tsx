@@ -1,21 +1,7 @@
 import style from "./bottom-navigation.module.css";
 import { cn } from "@/lib/utils";
 
-import {
-  //HomeIcon, //Home page
-  RectangleStackIcon, // TODO: maybe switch to this later (for Entries page)
-  Cog6ToothIcon, //Settings page
-} from "@heroicons/react/24/outline";
-import { HomeIconOutline as CustomHeroHomeIcon } from "@/components/icons/custom-heroicons"; //(Custom icon) Home page
-import {
-  HomeIcon as HomeIconSolid, //Home page (solid)
-  RectangleStackIcon as RectangleStackIconSolid, // TODO: maybe switch to this later (for Entries page)
-  Cog6ToothIcon as Cog6ToothIconSolid, //Settings page
-} from "@heroicons/react/24/solid";
-import {
-  StretchHorizontalIcon,
-  GalleryVerticalEndIcon, //same as RectangleStackIcon, but from lucide-react
-} from "lucide-react"; //Candidate for Entries page 5 (solid)
+import { NAV_ITEMS } from "@/lib/nav-items";
 import { NavLink, useLocation, matchPath } from "react-router-dom";
 
 import { useScrollPos } from "@/providers/scroll-observer";
@@ -63,81 +49,69 @@ export function BottomNavigation() {
         className="flex items-center justify-between text-center w-full max-w-(--lc-content-max-width) h-full mx-auto inset-x-0"
         // had classes: lc-bottom-navigation-animate-blur ${isHidden ? "lc-bottom-navigation-animate-blur--hidden" : ""}
       >
-        {/*ml-2.5 for the outer most link (left) (change, when four items are present)*/}
-        <div className="flex-1 mx-3 ml-2.5 /*ml-0.5*/ flex items-center justify-center h-full">
-          {/* Home */}
-          <NavLink
-            to="/"
-            title={pathname !== "/" ? "Home" : ""}
-            draggable={false}
-            viewTransition={pathname === "/" ? false : true}
-            className="group flex flex-col items-center py-4 w-full"
-          >
-            {({ isActive }) => (
-              <div
-                className={`transition-all duration-200 will-change-transform ${isActive ? "scale-100" : "text-muted-foreground group-hover:scale-110 group-hover:text-lc-muted-foreground-hover"}`}
+        {NAV_ITEMS.map((item, index) => {
+          const isFirst = index === 0;
+          const isLast = index === NAV_ITEMS.length - 1;
+          const isLibrary = item.path === "/library";
+          const onCurrentRoute = item.matchPrefix
+            ? pathname.startsWith(item.path)
+            : pathname === item.path;
+
+          return (
+            <div
+              key={item.path}
+              className={cn(
+                "flex-1 mx-3 flex items-center justify-center h-full",
+                isFirst && "ml-2.5",
+                isLast && "mr-2.5",
+              )}
+            >
+              <NavLink
+                to={isLibrary && pathname === "/library" ? `/library${search}` : item.path}
+                end={!item.matchPrefix}
+                onClick={
+                  isLibrary
+                    ? (e) => {
+                        if (pathname === "/library") {
+                          e.preventDefault();
+                          window.scrollTo({ top: 0 });
+                        }
+                      }
+                    : undefined
+                }
+                title={onCurrentRoute ? "" : item.label}
+                draggable={false}
+                viewTransition={pathname === item.path ? false : true}
+                className="group flex flex-col items-center py-4 w-full"
               >
-                {isActive ? (
-                  <HomeIconSolid className="size-6.5 animate-icon-pop" />
-                ) : (
-                  <CustomHeroHomeIcon className="size-6.5" />
-                )}
-              </div>
-            )}
-          </NavLink>
-        </div>
-        <div className="flex-1 mx-3 flex items-center justify-center h-full">
-          {/* Library */}
-          <NavLink
-            to={pathname === "/library" ? `/library${search}` : "/library"}
-            onClick={(e) => {
-              // If we're already on the library page, prevent navigation and just scroll to top
-              if (pathname === "/library") {
-                e.preventDefault();
-                window.scrollTo({ top: 0 });
-              }
-            }}
-            title={pathname.startsWith("/library") ? "" : "Library"}
-            draggable={false}
-            viewTransition={pathname === "/library" ? false : true}
-            className="group flex flex-col items-center py-4 w-full"
-          >
-            {({ isActive }) => (
-              <div
-                className={`transition-all duration-200 will-change-transform ${isActive ? "scale-100" : "text-muted-foreground group-hover:scale-110 group-hover:text-lc-muted-foreground-hover"}`}
-              >
-                <StretchHorizontalIcon
-                  className={`size-6.5 ${isActive ? "animate-icon-pop" : ""}`}
-                  strokeWidth={1.5}
-                  fill={isActive ? "currentColor" : "none"}
-                />
-              </div>
-            )}
-          </NavLink>
-        </div>
-        {/*mr-2.5 for the outer most link (right) (change, when four items are present)*/}
-        <div className="flex-1 mx-3 mr-2.5 /*mr-0.5*/ flex items-center justify-center h-full">
-          {/* Settings */}
-          <NavLink
-            to="/settings"
-            title={pathname.startsWith("/settings") ? "" : "Settings"}
-            draggable={false}
-            viewTransition={pathname === "/settings" ? false : true}
-            className="group flex flex-col items-center py-4 w-full"
-          >
-            {({ isActive }) => (
-              <div
-                className={`transition-all duration-200 will-change-transform ${isActive ? "scale-100" : "text-muted-foreground group-hover:scale-110 group-hover:text-lc-muted-foreground-hover"}`}
-              >
-                {isActive ? (
-                  <Cog6ToothIconSolid className="size-6.5 animate-icon-pop" />
-                ) : (
-                  <Cog6ToothIcon className="size-6.5" />
-                )}
-              </div>
-            )}
-          </NavLink>
-        </div>
+                {({ isActive }) => {
+                  const { Icon, ActiveIcon, iconProps } = item;
+                  const iconNode =
+                    isActive && ActiveIcon ? (
+                      <ActiveIcon className="size-6.5 animate-icon-pop" />
+                    ) : (
+                      <Icon
+                        className={`size-6.5${isActive ? " animate-icon-pop" : ""}`}
+                        {...iconProps}
+                        fill={ActiveIcon === null ? (isActive ? "currentColor" : "none") : undefined}
+                      />
+                    );
+                  return (
+                    <div
+                      className={`transition-all duration-200 will-change-transform ${
+                        isActive
+                          ? "scale-100"
+                          : "text-muted-foreground group-hover:scale-110 group-hover:text-lc-muted-foreground-hover"
+                      }`}
+                    >
+                      {iconNode}
+                    </div>
+                  );
+                }}
+              </NavLink>
+            </div>
+          );
+        })}
         {/*Possible new tabs: Search page and favorites page (maybe replace settings tab with something else like favorites)*/}
       </div>
     </section>
