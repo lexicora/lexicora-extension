@@ -35,10 +35,17 @@ A focused GitHub issue should be filed for the entry-form field width specifical
 
 ### Phase 1 cleanup pass
 
-Before starting Phase 2, do a short focused refactor:
+Before starting Phase 2, fix a handful of small bugs and light-mode follow-ons that surfaced during the polish pass, then do a focused refactor.
 
+**Bug fixes / small visual fixes:**
+- [#167](https://github.com/lexicora/lexicora-extension/issues/167) — Images sometimes captured twice when page contains images
+- [#162](https://github.com/lexicora/lexicora-extension/issues/162) — Top-bar action button hover contrast insufficient when content scrolls below backdrop blur
+- [#169](https://github.com/lexicora/lexicora-extension/issues/169) — Editor text too light in light mode
+- [#159](https://github.com/lexicora/lexicora-extension/issues/159) — Link colors in BlockNote editor need updating for light mode
+
+**Refactor:**
 - Extract shared component abstractions that the windowed extension will reuse (nav items, page header variants, form field wrappers)
-- Split any side-panel component over ~200 lines that grew too large during the polish pass
+- Split components that grew unwieldy during the polish pass — split only where there is a clear semantic boundary (distinct responsibility, reusable sub-component, or logic that belongs in a hook), not based on line count alone
 - Extract inline logic into `use*` hooks where it belongs
 - Investigate and resolve TODO comments in the codebase ([#148](https://github.com/lexicora/lexicora-extension/issues/148))
 - Remove dead code, unused imports, stale comments
@@ -76,10 +83,15 @@ Before starting Phase 3, do a short focused refactor:
 |---|---|
 | [#144](https://github.com/lexicora/lexicora-extension/issues/144) | Filter dropdown / popover UI for more complex list filtering |
 | [#145](https://github.com/lexicora/lexicora-extension/issues/145) | Hot-key support |
+| [#164](https://github.com/lexicora/lexicora-extension/issues/164) | Heading map / outline in entry detail and edit view |
+| [#166](https://github.com/lexicora/lexicora-extension/issues/166) | Copy confirmation feedback when using copy button / dropdown in detail pages |
+| [#173](https://github.com/lexicora/lexicora-extension/issues/173) | Improved loading skeleton for entry create and edit pages |
+| [#156](https://github.com/lexicora/lexicora-extension/issues/156) | Download entries / topics as Markdown (alongside copy button; destination set in settings) |
 | [#61](https://github.com/lexicora/lexicora-extension/issues/61) | YouTube video block in editor |
 | [#56](https://github.com/lexicora/lexicora-extension/issues/56) | Custom code syntax highlighting in editor |
 | [#62](https://github.com/lexicora/lexicora-extension/issues/62) | Show toolbar when drag handle is clicked |
 | [#60](https://github.com/lexicora/lexicora-extension/issues/60) | Adjust per-block margins (top/bottom) |
+| [#168](https://github.com/lexicora/lexicora-extension/issues/168) | Add `text-pretty` class to editor content |
 | [#8](https://github.com/lexicora/lexicora-extension/issues/8) | Update BlockNote editor to use shadcn components |
 | [#44](https://github.com/lexicora/lexicora-extension/issues/44) | Onboarding flow on first install |
 | [#51](https://github.com/lexicora/lexicora-extension/issues/51) | Inconsistent font in capture suggestion toast |
@@ -106,6 +118,7 @@ A dedicated pass to get the data layer solid before any sync code is written. Sy
 |---|---|
 | [#153](https://github.com/lexicora/lexicora-extension/issues/153) | Fix RxDB soft-delete so "clear all data" actually purges documents |
 | [#152](https://github.com/lexicora/lexicora-extension/issues/152) | Replace per-document remove loops with `bulkRemove`; audit RxDB operator usage |
+| [#176](https://github.com/lexicora/lexicora-extension/issues/176) | RxDB JSON conversion may be completely unnecessary — investigate and remove if so |
 | [#131](https://github.com/lexicora/lexicora-extension/issues/131) | Deleted data cleanup — soft-delete purge strategy |
 
 This overlaps with the Phase 3 cleanup pass for DB concerns — run them together as one focused effort.
@@ -127,6 +140,13 @@ This overlaps with the Phase 3 cleanup pass for DB concerns — run them togethe
 
 Issues that need more thought before scheduling:
 
+- [#175](https://github.com/lexicora/lexicora-extension/issues/175) — Future: replace port-based side-panel detection with direct `@webext-core/messaging` ping
+- [#174](https://github.com/lexicora/lexicora-extension/issues/174) — Potentially make bottom-navigation icon animations subtler
+- [#172](https://github.com/lexicora/lexicora-extension/issues/172) — Potentially disable form submit on Enter when editing form fields
+- [#170](https://github.com/lexicora/lexicora-extension/issues/170) — Potentially add pin as dropdown in forms or remove favorite toggle
+- [#165](https://github.com/lexicora/lexicora-extension/issues/165) — Potentially add subtle border / refracting effect on list items
+- [#161](https://github.com/lexicora/lexicora-extension/issues/161) — Potentially add full-screen / full-width toggle for editable editors
+- [#160](https://github.com/lexicora/lexicora-extension/issues/160) — Potentially switch monospace font to Cascadia Mono
 - [#104](https://github.com/lexicora/lexicora-extension/issues/104) — Optimize React with AI
 - [#102](https://github.com/lexicora/lexicora-extension/issues/102) — Prompt input as its own window
 - [#87](https://github.com/lexicora/lexicora-extension/issues/87) — Rename "Entries" tab
