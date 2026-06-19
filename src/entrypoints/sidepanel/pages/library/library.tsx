@@ -8,7 +8,6 @@ import {
   ArchiveIcon,
   FileTextIcon,
   FolderIcon,
-  ListFilterIcon,
   PlusIcon,
   SearchIcon,
   StarIcon,
@@ -21,7 +20,6 @@ import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
@@ -34,7 +32,6 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { cn } from "@/lib/utils";
 
 // TODO: Potentially make searching faster, when entering a search query, because on every character, a navigation takes place.
 // TODO: Also ensure, that when on a tab, the other tabs should not be rendered and in a way put to sleep, so they don't do unnecessary processing.

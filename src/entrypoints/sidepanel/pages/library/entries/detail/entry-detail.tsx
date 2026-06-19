@@ -1,3 +1,7 @@
+import { BlockNoteView } from "@/components/editor/BlockNoteView";
+import { appBlockNoteConfig } from "@/components/editor/config";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,16 +24,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
-import { appBlockNoteConfig } from "@/components/editor/config";
-import { BlockNoteView } from "@/components/editor/BlockNoteView";
-import { PageContainer } from "@/components/page-container";
-import { PageHeader } from "@/components/page-header";
 import { EntryDocType } from "@/db/schemas/entry";
-import { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
-import { formatDate } from "@/lib/utils/date-formatter";
-import { useEntryDetail } from "./__hooks__/use-entry-detail";
 import { type BlockNoteBlock } from "@/lib/utils/block-converter";
+import { formatDate } from "@/lib/utils/date-formatter";
+import { useCreateBlockNote } from "@blocknote/react";
 import {
   ArchiveIcon,
   ChevronRightIcon,
@@ -41,11 +40,11 @@ import {
   StarIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useCreateBlockNote } from "@blocknote/react";
 import { Avatar } from "radix-ui";
 import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
+import { useEntryDetail } from "./__hooks__/use-entry-detail";
 
 type CopyableEditor = {
   blocksToMarkdownLossy(blocks?: BlockNoteBlock[]): Promise<string>;

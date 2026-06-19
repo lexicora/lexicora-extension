@@ -1,3 +1,6 @@
+import { EntryItem } from "@/components/entry-item";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,14 +12,10 @@ import {
   AlertDialogMedia,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { EntryItem } from "@/components/entry-item";
-import { PageContainer } from "@/components/page-container";
-import { PageHeader } from "@/components/page-header";
 import { TopicDocType } from "@/db/schemas/topic";
-import { EntryDocType } from "@/db/schemas/entry";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
 import {
@@ -54,7 +53,9 @@ function TopicDetailPage() {
     if (!doc) return;
 
     const newValue = !topic[attribute];
-    const patch: Partial<Pick<TopicDocType, "isFavorite" | "isArchived" | "isPinned">> = { [attribute]: newValue };
+    const patch: Partial<
+      Pick<TopicDocType, "isFavorite" | "isArchived" | "isPinned">
+    > = { [attribute]: newValue };
 
     if (attribute === "isArchived" && entriesCollection) {
       const implicitEntries = await entriesCollection

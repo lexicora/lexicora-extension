@@ -1,4 +1,6 @@
 import { TopicForm, type TopicFormData } from "@/components/forms/topic-form";
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,15 +11,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { PageContainer } from "@/components/page-container";
-import { PageHeader } from "@/components/page-header";
 import { TopicDocType } from "@/db/schemas/topic";
-import { CheckCircle2Icon, CircleCheckIcon, SaveIcon } from "lucide-react";
+import { navLock } from "@/lib/navigation-lock";
 import { useEffect, useState } from "react";
 import { useBlocker, useNavigate, useParams } from "react-router-dom";
-import { toast } from "sonner";
 import { useRxCollection } from "rxdb/plugins/react";
-import { navLock } from "@/lib/navigation-lock";
+import { toast } from "sonner";
 
 function TopicEditPage() {
   const { id } = useParams<{ id: string }>();
