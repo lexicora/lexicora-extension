@@ -63,7 +63,7 @@
   --muted: color-mix(in oklab, var(--color-muted) 35%, transparent);
   /*TODO: Maybe add a subtile blue hue to it.*/
   /*Editor text color*/
-  --bn-colors-editor-text: #3d3d3d; /*was #3f3f3f then 3e3e3e*/
+  --bn-colors-editor-text: #292929; /*was #3f3f3f then 3e3e3e*/
 }
 
 /*Prevent scrolling, when certain stuff is present (also use layout shift mitigator technique to avoid disappearing scrollbar)*/
@@ -599,13 +599,27 @@ html:has(
 } */
 
 /* Link color: light mode uses primary token; dark mode inherits BlockNote default */
-.bn-root[data-color-scheme="light"] a {
-  color: var(--color-primary);
+.bn-root[data-color-scheme="light"] .bn-block .bn-block-content a {
+  color: oklch(58.8% 0.158 241.966);
+  transition: color 0.15s ease-in-out;
+  &:hover {
+    color: color-mix(
+      in oklab,
+      oklch(58.8% 0.158 241.966) 90%,
+      var(--color-foreground) 30%
+    );
+  }
 }
 
-/* Ensure body text uses full-opacity foreground in light mode (avoids muted-color inheritance) */
-.bn-root[data-color-scheme="light"] .bn-editor {
-  color: var(--color-foreground);
+.bn-root[data-color-scheme="dark"] .bn-block .bn-block-content a {
+  color: oklch(68.5% 0.169 237.323);
+  transition: color 0.15s ease-in-out;
+  &:hover {
+    color: color-mix(
+      in oklab,
+      oklch(68.5% 0.169 237.323) 80%,
+      var(--color-foreground) 30%
+    );
+  }
 }
-
 /*TODO: overhaul and make all selectors more consistent, to avoid inconsistent behavior*/

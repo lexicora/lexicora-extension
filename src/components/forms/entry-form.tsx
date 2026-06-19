@@ -186,6 +186,7 @@ export function EntryForm({
     if (prevInitialDataId.current === currentDataId) return;
     prevInitialDataId.current = currentDataId;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateField = (name: keyof FormValues, newValue: any) => {
       if (newValue === undefined || newValue === null) return;
       if (overrideExisting || !getValues(name)) {

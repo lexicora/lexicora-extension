@@ -93,7 +93,9 @@ export function BottomNavigation() {
                       <Icon
                         className={`size-6.5${isActive ? " animate-icon-pop" : ""}`}
                         {...iconProps}
-                        fill={ActiveIcon === null ? (isActive ? "currentColor" : "none") : undefined}
+                        {...(ActiveIcon === null
+                          ? { fill: isActive ? "currentColor" : "none" }
+                          : undefined)}
                       />
                     );
                   return (

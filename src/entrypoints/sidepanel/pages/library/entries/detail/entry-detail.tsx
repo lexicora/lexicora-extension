@@ -63,7 +63,8 @@ function EntryContentViewer({
   const editor = useCreateBlockNote({
     ...appBlockNoteConfig,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    initialContent: initialBlocks.length > 0 ? (initialBlocks as any[]) : undefined,
+    initialContent:
+      initialBlocks.length > 0 ? (initialBlocks as any[]) : undefined,
   });
 
   useEffect(() => {
@@ -100,7 +101,10 @@ function EntryDetailPage() {
     if (!doc) return;
     const newValue = !entry[attribute];
     const patch: Partial<
-      Pick<EntryDocType, "isFavorite" | "isPinned" | "isArchived" | "archivedExplicitly">
+      Pick<
+        EntryDocType,
+        "isFavorite" | "isPinned" | "isArchived" | "archivedExplicitly"
+      >
     > = { [attribute]: newValue };
     if (attribute === "isArchived") {
       patch.archivedExplicitly = newValue;
@@ -218,6 +222,7 @@ function EntryDetailPage() {
         {topic && (
           <button
             className="flex items-center gap-0.5 ml-px mb-1 max-w-full text-xs font-medium text-muted-foreground hover:text-lc-muted-foreground-hover hover:underline underline-offset-2 transition-colors cursor-pointer"
+            //title="View topic"
             onClick={() =>
               navigate(`/library/topics/${topic.id}`, {
                 viewTransition: true,
