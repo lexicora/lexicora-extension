@@ -24,12 +24,11 @@ import { appBlockNoteConfig } from "@/components/editor/config";
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
-import { BlockDocType } from "@/db/schemas/block";
 import { EntryDocType } from "@/db/schemas/entry";
 import { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
-import { convertDbBlocksToBlockNote } from "@/lib/utils/block-converter";
+import { useEntryDetail } from "./__hooks__/use-entry-detail";
 import {
   ArchiveIcon,
   ChevronRightIcon,
@@ -43,7 +42,7 @@ import {
 } from "lucide-react";
 import { useCreateBlockNote } from "@blocknote/react";
 import { Avatar } from "radix-ui";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
 
@@ -84,56 +83,10 @@ function EntryDetailPage() {
   const navigate = useNavigate();
   const entriesCollection = useRxCollection("entries");
   const blocksCollection = useRxCollection("blocks");
-  const topicsCollection = useRxCollection("topics");
 
-  // undefined = loading, null = not found
-  const [entry, setEntry] = useState<EntryDocType | null | undefined>(
-    undefined,
-  );
-  const [topic, setTopic] = useState<TopicDocType | null>(null);
-  const [blocks, setBlocks] = useState<any[] | null>(null);
+  const { entry, topic, blocks } = useEntryDetail(id);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const editorRef = useRef<CopyableEditor | null>(null);
-
-  // Reactive subscription so toggling isFavorite / isArchived / isPinned updates the UI
-  useEffect(() => {
-    if (!entriesCollection || !id) return;
-    const sub = entriesCollection.findOne({ selector: { id } }).$.subscribe({
-      next: (doc) => setEntry(doc ? (doc.toJSON() as EntryDocType) : null),
-      error: (err) => {
-        console.error("Error loading entry:", err);
-        setEntry(null);
-      },
-    });
-    return () => sub.unsubscribe();
-  }, [entriesCollection, id]);
-
-  useEffect(() => {
-    if (!topicsCollection || !entry?.topicId) return;
-    const sub = topicsCollection
-      .findOne({ selector: { id: entry.topicId } })
-      .$.subscribe({
-        next: (doc) => setTopic(doc ? (doc.toJSON() as TopicDocType) : null),
-        error: () => setTopic(null),
-      });
-    return () => sub.unsubscribe();
-  }, [topicsCollection, entry?.topicId]);
-
-  // Load blocks once — read-only view doesn't need live updates
-  // TODO: Maybe live updates are needed, when the windowed interface is implemented an blocks are updated.
-  useEffect(() => {
-    if (!blocksCollection || !id) return;
-    blocksCollection
-      .find({ selector: { entryId: id } })
-      .exec()
-      .then((docs) =>
-        setBlocks(convertDbBlocksToBlockNote(docs as BlockDocType[])),
-      )
-      .catch((err) => {
-        console.error("Error loading blocks:", err);
-        setBlocks([]);
-      });
-  }, [blocksCollection, id]);
 
   const handleAttributeToggle = async (
     attribute: "isFavorite" | "isPinned" | "isArchived",
@@ -237,14 +190,16 @@ function EntryDetailPage() {
     );
   }
 
+  type BlockLike = { type?: string; content?: unknown[]; children?: unknown[] };
+  const blocksList = blocks as BlockLike[] | null;
   const hasContent =
-    !!blocks &&
+    !!blocksList &&
     !(
-      blocks.length === 0 ||
-      (blocks.length === 1 &&
-        blocks[0].type === "paragraph" &&
-        (!blocks[0].content || blocks[0].content.length === 0) &&
-        (!blocks[0].children || blocks[0].children.length === 0))
+      blocksList.length === 0 ||
+      (blocksList.length === 1 &&
+        blocksList[0].type === "paragraph" &&
+        (!blocksList[0].content || blocksList[0].content.length === 0) &&
+        (!blocksList[0].children || blocksList[0].children.length === 0))
     );
 
   return (

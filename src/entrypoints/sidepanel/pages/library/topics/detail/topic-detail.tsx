@@ -30,9 +30,10 @@ import {
   StarIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
+import { useTopicDetail } from "./__hooks__/use-topic-detail";
 
 function TopicDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -41,58 +42,8 @@ function TopicDetailPage() {
   const entriesCollection = useRxCollection("entries");
   const blocksCollection = useRxCollection("blocks");
 
-  // undefined = still loading, null = not found, otherwise the topic.
-  const [topic, setTopic] = useState<TopicDocType | null | undefined>(
-    undefined,
-  );
+  const { topic, favoriteEntries, entriesCount } = useTopicDetail(id);
   const [deleteOpen, setDeleteOpen] = useState(false);
-
-  const [favoriteEntries, setFavoriteEntries] = useState<EntryDocType[]>([]);
-  const [entriesCount, setEntriesCount] = useState<number>(0);
-
-  useEffect(() => {
-    if (!collection || !id) return;
-
-    const sub = collection.findOne({ selector: { id } }).$.subscribe({
-      next: (doc) => setTopic(doc ? (doc.toJSON() as TopicDocType) : null),
-      error: (err) => {
-        console.error("Error loading topic:", err);
-        setTopic(null);
-      },
-    });
-
-    return () => sub.unsubscribe();
-  }, [collection, id]);
-
-  useEffect(() => {
-    if (!entriesCollection || !id) return;
-
-    const sub = entriesCollection
-      .find({
-        selector: { topicId: id, isFavorite: true, isArchived: false },
-        sort: [{ updatedAt: "desc" }],
-      })
-      .$.subscribe({
-        next: (docs) => setFavoriteEntries(docs as EntryDocType[]),
-        error: (err) => {
-          console.error("Error loading favorite entries:", err);
-          setFavoriteEntries([]);
-        },
-      });
-
-    return () => sub.unsubscribe();
-  }, [entriesCollection, id]);
-
-  useEffect(() => {
-    if (!entriesCollection || !id) return;
-    const sub = entriesCollection
-      .count({ selector: { topicId: id, isArchived: false } })
-      .$.subscribe({
-        next: setEntriesCount,
-        error: () => setEntriesCount(0),
-      });
-    return () => sub.unsubscribe();
-  }, [entriesCollection, id]);
 
   const handleAttributeToggle = async (
     attribute: "isFavorite" | "isArchived" | "isPinned",
