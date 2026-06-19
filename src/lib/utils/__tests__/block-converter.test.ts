@@ -277,7 +277,7 @@ describe("convertDbBlocksToBlockNote", () => {
   });
 
   it("defaults content to [] when contentJson is undefined", () => {
-    const db = [makeDbBlock({ id: V7_ID, contentJson: undefined as any })];
+    const db = [makeDbBlock({ id: V7_ID, contentJson: undefined })];
     const result = convertDbBlocksToBlockNote(db);
     expect(result[0].content).toEqual([]);
   });

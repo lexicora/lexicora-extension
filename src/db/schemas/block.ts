@@ -29,4 +29,11 @@ const blockSchemaLiteral = {
 } as const;
 
 export const blockSchema = toTypedRxJsonSchema(blockSchemaLiteral);
-export type BlockDocType = ExtractDocumentTypeFromTypedRxJsonSchema<typeof blockSchemaLiteral>;
+
+// RxDB's type extractor maps `type: ['array', 'object']` only to an object index
+// signature, which rejects array literals. Override contentJson to `unknown` since
+// it genuinely holds either inline-content arrays or structural objects at runtime.
+type _RawBlockDocType = ExtractDocumentTypeFromTypedRxJsonSchema<typeof blockSchemaLiteral>;
+export type BlockDocType = Omit<_RawBlockDocType, "contentJson"> & {
+  contentJson?: unknown;
+};
