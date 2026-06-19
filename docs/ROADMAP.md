@@ -33,23 +33,9 @@ The fix: apply a max-width wrapper to metadata field groups only (not the editor
 
 A focused GitHub issue should be filed for the entry-form field width specifically.
 
-### Phase 1 cleanup pass
+### Phase 1 cleanup pass ✅ Done
 
-Before starting Phase 2, fix a handful of small bugs and light-mode follow-ons that surfaced during the polish pass, then do a focused refactor.
-
-**Bug fixes / small visual fixes:**
-- [#167](https://github.com/lexicora/lexicora-extension/issues/167) — Images sometimes captured twice when page contains images
-- [#162](https://github.com/lexicora/lexicora-extension/issues/162) — Top-bar action button hover contrast insufficient when content scrolls below backdrop blur
-- [#169](https://github.com/lexicora/lexicora-extension/issues/169) — Editor text too light in light mode
-- [#159](https://github.com/lexicora/lexicora-extension/issues/159) — Link colors in BlockNote editor need updating for light mode
-
-**Refactor:**
-- Extract shared component abstractions that the windowed extension will reuse (nav items, page header variants, form field wrappers)
-- Split components that grew unwieldy during the polish pass — split only where there is a clear semantic boundary (distinct responsibility, reusable sub-component, or logic that belongs in a hook), not based on line count alone
-- Extract inline logic into `use*` hooks where it belongs
-- Investigate and resolve TODO comments in the codebase ([#148](https://github.com/lexicora/lexicora-extension/issues/148))
-- Remove dead code, unused imports, stale comments
-- Tighten loose TypeScript types, remove any `any`
+Bug fixes, light-mode follow-ons, and a focused refactor before Phase 2.
 
 ---
 
