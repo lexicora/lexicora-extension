@@ -63,8 +63,30 @@ function normalizeMediaAndLinks(root: Document | Element) {
       tempDiv.innerHTML = html;
       const hiddenImage = tempDiv.querySelector("img");
       if (hiddenImage) {
-        // Replace the noscript tag with the actual image so it gets processed
-        noscript.replaceWith(hiddenImage);
+        // Many lazy-loading sites have a placeholder <img data-src="..."> adjacent to
+        // the <noscript>. If we blindly insert the rescued img, Step 2 processes both
+        // and produces a duplicate. Instead, write the rescued src onto the existing
+        // placeholder's data-src and remove the noscript — Step 2 resolves it normally.
+        const prev = noscript.previousElementSibling;
+        const next = noscript.nextElementSibling;
+        const adjacentImg =
+          prev?.tagName === "IMG"
+            ? (prev as HTMLImageElement)
+            : next?.tagName === "IMG"
+              ? (next as HTMLImageElement)
+              : null;
+
+        if (adjacentImg) {
+          const rescuedSrc =
+            hiddenImage.getAttribute("src") ||
+            hiddenImage.getAttribute("data-src");
+          if (rescuedSrc) {
+            adjacentImg.setAttribute("data-src", rescuedSrc);
+          }
+          noscript.remove();
+        } else {
+          noscript.replaceWith(hiddenImage);
+        }
       }
     }
   });

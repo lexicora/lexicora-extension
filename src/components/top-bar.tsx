@@ -99,6 +99,7 @@ export function TopBar() {
           <Button
             variant="ghost"
             size="icon"
+            className="dark:hover:bg-muted/70"
             onClick={openExtensionWindow}
             title="Open Lexicora in window"
             //title="Visit Lexicora.com"

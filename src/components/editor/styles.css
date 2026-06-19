@@ -598,6 +598,14 @@ html:has(
   }
 } */
 
-/*TODO: Maybe change colors of links in editor.*/
+/* Link color: light mode uses primary token; dark mode inherits BlockNote default */
+.bn-root[data-color-scheme="light"] a {
+  color: var(--color-primary);
+}
+
+/* Ensure body text uses full-opacity foreground in light mode (avoids muted-color inheritance) */
+.bn-root[data-color-scheme="light"] .bn-editor {
+  color: var(--color-foreground);
+}
 
 /*TODO: overhaul and make all selectors more consistent, to avoid inconsistent behavior*/
