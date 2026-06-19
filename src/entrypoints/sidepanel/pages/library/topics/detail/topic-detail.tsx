@@ -54,7 +54,7 @@ function TopicDetailPage() {
     if (!doc) return;
 
     const newValue = !topic[attribute];
-    const patch: any = { [attribute]: newValue };
+    const patch: Partial<Pick<TopicDocType, "isFavorite" | "isArchived" | "isPinned">> = { [attribute]: newValue };
 
     if (attribute === "isArchived" && entriesCollection) {
       const implicitEntries = await entriesCollection

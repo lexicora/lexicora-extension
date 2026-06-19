@@ -612,8 +612,8 @@ export async function seedDummyData(db: RxDatabase) {
 
   const now = new Date().toISOString();
 
-  const topicsToInsert: any[] = [];
-  const entriesToInsert: any[] = [];
+  const topicsToInsert: Record<string, unknown>[] = [];
+  const entriesToInsert: Record<string, unknown>[] = [];
 
   for (const t of topicsData) {
     const topicId = uuidv7();

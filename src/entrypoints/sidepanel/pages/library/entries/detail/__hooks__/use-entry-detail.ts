@@ -3,14 +3,17 @@ import { useRxCollection } from "rxdb/plugins/react";
 import { type BlockDocType } from "@/db/schemas/block";
 import { type EntryDocType } from "@/db/schemas/entry";
 import { type TopicDocType } from "@/db/schemas/topic";
-import { convertDbBlocksToBlockNote } from "@/lib/utils/block-converter";
+import {
+  convertDbBlocksToBlockNote,
+  type BlockNoteBlock,
+} from "@/lib/utils/block-converter";
 
 export interface EntryDetailData {
   /** undefined = loading, null = not found */
   entry: EntryDocType | null | undefined;
   topic: TopicDocType | null;
   /** null = blocks not yet loaded */
-  blocks: unknown[] | null;
+  blocks: BlockNoteBlock[] | null;
 }
 
 export function useEntryDetail(id: string | undefined): EntryDetailData {
@@ -22,7 +25,7 @@ export function useEntryDetail(id: string | undefined): EntryDetailData {
     undefined,
   );
   const [topic, setTopic] = useState<TopicDocType | null>(null);
-  const [blocks, setBlocks] = useState<unknown[] | null>(null);
+  const [blocks, setBlocks] = useState<BlockNoteBlock[] | null>(null);
 
   // Reactive subscription — keeps entry in sync when attributes are toggled
   useEffect(() => {

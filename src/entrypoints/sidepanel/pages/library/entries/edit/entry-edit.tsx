@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils";
 import {
   convertBlockNoteBlocks,
   convertDbBlocksToBlockNote,
+  type BlockNoteBlock,
 } from "@/lib/utils/block-converter";
 import { useScrollPos } from "@/providers/scroll-observer";
 import { ArrowUpIcon, SaveIcon } from "lucide-react";
@@ -42,9 +43,9 @@ import { navLock } from "@/lib/navigation-lock";
 
 interface EntryEditContentProps {
   entry: EntryDocType;
-  initialBlocks: any[];
+  initialBlocks: BlockNoteBlock[];
   topics: TopicDocType[];
-  onSave: (data: EntryFormData, editorBlocks: any[]) => Promise<void>;
+  onSave: (data: EntryFormData, editorBlocks: BlockNoteBlock[]) => Promise<void>;
   isSaving: boolean;
 }
 
@@ -57,7 +58,8 @@ function EntryEditContent({
 }: EntryEditContentProps) {
   const editor = useCreateBlockNote({
     ...appBlockNoteConfig,
-    initialContent: initialBlocks.length > 0 ? initialBlocks : undefined,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    initialContent: initialBlocks.length > 0 ? (initialBlocks as any[]) : undefined,
   });
 
   const capturedData = useCaptureData();
@@ -245,7 +247,7 @@ function EntryEditPage() {
   const [entry, setEntry] = useState<EntryDocType | null | undefined>(
     undefined,
   );
-  const [blocks, setBlocks] = useState<any[] | null>(null);
+  const [blocks, setBlocks] = useState<BlockNoteBlock[] | null>(null);
   const [topics, setTopics] = useState<TopicDocType[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [promptText, setPromptText] = useState("");
@@ -311,7 +313,7 @@ function EntryEditPage() {
     return () => resizeObserver.disconnect();
   }, [entry, blocks]);
 
-  const handleSave = async (data: EntryFormData, editorBlocks: any[]) => {
+  const handleSave = async (data: EntryFormData, editorBlocks: BlockNoteBlock[]) => {
     if (!entriesCollection || !blocksCollection || !entry) return;
     setIsSaving(true);
     navLock.lock();

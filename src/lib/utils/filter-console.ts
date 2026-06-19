@@ -2,7 +2,7 @@
 export const filterConsole = () => {
   const originalWarn = console.warn;
 
-  console.warn = (...args: any[]) => {
+  console.warn = (...args: unknown[]) => {
     // Quickly filter out the specific RxDB Dexie premium advertisement warning
     if (
       typeof args[0] === "string" &&

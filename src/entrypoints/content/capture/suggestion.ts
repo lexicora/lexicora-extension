@@ -478,7 +478,7 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
   // 3. Handle Modern Back/Forward (Chromium Navigation API)
   const nav = window.navigation;
   if (nav) {
-    ctx.addEventListener(nav, "navigate", (e: any) => {
+    ctx.addEventListener(nav, "navigate", (e: Event & { navigationType?: string }) => {
       // 'traverse' natively catches Mouse 4/5 and Alt+Arrow history movements
       if (
         e.navigationType === "traverse" ||

@@ -238,8 +238,8 @@ describe("convertDbBlocksToBlockNote", () => {
     expect(result).toHaveLength(1);
     expect(result[0].id).toBe(parentId);
     expect(result[0].children).toHaveLength(2);
-    expect(result[0].children[0].id).toBe(child1Id);
-    expect(result[0].children[1].id).toBe(child2Id);
+    expect(result[0].children![0].id).toBe(child1Id);
+    expect(result[0].children![1].id).toBe(child2Id);
   });
 
   it("sorts children by order independently from top-level order", () => {
@@ -254,8 +254,8 @@ describe("convertDbBlocksToBlockNote", () => {
     ];
     const result = convertDbBlocksToBlockNote(db);
 
-    expect(result[0].children[0].id).toBe(child1Id);
-    expect(result[0].children[1].id).toBe(child2Id);
+    expect(result[0].children![0].id).toBe(child1Id);
+    expect(result[0].children![1].id).toBe(child2Id);
   });
 
   it("reconstructs deeply nested blocks (grandchildren)", () => {
@@ -272,8 +272,8 @@ describe("convertDbBlocksToBlockNote", () => {
 
     expect(result).toHaveLength(1);
     expect(result[0].children).toHaveLength(1);
-    expect(result[0].children[0].children).toHaveLength(1);
-    expect(result[0].children[0].children[0].id).toBe(grandchId);
+    expect(result[0].children![0].children).toHaveLength(1);
+    expect(result[0].children![0].children![0].id).toBe(grandchId);
   });
 
   it("defaults content to [] when contentJson is undefined", () => {
@@ -297,8 +297,8 @@ describe("convertDbBlocksToBlockNote", () => {
     const result = convertDbBlocksToBlockNote(db);
 
     expect(result).toHaveLength(2);
-    expect(result[0].children[0].id).toBe(c1);
-    expect(result[1].children[0].id).toBe(c2);
+    expect(result[0].children![0].id).toBe(c1);
+    expect(result[1].children![0].id).toBe(c2);
   });
 });
 
@@ -341,8 +341,8 @@ describe("convertBlockNoteBlocks → convertDbBlocksToBlockNote (round-trip)", (
     expect(restored[0].id).toBe(V7_ID);
     expect(restored[0].type).toBe("bulletListItem");
     expect(restored[0].children).toHaveLength(1);
-    expect(restored[0].children[0].type).toBe("paragraph");
-    expect(restored[0].children[0].content).toEqual([{ type: "text", text: "child" }]);
+    expect(restored[0].children![0].type).toBe("paragraph");
+    expect(restored[0].children![0].content).toEqual([{ type: "text", text: "child" }]);
 
     expect(restored[1].id).toBe("01900000-0000-7000-8000-000000000082");
     expect(restored[1].type).toBe("heading");

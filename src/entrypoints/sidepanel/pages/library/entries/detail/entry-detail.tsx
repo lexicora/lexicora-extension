@@ -29,6 +29,7 @@ import { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
 import { useEntryDetail } from "./__hooks__/use-entry-detail";
+import { type BlockNoteBlock } from "@/lib/utils/block-converter";
 import {
   ArchiveIcon,
   ChevronRightIcon,
@@ -47,21 +48,22 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
 
 type CopyableEditor = {
-  blocksToMarkdownLossy(blocks?: any[]): Promise<string>;
-  blocksToHTMLLossy(blocks?: any[]): Promise<string>;
-  document: any[];
+  blocksToMarkdownLossy(blocks?: BlockNoteBlock[]): Promise<string>;
+  blocksToHTMLLossy(blocks?: BlockNoteBlock[]): Promise<string>;
+  document: BlockNoteBlock[];
 };
 
 function EntryContentViewer({
   initialBlocks,
   onEditorReady,
 }: {
-  initialBlocks: any[];
+  initialBlocks: BlockNoteBlock[];
   onEditorReady?: (editor: CopyableEditor) => void;
 }) {
   const editor = useCreateBlockNote({
     ...appBlockNoteConfig,
-    initialContent: initialBlocks.length > 0 ? initialBlocks : undefined,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    initialContent: initialBlocks.length > 0 ? (initialBlocks as any[]) : undefined,
   });
 
   useEffect(() => {
@@ -97,7 +99,9 @@ function EntryDetailPage() {
       .exec();
     if (!doc) return;
     const newValue = !entry[attribute];
-    const patch: any = { [attribute]: newValue };
+    const patch: Partial<
+      Pick<EntryDocType, "isFavorite" | "isPinned" | "isArchived" | "archivedExplicitly">
+    > = { [attribute]: newValue };
     if (attribute === "isArchived") {
       patch.archivedExplicitly = newValue;
     }
@@ -190,16 +194,14 @@ function EntryDetailPage() {
     );
   }
 
-  type BlockLike = { type?: string; content?: unknown[]; children?: unknown[] };
-  const blocksList = blocks as BlockLike[] | null;
   const hasContent =
-    !!blocksList &&
+    !!blocks &&
     !(
-      blocksList.length === 0 ||
-      (blocksList.length === 1 &&
-        blocksList[0].type === "paragraph" &&
-        (!blocksList[0].content || blocksList[0].content.length === 0) &&
-        (!blocksList[0].children || blocksList[0].children.length === 0))
+      blocks.length === 0 ||
+      (blocks.length === 1 &&
+        blocks[0].type === "paragraph" &&
+        (!blocks[0].content || (blocks[0].content as unknown[]).length === 0) &&
+        (!blocks[0].children || blocks[0].children.length === 0))
     );
 
   return (

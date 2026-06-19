@@ -1,6 +1,15 @@
 import { uuidv7 } from "uuidv7";
 import { type BlockDocType } from "@/db/schemas/block";
 
+/** Minimal structural type bridging BlockNote's block shape and our RxDB schema. */
+export interface BlockNoteBlock {
+  id?: string;
+  type?: string;
+  props?: Record<string, unknown>;
+  content?: unknown;
+  children?: BlockNoteBlock[];
+}
+
 //* NOTE: Currently all blocks if unchanged are updated and rxdb marks them as a new version,
 //* which means it is included in sync, maybe somehow add an update check to make sync more efficient.
 
@@ -15,7 +24,7 @@ import { type BlockDocType } from "@/db/schemas/block";
  * @returns A flat array of BlockDocType objects ready for bulk insert
  */
 export function convertBlockNoteBlocks(
-  blocks: any[],
+  blocks: BlockNoteBlock[],
   entryId: string,
   userId: string = "00000000-0000-0000-0000-000000000000",
   parentBlockId?: string,
@@ -28,7 +37,7 @@ export function convertBlockNoteBlocks(
   let effectiveBlocks = blocks;
   if (parentBlockId === undefined) {
     const descendantIds = new Set<string>();
-    const collectDescendantIds = (list: any[]) => {
+    const collectDescendantIds = (list: BlockNoteBlock[]) => {
       for (const b of list) {
         if (b.children?.length) {
           for (const child of b.children) {
@@ -40,7 +49,7 @@ export function convertBlockNoteBlocks(
     };
     collectDescendantIds(blocks);
     if (descendantIds.size > 0) {
-      effectiveBlocks = blocks.filter((b) => !descendantIds.has(b.id));
+      effectiveBlocks = blocks.filter((b) => !b.id || !descendantIds.has(b.id));
     }
   }
 
@@ -61,7 +70,7 @@ export function convertBlockNoteBlocks(
       userId,
       entryId,
       order,
-      type: block.type,
+      type: (block.type ?? "paragraph") as BlockDocType["type"],
       propsJson: block.props || {},
       contentJson: block.content || [],
     };
@@ -97,7 +106,7 @@ export function convertBlockNoteBlocks(
  * Converts a flat array of BlockDocType documents back to a nested BlockNote.js block structure.
  * Top-level blocks (no parentBlockId) are sorted by order; children are recursively nested.
  */
-export function convertDbBlocksToBlockNote(blocks: BlockDocType[]): any[] {
+export function convertDbBlocksToBlockNote(blocks: BlockDocType[]): BlockNoteBlock[] {
   const childrenMap = new Map<string, BlockDocType[]>();
   const topLevelBlocks: BlockDocType[] = [];
 
@@ -116,7 +125,7 @@ export function convertDbBlocksToBlockNote(blocks: BlockDocType[]): any[] {
     children.sort((a, b) => a.order - b.order);
   }
 
-  function buildBlock(dbBlock: BlockDocType): any {
+  function buildBlock(dbBlock: BlockDocType): BlockNoteBlock {
     const children = (childrenMap.get(dbBlock.id) ?? []).map(buildBlock);
     return {
       id: dbBlock.id,
