@@ -50,7 +50,7 @@ function FaqPage() {
   return (
     <PageContainer>
       <PageHeader title="FAQ" goBackButton />
-      <main className="flex flex-col gap-4 w-full pt-4.5 px-1 mb-1.75">
+      <main className="flex flex-col gap-4 w-full pt-4.5 px-1 mb-2">
         <Accordion type="single" collapsible className="flex flex-col gap-4">
           {FAQ_ITEMS.map((item, index) => (
             <AccordionItem
@@ -64,7 +64,7 @@ function FaqPage() {
               <AccordionContent className="pb-0">
                 <div
                   className={cn(
-                    "px-3 pb-3 pt-2.5 text-left text-sm text-muted-foreground bg-slate-50/80 dark:bg-muted/30 rounded-b-2xl leading-relaxed text-pretty",
+                    "px-3 pb-3 pt-2.5 text-left text-sm text-muted-foreground bg-slate-50/85 dark:bg-muted/30 rounded-b-2xl leading-relaxed text-pretty",
                     //"transition-colors duration-150 data-closed:bg-transparent",
                     "transition-all duration-150 data-closed:bg-transparent",
                   )}

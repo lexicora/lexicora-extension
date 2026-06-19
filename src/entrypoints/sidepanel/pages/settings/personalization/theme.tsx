@@ -18,7 +18,7 @@ function ThemePersonalizationSettingsPage() {
   return (
     <PageContainer>
       <PageHeader title="Theme" goBackButton />
-      <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1">
+      <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-1">
         <section>
           <RadioGroup
             value={theme}

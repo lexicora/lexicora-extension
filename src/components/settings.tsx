@@ -88,7 +88,7 @@ export function SettingsItemSeparator({
       ></div>
       <div
         className={cn(
-          "flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-[#cdd3dc] dark:border-t-[#2b3b52]",
+          "flex-1 w-full h-0 max-w-[calc(100%-57px)] border-t border-t-[#cbd0d9] dark:border-t-[#2b3b52]",
           symmetric && "max-w-[calc(100%-30px)]",
         )}
       ></div>

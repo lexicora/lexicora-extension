@@ -24,7 +24,7 @@ function AboutPage() {
           <Item
             variant="muted"
             size="default"
-            className="bg-card rounded-2xl not-dark:shadow-xs flex-col items-center py-6 gap-2 text-center"
+            className="bg-card rounded-2xl not-dark:shadow-xs flex-col items-center py-6 gap-1 text-center"
           >
             <span className="flex justify-center gap-1.5 items-baseline mb-3">
               {/*Maybe add link to lexicora.com */}

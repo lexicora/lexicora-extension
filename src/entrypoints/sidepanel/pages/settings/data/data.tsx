@@ -114,7 +114,7 @@ function DataSettingsPage() {
   return (
     <PageContainer>
       <PageHeader title="Data Management" goBackButton />
-      <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-2">
+      <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-1">
         <section className="flex flex-col gap-8">
           <article>
             <Item

@@ -344,7 +344,7 @@ function TopicDetailPage() {
 
       {/* Favorite entries preview */}
       {favoriteEntries.length > 0 && (
-        <section className="px-0.75 mx-auto w-full max-w-(--lc-content-max-width) mt-2 mb-1.5">
+        <section className="px-0.75 mx-auto w-full max-w-(--lc-content-max-width) mt-2 mb-1.75">
           <Separator className="mx-auto max-w-[calc(100%-8px)] mt-0 mb-3 opacity-60" />
           <div className="flex items-center gap-1.5 mb-2.5 px-1.5">
             <StarIcon className="size-3.5 text-muted-foreground" />

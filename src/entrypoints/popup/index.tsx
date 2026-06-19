@@ -251,7 +251,7 @@ function Popup() {
                 }
                 className={cn(
                   "w-full hover:bg-[color-mix(in_oklab,var(--secondary),black_7%)] dark:hover:bg-[color-mix(in_oklab,var(--secondary)80%,var(--background))] overflow-hidden",
-                  "disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-secondary",
+                  "disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-secondary!",
                 )}
                 disabled={promptText.trimEnd() !== "" || !isSupported}
                 onClick={capturePage}
