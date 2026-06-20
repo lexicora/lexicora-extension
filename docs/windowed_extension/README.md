@@ -123,7 +123,7 @@ Use the shadcn `Breadcrumb` component (`docs/windowed_extension/sidebar-referenc
 ## Component strategy
 
 Prefer building **layout-aware variants** of existing components rather than forking them:
-- `PageHeader` — not used in the windowed shell; breadcrumb bar replaces it. The component itself stays untouched in `src/components/` for the side-panel.
+- `PageHeader` — already has a compact/expanded scroll variant; a `size` prop for a larger windowed variant can be added when needed ([#98](https://github.com/lexicora/lexicora-extension/issues/98))
 - Form field containers — reuse the max-width wrappers from the Phase 1 layout pass
 - Navigation — the shared `NavItems` list (extracted in the Phase 1 cleanup) feeds both the bottom tab bar (side-panel) and the sidebar (windowed)
 
