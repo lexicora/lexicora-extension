@@ -98,10 +98,32 @@ The windowed entrypoint gets its own `App.tsx` with:
 
 Background → window push messages need a `windowId` discriminator, same as the side-panel. The windowed entrypoint registers its own `windowId` via a dedicated message type (see [#103](https://github.com/lexicora/lexicora-extension/issues/103)).
 
+## Breadcrumb
+
+The content area has a breadcrumb bar at the top (e.g. `Library / Topics / Topic Name`). This replaces the `PageHeader` back-button pattern from the side-panel — in the windowed layout the user always knows where they are from the sidebar state, so the breadcrumb is the right navigation affordance instead of a compact back button.
+
+Use the shadcn `Breadcrumb` component (`docs/windowed_extension/sidebar-reference/ui/breadcrumb.tsx`). The breadcrumb bar also houses page-level actions (pin, more menu) — see `nav-actions.tsx` in the reference for the pattern.
+
+## Reference files
+
+`docs/windowed_extension/sidebar-reference/` contains a generated shadcn sidebar example. Imports reference `@/components/` which maps to `src/components/` in this project. Use these as implementation reference, not as copy-paste — adapt them to use `react-router-dom` `NavLink` instead of `<a>` tags and wire data from RxDB instead of static arrays.
+
+| Reference file | Maps to in Lexicora |
+|---|---|
+| `app-sidebar.tsx` | `src/entrypoints/window/app-sidebar.tsx` — root sidebar component |
+| `nav-main.tsx` | Core nav section: Home, Entries, Topics (top of sidebar) |
+| `nav-favorites.tsx` | Pinned topics section — wire to RxDB `isPinned: true` query |
+| `nav-workspaces.tsx` | Becomes `NavRecent` — recent topics sorted by `updatedAt` desc |
+| `nav-secondary.tsx` | Settings link at the bottom of the sidebar |
+| `nav-actions.tsx` | Breadcrumb bar + page actions at the top of the content area |
+| `team-switcher.tsx` | Not used — replace with Lexicora logo/app name in `SidebarHeader` |
+| `ui/sidebar.tsx` | Already in `src/components/ui/sidebar.tsx` (shadcn) |
+| `ui/breadcrumb.tsx` | Already in `src/components/ui/breadcrumb.tsx` (shadcn) |
+
 ## Component strategy
 
 Prefer building **layout-aware variants** of existing components rather than forking them:
-- `PageHeader` — already has a compact/expanded scroll variant; a `size` prop for a larger windowed variant can be added when needed ([#98](https://github.com/lexicora/lexicora-extension/issues/98))
+- `PageHeader` — not used in the windowed shell; breadcrumb bar replaces it. The component itself stays untouched in `src/components/` for the side-panel.
 - Form field containers — reuse the max-width wrappers from the Phase 1 layout pass
 - Navigation — the shared `NavItems` list (extracted in the Phase 1 cleanup) feeds both the bottom tab bar (side-panel) and the sidebar (windowed)
 

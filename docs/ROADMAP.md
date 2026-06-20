@@ -43,7 +43,7 @@ Bug fixes, light-mode follow-ons, and a focused refactor before Phase 2.
 
 A new WXT entrypoint that opens the extension as a full browser window — same data, same components, but a wider layout optimized for more screen real estate.
 
-See [`docs/WINDOWED_EXTENSION.md`](WINDOWED_EXTENSION.md) for full spec.
+See [`docs/windowed_extension/README.md`](windowed_extension/README.md) for full spec.
 
 Key issues: [#47](https://github.com/lexicora/lexicora-extension/issues/47), [#115](https://github.com/lexicora/lexicora-extension/issues/115), [#112](https://github.com/lexicora/lexicora-extension/issues/112), [#103](https://github.com/lexicora/lexicora-extension/issues/103), [#98](https://github.com/lexicora/lexicora-extension/issues/98)
 

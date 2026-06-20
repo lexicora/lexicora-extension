@@ -97,4 +97,4 @@ See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the phased implementation plan and 
 **Current phase**: Phase 2 — Windowed extension entrypoint.
 **Current goal**: fully functional offline app before integrating Supabase sync or AI features.
 
-Phase 2 builds a new `window/` entrypoint — a standalone browser window with a wider sidebar-based layout. Spec in [`docs/WINDOWED_EXTENSION.md`](docs/WINDOWED_EXTENSION.md).
+Phase 2 builds a new `window/` entrypoint — a standalone browser window with a wider sidebar-based layout. Spec in [`docs/windowed_extension/README.md`](docs/windowed_extension/README.md).
