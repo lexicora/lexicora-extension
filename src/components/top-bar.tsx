@@ -28,7 +28,7 @@ export function TopBar() {
     // TODO: Make sure only one windowed instance is open at a time.
     //* NOTE: For messaging, use webext-bridge/sidepanel, because the window is similar in behavior and the windowId is different so no conflicts with the real side-panel.
     browser.windows.create({
-      url: browser.runtime.getURL("/sidepanel.html"), // TODO: Implement unlisted side-panel similar app (see: https://wxt.dev/guide/essentials/entrypoints.html#unlisted-pages)
+      url: browser.runtime.getURL("/window.html"), // TODO: Implement unlisted side-panel similar app (see: https://wxt.dev/guide/essentials/entrypoints.html#unlisted-pages)
       type: "popup",
       width: 400,
       height: 660, // plus 40, because of window bar
