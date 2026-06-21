@@ -6,5 +6,6 @@
     "paths": {
       "@/*": ["./src/*"]
     }
-  }
+  },
+  "exclude": [".output", "docs"]
 }

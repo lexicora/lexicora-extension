@@ -22,36 +22,36 @@ import { Toaster } from "@/components/ui/sonner";
 
 // Pages
 import HomePage from "./pages/home/home";
-import ErrorPage from "./pages/error";
-import NotFoundPage from "./pages/not-found";
-import NotSupportedPage from "./pages/not-supported";
+import ErrorPage from "@/pages/error";
+import NotFoundPage from "@/pages/not-found";
+import NotSupportedPage from "@/pages/not-supported";
 
 // (Content) Library
-import LibraryPage from "./pages/library/library";
+import LibraryPage from "@/pages/library/library";
 
 // Entries Pages
-import EntryCreatePage from "./pages/library/entries/create/entry-create";
-import EntryDetailPage from "./pages/library/entries/detail/entry-detail";
-import EntryEditPage from "./pages/library/entries/edit/entry-edit";
+import EntryCreatePage from "@/pages/library/entries/create/entry-create";
+import EntryDetailPage from "@/pages/library/entries/detail/entry-detail";
+import EntryEditPage from "@/pages/library/entries/edit/entry-edit";
 
 // Topic Pages
 //* INFO: TopicsPage not necessary right now
-import TopicCreatePage from "./pages/library/topics/create/topic-create";
-import TopicDetailPage from "./pages/library/topics/detail/topic-detail";
-import TopicEditPage from "./pages/library/topics/edit/topic-edit";
-import TopicEntriesPage from "./pages/library/topics/entries/topic-entries";
+import TopicCreatePage from "@/pages/library/topics/create/topic-create";
+import TopicDetailPage from "@/pages/library/topics/detail/topic-detail";
+import TopicEditPage from "@/pages/library/topics/edit/topic-edit";
+import TopicEntriesPage from "@/pages/library/topics/entries/topic-entries";
 
 // Settings Pages
-import SettingsPage from "./pages/settings/settings";
+import SettingsPage from "@/pages/settings/settings";
 // Sub-settings pages
-import ThemePersonalizationSettingsPage from "./pages/settings/personalization/theme";
-import CaptureSuggestionsSettingsPage from "./pages/settings/features/capture-suggestions";
-import DataSettingsPage from "./pages/settings/data/data";
-import FaqPage from "./pages/settings/help/faq";
-import TipsAndTricksPage from "./pages/settings/help/tips-and-tricks";
-import AboutPage from "./pages/settings/about/about";
-import LicensesPage from "./pages/settings/about/licenses";
-// import NotificationsSettingsPage from "./pages/settings/notifications";
+import ThemePersonalizationSettingsPage from "@/pages/settings/personalization/theme";
+import CaptureSuggestionsSettingsPage from "@/pages/settings/features/capture-suggestions";
+import DataSettingsPage from "@/pages/settings/data/data";
+import FaqPage from "@/pages/settings/help/faq";
+import TipsAndTricksPage from "@/pages/settings/help/tips-and-tricks";
+import AboutPage from "@/pages/settings/about/about";
+import LicensesPage from "@/pages/settings/about/licenses";
+// import NotificationsSettingsPage from "@/pages/settings/notifications";
 
 function RootLayout() {
   useMouseNavigation();
