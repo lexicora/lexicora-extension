@@ -70,7 +70,7 @@ function NavMain() {
       {items.map((item) => (
         <SidebarMenuItem key={item.title}>
           <SidebarMenuButton asChild isActive={item.isActive}>
-            <NavLink to={item.to}>
+            <NavLink to={item.to} viewTransition>
               <item.icon />
               <span>{item.title}</span>
             </NavLink>
@@ -92,7 +92,11 @@ function NavPinned({ topics }: { topics: TopicDocType[] }) {
         {topics.map((topic) => (
           <SidebarMenuItem key={topic.id}>
             <SidebarMenuButton asChild>
-              <NavLink to={`/library/topics/${topic.id}`} title={topic.name}>
+              <NavLink
+                to={`/library/topics/${topic.id}`}
+                title={topic.name}
+                viewTransition
+              >
                 <PinIcon />
                 <span>{topic.name}</span>
               </NavLink>
@@ -116,7 +120,11 @@ function NavRecent({ topics }: { topics: TopicDocType[] }) {
           {topics.map((topic) => (
             <SidebarMenuItem key={topic.id}>
               <SidebarMenuButton asChild>
-                <NavLink to={`/library/topics/${topic.id}`} title={topic.name}>
+                <NavLink
+                  to={`/library/topics/${topic.id}`}
+                  title={topic.name}
+                  viewTransition
+                >
                   <FolderIcon />
                   <span>{topic.name}</span>
                 </NavLink>

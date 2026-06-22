@@ -54,11 +54,13 @@ function RootLayout() {
     <AppMessagingProvider>
       <RouterListener />
       <SidebarProvider>
-        <AppSidebar />
+        <AppSidebar className="select-none" />
         <SidebarInset>
           <ScrollObserverProvider>
-            <header className="sticky top-0 flex h-12 shrink-0 items-center gap-2 border-b px-3 bg-background/80 backdrop-blur-lg z-10">
-              <SidebarTrigger />
+            <header className="mb-12.25">
+              <div className="w-full fixed top-0 flex h-12.5 shrink-0 items-center gap-2 border-b bg-background/80 backdrop-blur-lg px-3 z-10">
+                <SidebarTrigger size="icon" />
+              </div>
             </header>
             <Outlet />
           </ScrollObserverProvider>
@@ -78,10 +80,7 @@ const router = createMemoryRouter([
       { path: "*", element: <NotFoundPage /> },
       { path: "not-supported", element: <NotSupportedPage /> },
       // Entries
-      {
-        path: "library",
-        element: <LibraryPage hideTabBar={true} isWindowed={true} />,
-      },
+      { path: "library", element: <LibraryPage hideTabBar isWindowed /> },
       { path: "library/entries/new", element: <EntryCreatePage /> },
       { path: "library/entries/:id", element: <EntryDetailPage /> },
       { path: "library/entries/:id/edit", element: <EntryEditPage /> },
