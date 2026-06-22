@@ -12,7 +12,7 @@ import { RouterListener } from "@/hooks/sidepanel/router-listener";
 //import { MessageListener } from "@/hooks/sidepanel/message-listener";
 import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
 import { useSidePanelConnection } from "@/hooks/sidepanel/use-sidepanel-connection";
-import { SidePanelMessagingProvider } from "@/providers/sidepanel-messaging";
+import { AppMessagingProvider } from "@/providers/app-messaging";
 import { ScrollObserverProvider } from "@/providers/scroll-observer";
 import { ThemeProvider } from "@/providers/theme-provider";
 import RxDBProvider from "@/providers/rxdb-provider";
@@ -71,7 +71,7 @@ function RootLayout() {
   const disableScrollRestoration = location.pathname.startsWith("/library");
 
   return (
-    <SidePanelMessagingProvider>
+    <AppMessagingProvider>
       <RouterListener />
       {disableScrollRestoration || <ScrollRestoration />}
       <ScrollObserverProvider>
@@ -79,7 +79,7 @@ function RootLayout() {
         <Outlet />
         <BottomNavigation />
       </ScrollObserverProvider>
-    </SidePanelMessagingProvider>
+    </AppMessagingProvider>
   );
 }
 

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { PageData } from "@/types/page-data.types";
 import { sendMessage, onMessage } from "@/lib/messaging";
-import { useSidePanelWindowId } from "@/providers/sidepanel-messaging";
+import { useAppWindowId } from "@/providers/app-messaging";
 import { MSG } from "@/constants/messaging";
 
 export function useCaptureData() {
   const [capturedData, setCapturedData] = useState<PageData | null>(null);
-  const windowId = useSidePanelWindowId();
+  const windowId = useAppWindowId();
 
   useEffect(() => {
     // Core logic to safely update data only if it is genuinely new

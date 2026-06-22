@@ -2,12 +2,12 @@ import { MSG } from "@/constants/messaging";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { sendMessage, onMessage } from "@/lib/messaging";
-import { useSidePanelWindowId } from "@/providers/sidepanel-messaging";
+import { useAppWindowId } from "@/providers/app-messaging";
 
 export function RouterListener() {
   const navigate = useNavigate();
   const location = useLocation();
-  const windowId = useSidePanelWindowId();
+  const windowId = useAppWindowId();
 
   const [pushEnabled, setPushEnabled] = useState(false);
 
