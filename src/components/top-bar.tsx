@@ -30,8 +30,8 @@ export function TopBar() {
     browser.windows.create({
       url: browser.runtime.getURL("/window.html"), // TODO: Implement unlisted side-panel similar app (see: https://wxt.dev/guide/essentials/entrypoints.html#unlisted-pages)
       type: "popup",
-      width: 400,
-      height: 660, // plus 40, because of window bar
+      width: 1000,
+      height: 800, // plus 40, because of window bar
       //tabId potentially set, could be useful for messaging.
     });
 

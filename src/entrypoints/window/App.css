@@ -1,0 +1,43 @@
+:root {
+  --lc-content-max-width: 44rem; /* 704px — readable centered content column */
+}
+
+#root {
+  margin: 0 auto;
+  padding: 0;
+}
+
+html {
+  overflow-x: hidden;
+  scroll-padding-top: 56px; /* account for the sticky sidebar-inset header (h-12 = 48px) */
+  scroll-padding-bottom: 16px;
+}
+
+/*NOTE: Prevents layout shift when a dropdown / editor locks body scroll (radix/shadcn)*/
+body[data-scroll-locked] {
+  margin-right: 0 !important;
+  --removed-body-scroll-bar-size: 0;
+}
+
+/*
+ * Shared page layout primitives. These mirror the side-panel's App.css but are
+ * tuned for the windowed shell:
+ *  - No fixed TopBar: the sidebar-inset header is sticky/in-flow, so content does
+ *    not need a top margin to clear an overlapping bar.
+ *  - No BottomNavigation: only a small bottom margin for breathing room.
+ * Both entrypoints define `.lc-page-container` in their own App.css, so the shared
+ * PageContainer component renders correctly in each host without a prop.
+ */
+.lc-page-container {
+  padding: 12px;
+  padding-right: calc(var(--lc-scrollbar-offset) + 2px);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.lc-page-container-inner {
+  max-width: var(--lc-content-max-width);
+  margin-inline: auto;
+}
