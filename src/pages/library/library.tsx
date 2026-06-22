@@ -36,7 +36,7 @@ import {
 // TODO: Potentially make searching faster, when entering a search query, because on every character, a navigation takes place.
 // TODO: Also ensure, that when on a tab, the other tabs should not be rendered and in a way put to sleep, so they don't do unnecessary processing.
 
-function LibraryPage() {
+function LibraryPage({ hideTabBar = false }: { hideTabBar?: boolean }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const deferredSearch = useDeferredValue(search);
@@ -171,13 +171,15 @@ function LibraryPage() {
                 <StarIcon className="group-data-[state=on]/toggle:text-yellow-600 group-data-[state=on]/toggle:fill-yellow-600 dark:group-data-[state=on]/toggle:text-yellow-500 dark:group-data-[state=on]/toggle:fill-yellow-500" />
               </Toggle>
               {/*Group Tabs of pure entries and topics (grouping of entries) and sites (grouping of entries based on their sites url grouped and matched) */}
-              <div className="flex-1 /*mr-7.5*/">
-                <TabsList className="h-8! py-[0.16rem]">
-                  <TabsTrigger value="entries">Entries</TabsTrigger>
-                  <TabsTrigger value="topics">Topics</TabsTrigger>
-                  {/* <TabsTrigger value="sites">Sites</TabsTrigger> */}
-                </TabsList>
-              </div>
+              {!hideTabBar && (
+                <div className="flex-1 /*mr-7.5*/">
+                  <TabsList className="h-8! py-[0.16rem]">
+                    <TabsTrigger value="entries">Entries</TabsTrigger>
+                    <TabsTrigger value="topics">Topics</TabsTrigger>
+                    {/* <TabsTrigger value="sites">Sites</TabsTrigger> */}
+                  </TabsList>
+                </div>
+              )}
               <Toggle
                 title={showArchived ? "Show all" : "Show only Archived"}
                 variant="outline"
