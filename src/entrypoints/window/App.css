@@ -41,3 +41,34 @@ body[data-scroll-locked] {
   max-width: var(--lc-content-max-width);
   margin-inline: auto;
 }
+
+/*
+ * Host-aware anchoring for viewport-fixed page chrome (the PageHeader compact
+ * strip, the floating create button/dropdown, the AI prompt bar). Those elements
+ * use `position: fixed`, so on their own they anchor to the viewport and span
+ * under the sidebar. We expose the sidebar's *reserved* width as
+ * `--lc-host-inset-left` so each element can push its left edge in and shrink its
+ * width to stay inside the content area. The value is driven by the sidebar's own
+ * data-attributes, so it tracks the collapse state (and the 200ms width
+ * transition) automatically — no JS, no `isWindowed` prop.
+ *
+ * Side-panel pages never define this var; the `var(--lc-host-inset-left, 0px)`
+ * fallback at each call site keeps them anchored full-width as before.
+ *
+ * `:has([data-slot="sidebar"][data-state])` matches only the desktop sidebar
+ * (the mobile Sheet variant has no `data-state`), so below the md breakpoint the
+ * inset is full-width and the var correctly falls back to 0.
+ */
+[data-slot="sidebar-wrapper"]:has([data-slot="sidebar"][data-state]) {
+  --lc-host-inset-left: var(--sidebar-width);
+}
+[data-slot="sidebar-wrapper"]:has(
+    [data-slot="sidebar"][data-collapsible="icon"]
+  ) {
+  --lc-host-inset-left: var(--sidebar-width-icon);
+}
+[data-slot="sidebar-wrapper"]:has(
+    [data-slot="sidebar"][data-collapsible="offcanvas"]
+  ) {
+  --lc-host-inset-left: 0px;
+}
