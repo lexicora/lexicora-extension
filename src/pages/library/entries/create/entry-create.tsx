@@ -356,7 +356,7 @@ function EntryCreatePage() {
         <section
           ref={footerContentRef}
           //* NOTE: Opt in for now, because of editor styles being changed
-          className="fixed bottom-0 left-0 min-h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-30
+          className="fixed bottom-0 left-[var(--lc-host-inset-left,0px)] right-0 min-h-15 transition-[left] duration-200 ease-linear p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-30
                 lc-bottom-bar-styled-bg"
         >
           <div

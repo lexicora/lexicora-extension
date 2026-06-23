@@ -191,7 +191,7 @@ function TopicEntriesPage() {
 
       {/* Floating create entry button — hidden for archived topics */}
       {!topicIsArchived && (
-        <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20 pointer-events-none">
+        <div className="fixed bottom-17.75 left-[var(--lc-host-inset-left,0px)] right-0 transition-[left] duration-200 ease-linear px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20 pointer-events-none">
           <div className="shrink-0 flex items-center justify-end max-w-[calc(var(--lc-content-max-width)+0.25rem)] mx-auto inset-x-0">
             <Button
               size="icon"
