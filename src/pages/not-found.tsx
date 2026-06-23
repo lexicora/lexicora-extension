@@ -10,7 +10,7 @@ function NotFoundPage() {
         hoverOnScroll={false}
         classNameHeaderElement="mb-2"
       />
-      <main className="text-center">
+      <main>
         <h2 className="text-8xl">404</h2>
         <p className="text-muted-foreground mt-2">
           The page you are looking for does not exist.

@@ -52,7 +52,7 @@ function WindowedCompactStrip({
       style={{
         left: state === "expanded" ? "var(--sidebar-width)" : "0px",
         right: 0,
-        transition: "left 200ms ease-linear",
+        transition: "left 200ms linear",
       }}
     >
       {children}

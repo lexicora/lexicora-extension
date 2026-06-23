@@ -6,6 +6,7 @@
 #root {
   margin: 0 auto;
   padding: 0;
+  text-align: center;
 }
 
 html {
@@ -15,9 +16,15 @@ html {
 }
 
 /*NOTE: Prevents layout shift when a dropdown / editor locks body scroll (radix/shadcn)*/
-body[data-scroll-locked] {
+#lc-body {
   margin-right: 0 !important;
+  /*Prevents layout shift when editing with editor*/
+}
+
+/*NOTE: Prevents layout shift when editing with editor*/
+body[data-scroll-locked] {
   --removed-body-scroll-bar-size: 0;
+  /*Does no longer prevent layout shift by dropdown (shadcn-ui/radix), must put this as a style property in the body with !important declaration*/
 }
 
 /*

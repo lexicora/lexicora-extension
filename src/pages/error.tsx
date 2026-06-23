@@ -28,7 +28,7 @@ function ErrorPage() {
           hoverOnScroll={false}
           classNameHeaderElement="mb-2"
         />
-        <main className="text-center">
+        <main>
           <h2 className="select-text text-8xl text-red-900 dark:text-red-300">
             {statusCode}
           </h2>
@@ -101,7 +101,7 @@ function ErrorPage() {
         hoverOnScroll={false}
         classNameHeaderElement="mb-2"
       />
-      <main className="text-center">{errorContent}</main>
+      <main>{errorContent}</main>
     </PageContainer>
   );
 }

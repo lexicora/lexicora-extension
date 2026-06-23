@@ -10,7 +10,7 @@ function NotSupportedPage() {
         hoverOnScroll={false}
         classNameHeaderElement="mb-2"
       />
-      <main className="text-center">
+      <main>
         <h2 className="text-8xl">403</h2>
         <p className="text-muted-foreground mt-2">
           The feature you are trying to access is either not supported or

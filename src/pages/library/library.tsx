@@ -32,6 +32,7 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { useAppHost } from "@/providers/app-host";
 
 // TODO: Potentially make searching faster, when entering a search query, because on every character, a navigation takes place.
 // TODO: Also ensure, that when on a tab, the other tabs should not be rendered and in a way put to sleep, so they don't do unnecessary processing.
@@ -40,11 +41,11 @@ import {
 // entrypoint opts in via App.tsx. TODO: migrate host detection to a provider later.
 function LibraryPage({
   hideTabBar = false,
-  isWindowed = false,
 }: {
   hideTabBar?: boolean;
   isWindowed?: boolean;
 }) {
+  const { isWindowed } = useAppHost();
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const deferredSearch = useDeferredValue(search);
