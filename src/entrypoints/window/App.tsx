@@ -86,7 +86,7 @@ function RootLayout() {
         {disableScrollRestoration || <ScrollRestoration />}
         <SidebarProvider>
           <AppSidebar className="select-none z-50" />
-          <SidebarInset>
+          <SidebarInset className="/pr-[calc(var(--lc-scrollbar-offset)+10px)]">
             <ScrollObserverProvider>
               <WindowHeader />
               <Outlet />

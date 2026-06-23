@@ -1,5 +1,6 @@
 :root {
   --lc-content-max-width: 44rem; /* 704px — readable centered content column */
+  --lc-max-scrollbar-width: 10px; /* width of thin scrollbar / base padding width */
 }
 
 #root {
@@ -43,6 +44,25 @@ body[data-scroll-locked] {
 }
 
 /*
+ * Sidebar-width-aware scroll metrics. These must live on sidebar-wrapper (not
+ * :root) because --sidebar-width is set as an inline style on sidebar-wrapper
+ * by SidebarProvider and only inherits downward from there. Placing them here
+ * makes them available to all descendants, including position:fixed elements
+ * whose left/right values depend on the content-area width.
+ *
+ *   --lc-content-total-width  visible content area width (sidebar excluded)
+ *   --lc-scrollbar-width      native window scrollbar width (100vw − content)
+ *   --lc-scrollbar-offset     padding delta to compensate for the scrollbar
+ */
+[data-slot="sidebar-wrapper"] {
+  --lc-content-total-width: calc(100% + var(--lc-host-inset-left, 0px));
+  --lc-scrollbar-width: calc(100vw - var(--lc-content-total-width));
+  --lc-scrollbar-offset: calc(
+    var(--lc-max-scrollbar-width) - var(--lc-scrollbar-width)
+  );
+}
+
+/*
  * Host-aware anchoring for viewport-fixed page chrome (the PageHeader compact
  * strip, the floating create button/dropdown, the AI prompt bar). Those elements
  * use `position: fixed`, so on their own they anchor to the viewport and span
@@ -63,12 +83,12 @@ body[data-scroll-locked] {
   --lc-host-inset-left: var(--sidebar-width);
 }
 [data-slot="sidebar-wrapper"]:has(
-    [data-slot="sidebar"][data-collapsible="icon"]
-  ) {
+  [data-slot="sidebar"][data-collapsible="icon"]
+) {
   --lc-host-inset-left: var(--sidebar-width-icon);
 }
 [data-slot="sidebar-wrapper"]:has(
-    [data-slot="sidebar"][data-collapsible="offcanvas"]
-  ) {
+  [data-slot="sidebar"][data-collapsible="offcanvas"]
+) {
   --lc-host-inset-left: 0px;
 }
