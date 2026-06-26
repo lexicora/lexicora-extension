@@ -1,4 +1,5 @@
 import "./App.css";
+import { useLayoutEffect, useRef } from "react";
 import {
   createMemoryRouter,
   RouterProvider,
@@ -22,6 +23,7 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "./app-sidebar";
 
@@ -57,6 +59,27 @@ import AboutPage from "@/pages/settings/about/about";
 import LicensesPage from "@/pages/settings/about/licenses";
 import { cn } from "@/lib/utils";
 
+function SidebarTransitionGuard() {
+  const { open } = useSidebar();
+  const mountedRef = useRef(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  useLayoutEffect(() => {
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      return;
+    }
+    document.documentElement.classList.add("sidebar-transitioning");
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      document.documentElement.classList.remove("sidebar-transitioning");
+    }, 200);
+    return () => clearTimeout(timerRef.current);
+  }, [open]);
+
+  return null;
+}
+
 function WindowHeader() {
   const { isAtTop } = useScrollPos();
 
@@ -82,9 +105,10 @@ function RootLayout() {
   return (
     <AppHostProvider isWindowed>
       <AppMessagingProvider>
-        <RouterListener />
+        {/* For now not necessary for the windowed host <RouterListener />*/}
         {disableScrollRestoration || <ScrollRestoration />}
         <SidebarProvider>
+          <SidebarTransitionGuard />
           <AppSidebar className="select-none z-50" />
           <SidebarInset className="/pr-[calc(var(--lc-scrollbar-offset)+10px)]">
             <ScrollObserverProvider>
