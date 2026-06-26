@@ -45,14 +45,15 @@ function WindowedCompactStrip({
   className: string;
   children: React.ReactNode;
 }) {
-  const { state } = useSidebar();
+  const { state, isMobile } = useSidebar();
   return (
     <div
       className={cn(className, "top-12.5")}
       style={{
-        left: state === "expanded" ? "var(--sidebar-width)" : "0px",
+        left:
+          !isMobile && state === "expanded" ? "var(--sidebar-width)" : "0px",
         right: 0,
-        transition: "left 200ms linear",
+        //transition: "left 200ms linear",
       }}
     >
       {children}

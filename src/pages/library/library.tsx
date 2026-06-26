@@ -39,12 +39,7 @@ import { useAppHost } from "@/providers/app-host";
 
 // NOTE: Pages are side-panel-first, so `isWindowed` defaults to false. The windowed
 // entrypoint opts in via App.tsx. TODO: migrate host detection to a provider later.
-function LibraryPage({
-  hideTabBar = false,
-}: {
-  hideTabBar?: boolean;
-  isWindowed?: boolean;
-}) {
+function LibraryPage({ hideTabBar = false }: { hideTabBar?: boolean }) {
   const { isWindowed } = useAppHost();
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") || "");
