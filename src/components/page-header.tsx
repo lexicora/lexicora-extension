@@ -48,7 +48,7 @@ function WindowedCompactStrip({
   const { state, isMobile } = useSidebar();
   return (
     <div
-      className={cn(className, "top-12.5")}
+      className={cn(className, "top-12.5 lc-strip-offset-container")}
       style={{
         left:
           !isMobile && state === "expanded" ? "var(--sidebar-width)" : "0px",
@@ -178,6 +178,7 @@ export function PageHeader({
     <div
       className={cn(
         "flex mt-1.25 w-full /*max-w-317.25*/ max-w-[calc(var(--lc-content-max-width)+0.8125rem)] mr-(--lc-scrollbar-offset)",
+        isWindowed && "lc-strip-offset",
         rightActionButton ? "justify-between" : "justify-start",
       )}
     >
@@ -204,6 +205,7 @@ export function PageHeader({
           "flex-1 mt-0.5 w-full /*max-w-298.5*/ max-w-[calc(var(--lc-content-max-width)-3.875rem)] text-base font-semibold transition-transform-opacity-blur duration-300 active-view-transition:transition-none text-center",
           !rightActionButton &&
             "mr-[calc(var(--lc-scrollbar-offset)+2.0625em)]",
+          isWindowed && !rightActionButton && "lc-strip-offset",
           isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
         )}
       >
@@ -237,6 +239,7 @@ export function PageHeader({
     <span
       className={cn(
         "ml-2.5 mr-(--lc-scrollbar-offset) mt-1.75 text-base font-semibold transition-transform-opacity-blur duration-300 active-view-transition:transition-none",
+        isWindowed && "lc-strip-offset",
         isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
       )}
     >

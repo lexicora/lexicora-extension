@@ -99,8 +99,16 @@ body[data-scroll-locked] {
   transition: --lc-host-inset-left 200ms linear;
 } */
 
-html.sidebar-transitioning .lc-page-container {
-  transition: padding-right 200ms linear;
+html.sidebar-transitioning {
+  & .lc-page-container {
+    transition: padding-right 200ms linear;
+  }
+  & .lc-strip-offset {
+    transition: margin-right 200ms linear;
+  }
+  & .lc-strip-offset-container {
+    transition: left 200ms linear;
+  }
 }
 
 [data-slot="sidebar-wrapper"]:has([data-slot="sidebar"][data-state]) {
