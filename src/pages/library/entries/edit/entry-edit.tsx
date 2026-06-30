@@ -25,6 +25,7 @@ import { BlockDocType } from "@/db/schemas/block";
 import { EntryDocType } from "@/db/schemas/entry";
 import { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
+import { useAppHost } from "@/providers/app-host";
 import {
   convertBlockNoteBlocks,
   convertDbBlocksToBlockNote,
@@ -243,6 +244,7 @@ function EntryEditPage() {
   const topicsCollection = useRxCollection("topics");
 
   // undefined = loading, null = not found
+  const { isWindowed } = useAppHost();
   const { isAtBottom } = useScrollPos();
   const [entry, setEntry] = useState<EntryDocType | null | undefined>(
     undefined,
@@ -431,8 +433,10 @@ function EntryEditPage() {
       <footer className={cn(styles.bottomFooter, "mt-10.5")} ref={footerRef}>
         <section
           ref={footerContentRef}
-          className="fixed bottom-0 left-[var(--lc-host-inset-left,0px)] right-0 min-h-15 transition-[left] duration-200 ease-linear p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-30
-                lc-bottom-bar-styled-bg"
+          className={cn(
+            "fixed bottom-0 left-[var(--lc-host-inset-left,0px)] right-0 min-h-15 transition-[left] duration-200 ease-linear p-3 z-30 lc-bottom-bar-styled-bg",
+            !isWindowed && "pr-[calc(var(--lc-scrollbar-offset)+2px)]",
+          )}
         >
           <div
             className={cn(

@@ -54,12 +54,20 @@ body[data-scroll-locked] {
  * Sidebar-width-aware scroll metrics. These must live on sidebar-wrapper (not
  * :root) because --sidebar-width is set as an inline style on sidebar-wrapper
  * by SidebarProvider and only inherits downward from there. Placing them here
- * makes them available to all descendants, including position:fixed elements
- * whose left/right values depend on the content-area width.
+ * makes them available to all descendants whose left/right values depend on
+ * the content-area width.
  *
  *   --lc-content-total-width  visible content area width (sidebar excluded)
  *   --lc-scrollbar-width      native window scrollbar width (100vw − content)
  *   --lc-scrollbar-offset     padding delta to compensate for the scrollbar
+ *
+ * NOTE: These variables are evaluated lazily — `100%` resolves at the USING
+ * element's context, not here. They work correctly for block elements inside
+ * SidebarInset (where 100% = SidebarInset width) but NOT for position:fixed
+ * elements (where 100% = 100vw, causing --lc-scrollbar-offset to balloon to
+ * ~10px + sidebar-width). Fixed elements must not use --lc-scrollbar-offset
+ * for padding-right; instead they omit it when isWindowed (see entry-create /
+ * entry-edit) or rely on a child element where 100% resolves correctly.
  */
 [data-slot="sidebar-wrapper"] {
   --lc-content-total-width: calc(100% + var(--lc-host-inset-left, 0px));

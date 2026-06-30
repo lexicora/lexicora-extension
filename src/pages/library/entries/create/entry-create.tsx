@@ -29,6 +29,7 @@ import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { cn } from "@/lib/utils";
 import { useScrollPos } from "@/providers/scroll-observer";
+import { useAppHost } from "@/providers/app-host";
 import { useCreateBlockNote } from "@blocknote/react";
 
 import { useRxCollection, useRxDatabase } from "rxdb/plugins/react";
@@ -68,6 +69,7 @@ function EntryCreatePage() {
   const topicsCollection = useRxCollection("topics");
   const db = useRxDatabase();
 
+  const { isWindowed } = useAppHost();
   const isPromptActive = isPromptFocused || promptText.trim() !== "";
 
   //const [isEditorReady, setIsEditorReady] = useState(false); // other approach with requestAnimation frame contrary to useLayoutEffect
@@ -356,8 +358,14 @@ function EntryCreatePage() {
         <section
           ref={footerContentRef}
           //* NOTE: Opt in for now, because of editor styles being changed
-          className="fixed bottom-0 left-[var(--lc-host-inset-left,0px)] right-0 min-h-15 transition-[left] duration-200 ease-linear p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-30
-                lc-bottom-bar-styled-bg"
+          className={cn(
+            "fixed bottom-0 left-[var(--lc-host-inset-left,0px)] right-0 min-h-15 transition-[left] duration-200 ease-linear p-3 z-30 lc-bottom-bar-styled-bg",
+            // In the windowed host, position:fixed elements resolve `100%` against the
+            // full viewport, making --lc-scrollbar-offset balloon to ~10px + sidebar-width
+            // and crushing the mx-auto centering. The sidepanel doesn't have this issue
+            // (no sidebar-wrapper override, global formula is correct for fixed elements).
+            !isWindowed && "pr-[calc(var(--lc-scrollbar-offset)+2px)]",
+          )}
         >
           <div
             className={cn(
