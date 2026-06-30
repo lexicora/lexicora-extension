@@ -1,8 +1,10 @@
 import * as React from "react";
 import { NavLink, useLocation, useSearchParams } from "react-router-dom";
 import {
+  FilePlusIcon,
   FileTextIcon,
   FolderIcon,
+  FolderPlusIcon,
   HomeIcon,
   PinIcon,
   Settings2Icon,
@@ -13,6 +15,7 @@ import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.sv
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -137,6 +140,38 @@ function NavRecent({ topics }: { topics: TopicDocType[] }) {
   );
 }
 
+/** Context-aware create actions. On topic pages, New Entry pre-selects the topic. */
+function NavCreate() {
+  const { pathname } = useLocation();
+  const topicIdMatch = pathname.match(/^\/library\/topics\/([^/]+)/);
+  const currentTopicId = topicIdMatch?.[1];
+
+  const newEntryTo = currentTopicId
+    ? `/library/entries/new?topicId=${encodeURIComponent(currentTopicId)}`
+    : "/library/entries/new";
+
+  return (
+    <SidebarMenu className="flex flex-row">
+      <SidebarMenuItem className="flex-1">
+        <SidebarMenuButton asChild>
+          <NavLink to={newEntryTo} viewTransition>
+            <FilePlusIcon />
+            <span>New Entry</span>
+          </NavLink>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+      <SidebarMenuItem className="flex-1">
+        <SidebarMenuButton asChild>
+          <NavLink to="/library/topics/new" viewTransition>
+            <FolderPlusIcon />
+            <span>New Topic</span>
+          </NavLink>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  );
+}
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { pinnedTopics, recentTopics } = useSidebarTopics();
 
@@ -168,6 +203,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavPinned topics={pinnedTopics} />
         <NavRecent topics={recentTopics} />
       </SidebarContent>
+      <SidebarFooter>
+        <NavCreate />
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
