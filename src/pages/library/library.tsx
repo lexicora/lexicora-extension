@@ -39,7 +39,7 @@ import { useAppHost } from "@/providers/app-host";
 
 // NOTE: Pages are side-panel-first, so `isWindowed` defaults to false. The windowed
 // entrypoint opts in via App.tsx. TODO: migrate host detection to a provider later.
-function LibraryPage({ hideTabBar = false }: { hideTabBar?: boolean }) {
+function LibraryPage() {
   const { isWindowed } = useAppHost();
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") || "");
@@ -175,7 +175,7 @@ function LibraryPage({ hideTabBar = false }: { hideTabBar?: boolean }) {
                 <StarIcon className="group-data-[state=on]/toggle:text-yellow-600 group-data-[state=on]/toggle:fill-yellow-600 dark:group-data-[state=on]/toggle:text-yellow-500 dark:group-data-[state=on]/toggle:fill-yellow-500" />
               </Toggle>
               {/*Group Tabs of pure entries and topics (grouping of entries) and sites (grouping of entries based on their sites url grouped and matched) */}
-              {!hideTabBar && (
+              {!isWindowed && (
                 <div className="flex-1 /*mr-7.5*/">
                   <TabsList className="h-8! py-[0.16rem]">
                     <TabsTrigger value="entries">Entries</TabsTrigger>

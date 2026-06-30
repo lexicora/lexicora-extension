@@ -32,6 +32,7 @@ export function TopBar() {
       type: "popup",
       width: 1000,
       height: 800, // plus 40, because of window bar
+      focused: true,
       //tabId potentially set, could be useful for messaging.
     });
 

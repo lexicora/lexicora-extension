@@ -132,7 +132,7 @@ const router = createMemoryRouter([
       { path: "*", element: <NotFoundPage /> },
       { path: "not-supported", element: <NotSupportedPage /> },
       // Entries
-      { path: "library", element: <LibraryPage hideTabBar /> },
+      { path: "library", element: <LibraryPage /> },
       { path: "library/entries/new", element: <EntryCreatePage /> },
       { path: "library/entries/:id", element: <EntryDetailPage /> },
       { path: "library/entries/:id/edit", element: <EntryEditPage /> },
