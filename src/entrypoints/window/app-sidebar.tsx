@@ -4,9 +4,9 @@ import {
   FilePlusIcon,
   FileTextIcon,
   FolderIcon,
-  FolderPlusIcon,
   HomeIcon,
   PinIcon,
+  PlusIcon,
   Settings2Icon,
 } from "lucide-react";
 
@@ -21,6 +21,7 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
@@ -31,7 +32,12 @@ import { useSidebarTopics } from "./__hooks__/use-sidebar-topics";
 /**
  * Fixed top-level navigation. Entries and Topics point at the Library page with a
  * `?tab=` discriminator — the sidebar acts as the Library tab switcher, so the
- * inner tab bar is hidden in the windowed shell (`hideTabBar`).
+ * inner tab bar is hidden in the windowed shell.
+ *
+ * The Topics item has an always-visible `+` action for creating a new topic. Unlike
+ * the hover-only `+` actions on individual topic rows (which are true sub-actions),
+ * this one is always shown because creating a topic is a top-level action, not a
+ * contextual sub-action of "Topics" as a container.
  */
 function NavMain() {
   const location = useLocation();
@@ -41,45 +47,55 @@ function NavMain() {
   const isOnLibrary = pathname === "/library";
   const activeTab = searchParams.get("tab") || "entries";
 
-  const items = [
-    {
-      title: "Home",
-      to: "/",
-      icon: HomeIcon,
-      isActive: pathname === "/",
-    },
-    {
-      title: "Entries",
-      to: "/library?tab=entries",
-      icon: FileTextIcon,
-      isActive: isOnLibrary && activeTab === "entries",
-    },
-    {
-      title: "Topics",
-      to: "/library?tab=topics",
-      icon: FolderIcon,
-      isActive: isOnLibrary && activeTab === "topics",
-    },
-    {
-      title: "Settings",
-      to: "/settings",
-      icon: Settings2Icon,
-      isActive: pathname.startsWith("/settings"),
-    },
-  ];
-
   return (
     <SidebarMenu>
-      {items.map((item) => (
-        <SidebarMenuItem key={item.title}>
-          <SidebarMenuButton asChild isActive={item.isActive}>
-            <NavLink to={item.to} viewTransition>
-              <item.icon />
-              <span>{item.title}</span>
-            </NavLink>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      ))}
+      <SidebarMenuItem>
+        <SidebarMenuButton asChild isActive={pathname === "/"}>
+          <NavLink to="/" viewTransition>
+            <HomeIcon />
+            <span>Home</span>
+          </NavLink>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          asChild
+          isActive={isOnLibrary && activeTab === "entries"}
+        >
+          <NavLink to="/library?tab=entries" viewTransition>
+            <FileTextIcon />
+            <span>Entries</span>
+          </NavLink>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          asChild
+          isActive={isOnLibrary && activeTab === "topics"}
+        >
+          <NavLink to="/library?tab=topics" viewTransition>
+            <FolderIcon />
+            <span>Topics</span>
+          </NavLink>
+        </SidebarMenuButton>
+        <SidebarMenuAction
+          asChild
+          title="New Topic"
+          className="border-l border-sidebar-border/50"
+        >
+          <NavLink to="/library/topics/new" viewTransition>
+            <PlusIcon />
+          </NavLink>
+        </SidebarMenuAction>
+      </SidebarMenuItem>
+      <SidebarMenuItem>
+        <SidebarMenuButton asChild isActive={pathname.startsWith("/settings")}>
+          <NavLink to="/settings" viewTransition>
+            <Settings2Icon />
+            <span>Settings</span>
+          </NavLink>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
     </SidebarMenu>
   );
 }
@@ -104,6 +120,18 @@ function NavPinned({ topics }: { topics: TopicDocType[] }) {
                 <span>{topic.name}</span>
               </NavLink>
             </SidebarMenuButton>
+            <SidebarMenuAction
+              showOnHover
+              asChild
+              title={`New entry in "${topic.name}"`}
+            >
+              <NavLink
+                to={`/library/entries/new?topicId=${encodeURIComponent(topic.id)}`}
+                viewTransition
+              >
+                <PlusIcon />
+              </NavLink>
+            </SidebarMenuAction>
           </SidebarMenuItem>
         ))}
       </SidebarMenu>
@@ -127,11 +155,25 @@ function NavRecent({ topics }: { topics: TopicDocType[] }) {
                   to={`/library/topics/${topic.id}`}
                   title={topic.name}
                   viewTransition
+                  className="group-hover/menu-item:bg-sidebar-accent"
                 >
                   <FolderIcon />
                   <span>{topic.name}</span>
                 </NavLink>
               </SidebarMenuButton>
+              <SidebarMenuAction
+                showOnHover
+                asChild
+                title={`New entry in "${topic.name}"`} // TODO: truncate
+              >
+                <NavLink
+                  to={`/library/entries/new?topicId=${encodeURIComponent(topic.id)}`}
+                  viewTransition
+                  className="hover:bg-[color-mix(in_oklab,var(--sidebar-accent),black_10%)]! dark:hover:bg-[color-mix(in_oklab,var(--sidebar-accent),white_10%)]"
+                >
+                  <PlusIcon />
+                </NavLink>
+              </SidebarMenuAction>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
@@ -140,7 +182,7 @@ function NavRecent({ topics }: { topics: TopicDocType[] }) {
   );
 }
 
-/** Context-aware create actions. On topic pages, New Entry pre-selects the topic. */
+/** Single "New Entry" button. On topic pages, pre-selects the current topic. */
 function NavCreate() {
   const { pathname } = useLocation();
   const topicIdMatch = pathname.match(/^\/library\/topics\/([^/]+)/);
@@ -151,20 +193,12 @@ function NavCreate() {
     : "/library/entries/new";
 
   return (
-    <SidebarMenu className="flex flex-row">
-      <SidebarMenuItem className="flex-1">
+    <SidebarMenu>
+      <SidebarMenuItem>
         <SidebarMenuButton asChild>
           <NavLink to={newEntryTo} viewTransition>
             <FilePlusIcon />
             <span>New Entry</span>
-          </NavLink>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-      <SidebarMenuItem className="flex-1">
-        <SidebarMenuButton asChild>
-          <NavLink to="/library/topics/new" viewTransition>
-            <FolderPlusIcon />
-            <span>New Topic</span>
           </NavLink>
         </SidebarMenuButton>
       </SidebarMenuItem>
