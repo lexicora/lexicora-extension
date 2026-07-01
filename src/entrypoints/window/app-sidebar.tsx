@@ -1,5 +1,10 @@
 import * as React from "react";
-import { NavLink, useLocation, useSearchParams } from "react-router-dom";
+import {
+  NavLink,
+  useLocation,
+  useSearchParams,
+  useNavigate,
+} from "react-router-dom";
 import {
   FilePlusIcon,
   FileTextIcon,
@@ -12,6 +17,8 @@ import {
 
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
   SidebarContent,
@@ -30,73 +37,102 @@ import type { TopicDocType } from "@/db/schemas/topic";
 import { useSidebarTopics } from "./__hooks__/use-sidebar-topics";
 
 /**
- * Fixed top-level navigation. Entries and Topics point at the Library page with a
+ * Fixed top-level navigation. Topics and Entries point at the Library page with a
  * `?tab=` discriminator — the sidebar acts as the Library tab switcher, so the
  * inner tab bar is hidden in the windowed shell.
+ *
+ * Order: Home → Topics → Entries → New Entry. Settings lives in the footer since
+ * it is a utility page, not part of the primary content flow.
  *
  * The Topics item has an always-visible `+` action for creating a new topic. Unlike
  * the hover-only `+` actions on individual topic rows (which are true sub-actions),
  * this one is always shown because creating a topic is a top-level action, not a
  * contextual sub-action of "Topics" as a container.
+ *
+ * The New Entry item is context-aware: when on a topic page it pre-selects that topic.
  */
 function NavMain() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const { pathname } = location;
   const isOnLibrary = pathname === "/library";
   const activeTab = searchParams.get("tab") || "entries";
 
+  const topicIdMatch = pathname.match(/^\/library\/topics\/([^/]+)/);
+  const currentTopicId = topicIdMatch?.[1];
+  const newEntryTo = currentTopicId
+    ? `/library/entries/new?topicId=${encodeURIComponent(currentTopicId)}`
+    : "/library/entries/new";
+
+  const navToNewEntry = () => {
+    navigate(newEntryTo, { viewTransition: true });
+  };
+
   return (
-    <SidebarMenu>
-      <SidebarMenuItem>
-        <SidebarMenuButton asChild isActive={pathname === "/"}>
-          <NavLink to="/" viewTransition>
-            <HomeIcon />
-            <span>Home</span>
-          </NavLink>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-      <SidebarMenuItem>
-        <SidebarMenuButton
-          asChild
-          isActive={isOnLibrary && activeTab === "entries"}
-        >
-          <NavLink to="/library?tab=entries" viewTransition>
-            <FileTextIcon />
-            <span>Entries</span>
-          </NavLink>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-      <SidebarMenuItem>
-        <SidebarMenuButton
-          asChild
-          isActive={isOnLibrary && activeTab === "topics"}
-        >
-          <NavLink to="/library?tab=topics" viewTransition>
-            <FolderIcon />
-            <span>Topics</span>
-          </NavLink>
-        </SidebarMenuButton>
-        <SidebarMenuAction
-          asChild
-          title="New Topic"
-          className="border-l border-sidebar-border/50"
-        >
-          <NavLink to="/library/topics/new" viewTransition>
-            <PlusIcon />
-          </NavLink>
-        </SidebarMenuAction>
-      </SidebarMenuItem>
-      <SidebarMenuItem>
-        <SidebarMenuButton asChild isActive={pathname.startsWith("/settings")}>
-          <NavLink to="/settings" viewTransition>
-            <Settings2Icon />
-            <span>Settings</span>
-          </NavLink>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-    </SidebarMenu>
+    <div>
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild isActive={pathname === "/"}>
+            <NavLink to="/" viewTransition>
+              <HomeIcon />
+              <span>Home</span>
+            </NavLink>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+        <SidebarMenuItem>
+          <SidebarMenuButton
+            asChild
+            isActive={isOnLibrary && activeTab === "topics"}
+          >
+            <NavLink to="/library?tab=topics" viewTransition>
+              <FolderIcon />
+              <span>Topics</span>
+            </NavLink>
+          </SidebarMenuButton>
+          <SidebarMenuAction
+            asChild
+            title="New Topic"
+            className="border-l border-sidebar-border/50"
+          >
+            <NavLink to="/library/topics/new" viewTransition>
+              <PlusIcon />
+            </NavLink>
+          </SidebarMenuAction>
+        </SidebarMenuItem>
+        <SidebarMenuItem>
+          <SidebarMenuButton
+            asChild
+            isActive={isOnLibrary && activeTab === "entries"}
+          >
+            <NavLink to="/library?tab=entries" viewTransition>
+              <FileTextIcon />
+              <span>Entries</span>
+            </NavLink>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+      <Separator className="mx-auto my-2 opacity-60 max-w-[calc(100%-16px)]" />
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild>
+            {/* <NavLink to={newEntryTo} viewTransition>
+              <FilePlusIcon />
+              <span>New Entry</span>
+            </NavLink> */}
+            <Button
+              variant="outline"
+              className="font-medium not-dark:bg-input-bg/90 not-dark:hover:bg-gray-100/80"
+              onClick={() => navigate(newEntryTo, { viewTransition: true })}
+            >
+              <FilePlusIcon />
+              <span>New Entry</span>
+            </Button>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </div>
   );
 }
 
@@ -182,23 +218,16 @@ function NavRecent({ topics }: { topics: TopicDocType[] }) {
   );
 }
 
-/** Single "New Entry" button. On topic pages, pre-selects the current topic. */
-function NavCreate() {
+function NavSettings() {
   const { pathname } = useLocation();
-  const topicIdMatch = pathname.match(/^\/library\/topics\/([^/]+)/);
-  const currentTopicId = topicIdMatch?.[1];
-
-  const newEntryTo = currentTopicId
-    ? `/library/entries/new?topicId=${encodeURIComponent(currentTopicId)}`
-    : "/library/entries/new";
 
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <SidebarMenuButton asChild>
-          <NavLink to={newEntryTo} viewTransition>
-            <FilePlusIcon />
-            <span>New Entry</span>
+        <SidebarMenuButton asChild isActive={pathname.startsWith("/settings")}>
+          <NavLink to="/settings" viewTransition>
+            <Settings2Icon />
+            <span>Settings</span>
           </NavLink>
         </SidebarMenuButton>
       </SidebarMenuItem>
@@ -238,7 +267,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavRecent topics={recentTopics} />
       </SidebarContent>
       <SidebarFooter>
-        <NavCreate />
+        <NavSettings />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
