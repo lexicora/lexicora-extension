@@ -350,6 +350,7 @@ function EntryCreatePage() {
         </div>
       </main>
       <footer
+        // TODO: Potentially disable the ai prompt when the host is the window, because no content can be captured to the window currently
         //id="lc-new-entry-bottom-footer"
         //className="mt-10.5"
         className={cn(styles.bottomFooter, "mt-10.5")}

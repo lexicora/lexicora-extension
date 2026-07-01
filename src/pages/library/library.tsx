@@ -260,52 +260,54 @@ function LibraryPage() {
         </TabsContent> */}
         <footer></footer>
       </Tabs>
-      {!isWindowed && <div className="fixed bottom-17.75 left-[var(--lc-host-inset-left,0px)] right-0 transition-[left] duration-200 ease-linear px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] /*WAS:pr-[calc(var(--lc-scrollbar-offset)+7px)]*/ z-20 pointer-events-none">
-        <div className="shrink-0 flex items-center justify-end max-w-[calc(var(--lc-content-max-width)+0.25rem)] mx-auto inset-x-0">
-          {/*MAYBE: Make smaller and also maybe a bit darker */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                size="icon"
-                title="Create..."
-                draggable={false}
-                className="pointer-events-auto button-create"
+      {!isWindowed && (
+        <div className="fixed bottom-17.75 left-(--lc-host-inset-left,0px) right-0 transition-[left] duration-200 ease-linear px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] /*WAS:pr-[calc(var(--lc-scrollbar-offset)+7px)]*/ z-20 pointer-events-none">
+          <div className="shrink-0 flex items-center justify-end max-w-[calc(var(--lc-content-max-width)+0.25rem)] mx-auto inset-x-0">
+            {/*MAYBE: Make smaller and also maybe a bit darker */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  size="icon"
+                  title="Create..."
+                  draggable={false}
+                  className="pointer-events-auto button-create"
+                >
+                  <PlusIcon className="size-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="top"
+                align="end"
+                className="min-w-28 /*min-w-21*/ /*bg-popover/80 backdrop-blur-md*/"
               >
-                <PlusIcon className="size-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              side="top"
-              align="end"
-              className="min-w-28 /*min-w-21*/ /*bg-popover/80 backdrop-blur-md*/"
-            >
-              <DropdownMenuGroup>
-                <DropdownMenuLabel className="select-none py-1">
-                  New...
-                </DropdownMenuLabel>
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onClick={() =>
-                    navigate("/library/topics/new", { viewTransition: true })
-                  }
-                >
-                  <FolderIcon className="mr-0 size-4" />
-                  <span>Topic</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onClick={() =>
-                    navigate("/library/entries/new", { viewTransition: true })
-                  }
-                >
-                  <FileTextIcon className="mr-0 size-4" />
-                  <span>Entry</span>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="select-none py-1">
+                    New...
+                  </DropdownMenuLabel>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() =>
+                      navigate("/library/topics/new", { viewTransition: true })
+                    }
+                  >
+                    <FolderIcon className="mr-0 size-4" />
+                    <span>Topic</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() =>
+                      navigate("/library/entries/new", { viewTransition: true })
+                    }
+                  >
+                    <FileTextIcon className="mr-0 size-4" />
+                    <span>Entry</span>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-      </div>}
+      )}
     </PageContainer>
   );
 }
