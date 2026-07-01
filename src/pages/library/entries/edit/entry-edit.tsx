@@ -46,7 +46,10 @@ interface EntryEditContentProps {
   entry: EntryDocType;
   initialBlocks: BlockNoteBlock[];
   topics: TopicDocType[];
-  onSave: (data: EntryFormData, editorBlocks: BlockNoteBlock[]) => Promise<void>;
+  onSave: (
+    data: EntryFormData,
+    editorBlocks: BlockNoteBlock[],
+  ) => Promise<void>;
   isSaving: boolean;
 }
 
@@ -60,7 +63,8 @@ function EntryEditContent({
   const editor = useCreateBlockNote({
     ...appBlockNoteConfig,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    initialContent: initialBlocks.length > 0 ? (initialBlocks as any[]) : undefined,
+    initialContent:
+      initialBlocks.length > 0 ? (initialBlocks as any[]) : undefined,
   });
 
   const capturedData = useCaptureData();
@@ -315,7 +319,10 @@ function EntryEditPage() {
     return () => resizeObserver.disconnect();
   }, [entry, blocks]);
 
-  const handleSave = async (data: EntryFormData, editorBlocks: BlockNoteBlock[]) => {
+  const handleSave = async (
+    data: EntryFormData,
+    editorBlocks: BlockNoteBlock[],
+  ) => {
     if (!entriesCollection || !blocksCollection || !entry) return;
     setIsSaving(true);
     navLock.lock();
@@ -434,8 +441,10 @@ function EntryEditPage() {
         <section
           ref={footerContentRef}
           className={cn(
-            "fixed bottom-0 left-[var(--lc-host-inset-left,0px)] right-0 min-h-15 transition-[left] duration-200 ease-linear p-3 z-30 lc-bottom-bar-styled-bg",
-            !isWindowed && "pr-[calc(var(--lc-scrollbar-offset)+2px)]",
+            "fixed bottom-0 left-(--lc-host-inset-left,0px) right-0 min-h-15 transition-[left] duration-200 ease-linear p-3 z-30 lc-bottom-bar-styled-bg",
+            isWindowed
+              ? "pr-[calc(calc(var(--lc-scrollbar-offset)+2px)-var(--lc-host-inset-left,0px))]"
+              : "pr-[calc(var(--lc-scrollbar-offset)+2px)]",
           )}
         >
           <div

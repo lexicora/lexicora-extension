@@ -359,12 +359,10 @@ function EntryCreatePage() {
           ref={footerContentRef}
           //* NOTE: Opt in for now, because of editor styles being changed
           className={cn(
-            "fixed bottom-0 left-[var(--lc-host-inset-left,0px)] right-0 min-h-15 transition-[left] duration-200 ease-linear p-3 z-30 lc-bottom-bar-styled-bg",
-            // In the windowed host, position:fixed elements resolve `100%` against the
-            // full viewport, making --lc-scrollbar-offset balloon to ~10px + sidebar-width
-            // and crushing the mx-auto centering. The sidepanel doesn't have this issue
-            // (no sidebar-wrapper override, global formula is correct for fixed elements).
-            !isWindowed && "pr-[calc(var(--lc-scrollbar-offset)+2px)]",
+            "fixed bottom-0 left-(--lc-host-inset-left,0px) right-0 min-h-15 transition-[left] duration-200 ease-linear p-3 z-30 lc-bottom-bar-styled-bg",
+            isWindowed
+              ? "pr-[calc(calc(var(--lc-scrollbar-offset)+2px)-var(--lc-host-inset-left,0px))]"
+              : "pr-[calc(var(--lc-scrollbar-offset)+2px)]",
           )}
         >
           <div
