@@ -1,11 +1,21 @@
 import "./App.css";
-import { createMemoryRouter, RouterProvider, Outlet } from "react-router-dom";
+import { useLayoutEffect, useRef } from "react";
+import {
+  createMemoryRouter,
+  RouterProvider,
+  Outlet,
+  ScrollRestoration,
+} from "react-router-dom";
 
 // Hooks, Providers and Components
 import { RouterListener } from "@/hooks/sidepanel/router-listener";
 import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
+import { AppHostProvider } from "@/providers/app-host";
 import { AppMessagingProvider } from "@/providers/app-messaging";
-import { ScrollObserverProvider } from "@/providers/scroll-observer";
+import {
+  ScrollObserverProvider,
+  useScrollPos,
+} from "@/providers/scroll-observer";
 import { ThemeProvider } from "@/providers/theme-provider";
 import RxDBProvider from "@/providers/rxdb-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -13,6 +23,7 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "./app-sidebar";
 
@@ -46,27 +57,68 @@ import FaqPage from "@/pages/settings/help/faq";
 import TipsAndTricksPage from "@/pages/settings/help/tips-and-tricks";
 import AboutPage from "@/pages/settings/about/about";
 import LicensesPage from "@/pages/settings/about/licenses";
+import { cn } from "@/lib/utils";
+
+function SidebarTransitionGuard() {
+  const { open } = useSidebar();
+  const mountedRef = useRef(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  useLayoutEffect(() => {
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      return;
+    }
+    document.documentElement.classList.add("sidebar-transitioning");
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      document.documentElement.classList.remove("sidebar-transitioning");
+    }, 200);
+    return () => clearTimeout(timerRef.current);
+  }, [open]);
+
+  return null;
+}
+
+function WindowHeader() {
+  const { isAtTop } = useScrollPos();
+
+  return (
+    <header className="mb-12.25">
+      <div
+        className={cn(
+          "w-full fixed top-0 flex h-12.5 shrink-0 items-center gap-2 border-b bg-background/80 backdrop-blur-lg px-3 z-30 transition-shadow duration-150 shadow-none",
+          { "shadow-md/4 dark:shadow-md/26": !isAtTop },
+        )}
+      >
+        <SidebarTrigger size="icon" />
+      </div>
+    </header>
+  );
+}
 
 function RootLayout() {
   useMouseNavigation();
 
+  const disableScrollRestoration = location.pathname.startsWith("/library");
+
   return (
-    <AppMessagingProvider>
-      <RouterListener />
-      <SidebarProvider>
-        <AppSidebar className="select-none" />
-        <SidebarInset>
-          <ScrollObserverProvider>
-            <header className="mb-12.25">
-              <div className="w-full fixed top-0 flex h-12.5 shrink-0 items-center gap-2 border-b bg-background/80 backdrop-blur-lg px-3 z-10">
-                <SidebarTrigger size="icon" />
-              </div>
-            </header>
-            <Outlet />
-          </ScrollObserverProvider>
-        </SidebarInset>
-      </SidebarProvider>
-    </AppMessagingProvider>
+    <AppHostProvider isWindowed>
+      <AppMessagingProvider>
+        {/* For now not necessary for the windowed host <RouterListener />*/}
+        {disableScrollRestoration || <ScrollRestoration />}
+        <SidebarProvider>
+          <SidebarTransitionGuard />
+          <AppSidebar className="select-none z-50" />
+          <SidebarInset className="/pr-[calc(var(--lc-scrollbar-offset)+10px)]">
+            <ScrollObserverProvider>
+              <WindowHeader />
+              <Outlet />
+            </ScrollObserverProvider>
+          </SidebarInset>
+        </SidebarProvider>
+      </AppMessagingProvider>
+    </AppHostProvider>
   );
 }
 
@@ -80,7 +132,7 @@ const router = createMemoryRouter([
       { path: "*", element: <NotFoundPage /> },
       { path: "not-supported", element: <NotSupportedPage /> },
       // Entries
-      { path: "library", element: <LibraryPage hideTabBar isWindowed /> },
+      { path: "library", element: <LibraryPage /> },
       { path: "library/entries/new", element: <EntryCreatePage /> },
       { path: "library/entries/:id", element: <EntryDetailPage /> },
       { path: "library/entries/:id/edit", element: <EntryEditPage /> },

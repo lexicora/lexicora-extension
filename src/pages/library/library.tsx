@@ -32,19 +32,15 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { useAppHost } from "@/providers/app-host";
 
 // TODO: Potentially make searching faster, when entering a search query, because on every character, a navigation takes place.
 // TODO: Also ensure, that when on a tab, the other tabs should not be rendered and in a way put to sleep, so they don't do unnecessary processing.
 
 // NOTE: Pages are side-panel-first, so `isWindowed` defaults to false. The windowed
 // entrypoint opts in via App.tsx. TODO: migrate host detection to a provider later.
-function LibraryPage({
-  hideTabBar = false,
-  isWindowed = false,
-}: {
-  hideTabBar?: boolean;
-  isWindowed?: boolean;
-}) {
+function LibraryPage() {
+  const { isWindowed } = useAppHost();
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const deferredSearch = useDeferredValue(search);
@@ -179,7 +175,7 @@ function LibraryPage({
                 <StarIcon className="group-data-[state=on]/toggle:text-yellow-600 group-data-[state=on]/toggle:fill-yellow-600 dark:group-data-[state=on]/toggle:text-yellow-500 dark:group-data-[state=on]/toggle:fill-yellow-500" />
               </Toggle>
               {/*Group Tabs of pure entries and topics (grouping of entries) and sites (grouping of entries based on their sites url grouped and matched) */}
-              {!hideTabBar && (
+              {!isWindowed && (
                 <div className="flex-1 /*mr-7.5*/">
                   <TabsList className="h-8! py-[0.16rem]">
                     <TabsTrigger value="entries">Entries</TabsTrigger>
@@ -264,52 +260,54 @@ function LibraryPage({
         </TabsContent> */}
         <footer></footer>
       </Tabs>
-      <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] /*WAS:pr-[calc(var(--lc-scrollbar-offset)+7px)]*/ z-20 pointer-events-none">
-        <div className="shrink-0 flex items-center justify-end max-w-[calc(var(--lc-content-max-width)+0.25rem)] mx-auto inset-x-0">
-          {/*MAYBE: Make smaller and also maybe a bit darker */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                size="icon"
-                title="Create..."
-                draggable={false}
-                className="pointer-events-auto button-create"
+      {!isWindowed && (
+        <div className="fixed bottom-17.75 left-(--lc-host-inset-left,0px) right-0 transition-[left] duration-200 ease-linear px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] /*WAS:pr-[calc(var(--lc-scrollbar-offset)+7px)]*/ z-20 pointer-events-none">
+          <div className="shrink-0 flex items-center justify-end max-w-[calc(var(--lc-content-max-width)+0.25rem)] mx-auto inset-x-0">
+            {/*MAYBE: Make smaller and also maybe a bit darker */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  size="icon"
+                  title="Create..."
+                  draggable={false}
+                  className="pointer-events-auto button-create"
+                >
+                  <PlusIcon className="size-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="top"
+                align="end"
+                className="min-w-28 /*min-w-21*/ /*bg-popover/80 backdrop-blur-md*/"
               >
-                <PlusIcon className="size-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              side="top"
-              align="end"
-              className="min-w-28 /*min-w-21*/ /*bg-popover/80 backdrop-blur-md*/"
-            >
-              <DropdownMenuGroup>
-                <DropdownMenuLabel className="select-none py-1">
-                  New...
-                </DropdownMenuLabel>
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onClick={() =>
-                    navigate("/library/topics/new", { viewTransition: true })
-                  }
-                >
-                  <FolderIcon className="mr-0 size-4" />
-                  <span>Topic</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onClick={() =>
-                    navigate("/library/entries/new", { viewTransition: true })
-                  }
-                >
-                  <FileTextIcon className="mr-0 size-4" />
-                  <span>Entry</span>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="select-none py-1">
+                    New...
+                  </DropdownMenuLabel>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() =>
+                      navigate("/library/topics/new", { viewTransition: true })
+                    }
+                  >
+                    <FolderIcon className="mr-0 size-4" />
+                    <span>Topic</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() =>
+                      navigate("/library/entries/new", { viewTransition: true })
+                    }
+                  >
+                    <FileTextIcon className="mr-0 size-4" />
+                    <span>Entry</span>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-      </div>
+      )}
     </PageContainer>
   );
 }

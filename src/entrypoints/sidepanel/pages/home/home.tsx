@@ -36,8 +36,12 @@ function HomePage() {
   const [promptText, setPromptText] = useState("");
   const aiPromptTextareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const { favoriteTopicsCount, favoriteEntriesCount, combinedTopics, maxTopicsToShow } =
-    useHomeData();
+  const {
+    favoriteTopicsCount,
+    favoriteEntriesCount,
+    combinedTopics,
+    maxTopicsToShow,
+  } = useHomeData();
 
   const capturePage = async () => {
     if (!isSupported) return;
@@ -141,7 +145,7 @@ function HomePage() {
                 key={topic.id}
                 variant="secondary"
                 className={cn(
-                  "group w-full flex items-center h-9.5 gap-2 px-3 bg-card hover:bg-card-hover not-dark:shadow-xs rounded-xl text-left",
+                  "group w-full flex items-center h-9.5 gap-2 px-3 bg-card hover:bg-card-hover not-dark:shadow-xs rounded-xl text-left transition-colors",
                   index === 0 && "mt-1.75",
                 )}
                 //title="View topic"
@@ -175,6 +179,7 @@ function HomePage() {
           </div>
         </section>
         <Separator className="mt-4 mx-auto max-w-[calc(100%-8px)] shrink-0 [@media(min-height:950px)]:hidden" />
+        {/*TODO: Potentially add some entries, like pinned or recently edited/viewed */}
         <section className="flex-1 flex flex-col">
           <div className="flex-1 flex flex-col items-center justify-end text-center py-5">
             <h2 className="text-lg font-medium mb-1 text-[#00143d] dark:text-foreground">
@@ -189,7 +194,7 @@ function HomePage() {
               id="ai-prompt-textarea"
               ref={aiPromptTextareaRef}
               placeholder="Type your desired AI prompt here."
-              className="max-h-75 field-sizing-content resize-y w-[calc(100%-2px)] mx-auto scrollbar-thin transition-colors duration-150 focus-visible:ring-0"
+              className="text-base! max-h-75 field-sizing-content resize-y w-[calc(100%-2px)] mx-auto scrollbar-thin transition-colors duration-150 focus-visible:ring-0"
               maxLength={1000}
               disabled={!isSupported}
               title={

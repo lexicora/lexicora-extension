@@ -1,10 +1,12 @@
 :root {
   --lc-content-max-width: 44rem; /* 704px — readable centered content column */
+  --lc-max-scrollbar-width: 10px; /* width of thin scrollbar / base padding width */
 }
 
 #root {
   margin: 0 auto;
   padding: 0;
+  text-align: center;
 }
 
 html {
@@ -14,9 +16,15 @@ html {
 }
 
 /*NOTE: Prevents layout shift when a dropdown / editor locks body scroll (radix/shadcn)*/
-body[data-scroll-locked] {
+#lc-body {
   margin-right: 0 !important;
+  /*Prevents layout shift when editing with editor*/
+}
+
+/*NOTE: Prevents layout shift when editing with editor*/
+body[data-scroll-locked] {
   --removed-body-scroll-bar-size: 0;
+  /*Does no longer prevent layout shift by dropdown (shadcn-ui/radix), must put this as a style property in the body with !important declaration*/
 }
 
 /*
@@ -40,4 +48,87 @@ body[data-scroll-locked] {
 .lc-page-container-inner {
   max-width: var(--lc-content-max-width);
   margin-inline: auto;
+}
+
+/*
+ * Sidebar-width-aware scroll metrics. These must live on sidebar-wrapper (not
+ * :root) because --sidebar-width is set as an inline style on sidebar-wrapper
+ * by SidebarProvider and only inherits downward from there. Placing them here
+ * makes them available to all descendants whose left/right values depend on
+ * the content-area width.
+ *
+ *   --lc-content-total-width  visible content area width (sidebar excluded)
+ *   --lc-scrollbar-width      native window scrollbar width (100vw − content)
+ *   --lc-scrollbar-offset     padding delta to compensate for the scrollbar
+ *
+ * NOTE: These variables are evaluated lazily — `100%` resolves at the USING
+ * element's context, not here. They work correctly for block elements inside
+ * SidebarInset (where 100% = SidebarInset width) but NOT for position:fixed
+ * elements (where 100% = 100vw, causing --lc-scrollbar-offset to balloon to
+ * ~10px + sidebar-width). Fixed elements must not use --lc-scrollbar-offset
+ * for padding-right; instead they omit it when isWindowed (see entry-create /
+ * entry-edit) or rely on a child element where 100% resolves correctly.
+ */
+[data-slot="sidebar-wrapper"] {
+  --lc-content-total-width: calc(100% + var(--lc-host-inset-left, 0px));
+  --lc-scrollbar-width: calc(100vw - var(--lc-content-total-width));
+  --lc-scrollbar-offset: calc(
+    var(--lc-max-scrollbar-width) - var(--lc-scrollbar-width)
+  );
+}
+
+/*
+ * Host-aware anchoring for viewport-fixed page chrome (the PageHeader compact
+ * strip, the floating create button/dropdown, the AI prompt bar). Those elements
+ * use `position: fixed`, so on their own they anchor to the viewport and span
+ * under the sidebar. We expose the sidebar's *reserved* width as
+ * `--lc-host-inset-left` so each element can push its left edge in and shrink its
+ * width to stay inside the content area.
+ *
+ * `@property` registers the variable as a typed `<length>` so CSS can interpolate
+ * it. The transition is gated on `.sidebar-transitioning` (set by React for the
+ * 200ms duration of a sidebar toggle) so it never fires during window resize or
+ * breakpoint crossing — only on an actual open/close action.
+ *
+ * Side-panel pages never define this var; the `var(--lc-host-inset-left, 0px)`
+ * fallback at each call site keeps them anchored full-width as before.
+ *
+ * `:has([data-slot="sidebar"][data-state])` matches only the desktop sidebar
+ * (the mobile Sheet variant has no `data-state`), so below the md breakpoint the
+ * inset is full-width and the var correctly falls back to 0.
+ */
+@property --lc-host-inset-left {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+/* html.sidebar-transitioning [data-slot="sidebar-wrapper"] {
+  transition: --lc-host-inset-left 200ms linear;
+} */
+
+html.sidebar-transitioning {
+  & .lc-page-container {
+    transition: padding-right 200ms linear;
+  }
+  & .lc-strip-offset {
+    transition: margin-right 200ms linear;
+  }
+  & .lc-strip-offset-container {
+    transition: left 200ms linear;
+  }
+}
+
+[data-slot="sidebar-wrapper"]:has([data-slot="sidebar"][data-state]) {
+  --lc-host-inset-left: var(--sidebar-width);
+}
+[data-slot="sidebar-wrapper"]:has(
+  [data-slot="sidebar"][data-collapsible="icon"]
+) {
+  --lc-host-inset-left: var(--sidebar-width-icon);
+}
+[data-slot="sidebar-wrapper"]:has(
+  [data-slot="sidebar"][data-collapsible="offcanvas"]
+) {
+  --lc-host-inset-left: 0px;
 }

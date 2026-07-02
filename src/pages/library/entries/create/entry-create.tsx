@@ -29,6 +29,7 @@ import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { cn } from "@/lib/utils";
 import { useScrollPos } from "@/providers/scroll-observer";
+import { useAppHost } from "@/providers/app-host";
 import { useCreateBlockNote } from "@blocknote/react";
 
 import { useRxCollection, useRxDatabase } from "rxdb/plugins/react";
@@ -68,6 +69,7 @@ function EntryCreatePage() {
   const topicsCollection = useRxCollection("topics");
   const db = useRxDatabase();
 
+  const { isWindowed } = useAppHost();
   const isPromptActive = isPromptFocused || promptText.trim() !== "";
 
   //const [isEditorReady, setIsEditorReady] = useState(false); // other approach with requestAnimation frame contrary to useLayoutEffect
@@ -348,6 +350,7 @@ function EntryCreatePage() {
         </div>
       </main>
       <footer
+        // TODO: Potentially disable the ai prompt when the host is the window, because no content can be captured to the window currently
         //id="lc-new-entry-bottom-footer"
         //className="mt-10.5"
         className={cn(styles.bottomFooter, "mt-10.5")}
@@ -356,8 +359,12 @@ function EntryCreatePage() {
         <section
           ref={footerContentRef}
           //* NOTE: Opt in for now, because of editor styles being changed
-          className="fixed bottom-0 left-0 min-h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-30
-                lc-bottom-bar-styled-bg"
+          className={cn(
+            "fixed bottom-0 left-(--lc-host-inset-left,0px) right-0 min-h-15 p-3 z-30 lc-bottom-bar-styled-bg",
+            isWindowed
+              ? "pr-[calc(calc(var(--lc-scrollbar-offset)+2px)-var(--lc-host-inset-left,0px))] lc-strip-offset-container"
+              : "pr-[calc(var(--lc-scrollbar-offset)+2px)]",
+          )}
         >
           <div
             className={cn(

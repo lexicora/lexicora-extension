@@ -18,6 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
+import { useAppHost } from "@/providers/app-host";
 import {
   ArchiveIcon,
   ChevronRightIcon,
@@ -35,6 +36,7 @@ import { useRxCollection } from "rxdb/plugins/react";
 import { useTopicDetail } from "./__hooks__/use-topic-detail";
 
 function TopicDetailPage() {
+  const { isWindowed } = useAppHost();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const collection = useRxCollection("topics");
@@ -326,9 +328,9 @@ function TopicDetailPage() {
         </section>
       )}
 
-      {/* Floating create entry button — hidden for archived topics */}
-      {!topic.isArchived && (
-        <div className="fixed bottom-17.75 left-0 w-full px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20 pointer-events-none">
+      {/* Floating create entry button — hidden for archived topics and in windowed host */}
+      {!topic.isArchived && !isWindowed && (
+        <div className="fixed bottom-17.75 left-[var(--lc-host-inset-left,0px)] right-0 transition-[left] duration-200 ease-linear px-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-20 pointer-events-none">
           <div className="shrink-0 flex items-center justify-end max-w-[calc(var(--lc-content-max-width)+0.25rem)] mx-auto inset-x-0">
             <Button
               size="icon"

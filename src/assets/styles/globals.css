@@ -255,12 +255,6 @@
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
-  button,
-  [role="button"] {
-    /*MAYBE: Put this in component directly*/
-    font-weight: 600 !important;
-    /*letter-spacing: 0.01rem; (bit more than default maybe)*/
-  }
 }
 
 body {
