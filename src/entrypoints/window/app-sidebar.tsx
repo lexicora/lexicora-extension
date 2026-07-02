@@ -116,7 +116,7 @@ function NavMain() {
       <Separator className="mx-auto my-2 opacity-60 max-w-[calc(100%-16px)]" />
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuButton asChild>
+          <SidebarMenuButton className="transition-colors" asChild>
             {/* <NavLink to={newEntryTo} viewTransition>
               <FilePlusIcon />
               <span>New Entry</span>
@@ -205,7 +205,7 @@ function NavRecent({ topics }: { topics: TopicDocType[] }) {
                 <NavLink
                   to={`/library/entries/new?topicId=${encodeURIComponent(topic.id)}`}
                   viewTransition
-                  className="hover:bg-[color-mix(in_oklab,var(--sidebar-accent),black_10%)]! dark:hover:bg-[color-mix(in_oklab,var(--sidebar-accent),white_10%)]"
+                  className="hover:bg-[color-mix(in_oklab,var(--sidebar-accent),black_10%)]! dark:hover:bg-[color-mix(in_oklab,var(--sidebar-accent),white_10%)]!"
                 >
                   <PlusIcon />
                 </NavLink>

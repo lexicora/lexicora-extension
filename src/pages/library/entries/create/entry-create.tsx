@@ -360,9 +360,9 @@ function EntryCreatePage() {
           ref={footerContentRef}
           //* NOTE: Opt in for now, because of editor styles being changed
           className={cn(
-            "fixed bottom-0 left-(--lc-host-inset-left,0px) right-0 min-h-15 transition-[left] duration-200 ease-linear p-3 z-30 lc-bottom-bar-styled-bg",
+            "fixed bottom-0 left-(--lc-host-inset-left,0px) right-0 min-h-15 p-3 z-30 lc-bottom-bar-styled-bg",
             isWindowed
-              ? "pr-[calc(calc(var(--lc-scrollbar-offset)+2px)-var(--lc-host-inset-left,0px))]"
+              ? "pr-[calc(calc(var(--lc-scrollbar-offset)+2px)-var(--lc-host-inset-left,0px))] lc-strip-offset-container"
               : "pr-[calc(var(--lc-scrollbar-offset)+2px)]",
           )}
         >
