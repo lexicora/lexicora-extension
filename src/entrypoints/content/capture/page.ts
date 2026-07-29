@@ -1,4 +1,4 @@
-import { PageData } from "@/types/page-data.types";
+import type { PageData } from "@/types/page-data.types";
 import { parseDocument } from "@/lib/utils/document-parser";
 
 // TODO: Maybe make this function not return a nullable type, so Promise<PageData>.

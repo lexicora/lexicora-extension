@@ -17,7 +17,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import { TopicDocType } from "@/db/schemas/topic";
+import type { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/date-formatter";
 import {

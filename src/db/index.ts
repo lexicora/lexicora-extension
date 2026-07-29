@@ -43,17 +43,17 @@ export async function initializeDb() {
   // Automatically populate the searchBlob field on insert and update
   // so queries only need to scan a single denormalized string field.
 
-  db.entries.preInsert((doc) => {
+  db.entries?.preInsert((doc) => {
     doc.searchBlob = buildEntrySearchBlob(doc);
   }, false); // maybe change to parallel if more hooks are added
-  db.entries.preSave((doc) => {
+  db.entries?.preSave((doc) => {
     doc.searchBlob = buildEntrySearchBlob(doc);
   }, false); // maybe change to parallel if more hooks are added
 
-  db.topics.preInsert((doc) => {
+  db.topics?.preInsert((doc) => {
     doc.searchBlob = buildTopicSearchBlob(doc);
   }, false); // maybe change to parallel if more hooks are added
-  db.topics.preSave((doc) => {
+  db.topics?.preSave((doc) => {
     doc.searchBlob = buildTopicSearchBlob(doc);
   }, false); // maybe change to parallel if more hooks are added
 

@@ -120,7 +120,7 @@ function EntryCreatePage() {
       let finalTopicId = data.topicId;
       const isExistingTopic = topics.some((t) => t.id === finalTopicId);
 
-      if (!isExistingTopic && finalTopicId) {
+      if (!isExistingTopic && finalTopicId && db?.topics) {
         const newTopicId = uuidv7();
         await db.topics.insert({
           id: newTopicId,
@@ -145,33 +145,35 @@ function EntryCreatePage() {
         }
       }
 
-      await db.entries.insert({
-        id: entryId,
-        topicId: finalTopicId,
-        title: data.title,
-        description: data.description,
-        tags: data.tags,
-        isFavorite: data.isFavorite,
-        isPinned: false,
-        isArchived: false,
-        archivedExplicitly: false,
-        languageCode: data.languageCode,
-        siteName: data.siteName,
-        faviconUrl: data.faviconUrl,
-        url: data.url,
-        hostnameUrl: urlObj?.hostname || "",
-        pathnameUrl: urlObj?.pathname || "",
-        searchUrl: urlObj?.search || "",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
+      if (db?.entries) {
+        await db.entries.insert({
+          id: entryId,
+          topicId: finalTopicId,
+          title: data.title,
+          description: data.description,
+          tags: data.tags,
+          isFavorite: data.isFavorite,
+          isPinned: false,
+          isArchived: false,
+          archivedExplicitly: false,
+          languageCode: data.languageCode,
+          siteName: data.siteName,
+          faviconUrl: data.faviconUrl,
+          url: data.url,
+          hostnameUrl: urlObj?.hostname || "",
+          pathnameUrl: urlObj?.pathname || "",
+          searchUrl: urlObj?.search || "",
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        });
+      }
 
       const dbBlocks = convertBlockNoteBlocks(
         editorBlocks,
         entryId,
         "00000000-0000-0000-0000-000000000000",
       );
-      if (dbBlocks.length > 0) {
+      if (dbBlocks.length > 0 && db?.blocks) {
         await db.blocks.bulkInsert(dbBlocks);
       }
 
@@ -207,20 +209,28 @@ function EntryCreatePage() {
         return;
       }
       const currentBlocks = editor.document;
+      const firstBlock = currentBlocks[0];
+      const firstContent = firstBlock?.content;
+      const firstChildren = firstBlock?.children;
+      const isContentEmpty =
+        !firstContent ||
+        (Array.isArray(firstContent) && firstContent.length === 0);
+      const isChildrenEmpty =
+        !firstChildren || firstChildren.length === 0;
+
       const isEmpty =
         currentBlocks.length === 1 &&
-        currentBlocks[0].type === "paragraph" &&
-        (!currentBlocks[0].content || currentBlocks[0].content.length === 0) &&
-        (!currentBlocks[0].children || currentBlocks[0].children.length === 0);
+        firstBlock?.type === "paragraph" &&
+        isContentEmpty &&
+        isChildrenEmpty;
 
       if (isEmpty) {
         editor.replaceBlocks(currentBlocks, blocks);
       } else {
-        editor.insertBlocks(
-          blocks,
-          currentBlocks[currentBlocks.length - 1].id,
-          "after",
-        ); // currentBlocks[0].id, would work too.
+        const lastBlock = currentBlocks[currentBlocks.length - 1];
+        if (lastBlock) {
+          editor.insertBlocks(blocks, lastBlock.id, "after");
+        }
       }
     }
   }, [capturedData, editor]);

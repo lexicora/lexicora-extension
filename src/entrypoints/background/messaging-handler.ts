@@ -1,6 +1,6 @@
 import { onMessage } from "@/lib/messaging";
 import { MSG } from "@/constants/messaging";
-import { PageData } from "@/types/page-data.types";
+import type { PageData } from "@/types/page-data.types";
 import { handleCaptureRequest } from "./capture-request";
 
 // This stays private to this module (encapsulation)

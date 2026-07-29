@@ -100,7 +100,7 @@ function normalizeMediaAndLinks(root: Document | Element) {
       const bestSource = sources.find((s) => s.getAttribute("srcset"));
       if (bestSource) {
         const srcset = bestSource.getAttribute("srcset") || "";
-        const firstUrl = srcset.split(",")[0].trim().split(/\s+/)[0];
+        const firstUrl = srcset.split(",")[0]?.trim().split(/\s+/)[0];
         if (firstUrl) {
           img.setAttribute("data-extracted-source", firstUrl);
         }
@@ -118,7 +118,7 @@ function normalizeMediaAndLinks(root: Document | Element) {
 
     const srcset = img.getAttribute("srcset");
     if (srcset) {
-      const firstSrc = srcset.split(",")[0].trim().split(/\s+/)[0];
+      const firstSrc = srcset.split(",")[0]?.trim().split(/\s+/)[0];
       if (firstSrc) bestSrcStr = firstSrc;
     }
 
@@ -162,7 +162,7 @@ function normalizeMediaAndLinks(root: Document | Element) {
     if (!detectedLang) {
       const className = block.getAttribute("class") || "";
       const match = className.match(/(?:lang|language|highlight)-([a-z0-9]+)/i);
-      if (match) detectedLang = match[1];
+      if (match?.[1]) detectedLang = match[1];
     }
 
     if (block.tagName === "PRE") {
@@ -174,7 +174,7 @@ function normalizeMediaAndLinks(root: Document | Element) {
         const childMatch = childClass.match(
           /(?:lang|language|highlight)-([a-z0-9]+)/i,
         );
-        if (childMatch) detectedLang = childMatch[1];
+        if (childMatch?.[1]) detectedLang = childMatch[1];
       }
 
       // Check child <span> tags for classes (Crucial for sites that don't use <code>)
@@ -185,7 +185,7 @@ function normalizeMediaAndLinks(root: Document | Element) {
           const spanMatch = spanClass.match(
             /(?:lang|language|highlight)-([a-z0-9]+)/i,
           );
-          if (spanMatch) {
+          if (spanMatch?.[1]) {
             detectedLang = spanMatch[1];
             break; // Stop looking once we find a valid language
           }
@@ -363,7 +363,7 @@ export function parseDocument(doc: Document): ParseResult {
     ),
   ).sort((a, b) => (b.textContent?.length || 0) - (a.textContent?.length || 0));
 
-  if (semanticContainers.length > 0) {
+  if (semanticContainers.length > 0 && semanticContainers[0]) {
     mainContentHtml = semanticContainers[0].innerHTML;
   } else {
     // Improved Heuristic Fallback

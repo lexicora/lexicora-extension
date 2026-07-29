@@ -24,7 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
-import { EntryDocType } from "@/db/schemas/entry";
+import type { EntryDocType } from "@/db/schemas/entry";
 import { cn } from "@/lib/utils";
 import { type BlockNoteBlock } from "@/lib/utils/block-converter";
 import { formatDate } from "@/lib/utils/date-formatter";
@@ -197,14 +197,15 @@ function EntryDetailPage() {
     );
   }
 
+  const firstBlock = blocks?.[0];
   const hasContent =
     !!blocks &&
     !(
       blocks.length === 0 ||
       (blocks.length === 1 &&
-        blocks[0].type === "paragraph" &&
-        (!blocks[0].content || (blocks[0].content as unknown[]).length === 0) &&
-        (!blocks[0].children || blocks[0].children.length === 0))
+        firstBlock?.type === "paragraph" &&
+        (!firstBlock?.content || (firstBlock.content as unknown[]).length === 0) &&
+        (!firstBlock?.children || firstBlock.children.length === 0))
     );
 
   return (

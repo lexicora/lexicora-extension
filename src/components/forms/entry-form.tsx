@@ -24,7 +24,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Toggle } from "@/components/ui/toggle";
-import { TopicDocType } from "@/db/schemas/topic";
+import type { TopicDocType } from "@/db/schemas/topic";
 import { useTabSupport } from "@/hooks/use-tab-support";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -237,7 +237,7 @@ export function EntryForm({
       });
       if (!tab || !tab.id) return;
 
-      const [{ result }] = await browser.scripting.executeScript({
+      const results = await browser.scripting.executeScript({
         target: { tabId: tab.id },
         func: () => {
           let faviconUrl =
@@ -281,6 +281,7 @@ export function EntryForm({
         },
       });
 
+      const result = results?.[0]?.result;
       if (result) {
         setValue("faviconUrl", result.faviconUrl || "", {
           shouldValidate: true,

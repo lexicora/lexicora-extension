@@ -4,7 +4,7 @@ import React, {
   useState,
   useEffect,
   useRef,
-  ReactNode,
+  type ReactNode,
 } from "react";
 
 interface ScrollState {

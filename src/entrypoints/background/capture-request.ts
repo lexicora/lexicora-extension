@@ -1,7 +1,7 @@
 import { MSG } from "@/constants/messaging";
 import { sendMessage } from "@/lib/messaging";
 import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
-import { TabData } from "@/types/tab-data.types";
+import type { TabData } from "@/types/tab-data.types";
 
 export async function handleCaptureRequest(
   fromContext: string,

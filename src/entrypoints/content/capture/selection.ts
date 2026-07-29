@@ -1,4 +1,4 @@
-import { PageData } from "@/types/page-data.types";
+import type { PageData } from "@/types/page-data.types";
 import {
   getSelectionAsElement,
   parseSnippet,

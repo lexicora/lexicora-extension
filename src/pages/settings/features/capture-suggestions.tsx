@@ -102,7 +102,7 @@ function CaptureSuggestionsSettingsPage() {
                   max={60}
                   step={1}
                   value={[currentDelay]}
-                  onValueChange={(v) => setDelayMultiplier(v[0])}
+                  onValueChange={(v) => v[0] !== undefined && setDelayMultiplier(v[0])}
                   disabled={!enabled}
                 />
                 <div className="flex justify-between mt-2 px-0.5">
