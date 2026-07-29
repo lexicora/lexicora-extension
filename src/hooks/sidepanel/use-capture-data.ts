@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { PageData } from "@/types/page-data.types";
+import type { PageData } from "@/types/page-data.types";
 import { sendMessage, onMessage } from "@/lib/messaging";
 import { useAppWindowId } from "@/providers/app-messaging";
 import { MSG } from "@/constants/messaging";

@@ -1,4 +1,4 @@
-import { defineConfig, UserManifest } from "wxt";
+import { defineConfig, type UserManifest } from "wxt";
 import tailwindcss from "@tailwindcss/vite";
 
 // See https://wxt.dev/api/config.html

@@ -20,10 +20,10 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
-    "@blocknote/code-block": "^0.51.4",
-    "@blocknote/core": "^0.51.4",
-    "@blocknote/react": "^0.51.4",
-    "@blocknote/shadcn": "^0.51.4",
+    "@blocknote/code-block": "^0.52.1",
+    "@blocknote/core": "^0.52.1",
+    "@blocknote/react": "^0.52.1",
+    "@blocknote/shadcn": "^0.52.1",
     "@fontsource/jetbrains-mono": "^5.3.0",
     "@fontsource/wix-madefor-text": "^5.3.0",
     "@heroicons/react": "^2.2.0",
@@ -38,7 +38,7 @@
     "@radix-ui/react-toggle": "^1.1.18",
     "@radix-ui/react-tooltip": "^1.2.16",
     "@tailwindcss/vite": "^4.3.3",
-    "@webext-core/messaging": "^3.0.3",
+    "@webext-core/messaging": "^4.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dompurify": "^3.4.12",
@@ -68,8 +68,9 @@
     "@vitest/coverage-v8": "^4.1.10",
     "@wxt-dev/module-react": "^1.2.2",
     "happy-dom": "^20.11.1",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.10",
-    "wxt": "^0.20.27"
+    "web-ext": "^10.5.0",
+    "wxt": "^0.21.1"
   }
 }

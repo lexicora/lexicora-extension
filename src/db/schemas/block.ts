@@ -1,4 +1,4 @@
-import { ExtractDocumentTypeFromTypedRxJsonSchema, toTypedRxJsonSchema } from 'rxdb';
+import { type ExtractDocumentTypeFromTypedRxJsonSchema, toTypedRxJsonSchema } from 'rxdb';
 import { blockTypes, uuidSchema, uuidWithNilDefault } from './common';
 
 const blockSchemaLiteral = {

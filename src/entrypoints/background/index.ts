@@ -1,5 +1,4 @@
 import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/constants/context-menu-items";
-import { PageData } from "@/types/page-data.types";
 import {
   setupContextMenuActions,
   setupContextMenuStateSync,

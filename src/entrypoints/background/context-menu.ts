@@ -1,7 +1,7 @@
 import { sendMessage } from "@/lib/messaging";
 import { MSG } from "@/constants/messaging";
 import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/constants/context-menu-items";
-import { PageData } from "@/types/page-data.types";
+import type { PageData } from "@/types/page-data.types";
 import turndownService from "@/lib/turndown";
 import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
 import { UNSUPPORTED_URL_REGEX } from "@/constants/support-capture-sites";
