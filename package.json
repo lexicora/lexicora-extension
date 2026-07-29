@@ -61,14 +61,20 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@eslint/css": "^1.4.0",
+    "@eslint/js": "^10.0.1",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@types/react-router-dom": "^5.3.3",
     "@types/turndown": "^5.0.6",
     "@vitest/coverage-v8": "^4.1.10",
     "@wxt-dev/module-react": "^1.2.2",
+    "eslint": "^10.8.0",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^17.8.0",
     "happy-dom": "^20.11.1",
     "typescript": "^7.0.2",
+    "typescript-eslint": "^8.65.0",
     "vitest": "^4.1.10",
     "web-ext": "^10.5.0",
     "wxt": "^0.21.1"
