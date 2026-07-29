@@ -59,7 +59,7 @@ function Popup() {
         active: true,
         currentWindow: true,
       });
-      finalTab = queriedTab;
+      finalTab = queriedTab ?? null;
     }
     if (!finalTab?.id || !finalTab?.windowId) return; // This should never happen, but just in case to prevent errors in messaging handler.
     const tabData: TabData = {

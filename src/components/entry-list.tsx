@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 import { EntryItem } from "@/components/entry-item";
-import { EntryDocType } from "@/db/schemas/entry";
+import type { EntryDocType } from "@/db/schemas/entry";
 import { cn } from "@/lib/utils";
 import { FilesIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";

@@ -1,4 +1,4 @@
-import { RxDatabase } from "rxdb";
+import type { RxDatabase } from "rxdb";
 import { uuidv7 } from "uuidv7";
 
 const USER_ID = "00000000-0000-0000-0000-000000000000";
@@ -603,8 +603,8 @@ const topicsData = [
 
 export async function seedDummyData(db: RxDatabase) {
   // Check if we already have data to prevent duplicate seeding
-  const existingTopics = await db.collections.topics.find().exec();
-  if (existingTopics.length > 0) {
+  const existingTopics = await db.collections.topics?.find().exec();
+  if (existingTopics && existingTopics.length > 0) {
     return;
   }
 
@@ -660,15 +660,15 @@ export async function seedDummyData(db: RxDatabase) {
         hostnameUrl: urlObj.hostname,
         pathnameUrl: urlObj.pathname,
         searchUrl: urlObj.search,
-        siteName: e.title.split(" - ")[0].split(" ")[0], // Minimal site name attempt
+        siteName: e.title.split(" - ")[0]?.split(" ")[0] ?? "", // Minimal site name attempt
         createdAt: now,
         updatedAt: now,
       });
     }
   }
 
-  await db.collections.topics.bulkInsert(topicsToInsert);
-  await db.collections.entries.bulkInsert(entriesToInsert);
+  await db.collections.topics?.bulkInsert(topicsToInsert);
+  await db.collections.entries?.bulkInsert(entriesToInsert);
 
   console.log(
     `✅ Seeded ${topicsToInsert.length} topics and ${entriesToInsert.length} entries.`,

@@ -3,7 +3,7 @@ import {
   convertBlockNoteBlocks,
   convertDbBlocksToBlockNote,
 } from "../block-converter";
-import { BlockDocType } from "@/db/schemas/block";
+import type { BlockDocType } from "@/db/schemas/block";
 
 const ENTRY_ID = "01900000-0000-7000-8000-000000000001";
 const USER_ID = "01900000-0000-7000-8000-000000000002";
@@ -51,12 +51,12 @@ describe("convertBlockNoteBlocks", () => {
     const result = convertBlockNoteBlocks(blocks, ENTRY_ID, USER_ID);
 
     expect(result).toHaveLength(2);
-    expect(result[0].type).toBe("paragraph");
-    expect(result[0].entryId).toBe(ENTRY_ID);
-    expect(result[0].userId).toBe(USER_ID);
-    expect(result[0].order).toBe(0);
-    expect(result[1].type).toBe("heading");
-    expect(result[1].order).toBe(1);
+    expect(result[0]!.type).toBe("paragraph");
+    expect(result[0]!.entryId).toBe(ENTRY_ID);
+    expect(result[0]!.userId).toBe(USER_ID);
+    expect(result[0]!.order).toBe(0);
+    expect(result[1]!.type).toBe("heading");
+    expect(result[1]!.order).toBe(1);
   });
 
   it("flattens nested children into a flat array", () => {
@@ -75,10 +75,10 @@ describe("convertBlockNoteBlocks", () => {
     const result = convertBlockNoteBlocks(blocks, ENTRY_ID, USER_ID);
 
     expect(result).toHaveLength(3);
-    const parent = result[0];
+    const parent = result[0]!;
     const children = result.slice(1);
-    expect(children[0].parentBlockId).toBe(parent.id);
-    expect(children[1].parentBlockId).toBe(parent.id);
+    expect(children[0]!.parentBlockId).toBe(parent.id);
+    expect(children[1]!.parentBlockId).toBe(parent.id);
   });
 
   it("children have order starting at 0 independent of parent", () => {
@@ -95,14 +95,14 @@ describe("convertBlockNoteBlocks", () => {
     ];
 
     const result = convertBlockNoteBlocks(blocks, ENTRY_ID, USER_ID);
-    expect(result[1].order).toBe(0);
-    expect(result[2].order).toBe(1);
+    expect(result[1]!.order).toBe(0);
+    expect(result[2]!.order).toBe(1);
   });
 
   it("uses nil UUID as default userId", () => {
     const blocks = [{ type: "paragraph", props: {}, content: [], children: [] }];
     const result = convertBlockNoteBlocks(blocks, ENTRY_ID);
-    expect(result[0].userId).toBe("00000000-0000-0000-0000-000000000000");
+    expect(result[0]!.userId).toBe("00000000-0000-0000-0000-000000000000");
   });
 
   it("returns empty array for empty input", () => {
@@ -115,8 +115,8 @@ describe("convertBlockNoteBlocks", () => {
       { type: "paragraph", props: {}, content: [], children: [] },
     ];
     const result = convertBlockNoteBlocks(blocks, ENTRY_ID, USER_ID, undefined, 5);
-    expect(result[0].order).toBe(5);
-    expect(result[1].order).toBe(6);
+    expect(result[0]!.order).toBe(5);
+    expect(result[1]!.order).toBe(6);
   });
 
   it("preserves existing v7 block IDs", () => {
@@ -124,7 +124,7 @@ describe("convertBlockNoteBlocks", () => {
       { id: V7_ID, type: "paragraph", props: {}, content: [], children: [] },
     ];
     const result = convertBlockNoteBlocks(blocks, ENTRY_ID, USER_ID);
-    expect(result[0].id).toBe(V7_ID);
+    expect(result[0]!.id).toBe(V7_ID);
   });
 
   it("mints a new v7 ID for blocks with a v4 ID", () => {
@@ -132,8 +132,8 @@ describe("convertBlockNoteBlocks", () => {
       { id: V4_ID, type: "paragraph", props: {}, content: [], children: [] },
     ];
     const result = convertBlockNoteBlocks(blocks, ENTRY_ID, USER_ID);
-    expect(result[0].id).not.toBe(V4_ID);
-    expect(result[0].id[14]).toBe("7");
+    expect(result[0]!.id).not.toBe(V4_ID);
+    expect(result[0]!.id[14]).toBe("7");
   });
 
   it("mints a new v7 ID for blocks with no ID", () => {
@@ -141,8 +141,8 @@ describe("convertBlockNoteBlocks", () => {
       { type: "paragraph", props: {}, content: [], children: [] },
     ];
     const result = convertBlockNoteBlocks(blocks, ENTRY_ID, USER_ID);
-    expect(result[0].id).toBeTruthy();
-    expect(result[0].id[14]).toBe("7");
+    expect(result[0]!.id).toBeTruthy();
+    expect(result[0]!.id[14]).toBe("7");
   });
 
   it("top-level blocks do not have parentBlockId set", () => {
@@ -150,19 +150,19 @@ describe("convertBlockNoteBlocks", () => {
       { id: V7_ID, type: "paragraph", props: {}, content: [], children: [] },
     ];
     const result = convertBlockNoteBlocks(blocks, ENTRY_ID, USER_ID);
-    expect(result[0].parentBlockId).toBeUndefined();
+    expect(result[0]!.parentBlockId).toBeUndefined();
   });
 
   it("defaults propsJson to {} when props is absent", () => {
     const blocks = [{ type: "paragraph", content: [], children: [] }];
     const result = convertBlockNoteBlocks(blocks, ENTRY_ID, USER_ID);
-    expect(result[0].propsJson).toEqual({});
+    expect(result[0]!.propsJson).toEqual({});
   });
 
   it("defaults contentJson to [] when content is absent", () => {
     const blocks = [{ type: "paragraph", props: {}, children: [] }];
     const result = convertBlockNoteBlocks(blocks, ENTRY_ID, USER_ID);
-    expect(result[0].contentJson).toEqual([]);
+    expect(result[0]!.contentJson).toEqual([]);
   });
 
   it("deduplicates blocks that appear both at top-level and inside a parent's children (partially-flattened BlockNote output)", () => {
@@ -185,9 +185,9 @@ describe("convertBlockNoteBlocks", () => {
 
     // Should produce 2 records (parent + 1 child), not 3
     expect(result).toHaveLength(2);
-    expect(result[0].type).toBe("bulletListItem");
-    expect(result[1].id).toBe(childId);
-    expect(result[1].parentBlockId).toBe(result[0].id);
+    expect(result[0]!.type).toBe("bulletListItem");
+    expect(result[1]!.id).toBe(childId);
+    expect(result[1]!.parentBlockId).toBe(result[0]!.id);
   });
 });
 
@@ -205,11 +205,11 @@ describe("convertDbBlocksToBlockNote", () => {
     const result = convertDbBlocksToBlockNote(db);
 
     expect(result).toHaveLength(1);
-    expect(result[0].id).toBe(V7_ID);
-    expect(result[0].type).toBe("paragraph");
-    expect(result[0].props).toEqual({ textColor: "default" });
-    expect(result[0].content).toEqual([{ type: "text", text: "Hi" }]);
-    expect(result[0].children).toEqual([]);
+    expect(result[0]!.id).toBe(V7_ID);
+    expect(result[0]!.type).toBe("paragraph");
+    expect(result[0]!.props).toEqual({ textColor: "default" });
+    expect(result[0]!.content).toEqual([{ type: "text", text: "Hi" }]);
+    expect(result[0]!.children).toEqual([]);
   });
 
   it("sorts top-level blocks by order", () => {
@@ -236,10 +236,10 @@ describe("convertDbBlocksToBlockNote", () => {
     const result = convertDbBlocksToBlockNote(db);
 
     expect(result).toHaveLength(1);
-    expect(result[0].id).toBe(parentId);
-    expect(result[0].children).toHaveLength(2);
-    expect(result[0].children![0].id).toBe(child1Id);
-    expect(result[0].children![1].id).toBe(child2Id);
+    expect(result[0]!.id).toBe(parentId);
+    expect(result[0]!.children).toHaveLength(2);
+    expect(result[0]!.children![0]!.id).toBe(child1Id);
+    expect(result[0]!.children![1]!.id).toBe(child2Id);
   });
 
   it("sorts children by order independently from top-level order", () => {
@@ -254,8 +254,8 @@ describe("convertDbBlocksToBlockNote", () => {
     ];
     const result = convertDbBlocksToBlockNote(db);
 
-    expect(result[0].children![0].id).toBe(child1Id);
-    expect(result[0].children![1].id).toBe(child2Id);
+    expect(result[0]!.children![0]!.id).toBe(child1Id);
+    expect(result[0]!.children![1]!.id).toBe(child2Id);
   });
 
   it("reconstructs deeply nested blocks (grandchildren)", () => {
@@ -271,15 +271,15 @@ describe("convertDbBlocksToBlockNote", () => {
     const result = convertDbBlocksToBlockNote(db);
 
     expect(result).toHaveLength(1);
-    expect(result[0].children).toHaveLength(1);
-    expect(result[0].children![0].children).toHaveLength(1);
-    expect(result[0].children![0].children![0].id).toBe(grandchId);
+    expect(result[0]!.children).toHaveLength(1);
+    expect(result[0]!.children![0]!.children).toHaveLength(1);
+    expect(result[0]!.children![0]!.children![0]!.id).toBe(grandchId);
   });
 
   it("defaults content to [] when contentJson is undefined", () => {
     const db = [makeDbBlock({ id: V7_ID, contentJson: undefined })];
     const result = convertDbBlocksToBlockNote(db);
-    expect(result[0].content).toEqual([]);
+    expect(result[0]!.content).toEqual([]);
   });
 
   it("handles multiple top-level blocks each with children", () => {
@@ -297,8 +297,8 @@ describe("convertDbBlocksToBlockNote", () => {
     const result = convertDbBlocksToBlockNote(db);
 
     expect(result).toHaveLength(2);
-    expect(result[0].children![0].id).toBe(c1);
-    expect(result[1].children![0].id).toBe(c2);
+    expect(result[0]!.children![0]!.id).toBe(c1);
+    expect(result[1]!.children![0]!.id).toBe(c2);
   });
 });
 
@@ -338,14 +338,14 @@ describe("convertBlockNoteBlocks → convertDbBlocksToBlockNote (round-trip)", (
 
     expect(restored).toHaveLength(2);
 
-    expect(restored[0].id).toBe(V7_ID);
-    expect(restored[0].type).toBe("bulletListItem");
-    expect(restored[0].children).toHaveLength(1);
-    expect(restored[0].children![0].type).toBe("paragraph");
-    expect(restored[0].children![0].content).toEqual([{ type: "text", text: "child" }]);
+    expect(restored[0]!.id).toBe(V7_ID);
+    expect(restored[0]!.type).toBe("bulletListItem");
+    expect(restored[0]!.children).toHaveLength(1);
+    expect(restored[0]!.children![0]!.type).toBe("paragraph");
+    expect(restored[0]!.children![0]!.content).toEqual([{ type: "text", text: "child" }]);
 
-    expect(restored[1].id).toBe("01900000-0000-7000-8000-000000000082");
-    expect(restored[1].type).toBe("heading");
-    expect(restored[1].children).toHaveLength(0);
+    expect(restored[1]!.id).toBe("01900000-0000-7000-8000-000000000082");
+    expect(restored[1]!.type).toBe("heading");
+    expect(restored[1]!.children).toHaveLength(0);
   });
 });

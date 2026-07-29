@@ -28,6 +28,7 @@ const createFormSchema = (currentTopicId?: string) =>
       .max(255, "Name is too long.")
       .refine(async (name) => {
         const db = await getDb();
+        if (!db?.topics) return true;
         const existing = await db.topics
           .findOne({
             selector: {

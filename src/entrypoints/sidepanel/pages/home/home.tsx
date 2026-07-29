@@ -51,7 +51,7 @@ function HomePage() {
         active: true,
         currentWindow: true,
       });
-      finalTab = queriedTab;
+      finalTab = queriedTab ?? null;
     }
     if (!finalTab?.id || !finalTab?.windowId) return;
     const tabData: TabData = {

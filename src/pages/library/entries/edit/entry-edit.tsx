@@ -21,9 +21,9 @@ import {
   type EntryFormApi,
   type EntryFormData,
 } from "@/components/forms/entry-form";
-import { BlockDocType } from "@/db/schemas/block";
-import { EntryDocType } from "@/db/schemas/entry";
-import { TopicDocType } from "@/db/schemas/topic";
+import type { BlockDocType } from "@/db/schemas/block";
+import type { EntryDocType } from "@/db/schemas/entry";
+import type { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
 import { useAppHost } from "@/providers/app-host";
 import {
@@ -102,15 +102,28 @@ function EntryEditContent({
       }
     } else {
       const current = editor.document;
+      const firstBlock = current[0];
+      const firstContent = firstBlock?.content;
+      const firstChildren = firstBlock?.children;
+      const isContentEmpty =
+        !firstContent ||
+        (Array.isArray(firstContent) && firstContent.length === 0);
+      const isChildrenEmpty =
+        !firstChildren || firstChildren.length === 0;
+
       const isEmpty =
         current.length === 1 &&
-        current[0].type === "paragraph" &&
-        (!current[0].content || current[0].content.length === 0) &&
-        (!current[0].children || current[0].children.length === 0);
+        firstBlock?.type === "paragraph" &&
+        isContentEmpty &&
+        isChildrenEmpty;
+
       if (isEmpty) {
         editor.replaceBlocks(current, blocks);
       } else {
-        editor.insertBlocks(blocks, current[current.length - 1].id, "after");
+        const lastBlock = current[current.length - 1];
+        if (lastBlock) {
+          editor.insertBlocks(blocks, lastBlock.id, "after");
+        }
       }
       // For selection capture, all metadata fields only written if currently empty
       if (api) {

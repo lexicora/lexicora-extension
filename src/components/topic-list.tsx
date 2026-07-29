@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 import { TopicItem } from "@/components/topic-item";
-import { TopicDocType } from "@/db/schemas/topic";
+import type { TopicDocType } from "@/db/schemas/topic";
 import { FoldersIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useNavigationType } from "react-router-dom";
