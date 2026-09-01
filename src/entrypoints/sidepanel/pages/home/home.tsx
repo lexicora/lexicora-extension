@@ -13,6 +13,7 @@ import {
   StarIcon,
 } from "lucide-react";
 import { useTabSupport } from "@/hooks/use-tab-support";
+import { FEATURES } from "@/constants/features";
 import { MSG } from "@/constants/messaging";
 import type { TabData } from "@/types/tab-data.types";
 import { sendMessage } from "@/lib/messaging";
@@ -178,90 +179,114 @@ function HomePage() {
             )}
           </div>
         </section>
-        <Separator className="mt-4 mx-auto max-w-[calc(100%-8px)] shrink-0 [@media(min-height:950px)]:hidden" />
         {/*TODO: Potentially add some entries, like pinned or recently edited/viewed */}
-        <section className="flex-1 flex flex-col">
-          <div className="flex-1 flex flex-col items-center justify-end text-center py-5">
-            <h2 className="text-lg font-medium mb-1 text-[#00143d] dark:text-foreground">
-              Describe what you want AI to do
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Optional — leave blank to capture the page as-is.
-            </p>
-          </div>
-          <div className="pb-12">
-            <Textarea
-              id="ai-prompt-textarea"
-              ref={aiPromptTextareaRef}
-              placeholder="Type your desired AI prompt here."
-              className="text-base! max-h-75 field-sizing-content resize-y w-[calc(100%-2px)] mx-auto scrollbar-thin transition-colors duration-150 focus-visible:ring-0"
-              maxLength={1000}
-              disabled={!isSupported}
-              title={
-                isSupported
-                  ? ""
-                  : "You are currently on a unsupported page for capturing."
-              }
-              value={promptText}
-              onChange={(e) => {
-                setPromptText(e.target.value);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Escape") {
-                  e.preventDefault();
-                  aiPromptTextareaRef.current?.blur();
-                }
-                // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
-                if (e.ctrlKey && e.key === "Enter") {
-                  e.preventDefault();
-                  if (promptText.trim() === "") return;
-                  alert("Submitted AI request successfully!");
-                }
-              }}
-            />
-          </div>
-        </section>
+        {FEATURES.AI && (
+          <>
+            <Separator className="mt-4 mx-auto max-w-[calc(100%-8px)] shrink-0 [@media(min-height:950px)]:hidden" />
+            <section className="flex-1 flex flex-col">
+              <div className="flex-1 flex flex-col items-center justify-end text-center py-5">
+                <h2 className="text-lg font-medium mb-1 text-[#00143d] dark:text-foreground">
+                  Describe what you want AI to do
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Optional — leave blank to capture the page as-is.
+                </p>
+              </div>
+              <div className="pb-12">
+                <Textarea
+                  id="ai-prompt-textarea"
+                  ref={aiPromptTextareaRef}
+                  placeholder="Type your desired AI prompt here."
+                  className="text-base! max-h-75 field-sizing-content resize-y w-[calc(100%-2px)] mx-auto scrollbar-thin transition-colors duration-150 focus-visible:ring-0"
+                  maxLength={1000}
+                  disabled={!isSupported}
+                  title={
+                    isSupported
+                      ? ""
+                      : "You are currently on a unsupported page for capturing."
+                  }
+                  value={promptText}
+                  onChange={(e) => {
+                    setPromptText(e.target.value);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") {
+                      e.preventDefault();
+                      aiPromptTextareaRef.current?.blur();
+                    }
+                    // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
+                    if (e.ctrlKey && e.key === "Enter") {
+                      e.preventDefault();
+                      if (promptText.trim() === "") return;
+                      // TODO: Submit the AI capture request once an AI backend exists (#52).
+                    }
+                  }}
+                />
+              </div>
+            </section>
+          </>
+        )}
       </main>
       <footer className={styles.bottomFooter}>
         <section className="fixed bottom-14.75 left-0 h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-10 lc-bottom-bar-styled-bg">
           <div className="flex gap-0 items-center justify-between w-full max-w-(--lc-content-max-width) mx-auto inset-x-0">
-            <div
-              className={`flex justify-start transition-all motion-reduce:transition-none duration-300 ease-in-out ${
-                promptText.trimEnd() === ""
-                  ? "flex-1 max-w-[50%] mr-3"
-                  : "flex-0 max-w-0 opacity-0 mr-0 blur-[6px]"
-              }`}
-            >
-              <Button
-                variant="secondary"
-                title={
-                  isSupported
-                    ? "Capture page"
-                    : "You are currently on a unsupported page for capturing."
-                }
-                className={cn(
-                  "w-full hover:bg-[color-mix(in_oklab,var(--secondary),black_7%)] dark:hover:bg-[color-mix(in_oklab,var(--secondary)80%,var(--background))] overflow-hidden",
-                  "disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-secondary!",
-                )}
-                disabled={promptText.trimEnd() !== "" || !isSupported}
-                onClick={capturePage}
-              >
-                Capture
-              </Button>
-            </div>
-            <div className="flex justify-end flex-1">
-              <Button
-                title={
-                  isSupported
-                    ? "Capture page with AI"
-                    : "You are currently on a unsupported page for capturing."
-                }
-                className="w-full hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary"
-                disabled={!isSupported}
-              >
-                Capture with AI
-              </Button>
-            </div>
+            {FEATURES.AI ? (
+              <>
+                <div
+                  className={`flex justify-start transition-all motion-reduce:transition-none duration-300 ease-in-out ${
+                    promptText.trimEnd() === ""
+                      ? "flex-1 max-w-[50%] mr-3"
+                      : "flex-0 max-w-0 opacity-0 mr-0 blur-[6px]"
+                  }`}
+                >
+                  <Button
+                    variant="secondary"
+                    title={
+                      isSupported
+                        ? "Capture page"
+                        : "You are currently on a unsupported page for capturing."
+                    }
+                    className={cn(
+                      "w-full hover:bg-[color-mix(in_oklab,var(--secondary),black_7%)] dark:hover:bg-[color-mix(in_oklab,var(--secondary)80%,var(--background))] overflow-hidden",
+                      "disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-secondary!",
+                    )}
+                    disabled={promptText.trimEnd() !== "" || !isSupported}
+                    onClick={capturePage}
+                  >
+                    Capture
+                  </Button>
+                </div>
+                <div className="flex justify-end flex-1">
+                  <Button
+                    title={
+                      isSupported
+                        ? "Capture page with AI"
+                        : "You are currently on a unsupported page for capturing."
+                    }
+                    className="w-full hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary"
+                    disabled={!isSupported}
+                  >
+                    Capture with AI
+                  </Button>
+                </div>
+              </>
+            ) : (
+              /* Without AI there is a single action, so it takes the full bar. */
+              <div className="flex justify-start flex-1">
+                <Button
+                  title={
+                    isSupported
+                      ? "Capture page"
+                      : "You are currently on a unsupported page for capturing."
+                  }
+                  className="w-full hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary"
+                  disabled={!isSupported}
+                  onClick={capturePage}
+                >
+                  Capture page
+                </Button>
+              </div>
+            )}
           </div>
         </section>
       </footer>

@@ -35,6 +35,7 @@ import {
 import { Link } from "react-router-dom";
 //import styles from "./settings-page.module.css";
 
+import { FEATURES } from "@/constants/features";
 import { SettingsItem } from "@/components/settings";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -46,64 +47,68 @@ function SettingsPage() {
     <PageContainer>
       <PageHeader title="Settings" />
       <main className="flex flex-col gap-5.75 w-full px-1 mb-2">
-        <section id="account-settings">
-          <Label htmlFor="" className="text-sm ml-2 mb-0.5">
-            <UserRoundIcon className="size-3.5 text-fuchsia-400" /> Account
-          </Label>
-          <Item
-            variant="muted"
-            size="default"
-            className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl /*rounded-b-none*/ not-dark:shadow-xs"
-            asChild
-          >
-            <Link to="/settings/account" draggable={false} viewTransition>
-              <ItemMedia variant="icon">
-                {/* <Avatar
-                  className="size-7 not-dark:border not-dark:border-gray-400/75"
-                  title="Profile"
-                >
-                  <AvatarImage
-                    src="https://github.com/tgmaurer.png"
-                    alt="@tgmaurer"
-                  />
-                  <AvatarFallback>TG</AvatarFallback>
-                </Avatar> */}
-                <div className="size-8 rounded-md flex items-center">
-                  <div className="flex items-center justify-center size-full rounded-full bg-secondary/25 dark:bg-secondary/50 ring ring-inset ring-black/20 dark:ring-white/20">
-                    <UserIcon className="size-4.5" />
-                    {/* TODO: If logged in, show user's avatar or initials */}
+        {FEATURES.ACCOUNTS && (
+          <section id="account-settings">
+            <Label htmlFor="" className="text-sm ml-2 mb-0.5">
+              <UserRoundIcon className="size-3.5 text-fuchsia-400" /> Account
+            </Label>
+            <Item
+              variant="muted"
+              size="default"
+              className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl /*rounded-b-none*/ not-dark:shadow-xs"
+              asChild
+            >
+              <Link to="/settings/account" draggable={false} viewTransition>
+                <ItemMedia variant="icon">
+                  {/* <Avatar
+                    className="size-7 not-dark:border not-dark:border-gray-400/75"
+                    title="Profile"
+                  >
+                    <AvatarImage
+                      src="https://github.com/tgmaurer.png"
+                      alt="@tgmaurer"
+                    />
+                    <AvatarFallback>TG</AvatarFallback>
+                  </Avatar> */}
+                  <div className="size-8 rounded-md flex items-center">
+                    <div className="flex items-center justify-center size-full rounded-full bg-secondary/25 dark:bg-secondary/50 ring ring-inset ring-black/20 dark:ring-white/20">
+                      <UserIcon className="size-4.5" />
+                      {/* TODO: If logged in, show user's avatar or initials */}
+                    </div>
                   </div>
-                </div>
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle className="text-base /*font-semibold*/">
-                  Account
-                </ItemTitle>
-                {/*Later display name of user or account specific data*/}
-                {/*<ItemDescription>
-                  Customize the appearance and behavior of the extension.
-                </ItemDescription>*/}
-              </ItemContent>
-              <ItemActions>
-                <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
-              </ItemActions>
-            </Link>
-          </Item>
-          {/*TODO MAYBE: Add subscription settings right below above or put it in the account settings */}
-        </section>
-        <section id="ai-settings">
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle className="text-base /*font-semibold*/">
+                    Account
+                  </ItemTitle>
+                  {/*Later display name of user or account specific data*/}
+                  {/*<ItemDescription>
+                    Customize the appearance and behavior of the extension.
+                  </ItemDescription>*/}
+                </ItemContent>
+                <ItemActions>
+                  <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
+                </ItemActions>
+              </Link>
+            </Item>
+            {/*TODO MAYBE: Add subscription settings right below above or put it in the account settings */}
+          </section>
+        )}
+        <section id="features-settings">
           <Label htmlFor="" className="text-sm ml-2 mb-0.5">
             <Settings2Icon className="size-3.5 text-cyan-400" /> Features
           </Label>
           <div className="rounded-2xl not-dark:shadow-xs">
-            <SettingsItem
-              to="/settings/ai"
-              size="sm"
-              MediaIcon={SparklesIcon}
-              mediaIconColor="text-purple-500"
-              itemTitle="AI Settings"
-              roundingClass="rounded-b-none"
-            />
+            {FEATURES.AI && (
+              <SettingsItem
+                to="/settings/ai"
+                size="sm"
+                MediaIcon={SparklesIcon}
+                mediaIconColor="text-purple-500"
+                itemTitle="AI Settings"
+                roundingClass="rounded-b-none"
+              />
+            )}
             {import.meta.env.FIREFOX ? (
               <SettingsItem
                 to="/not-supported"
@@ -111,7 +116,7 @@ function SettingsPage() {
                 MediaIcon={CameraIcon}
                 mediaIconColor="text-red-500"
                 itemTitle="Capture Suggestions"
-                roundingClass="rounded-t-none"
+                roundingClass={FEATURES.AI ? "rounded-t-none" : ""}
                 disabled
                 disabledReason="Not supported in Firefox based browsers"
               />
@@ -122,7 +127,7 @@ function SettingsPage() {
                 MediaIcon={CameraIcon}
                 mediaIconColor="text-red-500"
                 itemTitle="Capture Suggestions"
-                roundingClass="rounded-t-none"
+                roundingClass={FEATURES.AI ? "rounded-t-none" : ""}
               />
               //Add reminder feature, that reminds the user if he already has an entry with the same URL of the current page.
             )}

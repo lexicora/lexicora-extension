@@ -16,6 +16,7 @@ import { sendMessage } from "@/lib/messaging";
 import { ArrowUpRightIcon, PanelRightIcon, UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { FEATURES } from "@/constants/features";
 import { MSG } from "@/constants/messaging";
 import { useTabSupport } from "@/hooks/use-tab-support";
 import { cn } from "@/lib/utils";
@@ -76,6 +77,7 @@ function Popup() {
   };
 
   useEffect(() => {
+    if (!FEATURES.AI) return;
     // Focus the textarea on component mount, for better UX
     setTimeout(() => {
       document.getElementById("ai-prompt-textarea")?.focus();
@@ -93,31 +95,42 @@ function Popup() {
           )}
         >
           <div className="flex gap-0 items-center justify-between w-full">
+            {/* Kept as a spacer so the logo stays centered when accounts are off. */}
             <div className="flex justify-start flex-1">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <div className="ml-0.5 size-8 rounded-md flex items-center">
-                    <div className="flex items-center justify-center size-full rounded-full bg-secondary/80 ring ring-inset ring-black/20 dark:ring-white/20">
-                      <UserIcon className="size-4.5" />
-                      {/* TODO: If logged in, show user's avatar or initials and also change the hue of the background to a color (user varying and users can choose)*/}
-                      {/* Maybe also just generate an image with an image generator */}
+              {FEATURES.ACCOUNTS && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div className="ml-0.5 size-8 rounded-md flex items-center">
+                      <div className="flex items-center justify-center size-full rounded-full bg-secondary/80 ring ring-inset ring-black/20 dark:ring-white/20">
+                        <UserIcon className="size-4.5" />
+                        {/* TODO: If logged in, show user's avatar or initials and also change the hue of the background to a color (user varying and users can choose)*/}
+                        {/* Maybe also just generate an image with an image generator */}
+                      </div>
                     </div>
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="select-none">
-                  <DropdownMenuLabel className="py-1">
-                    My Account
-                  </DropdownMenuLabel>
-                  <DropdownMenuItem className="py-1">Profile</DropdownMenuItem>
-                  <DropdownMenuItem className="py-1">Settings</DropdownMenuItem>
-                  {/*TODO: Maybe add "My Plan", "Subscription" or something like that, if we have a paid offering in the future */}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="py-1">Support</DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="py-1">Sign out</DropdownMenuItem>
-                  {/*TODO: Make dynamic based on login status */}
-                </DropdownMenuContent>
-              </DropdownMenu>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="select-none">
+                    <DropdownMenuLabel className="py-1">
+                      My Account
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem className="py-1">
+                      Profile
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="py-1">
+                      Settings
+                    </DropdownMenuItem>
+                    {/*TODO: Maybe add "My Plan", "Subscription" or something like that, if we have a paid offering in the future */}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="py-1">
+                      Support
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="py-1">
+                      Sign out
+                    </DropdownMenuItem>
+                    {/*TODO: Make dynamic based on login status */}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
             <div
               className="shrink-0"
@@ -187,91 +200,111 @@ function Popup() {
           {/*TODO: Maybe show indication (like in browsers bottom left of window), where this link leads */}
         </section>
       </header>
-      <main>
-        <section>
-          <hr className="mt-3 mx-2" />
-          <article>
-            <h2 className="text-lg font-medium mt-4 mb-1 text-[#00143d] dark:text-foreground">
-              Describe what you want AI to do
-            </h2>
-            <p className="text-sm text-pretty text-muted-foreground">
-              Optional — leave blank to capture the page as-is.
-            </p>
-          </article>
-        </section>
-        <section className="mt-5">
-          <Textarea
-            id="ai-prompt-textarea"
-            placeholder="Type your desired AI prompt here."
-            // Adjust default height to either 6 rows (min-h-40.5) or 5 rows (min-h-34.5)
-            className="field-sizing-content resize-y /*min-h-40.5*/ min-h-34.5 /*max-h-300*/ ml-px w-[calc(100%-2px)] scrollbar-thin
-            transition-colors duration-150 focus-visible:ring-0 /*not-dark:border-gray-300*/ /*shadow-none*/"
-            maxLength={1000}
-            disabled={!isSupported}
-            title={
-              isSupported
-                ? ""
-                : "You are currently on a unsupported page for capturing."
-            }
-            value={promptText}
-            onChange={(e) => {
-              setPromptText(e.target.value);
-              // Makes sure shadow disappears
-            }} // 4. Update state on every keystroke
-            onKeyDown={(e) => {
-              // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
-              if (e.ctrlKey && e.key === "Enter") {
-                // Submit AI prompt logic here
-                e.preventDefault();
-                if (promptText.trim() === "") return;
-                alert("Submitted AI request successfully!");
-                // TODO: do more here
+      {FEATURES.AI && (
+        <main>
+          <section>
+            <hr className="mt-3 mx-2" />
+            <article>
+              <h2 className="text-lg font-medium mt-4 mb-1 text-[#00143d] dark:text-foreground">
+                Describe what you want AI to do
+              </h2>
+              <p className="text-sm text-pretty text-muted-foreground">
+                Optional — leave blank to capture the page as-is.
+              </p>
+            </article>
+          </section>
+          <section className="mt-5">
+            <Textarea
+              id="ai-prompt-textarea"
+              placeholder="Type your desired AI prompt here."
+              // Adjust default height to either 6 rows (min-h-40.5) or 5 rows (min-h-34.5)
+              className="field-sizing-content resize-y /*min-h-40.5*/ min-h-34.5 /*max-h-300*/ ml-px w-[calc(100%-2px)] scrollbar-thin
+              transition-colors duration-150 focus-visible:ring-0 /*not-dark:border-gray-300*/ /*shadow-none*/"
+              maxLength={1000}
+              disabled={!isSupported}
+              title={
+                isSupported
+                  ? ""
+                  : "You are currently on a unsupported page for capturing."
               }
-            }}
-          />
-        </section>
-      </main>
+              value={promptText}
+              onChange={(e) => {
+                setPromptText(e.target.value);
+                // Makes sure shadow disappears
+              }} // 4. Update state on every keystroke
+              onKeyDown={(e) => {
+                // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
+                if (e.ctrlKey && e.key === "Enter") {
+                  e.preventDefault();
+                  if (promptText.trim() === "") return;
+                  // TODO: Submit the AI capture request once an AI backend exists (#52).
+                }
+              }}
+            />
+          </section>
+        </main>
+      )}
       <footer>
         <section className="fixed bottom-0 left-0 h-15 w-full p-3 pt-2.75 z-10 lc-bottom-bar-styled-bg">
           {/*MAYBE: Remove the animation disabling motion-reduce, because it is a very noticeable and maybe not optimal for accessibility*/}
           <div className="flex gap-0 items-center justify-between w-full">
-            <div
-              className={`flex justify-start transition-all motion-reduce:transition-none duration-300 ease-in-out /*overflow-visible*/ ${
-                promptText.trimEnd() === ""
-                  ? "flex-1 max-w-[50%] mr-3"
-                  : "flex-0 max-w-0 opacity-0 mr-0 blur-[6px]"
-              }`}
-            >
-              <Button
-                variant="secondary"
-                title={
-                  isSupported
-                    ? "Capture page"
-                    : "You are currently on a unsupported page for capturing."
-                }
-                className={cn(
-                  "w-full hover:bg-[color-mix(in_oklab,var(--secondary),black_7%)] dark:hover:bg-[color-mix(in_oklab,var(--secondary)80%,var(--background))] overflow-hidden",
-                  "disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-secondary!",
-                )}
-                disabled={promptText.trimEnd() !== "" || !isSupported}
-                onClick={capturePage}
-              >
-                Capture
-              </Button>
-            </div>
-            <div className="flex justify-end flex-1">
-              <Button
-                title={
-                  isSupported
-                    ? "Capture page with AI"
-                    : "You are currently on a unsupported page for capturing."
-                }
-                className="w-full hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary"
-                disabled={!isSupported}
-              >
-                Capture with AI
-              </Button>
-            </div>
+            {FEATURES.AI ? (
+              <>
+                <div
+                  className={`flex justify-start transition-all motion-reduce:transition-none duration-300 ease-in-out /*overflow-visible*/ ${
+                    promptText.trimEnd() === ""
+                      ? "flex-1 max-w-[50%] mr-3"
+                      : "flex-0 max-w-0 opacity-0 mr-0 blur-[6px]"
+                  }`}
+                >
+                  <Button
+                    variant="secondary"
+                    title={
+                      isSupported
+                        ? "Capture page"
+                        : "You are currently on a unsupported page for capturing."
+                    }
+                    className={cn(
+                      "w-full hover:bg-[color-mix(in_oklab,var(--secondary),black_7%)] dark:hover:bg-[color-mix(in_oklab,var(--secondary)80%,var(--background))] overflow-hidden",
+                      "disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-secondary!",
+                    )}
+                    disabled={promptText.trimEnd() !== "" || !isSupported}
+                    onClick={capturePage}
+                  >
+                    Capture
+                  </Button>
+                </div>
+                <div className="flex justify-end flex-1">
+                  <Button
+                    title={
+                      isSupported
+                        ? "Capture page with AI"
+                        : "You are currently on a unsupported page for capturing."
+                    }
+                    className="w-full hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary"
+                    disabled={!isSupported}
+                  >
+                    Capture with AI
+                  </Button>
+                </div>
+              </>
+            ) : (
+              /* Without AI there is a single action, so it takes the full bar. */
+              <div className="flex justify-start flex-1">
+                <Button
+                  title={
+                    isSupported
+                      ? "Capture page"
+                      : "You are currently on a unsupported page for capturing."
+                  }
+                  className="w-full hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary"
+                  disabled={!isSupported}
+                  onClick={capturePage}
+                >
+                  Capture page
+                </Button>
+              </div>
+            )}
           </div>
         </section>
       </footer>
