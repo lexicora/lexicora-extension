@@ -1,5 +1,18 @@
 import type { RxDatabase } from "rxdb";
 import { uuidv7 } from "uuidv7";
+import { storage } from "wxt/utils/storage";
+
+/**
+ * Marks that development seeding has already run for this browser profile.
+ *
+ * Without it, an empty database is indistinguishable from a never-seeded one, so
+ * clearing all data in development re-seeds on the next open and looks like the
+ * deleted data came back (the symptom originally reported as issue #153).
+ */
+const devSeedCompletedStorage = storage.defineItem<boolean>(
+  "local:dev-seed-completed",
+  { fallback: false },
+);
 
 const USER_ID = "00000000-0000-0000-0000-000000000000";
 
@@ -602,9 +615,13 @@ const topicsData = [
 ];
 
 export async function seedDummyData(db: RxDatabase) {
+  // Never re-seed a profile that has been seeded before, even if it is now empty.
+  if (await devSeedCompletedStorage.getValue()) return;
+
   // Check if we already have data to prevent duplicate seeding
   const existingTopics = await db.collections.topics?.find().exec();
   if (existingTopics && existingTopics.length > 0) {
+    await devSeedCompletedStorage.setValue(true);
     return;
   }
 

@@ -24,21 +24,7 @@ import { useRxCollection } from "rxdb/plugins/react";
 import { toast } from "sonner";
 
 function DataSettingsPage() {
-  // TODO: Re-enable clear all data once the soft-delete issue is resolved.
-  // RxDB's bulkRemove() only soft-deletes documents (sets "_deleted": true); it does
-  // not physically remove them from IndexedDB. As a result, on closing and reopening
-  // the extension the soft-deleted documents reappear in the UI despite the flag still
-  // being set. This should be investigated when implementing the cleanup logic that
-  // physically purges soft-deleted documents from IndexedDB.
-  //
-  // Before re-enabling, also verify transaction finality per rxdb.info:
-  //   // .commit() is not available on all browsers, so first check if it exists.
-  //   if (transaction.commit) {
-  //     transaction.commit()
-  //   }
-  //
-  // See: https://rxdb.info/cleanup.html
-  // const [clearOpen, setClearOpen] = useState(false);
+  const [clearOpen, setClearOpen] = useState(false);
 
   const topicsCollection = useRxCollection("topics");
   const entriesCollection = useRxCollection("entries");
@@ -87,29 +73,32 @@ function DataSettingsPage() {
     });
   };
 
-  // const handleClear = () => {
-  //   if (!topicsCollection || !entriesCollection || !blocksCollection) return;
-  //
-  //   const p = async () => {
-  //     const [topicDocs, entryDocs, blockDocs] = await Promise.all([
-  //       topicsCollection.find().exec(),
-  //       entriesCollection.find().exec(),
-  //       blocksCollection.find().exec(),
-  //     ]);
-  //
-  //     await Promise.all([
-  //       topicsCollection.bulkRemove(topicDocs),
-  //       entriesCollection.bulkRemove(entryDocs),
-  //       blocksCollection.bulkRemove(blockDocs),
-  //     ]);
-  //   };
-  //
-  //   toast.promise(p(), {
-  //     loading: "Clearing all data...",
-  //     success: "All data cleared",
-  //     error: "Failed to clear data",
-  //   });
-  // };
+  const handleClear = () => {
+    if (!topicsCollection || !entriesCollection || !blocksCollection) return;
+
+    const p = async () => {
+      //* NOTE: `remove()` only soft-deletes (sets `_deleted: true`), so each
+      //* collection is then cleaned up with a zero threshold to physically purge
+      //* the documents from IndexedDB. Requires RxDBCleanupPlugin (see src/db).
+      await Promise.all([
+        topicsCollection.find().remove(),
+        entriesCollection.find().remove(),
+        blocksCollection.find().remove(),
+      ]);
+
+      await Promise.all([
+        topicsCollection.cleanup(0),
+        entriesCollection.cleanup(0),
+        blocksCollection.cleanup(0),
+      ]);
+    };
+
+    toast.promise(p(), {
+      loading: "Clearing all data...",
+      success: "All data cleared",
+      error: "Failed to clear data",
+    });
+  };
 
   return (
     <PageContainer>
@@ -139,59 +128,33 @@ function DataSettingsPage() {
               Download all your topics, entries, and notes as a JSON file.
             </p>
           </article>
-          {/*<SettingsItemSeperator />*/}
-          {/* Clear All Data — temporarily disabled: RxDB soft-delete does not
-              physically remove documents from IndexedDB, causing data to reappear
-              after reopening the extension. See the TODO comment above. */}
-          {/*
-          <Item
-            variant="muted"
-            size="sm"
-            className="group transition-colors duration-150 bg-slate-200/75 hover:bg-slate-300/75! dark:bg-muted/50 dark:hover:bg-muted! rounded-2xl rounded-t-none hover:cursor-pointer"
-            onClick={() => setClearOpen(true)}
-          >
-            <ItemMedia variant="icon">
-              <Trash2Icon className="size-5 text-red-500" />
-            </ItemMedia>
-            <ItemContent>
-              <ItemTitle className="text-red-600 dark:text-red-400">
-                Clear All Data
-              </ItemTitle>
-              <ItemDescription>
-                Permanently delete all topics, entries, and notes
-              </ItemDescription>
-            </ItemContent>
-          </Item>
-          */}
-          <article className="opacity-65 grayscale-30">
+          <SettingsItemSeparator />
+          <article>
             <Item
               variant="muted"
               size="sm"
-              className="bg-card rounded-2xl not-dark:shadow-xs"
+              className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl hover:cursor-pointer"
+              asChild
             >
-              <ItemMedia variant="icon">
-                <Trash2Icon className="size-5 text-red-500" />
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle className="text-red-600 dark:text-red-400">
-                  Clear All Data
-                </ItemTitle>
-                {/*<ItemDescription className="line-clamp-none">
-                  To clear all data, remove and reinstall the extension. This
-                  feature will be re-enabled in a future update.
-                </ItemDescription>*/}
-              </ItemContent>
+              <button onClick={() => setClearOpen(true)}>
+                <ItemMedia variant="icon">
+                  <Trash2Icon className="size-5 text-red-500" />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle className="text-red-600 dark:text-red-400">
+                    Clear All Data
+                  </ItemTitle>
+                </ItemContent>
+              </button>
             </Item>
             <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
-              To clear all data, remove and reinstall the extension. This
-              feature will be re-enabled in a future update.
+              Permanently delete all topics, entries, and notes. This cannot be
+              undone — export your data first if you want to keep a copy.
             </p>
           </article>
         </section>
       </main>
 
-      {/* AlertDialog for clear confirmation — disabled until soft-delete issue is resolved */}
-      {/*
       <AlertDialog open={clearOpen} onOpenChange={setClearOpen}>
         <AlertDialogContent size="sm">
           <AlertDialogHeader>
@@ -211,7 +174,6 @@ function DataSettingsPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      */}
     </PageContainer>
   );
 }

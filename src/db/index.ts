@@ -1,5 +1,6 @@
 import { createRxDatabase, addRxPlugin } from "rxdb";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
+import { RxDBCleanupPlugin } from "rxdb/plugins/cleanup";
 //import { RxDBQueryBuilderPlugin } from "rxdb/plugins/query-builder";
 import { disableWarnings, RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
 
@@ -11,6 +12,15 @@ import { filterConsole } from "@/lib/utils/filter-console";
 import { buildEntrySearchBlob, buildTopicSearchBlob } from "./search-blob";
 
 const isDev = import.meta.env.DEV;
+
+/**
+ * Required so removed documents are physically purged from IndexedDB instead of
+ * lingering as soft-deleted (`_deleted: true`) rows. Also what makes the
+ * "Clear all data" setting a real deletion — see `collection.cleanup(0)` there.
+ *
+ * Must be registered before any database is created.
+ */
+addRxPlugin(RxDBCleanupPlugin);
 
 // TODO: For testing always add same test data on db init.
 // Add plugins
@@ -30,6 +40,11 @@ export async function initializeDb() {
     ignoreDuplicate: false, // true is only allowed in development.
     closeDuplicates: isDev, // TODO: Maybe set to true always. automatically close duplicate instances (e.g. from hot reload) - only relevant if ignoreDuplicate is true (enable if needed)
     eventReduce: true,
+    cleanupPolicy: {
+      //* Lexicora has no replication, so deleted documents serve no purpose once
+      //* they are a day old. Keeps IndexedDB from growing with tombstones.
+      minimumDeletedTime: 1000 * 60 * 60 * 24, // 1 day
+    },
   });
 
   // Add the collections
