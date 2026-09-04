@@ -128,7 +128,6 @@ function DataSettingsPage() {
               Download all your topics, entries, and notes as a JSON file.
             </p>
           </article>
-          <SettingsItemSeparator />
           <article>
             <Item
               variant="muted"

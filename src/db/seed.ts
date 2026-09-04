@@ -687,6 +687,11 @@ export async function seedDummyData(db: RxDatabase) {
   await db.collections.topics?.bulkInsert(topicsToInsert);
   await db.collections.entries?.bulkInsert(entriesToInsert);
 
+  // Must happen after a successful seed, otherwise an emptied database looks
+  // unseeded on the next open and the dummy data comes back — which is exactly
+  // what "Clear All Data" is not allowed to do.
+  await devSeedCompletedStorage.setValue(true);
+
   console.log(
     `✅ Seeded ${topicsToInsert.length} topics and ${entriesToInsert.length} entries.`,
   );

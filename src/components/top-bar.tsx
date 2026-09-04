@@ -80,7 +80,9 @@ export function TopBar() {
           )}
         </div>
         <div
-          className="shrink-0 select-none"
+          className={cn("shrink-0 select-none", {
+            "my-0.5": !FEATURES.ACCOUNTS || !FEATURES.WINDOWED_APP,
+          })}
           //role="button"
           onClick={() => {
             window.scrollTo({ top: 0 }); //MAYBE: Make instant (no animation or custom animation like motion blur...)
