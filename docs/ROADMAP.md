@@ -1,6 +1,45 @@
 # Lexicora Extension — Roadmap
 
+## v1.0 Milestone — offline release
+
+**v1.0 ships as a polished, offline, single-device knowledge capture extension.**
+It is a deliberate scope cut, not the completion of the phases below: the
+original plan ran through Supabase sync and AI features, and those are no longer
+part of the definition of done.
+
+Everything in v1.0 stays on the user's machine. The extension makes no network
+requests of its own.
+
+### Hidden, not removed
+
+AI, accounts and the windowed app are gated behind `FEATURES` in
+[`src/constants/features.ts`](../src/constants/features.ts), all set to `false`.
+The UI for them exists and re-enabling is a one-line change, but nothing that
+promises an unbuilt feature is visible to users.
+
+### Remaining work for v1.0
+
+| Item | Notes |
+|---|---|
+| **Bookmark-only capture** | Capture a page from its metadata alone — title, URL, favicon, site name, description — with no page content and no editor blocks. Essentially a "super bookmark": faster than a full capture, useful for pages worth keeping but not worth reading into the library. Should sit alongside the existing capture action rather than replacing it. |
+| **Empty and sparse UI states** | The popup, side-panel home and top-bar have visible gaps now that the AI surfaces are gated. Needs a layout pass. |
+| **ESLint** | The config currently fails to run: `typescript-eslint` does not support TypeScript 7. No `lint` script exists either. |
+| **Release prep** | Version bump, README scope statement, privacy policy, store listing copy and permission justifications. Store submission is deferred until the product is judged ready. |
+
+### Explicitly out of scope for v1.0
+
+Supabase sync and the web app (#68, #69), all AI features (#52, #190),
+onboarding (#44), hot-keys (#145), Markdown export (#156), the editor backlog
+(#8, #56, #60, #61, #62), filter popover (#144), heading map (#164), windowed
+polish (#179, #180, #182, #184), and the parking lot at the bottom of this file.
+
+---
+
 ## Strategy
+
+> **Note:** the phases below describe the original, larger plan. They are kept
+> for context and as the backlog beyond v1.0. Phases 1 and 2 are largely
+> complete; Phase 3 onward is out of scope for the v1.0 milestone above.
 
 **Build & Refine**: build features incrementally, then refine the app in passes.
 

@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowUpRightIcon,
+  BookmarkIcon,
   ChevronRightIcon,
+  GlobeIcon,
   HistoryIcon,
   PinIcon,
   StarIcon,
@@ -42,6 +44,8 @@ function HomePage() {
     favoriteEntriesCount,
     combinedTopics,
     maxTopicsToShow,
+    recentEntries,
+    isLibraryEmpty,
   } = useHomeData();
 
   const capturePage = async () => {
@@ -165,7 +169,7 @@ function HomePage() {
                 <ChevronRightIcon className="transition-opacity size-3.5 text-muted-foreground shrink-0 opacity-70 group-hover:opacity-100" />
               </Button>
             ))}
-            {combinedTopics.length < maxTopicsToShow && (
+            {!isLibraryEmpty && combinedTopics.length < maxTopicsToShow && (
               <Button
                 variant="link"
                 size="sm"
@@ -179,6 +183,71 @@ function HomePage() {
             )}
           </div>
         </section>
+
+        {isLibraryEmpty ? (
+          <section className="flex-1 flex flex-col items-center justify-center text-center px-4 pb-6">
+            <div className="flex items-center justify-center size-11 rounded-full bg-card not-dark:shadow-xs mb-3">
+              <BookmarkIcon className="size-5 text-muted-foreground" />
+            </div>
+            <h2 className="text-base font-medium mb-1">Nothing saved yet</h2>
+            <p className="text-sm text-pretty text-muted-foreground max-w-64">
+              Capture the page you are on, and it will show up here ready to
+              search.
+            </p>
+            <Button
+              variant="link"
+              size="sm"
+              onClick={() =>
+                navigate("/library/topics/new", { viewTransition: true })
+              }
+              className="mt-2"
+            >
+              Or create a topic first
+            </Button>
+          </section>
+        ) : (
+          recentEntries.length > 0 && (
+            <section className="mt-4 shrink-0">
+              <Separator className="mx-auto max-w-[calc(100%-8px)] shrink-0" />
+              <h2 className="text-xs font-medium text-muted-foreground text-left ml-2.5 mt-3 mb-1.75 select-none">
+                Recent entries
+              </h2>
+              <div className="flex flex-col gap-1.75">
+                {recentEntries.map((entry) => (
+                  <Button
+                    key={entry.id}
+                    variant="secondary"
+                    className="group w-full flex items-center h-9.5 gap-2 px-3 bg-card hover:bg-card-hover not-dark:shadow-xs rounded-xl text-left transition-colors"
+                    onClick={() =>
+                      navigate(`/library/entries/${entry.id}`, {
+                        viewTransition: true,
+                      })
+                    }
+                  >
+                    {entry.faviconUrl ? (
+                      <img
+                        src={entry.faviconUrl}
+                        alt=""
+                        aria-hidden
+                        draggable="false"
+                        className="size-3.5 shrink-0 rounded-xs"
+                        onError={(e) => {
+                          e.currentTarget.style.visibility = "hidden";
+                        }}
+                      />
+                    ) : (
+                      <GlobeIcon className="size-3.5 text-muted-foreground shrink-0" />
+                    )}
+                    <span className="text-sm truncate flex-1">
+                      {entry.title}
+                    </span>
+                    <ChevronRightIcon className="transition-opacity size-3.5 text-muted-foreground shrink-0 opacity-70 group-hover:opacity-100" />
+                  </Button>
+                ))}
+              </div>
+            </section>
+          )
+        )}
         {/*TODO: Potentially add some entries, like pinned or recently edited/viewed */}
         {FEATURES.AI && (
           <>

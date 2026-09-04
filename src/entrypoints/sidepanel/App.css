@@ -27,6 +27,18 @@ html {
 /*Account for TopBar height. was: 60px*/
 /*Account for BottomNavigation height. was: 60px (opt out on a page level)*/
 
+/*
+ * Layout when the top bar is hidden (FEATURES.SIDE_PANEL_TOP_BAR = false).
+ * The class is set in main.tsx before the first paint.
+ */
+html.lc-no-top-bar {
+  scroll-padding-top: 44px; /*102px minus the 58px top bar*/
+}
+
+html.lc-no-top-bar .lc-page-container {
+  margin-top: 0; /*the container's own 12px padding is enough*/
+}
+
 #lc-body {
   margin-right: 0 !important;
   /*Prevents layout shift when editing with editor*/

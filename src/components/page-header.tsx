@@ -1,3 +1,4 @@
+import { FEATURES } from "@/constants/features";
 import styles from "./page-header.module.css";
 import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -273,7 +274,15 @@ export function PageHeader({
           {compactStripContent}
         </WindowedCompactStrip>
       ) : (
-        <div className={cn(compactStripBase, "top-14.75 left-0 w-full")}>
+        <div
+          className={cn(
+            compactStripBase,
+            // Sits below the top bar when there is one, otherwise at the very
+            // top of the viewport. See FEATURES.SIDE_PANEL_TOP_BAR.
+            FEATURES.SIDE_PANEL_TOP_BAR ? "top-14.75" : "top-0",
+            "left-0 w-full",
+          )}
+        >
           {compactStripContent}
         </div>
       )}

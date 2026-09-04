@@ -11,6 +11,16 @@
   min-height: calc(100dvh - 142px);
 }
 
+/* Without the top bar the container has no top margin, so 58px of the offset
+   above no longer applies. See FEATURES.SIDE_PANEL_TOP_BAR. */
+:global(html.lc-no-top-bar #lc-home-page .lc-page-container-inner) {
+  min-height: calc(100dvh - 84px);
+}
+
+:global(html.lc-no-top-bar #lc-home-page) {
+  scroll-padding-top: 14px;
+}
+
 /* Textarea height mirrors the original --topics-h logic in pure CSS.
    The base offset (560px) accounts for all fixed overhead above the textarea when
    3 topics are shown. Each breakpoint adds 45px (one topic row + gap) to the offset

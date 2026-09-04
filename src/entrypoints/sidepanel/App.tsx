@@ -16,6 +16,7 @@ import { AppMessagingProvider } from "@/providers/app-messaging";
 import { ScrollObserverProvider } from "@/providers/scroll-observer";
 import { ThemeProvider } from "@/providers/theme-provider";
 import RxDBProvider from "@/providers/rxdb-provider";
+import { FEATURES } from "@/constants/features";
 import { TopBar } from "@/components/top-bar";
 import { BottomNavigation } from "@/components/bottom-navigation";
 import { Toaster } from "@/components/ui/sonner";
@@ -75,7 +76,7 @@ function RootLayout() {
       <RouterListener />
       {disableScrollRestoration || <ScrollRestoration />}
       <ScrollObserverProvider>
-        <TopBar />
+        {FEATURES.SIDE_PANEL_TOP_BAR && <TopBar />}
         <Outlet />
         <BottomNavigation />
       </ScrollObserverProvider>

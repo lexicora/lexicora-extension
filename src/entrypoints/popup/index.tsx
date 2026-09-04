@@ -13,18 +13,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { sendMessage } from "@/lib/messaging";
-import { ArrowUpRightIcon, PanelRightIcon, UserIcon } from "lucide-react";
+import {
+  ArrowUpRightIcon,
+  GlobeIcon,
+  PanelRightIcon,
+  UserIcon,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { FEATURES } from "@/constants/features";
 import { MSG } from "@/constants/messaging";
 import { useTabSupport } from "@/hooks/use-tab-support";
 import { cn } from "@/lib/utils";
-import { useScrollPos } from "@/providers/scroll-observer";
 import type { TabData } from "@/types/tab-data.types";
 
 function Popup() {
-  const { isAtTop } = useScrollPos();
   const { isSupported, activeTab } = useTabSupport();
   const [promptText, setPromptText] = useState("");
 
@@ -85,228 +88,181 @@ function Popup() {
     }, 100);
   }, []);
 
+  const pageTitle = activeTab?.title?.trim();
+  const pageHost = (() => {
+    if (!activeTab?.url) return null;
+    try {
+      return new URL(activeTab.url).hostname.replace(/^www\./, "");
+    } catch {
+      return null;
+    }
+  })();
+
   return (
-    <div className="w-85 overflow-auto h-full pt-20 pb-15 px-3 select-none">
-      <header>
-        <nav
-          className={cn(
-            "fixed top-0 left-0 w-full p-2.75 z-10 border-b bg-background/80 backdrop-blur-lg transition-shadow duration-150 shadow-none",
-            { "shadow-md/5 dark:shadow-md/20": !isAtTop },
+    <div className="w-85 select-none px-3 pt-3 pb-3.5">
+      <header className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          {FEATURES.ACCOUNTS && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="size-8 shrink-0 rounded-md flex items-center">
+                  <div className="flex items-center justify-center size-full rounded-full bg-secondary/80 ring ring-inset ring-black/20 dark:ring-white/20">
+                    <UserIcon className="size-4.5" />
+                  </div>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="select-none">
+                <DropdownMenuLabel className="py-1">
+                  My Account
+                </DropdownMenuLabel>
+                <DropdownMenuItem className="py-1">Profile</DropdownMenuItem>
+                <DropdownMenuItem className="py-1">Settings</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="py-1">Support</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="py-1">Sign out</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
-        >
-          <div className="flex gap-0 items-center justify-between w-full">
-            {/* Kept as a spacer so the logo stays centered when accounts are off. */}
-            <div className="flex justify-start flex-1">
-              {FEATURES.ACCOUNTS && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <div className="ml-0.5 size-8 rounded-md flex items-center">
-                      <div className="flex items-center justify-center size-full rounded-full bg-secondary/80 ring ring-inset ring-black/20 dark:ring-white/20">
-                        <UserIcon className="size-4.5" />
-                        {/* TODO: If logged in, show user's avatar or initials and also change the hue of the background to a color (user varying and users can choose)*/}
-                        {/* Maybe also just generate an image with an image generator */}
-                      </div>
-                    </div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="select-none">
-                    <DropdownMenuLabel className="py-1">
-                      My Account
-                    </DropdownMenuLabel>
-                    <DropdownMenuItem className="py-1">
-                      Profile
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="py-1">
-                      Settings
-                    </DropdownMenuItem>
-                    {/*TODO: Maybe add "My Plan", "Subscription" or something like that, if we have a paid offering in the future */}
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="py-1">
-                      Support
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="py-1">
-                      Sign out
-                    </DropdownMenuItem>
-                    {/*TODO: Make dynamic based on login status */}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
-            </div>
-            <div
-              className="shrink-0"
-              onClick={() => {
-                window.scrollTo({ top: 0 });
-              }}
-              title="Scroll to top"
-            >
-              {/*Maybe remove later and keep it blank*/}
-              <img
-                src={lexicoraLightThemeLogoNoBg}
-                className="h-8 lc-display-light rounded-[3px]"
-                alt="Lexicora logo"
-                draggable="false"
-              />
-              <img
-                src={lexicoraDarkThemeLogoNoBg}
-                className="h-8 lc-display-dark rounded-[3px]"
-                alt="Lexicora logo"
-                draggable="false"
-              />
-            </div>
-            <div className="flex justify-end flex-1">
-              <Button
-                onClick={() => openSidePanel(true)}
-                variant="ghost"
-                size="icon"
-                title="Open Side Panel"
-                // Maybe change title to "Open app (in side panel)", or similar. potentially leave out (in side panel).
-              >
-                <PanelRightIcon className="size-4.5" />
-              </Button>
-            </div>
-          </div>
-        </nav>
-        <section className="mt-1">
-          <span className="flex justify-center gap-3 items-baseline mb-3">
-            {/*Maybe add link to lexicora.com */}
-            <img
-              src={lexicoraLightThemeLogoNoBg}
-              className="h-6.5 lc-display-light rounded-xs"
-              alt="Lexicora logo"
-              draggable="false"
-            />
-            <img
-              src={lexicoraDarkThemeLogoNoBg}
-              className="h-6.5 lc-display-dark rounded-xs"
-              alt="Lexicora logo"
-              draggable="false"
-            />
-            {/*#00143d is the Lexicora color */}
-            <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground leading-0">
-              Lexicora
-            </h1>
+          <img
+            src={lexicoraLightThemeLogoNoBg}
+            className="h-6 lc-display-light rounded-xs shrink-0"
+            alt=""
+            aria-hidden
+            draggable="false"
+          />
+          <img
+            src={lexicoraDarkThemeLogoNoBg}
+            className="h-6 lc-display-dark rounded-xs shrink-0"
+            alt=""
+            aria-hidden
+            draggable="false"
+          />
+          <span className="text-lg font-bold text-[#00143d] dark:text-foreground truncate">
+            Lexicora
           </span>
-          <div className="flex justify-center mt-1">
-            <a
-              href="https://lexicora.com"
-              target="_blank"
-              className="text-sm text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 hover:text-lc-muted-foreground-hover"
-              title="https://lexicora.com"
-            >
-              Visit Lexicora.com{" "}
-              <ArrowUpRightIcon className="inline" size={16} />
-            </a>
-          </div>
-          {/*TODO: Maybe show indication (like in browsers bottom left of window), where this link leads */}
-        </section>
+        </div>
+        <Button
+          onClick={() => openSidePanel(true)}
+          variant="ghost"
+          size="icon"
+          title="Open Lexicora side panel"
+          className="shrink-0"
+        >
+          <PanelRightIcon className="size-4.5" />
+        </Button>
       </header>
+
       {FEATURES.AI && (
-        <main>
-          <section>
-            <hr className="mt-3 mx-2" />
-            <article>
-              <h2 className="text-lg font-medium mt-4 mb-1 text-[#00143d] dark:text-foreground">
-                Describe what you want AI to do
-              </h2>
-              <p className="text-sm text-pretty text-muted-foreground">
-                Optional — leave blank to capture the page as-is.
-              </p>
-            </article>
-          </section>
-          <section className="mt-5">
-            <Textarea
-              id="ai-prompt-textarea"
-              placeholder="Type your desired AI prompt here."
-              // Adjust default height to either 6 rows (min-h-40.5) or 5 rows (min-h-34.5)
-              className="field-sizing-content resize-y /*min-h-40.5*/ min-h-34.5 /*max-h-300*/ ml-px w-[calc(100%-2px)] scrollbar-thin
-              transition-colors duration-150 focus-visible:ring-0 /*not-dark:border-gray-300*/ /*shadow-none*/"
-              maxLength={1000}
-              disabled={!isSupported}
-              title={
-                isSupported
-                  ? ""
-                  : "You are currently on a unsupported page for capturing."
+        <main className="mt-3">
+          <h2 className="text-sm font-medium mb-1 text-[#00143d] dark:text-foreground">
+            Describe what you want AI to do
+          </h2>
+          <Textarea
+            id="ai-prompt-textarea"
+            placeholder="Type your desired AI prompt here."
+            className="field-sizing-content resize-y min-h-24 w-full scrollbar-thin transition-colors duration-150 focus-visible:ring-0"
+            maxLength={1000}
+            disabled={!isSupported}
+            value={promptText}
+            onChange={(e) => setPromptText(e.target.value)}
+            onKeyDown={(e) => {
+              // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
+              if (e.ctrlKey && e.key === "Enter") {
+                e.preventDefault();
+                if (promptText.trim() === "") return;
+                // TODO: Submit the AI capture request once an AI backend exists (#52).
               }
-              value={promptText}
-              onChange={(e) => {
-                setPromptText(e.target.value);
-                // Makes sure shadow disappears
-              }} // 4. Update state on every keystroke
-              onKeyDown={(e) => {
-                // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
-                if (e.ctrlKey && e.key === "Enter") {
-                  e.preventDefault();
-                  if (promptText.trim() === "") return;
-                  // TODO: Submit the AI capture request once an AI backend exists (#52).
-                }
-              }}
-            />
-          </section>
+            }}
+          />
         </main>
       )}
-      <footer>
-        <section className="fixed bottom-0 left-0 h-15 w-full p-3 pt-2.75 z-10 lc-bottom-bar-styled-bg">
-          {/*MAYBE: Remove the animation disabling motion-reduce, because it is a very noticeable and maybe not optimal for accessibility*/}
-          <div className="flex gap-0 items-center justify-between w-full">
-            {FEATURES.AI ? (
-              <>
-                <div
-                  className={`flex justify-start transition-all motion-reduce:transition-none duration-300 ease-in-out /*overflow-visible*/ ${
-                    promptText.trimEnd() === ""
-                      ? "flex-1 max-w-[50%] mr-3"
-                      : "flex-0 max-w-0 opacity-0 mr-0 blur-[6px]"
-                  }`}
-                >
-                  <Button
-                    variant="secondary"
-                    title={
-                      isSupported
-                        ? "Capture page"
-                        : "You are currently on a unsupported page for capturing."
-                    }
-                    className={cn(
-                      "w-full hover:bg-[color-mix(in_oklab,var(--secondary),black_7%)] dark:hover:bg-[color-mix(in_oklab,var(--secondary)80%,var(--background))] overflow-hidden",
-                      "disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-secondary!",
-                    )}
-                    disabled={promptText.trimEnd() !== "" || !isSupported}
-                    onClick={capturePage}
-                  >
-                    Capture
-                  </Button>
-                </div>
-                <div className="flex justify-end flex-1">
-                  <Button
-                    title={
-                      isSupported
-                        ? "Capture page with AI"
-                        : "You are currently on a unsupported page for capturing."
-                    }
-                    className="w-full hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary"
-                    disabled={!isSupported}
-                  >
-                    Capture with AI
-                  </Button>
-                </div>
-              </>
-            ) : (
-              /* Without AI there is a single action, so it takes the full bar. */
-              <div className="flex justify-start flex-1">
-                <Button
-                  title={
-                    isSupported
-                      ? "Capture page"
-                      : "You are currently on a unsupported page for capturing."
-                  }
-                  className="w-full hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary"
-                  disabled={!isSupported}
-                  onClick={capturePage}
-                >
-                  Capture page
-                </Button>
-              </div>
-            )}
+
+      {/* What Capture will save, so the action is never a guess. */}
+      <section
+        className={cn(
+          "mt-3 flex items-center gap-2.5 rounded-xl bg-card not-dark:shadow-xs px-3 py-2.5 text-left",
+          !isSupported && "opacity-70",
+        )}
+      >
+        {isSupported && activeTab?.favIconUrl ? (
+          <img
+            src={activeTab.favIconUrl}
+            alt=""
+            aria-hidden
+            draggable="false"
+            className="size-4 shrink-0 rounded-xs"
+            onError={(e) => {
+              e.currentTarget.style.visibility = "hidden";
+            }}
+          />
+        ) : (
+          <GlobeIcon className="size-4 shrink-0 text-muted-foreground" />
+        )}
+        <div className="min-w-0 flex-1">
+          <p className="text-sm truncate">
+            {isSupported ? (pageTitle ?? "Untitled page") : "Can't capture this page"}
+          </p>
+          <p className="text-xs text-muted-foreground truncate">
+            {isSupported
+              ? (pageHost ?? "Unknown site")
+              : "Browser and extension pages are not supported"}
+          </p>
+        </div>
+      </section>
+
+      <footer className="mt-3">
+        {FEATURES.AI ? (
+          <div className="flex items-center gap-3">
+            <Button
+              variant="secondary"
+              title={
+                isSupported
+                  ? "Capture page"
+                  : "You are currently on a unsupported page for capturing."
+              }
+              className="flex-1 disabled:pointer-events-auto disabled:cursor-not-allowed"
+              disabled={promptText.trimEnd() !== "" || !isSupported}
+              onClick={capturePage}
+            >
+              Capture
+            </Button>
+            <Button
+              title={
+                isSupported
+                  ? "Capture page with AI"
+                  : "You are currently on a unsupported page for capturing."
+              }
+              className="flex-1 disabled:pointer-events-auto disabled:cursor-not-allowed"
+              disabled={!isSupported}
+            >
+              Capture with AI
+            </Button>
           </div>
-        </section>
+        ) : (
+          <Button
+            title={
+              isSupported
+                ? "Capture page"
+                : "You are currently on a unsupported page for capturing."
+            }
+            className="w-full hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary"
+            disabled={!isSupported}
+            onClick={capturePage}
+          >
+            Capture page
+          </Button>
+        )}
+        <div className="flex justify-center mt-2.5">
+          <a
+            href="https://lexicora.com"
+            target="_blank"
+            className="text-xs text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 hover:text-lc-muted-foreground-hover"
+            title="https://lexicora.com"
+          >
+            Visit Lexicora.com <ArrowUpRightIcon className="inline" size={13} />
+          </a>
+        </div>
       </footer>
     </div>
   );
