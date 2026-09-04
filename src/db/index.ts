@@ -1,6 +1,7 @@
 import { createRxDatabase, addRxPlugin } from "rxdb";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { RxDBCleanupPlugin } from "rxdb/plugins/cleanup";
+import { RxDBLeaderElectionPlugin } from "rxdb/plugins/leader-election";
 //import { RxDBQueryBuilderPlugin } from "rxdb/plugins/query-builder";
 import { disableWarnings, RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
 
@@ -14,13 +15,21 @@ import { buildEntrySearchBlob, buildTopicSearchBlob } from "./search-blob";
 const isDev = import.meta.env.DEV;
 
 /**
- * Required so removed documents are physically purged from IndexedDB instead of
- * lingering as soft-deleted (`_deleted: true`) rows. Also what makes the
- * "Clear all data" setting a real deletion — see `collection.cleanup(0)` there.
+ * Cleanup: required so removed documents are physically purged from IndexedDB
+ * instead of lingering as soft-deleted (`_deleted: true`) rows. Also what makes
+ * the "Clear all data" setting a real deletion — see `collection.cleanup(0)`.
  *
- * Must be registered before any database is created.
+ * Leader election: the cleanup plugin starts a background cleanup loop per
+ * collection, and that loop awaits `database.waitForLeadership()` whenever the
+ * database is multi-instance (it is — the side-panel and the window can both be
+ * open at once). Without this plugin that call throws "You are using a function
+ * which must be overwritten by a plugin". Electing a leader also keeps the loop
+ * from running redundantly in every open context.
+ *
+ * Both must be registered before any database is created.
  */
 addRxPlugin(RxDBCleanupPlugin);
+addRxPlugin(RxDBLeaderElectionPlugin);
 
 // TODO: For testing always add same test data on db init.
 // Add plugins

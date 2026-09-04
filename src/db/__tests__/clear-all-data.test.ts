@@ -1,5 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { createRxDatabase, addRxPlugin, type RxDatabase } from "rxdb";
+import {
+  createRxDatabase,
+  addRxPlugin,
+  type RxCollection,
+  type RxDatabase,
+} from "rxdb";
 import { getRxStorageMemory } from "rxdb/plugins/storage-memory";
 import { RxDBCleanupPlugin } from "rxdb/plugins/cleanup";
 
@@ -20,14 +25,23 @@ addRxPlugin(RxDBCleanupPlugin);
 
 const NIL_UUID = "00000000-0000-0000-0000-000000000000";
 
-let db: RxDatabase;
+type TestCollections = {
+  topics: RxCollection;
+  entries: RxCollection;
+  blocks: RxCollection;
+};
+
+let db: RxDatabase<TestCollections>;
 let dbCount = 0;
 
 beforeEach(async () => {
-  db = await createRxDatabase({
+  db = await createRxDatabase<TestCollections>({
     // Unique per test so instances never collide.
     name: `cleartest${dbCount++}`,
     storage: getRxStorageMemory(),
+    //* Single-instance so the cleanup plugin's background loop never waits for
+    //* leadership. The real database is multi-instance and registers the leader
+    //* election plugin for exactly that reason — see src/db/index.ts.
     multiInstance: false,
     eventReduce: true,
   });
@@ -59,13 +73,12 @@ function makeTopic(id: string) {
 }
 
 /** Reads straight from the storage instance, including soft-deleted documents. */
-async function rawDocCount(collectionName: string, ids: string[]) {
-  const docs = await db.collections[collectionName].storageInstance
-    .findDocumentsById(ids, true)
-    .then((result) =>
-      Array.isArray(result) ? result : Object.values(result ?? {}),
-    );
-  return docs.length;
+async function rawDocCount(ids: string[]) {
+  const result = await db.collections.topics.storageInstance.findDocumentsById(
+    ids,
+    true,
+  );
+  return Array.isArray(result) ? result.length : Object.keys(result).length;
 }
 
 describe("clear all data", () => {
@@ -84,7 +97,7 @@ describe("clear all data", () => {
 
     // Still physically present — this is the behaviour that made the original
     // implementation feel broken.
-    expect(await rawDocCount("topics", ["a"])).toBe(1);
+    expect(await rawDocCount(["a"])).toBe(1);
   });
 
   it("physically purges documents once cleanup(0) runs", async () => {
@@ -92,7 +105,7 @@ describe("clear all data", () => {
     await db.collections.topics.find().remove();
     await db.collections.topics.cleanup(0);
 
-    expect(await rawDocCount("topics", ["a", "b"])).toBe(0);
+    expect(await rawDocCount(["a", "b"])).toBe(0);
     expect(await db.collections.topics.find().exec()).toHaveLength(0);
   });
 
