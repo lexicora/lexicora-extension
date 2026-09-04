@@ -1,26 +1,13 @@
 import { cn } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { AccountMenu } from "@/components/account-menu";
 import { Button } from "@/components/ui/button";
-import {
-  ArrowUpRightIcon,
-  ExternalLinkIcon,
-  SquareArrowOutUpRightIcon,
-  UserIcon,
-} from "lucide-react";
+import { SquareArrowOutUpRightIcon } from "lucide-react";
 
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
 
 import { FEATURES } from "@/constants/features";
 import { useScrollPos } from "@/providers/scroll-observer";
-import { Arrow } from "@radix-ui/react-dropdown-menu";
 
 export function TopBar() {
   const { isAtTop } = useScrollPos();
@@ -52,32 +39,7 @@ export function TopBar() {
       <div className="flex gap-0 items-center justify-between w-full max-w-(--lc-content-max-width) mx-auto inset-x-0">
         {/* Kept as a spacer so the logo stays centered when accounts are off. */}
         <div className="flex justify-start flex-1">
-          {FEATURES.ACCOUNTS && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div className="ml-0.5 size-8 rounded-md flex items-center">
-                  <div className="flex items-center justify-center size-full rounded-full bg-secondary/50 dark:bg-secondary/75 ring ring-inset ring-black/20 dark:ring-white/20">
-                    <UserIcon className="size-4.5" />
-                    {/* TODO: If logged in, show user's avatar or initials and also change the hue of the background to a color (user varying and users can choose)*/}
-                    {/* Maybe also just generate an image with an image generator */}
-                  </div>
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="select-none">
-                <DropdownMenuLabel className="py-1">
-                  My Account
-                </DropdownMenuLabel>
-                <DropdownMenuItem className="py-1">Profile</DropdownMenuItem>
-                <DropdownMenuItem className="py-1">Settings</DropdownMenuItem>
-                {/*TODO: Maybe add "My Plan", "Subscription" or something like that, if we have a paid offering in the future */}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="py-1">Support</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="py-1">Sign out</DropdownMenuItem>
-                {/*TODO: Make dynamic based on login status */}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+          <AccountMenu />
         </div>
         <div
           className={cn("shrink-0 select-none", {

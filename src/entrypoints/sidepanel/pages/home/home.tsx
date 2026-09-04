@@ -1,15 +1,12 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import styles from "./home.module.css";
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
 import { PageContainer } from "@/components/page-container";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowUpRightIcon,
-  BookmarkIcon,
   ChevronRightIcon,
-  GlobeIcon,
   HistoryIcon,
   PinIcon,
   StarIcon,
@@ -21,8 +18,10 @@ import type { TabData } from "@/types/tab-data.types";
 import { sendMessage } from "@/lib/messaging";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
 import { useHomeData } from "./__hooks__/use-home-data";
+import { AiPromptSection } from "@/components/home/ai-prompt-section";
+import { LibraryEmptyState } from "@/components/home/library-empty-state";
+import { RecentEntries } from "@/components/home/recent-entries";
 
 function formatFavoriteCount(count: number): string {
   if (count < 1000) return String(count);
@@ -37,7 +36,6 @@ function HomePage() {
   const navigate = useNavigate();
   const { isSupported, activeTab } = useTabSupport();
   const [promptText, setPromptText] = useState("");
-  const aiPromptTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   const {
     favoriteTopicsCount,
@@ -47,6 +45,17 @@ function HomePage() {
     recentEntries,
     isLibraryEmpty,
   } = useHomeData();
+
+  /**
+   * Single composition point for the flexible middle of the page. The three
+   * options are alternatives for the same space and must never render together.
+   * Turning FEATURES.AI back on restores the original prompt layout.
+   */
+  const mainContent = FEATURES.AI
+    ? "ai-prompt"
+    : isLibraryEmpty
+      ? "empty-state"
+      : "recent-entries";
 
   const capturePage = async () => {
     if (!isSupported) return;
@@ -169,7 +178,8 @@ function HomePage() {
                 <ChevronRightIcon className="transition-opacity size-3.5 text-muted-foreground shrink-0 opacity-70 group-hover:opacity-100" />
               </Button>
             ))}
-            {!isLibraryEmpty && combinedTopics.length < maxTopicsToShow && (
+            {mainContent !== "empty-state" &&
+              combinedTopics.length < maxTopicsToShow && (
               <Button
                 variant="link"
                 size="sm"
@@ -184,116 +194,16 @@ function HomePage() {
           </div>
         </section>
 
-        {isLibraryEmpty ? (
-          <section className="flex-1 flex flex-col items-center justify-center text-center px-4 pb-6">
-            <div className="flex items-center justify-center size-11 rounded-full bg-card not-dark:shadow-xs mb-3">
-              <BookmarkIcon className="size-5 text-muted-foreground" />
-            </div>
-            <h2 className="text-base font-medium mb-1">Nothing saved yet</h2>
-            <p className="text-sm text-pretty text-muted-foreground max-w-64">
-              Capture the page you are on, and it will show up here ready to
-              search.
-            </p>
-            <Button
-              variant="link"
-              size="sm"
-              onClick={() =>
-                navigate("/library/topics/new", { viewTransition: true })
-              }
-              className="mt-2"
-            >
-              Or create a topic first
-            </Button>
-          </section>
-        ) : (
-          recentEntries.length > 0 && (
-            <section className="mt-4 shrink-0">
-              <Separator className="mx-auto max-w-[calc(100%-8px)] shrink-0" />
-              <h2 className="text-xs font-medium text-muted-foreground text-left ml-2.5 mt-3 mb-1.75 select-none">
-                Recent entries
-              </h2>
-              <div className="flex flex-col gap-1.75">
-                {recentEntries.map((entry) => (
-                  <Button
-                    key={entry.id}
-                    variant="secondary"
-                    className="group w-full flex items-center h-9.5 gap-2 px-3 bg-card hover:bg-card-hover not-dark:shadow-xs rounded-xl text-left transition-colors"
-                    onClick={() =>
-                      navigate(`/library/entries/${entry.id}`, {
-                        viewTransition: true,
-                      })
-                    }
-                  >
-                    {entry.faviconUrl ? (
-                      <img
-                        src={entry.faviconUrl}
-                        alt=""
-                        aria-hidden
-                        draggable="false"
-                        className="size-3.5 shrink-0 rounded-xs"
-                        onError={(e) => {
-                          e.currentTarget.style.visibility = "hidden";
-                        }}
-                      />
-                    ) : (
-                      <GlobeIcon className="size-3.5 text-muted-foreground shrink-0" />
-                    )}
-                    <span className="text-sm truncate flex-1">
-                      {entry.title}
-                    </span>
-                    <ChevronRightIcon className="transition-opacity size-3.5 text-muted-foreground shrink-0 opacity-70 group-hover:opacity-100" />
-                  </Button>
-                ))}
-              </div>
-            </section>
-          )
+        {mainContent === "ai-prompt" && (
+          <AiPromptSection
+            isSupported={isSupported}
+            promptText={promptText}
+            onPromptTextChange={setPromptText}
+          />
         )}
-        {/*TODO: Potentially add some entries, like pinned or recently edited/viewed */}
-        {FEATURES.AI && (
-          <>
-            <Separator className="mt-4 mx-auto max-w-[calc(100%-8px)] shrink-0 [@media(min-height:950px)]:hidden" />
-            <section className="flex-1 flex flex-col">
-              <div className="flex-1 flex flex-col items-center justify-end text-center py-5">
-                <h2 className="text-lg font-medium mb-1 text-[#00143d] dark:text-foreground">
-                  Describe what you want AI to do
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  Optional — leave blank to capture the page as-is.
-                </p>
-              </div>
-              <div className="pb-12">
-                <Textarea
-                  id="ai-prompt-textarea"
-                  ref={aiPromptTextareaRef}
-                  placeholder="Type your desired AI prompt here."
-                  className="text-base! max-h-75 field-sizing-content resize-y w-[calc(100%-2px)] mx-auto scrollbar-thin transition-colors duration-150 focus-visible:ring-0"
-                  maxLength={1000}
-                  disabled={!isSupported}
-                  title={
-                    isSupported
-                      ? ""
-                      : "You are currently on a unsupported page for capturing."
-                  }
-                  value={promptText}
-                  onChange={(e) => {
-                    setPromptText(e.target.value);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Escape") {
-                      e.preventDefault();
-                      aiPromptTextareaRef.current?.blur();
-                    }
-                    // NOTE (feature parity discrepancy): Firefox for some reason does not seem to support this
-                    if (e.ctrlKey && e.key === "Enter") {
-                      e.preventDefault();
-                      if (promptText.trim() === "") return;
-                      // TODO: Submit the AI capture request once an AI backend exists (#52).
-                    }
-                  }}
-                />
-              </div>
-            </section>
-          </>
+        {mainContent === "empty-state" && <LibraryEmptyState />}
+        {mainContent === "recent-entries" && (
+          <RecentEntries entries={recentEntries} />
         )}
       </main>
       <footer className={styles.bottomFooter}>

@@ -13,6 +13,38 @@
  *
  * Properties are typed as `boolean` (not `as const` literals) so that gated code
  * stays type-checked and free of "unreachable code" noise while the flag is off.
+ *
+ * ## How these are structured
+ *
+ * A flag never scatters conditionals through a surface. Each surface has one
+ * composition point that picks between *complete* layouts, so both branches are
+ * designs in their own right and neither is leftovers of the other:
+ *
+ * - `entrypoints/popup/index.tsx` → `PopupAiLayout` | `PopupCompactLayout`
+ * - `sidepanel/pages/home/home.tsx` → its `mainContent` decision, choosing
+ *   `AiPromptSection` | `LibraryEmptyState` | `RecentEntries`
+ * - `components/account-menu.tsx` → renders nothing itself when `ACCOUNTS` is
+ *   off, so call sites never repeat the check
+ *
+ * ## Flipping a flag
+ *
+ * Nothing renders the "on" branches today, so they cannot be assumed to still
+ * be correct. `bun run compile` catches type and import breakage but not layout
+ * breakage. After flipping one, re-check its surfaces by hand:
+ *
+ * | Flag                | Re-check                                              |
+ * |---------------------|-------------------------------------------------------|
+ * | `AI`                | popup; side-panel home main + capture footer; entry    |
+ * |                     | create and edit bottom prompt bars; Settings AI item,  |
+ * |                     | which needs a `/settings/ai` route registering first   |
+ * | `ACCOUNTS`          | top bar; popup header; Settings account item, which    |
+ * |                     | needs a `/settings/account` route registering first    |
+ * | `SIDE_PANEL_TOP_BAR`| every side-panel page's top offset, and PageHeader's   |
+ * |                     | compact strip while scrolling                          |
+ * | `WINDOWED_APP`      | top-bar button; the whole `window/` entrypoint         |
+ *
+ * Both settings entries link to routes that do not exist yet — turning `AI` or
+ * `ACCOUNTS` on without adding them lands the user on the not-found page.
  */
 export const FEATURES = {
   /**
