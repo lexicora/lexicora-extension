@@ -22,6 +22,7 @@ promises an unbuilt feature is visible to users.
 | Item | Notes |
 |---|---|
 | **Bookmark-only capture** | Capture a page from its metadata alone — title, URL, favicon, site name, description — with no page content and no editor blocks. Essentially a "super bookmark": faster than a full capture, useful for pages worth keeping but not worth reading into the library. Should sit alongside the existing capture action rather than replacing it. |
+| **Export and rich copy** ([#156](https://github.com/lexicora/lexicora-extension/issues/156)) | Get data back out of Lexicora and into a long-term knowledge base (Obsidian, Tolaria, Notion). Two halves: a **download** action producing Markdown, and a **copy** action that puts rich content on the clipboard — HTML for targets that render formatting, with Markdown as the `text/plain` fallback, so a single copy pastes correctly into both a rich editor and a plain-text one. Should be available from entry and topic detail pages, and worth exposing for multi-select or whole-library export too. BlockNote already provides both conversions (`editor.blocksToMarkdownLossy()` / `blocksToHTMLLossy()`), so the work is mostly clipboard plumbing, file naming and where the actions live. |
 | **Empty and sparse UI states** | The popup, side-panel home and top-bar have visible gaps now that the AI surfaces are gated. Needs a layout pass. |
 | **ESLint** | The config currently fails to run: `typescript-eslint` does not support TypeScript 7. No `lint` script exists either. |
 | **Release prep** | Version bump, README scope statement, privacy policy, store listing copy and permission justifications. Store submission is deferred until the product is judged ready. |
@@ -29,9 +30,9 @@ promises an unbuilt feature is visible to users.
 ### Explicitly out of scope for v1.0
 
 Supabase sync and the web app (#68, #69), all AI features (#52, #190),
-onboarding (#44), hot-keys (#145), Markdown export (#156), the editor backlog
-(#8, #56, #60, #61, #62), filter popover (#144), heading map (#164), windowed
-polish (#179, #180, #182, #184), and the parking lot at the bottom of this file.
+onboarding (#44), hot-keys (#145), the editor backlog (#8, #56, #60, #61, #62),
+filter popover (#144), heading map (#164), windowed polish (#179, #180, #182,
+#184), and the parking lot at the bottom of this file.
 
 ---
 
