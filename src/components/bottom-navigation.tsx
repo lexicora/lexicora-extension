@@ -68,6 +68,7 @@ export function BottomNavigation() {
                 "flex-1 mx-3 flex items-center justify-center h-full",
                 isFirst && "ml-3",
                 isLast && "mr-3",
+                // was: ml-2.5 and mr-2.5 respectively
               )}
             >
               <NavLink

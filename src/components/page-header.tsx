@@ -248,6 +248,7 @@ export function PageHeader({
         isWindowed && "lc-strip-offset",
         isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
       )}
+      // Only enabled because FEATURES.SIDE_PANEL_TOP_BAR is disabled, otherwise the top bar is always present and this is redundant.
       onClick={() => window.scrollTo({ top: 0 })}
       title="Scroll to top" // Maybe remove title for this
     >
