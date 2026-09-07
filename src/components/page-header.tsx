@@ -210,7 +210,12 @@ export function PageHeader({
           isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
         )}
       >
-        {title}
+        <span
+          onClick={() => window.scrollTo({ top: 0 })}
+          title="Scroll to top" // Maybe remove title for this
+        >
+          {title}
+        </span>
       </span>
       {rightActionButton && (
         <Button
@@ -243,6 +248,8 @@ export function PageHeader({
         isWindowed && "lc-strip-offset",
         isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
       )}
+      onClick={() => window.scrollTo({ top: 0 })}
+      title="Scroll to top" // Maybe remove title for this
     >
       {title}
     </span>

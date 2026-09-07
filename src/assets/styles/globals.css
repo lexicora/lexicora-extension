@@ -72,6 +72,7 @@
 
   /* Colors: */
   --lc-text-color-monospace: oklch(50.153% 0.19988 28.587);
+  --lc-muted-foreground: oklch(0.48 0.027 264.364);
   --lc-muted-foreground-hover: oklch(0.34 0.027 263);
   --lc-light-foreground-color: oklch(0.985 0.002 247.839);
   --lc-logo-foreground: #00143d; /*Similar to tw gray 900 or 950, maybe change hsl or oklch*/
@@ -124,6 +125,7 @@
   /*Lexicora: styles / variables /colors */
   /* Colors: */
   --lc-text-color-monospace: oklch(65.34% 0.183 23.68);
+  --lc-muted-foreground: oklch(0.77 0.022 261.325);
   --lc-muted-foreground-hover: oklch(0.84 0.015 255);
   --lc-logo-foreground: #ffffff;
 }
@@ -173,6 +175,7 @@
   --font-lc-monospace: var(--lc-font-monospace);
   /*Maybe set --font-monospace instead*/
   --color-lc-text-monospace: var(--lc-text-color-monospace);
+  --color-lc-muted-foreground: var(--lc-muted-foreground);
   --color-lc-muted-foreground-hover: var(--lc-muted-foreground-hover);
   --color-lc-light-foreground: var(--lc-light-foreground-color);
   --color-lc-logo-foreground: var(--lc-logo-foreground);

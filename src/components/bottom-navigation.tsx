@@ -5,6 +5,7 @@ import { NAV_ITEMS } from "@/lib/nav-items";
 import { NavLink, useLocation, matchPath } from "react-router-dom";
 
 import { useScrollPos } from "@/providers/scroll-observer";
+import { FEATURES } from "@/constants/features";
 
 export function BottomNavigation() {
   const { pathname, search } = useLocation();
@@ -22,7 +23,7 @@ export function BottomNavigation() {
     matchPath({ path: pattern, end: true }, pathname),
   );
 
-  const noShadowPaths = ["/"];
+  const noShadowPaths = FEATURES.SIDE_PANEL_NEW_BOTTOM_NAV_STYLE ? ["/"] : [""];
 
   // Determine if the current path is in the noShadowPaths array
   const isNoShadowPath = noShadowPaths.includes(pathname);
@@ -34,7 +35,10 @@ export function BottomNavigation() {
       // Change px-2.75 to px-2.5 if four items are present
       className={cn(
         style.bottomNav,
-        "fixed bottom-0 w-full h-14.75 px-2.75 pr-[calc(var(--lc-scrollbar-offset)+1px)] z-100 select-none border-t bg-background/80 backdrop-blur-lg",
+        "fixed bottom-0 w-full h-14.75 px-2.75 pr-[calc(var(--lc-scrollbar-offset)+1px)] z-100 select-none",
+        FEATURES.SIDE_PANEL_NEW_BOTTOM_NAV_STYLE
+          ? style.styledBackground
+          : "border-t bg-background/80 backdrop-blur-lg",
         isHidden
           ? style.bottomNavHidden
           : isNoShadowPath
@@ -62,12 +66,16 @@ export function BottomNavigation() {
               key={item.path}
               className={cn(
                 "flex-1 mx-3 flex items-center justify-center h-full",
-                isFirst && "ml-2.5",
-                isLast && "mr-2.5",
+                isFirst && "ml-3",
+                isLast && "mr-3",
               )}
             >
               <NavLink
-                to={isLibrary && pathname === "/library" ? `/library${search}` : item.path}
+                to={
+                  isLibrary && pathname === "/library"
+                    ? `/library${search}`
+                    : item.path
+                }
                 end={!item.matchPrefix}
                 onClick={
                   isLibrary
@@ -103,7 +111,7 @@ export function BottomNavigation() {
                       className={`transition-all duration-200 will-change-transform ${
                         isActive
                           ? "scale-100"
-                          : "text-muted-foreground group-hover:scale-110 group-hover:text-lc-muted-foreground-hover"
+                          : "text-lc-muted-foreground group-hover:scale-110 group-hover:text-lc-muted-foreground-hover"
                       }`}
                     >
                       {iconNode}
@@ -114,6 +122,7 @@ export function BottomNavigation() {
             </div>
           );
         })}
+        {/* text-lc-muted-foreground was originally text-muted-foreground. changed due to improve readability in new style */}
         {/*Possible new tabs: Search page and favorites page (maybe replace settings tab with something else like favorites)*/}
       </div>
     </section>

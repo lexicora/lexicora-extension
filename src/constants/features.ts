@@ -76,6 +76,13 @@ export const FEATURES = {
   SIDE_PANEL_TOP_BAR: false,
 
   /**
+   * The new bottom navigation style, which is a single row of icons instead of
+   * a row of buttons with text. Off until the new design is fully implemented
+   * and tested.
+   */
+  SIDE_PANEL_NEW_BOTTOM_NAV_STYLE: true,
+
+  /**
    * The standalone windowed app (`window.html`). The entrypoint is functional
    * but unpolished — its home page is a placeholder and several window-specific
    * issues are open (#179, #180, #182, #184). Off until that work is finished;
