@@ -26,6 +26,7 @@ const LICENSES: { name: string; license: string }[] = [
   { name: "Tailwind CSS", license: "MIT" },
   { name: "Turndown", license: "MIT" },
   { name: "uuidv7", license: "MIT" },
+  { name: "Wix Madefor Text", license: "SIL Open Font License 1.1" },
   { name: "WXT", license: "MIT" },
   { name: "Zod", license: "MIT" },
 ];

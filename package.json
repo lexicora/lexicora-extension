@@ -1,6 +1,6 @@
 {
   "name": "lexicora-extension",
-  "description": "Extension for the Lexicara platform",
+  "description": "The Lexicora browser extension for capturing and organizing web content.",
   "private": true,
   "version": "0.0.0",
   "type": "module",

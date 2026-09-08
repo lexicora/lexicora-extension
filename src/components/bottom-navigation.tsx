@@ -23,7 +23,7 @@ export function BottomNavigation() {
     matchPath({ path: pattern, end: true }, pathname),
   );
 
-  const noShadowPaths = FEATURES.SIDE_PANEL_NEW_BOTTOM_NAV_STYLE ? ["/"] : [""];
+  const noShadowPaths = ["/"];
 
   // Determine if the current path is in the noShadowPaths array
   const isNoShadowPath = noShadowPaths.includes(pathname);
@@ -36,12 +36,14 @@ export function BottomNavigation() {
       className={cn(
         style.bottomNav,
         "fixed bottom-0 w-full h-14.75 px-2.75 pr-[calc(var(--lc-scrollbar-offset)+1px)] z-100 select-none",
-        FEATURES.SIDE_PANEL_NEW_BOTTOM_NAV_STYLE
-          ? style.styledBackground
-          : "border-t bg-background/80 backdrop-blur-lg",
+        !FEATURES.SIDE_PANEL_NEW_BOTTOM_NAV_STYLE || isNoShadowPath
+          ? "border-t bg-background/80 backdrop-blur-lg"
+          : isAtBottom
+            ? ""
+            : style.styledBackground,
         isHidden
           ? style.bottomNavHidden
-          : isNoShadowPath
+          : isNoShadowPath || FEATURES.SIDE_PANEL_NEW_BOTTOM_NAV_STYLE
             ? "shadow-none"
             : isAtBottom
               ? "shadow-none"

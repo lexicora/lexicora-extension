@@ -28,9 +28,10 @@ export default defineConfig({
   // }),
   manifest: ({ browser, manifestVersion, mode, command }) => {
     const manifestBase: UserManifest = {
-      name: "Lexicora Extension",
+      name: "Lexicora",
       description:
-        "A browser extension for the Lexicora platform and services.",
+        "The Lexicora browser extension for capturing and organizing web content.",
+      //"A browser extension for the Lexicora platform and services.",
       version: "0.1.0",
       permissions: [
         "storage",

@@ -1,6 +1,12 @@
 .styledBackground {
-    box-shadow: inset 0 44px 11px -11px
-        color-mix(in srgb, var(--background), transparent 50%);
+    /* box-shadow: inset 0 44px 11px -11px
+        color-mix(in srgb, var(--background), transparent 50%); */
+    /* Use this code below if Top-Bar is not present. */
+    --shadow-main: color-mix(in srgb, var(--background), transparent 50%);
+    --shadow-secondary: color-mix(in srgb, var(--background), transparent 55%);
+    box-shadow:
+      inset 0 44px 11px -11px var(--shadow-main),
+      inset 0 26px 22px -20px var(--shadow-secondary) !important;
 }
 
 /*:global(.dark) .styledBackground {
