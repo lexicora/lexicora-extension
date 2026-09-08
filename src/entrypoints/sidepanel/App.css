@@ -58,7 +58,7 @@ body[data-scroll-locked] {
   padding-right: calc(var(--lc-scrollbar-offset) + 2px);
   /*margin-inline: auto;*/
   margin-top: 58px; /*Account for TopBar height. was: 60px*/
-  margin-bottom: 58px; /*Account for BottomNavigation height. was: 60px (opt out on a page level)*/
+  margin-bottom: 45px; /*Account for BottomNavigation height. was: 58px, with new SIDE_PANEL_NEW_BOTTOM_NAV_STYLE it's less*/
   /*inset-inline: 0;*/
   -webkit-user-select: none;
   user-select: none;
