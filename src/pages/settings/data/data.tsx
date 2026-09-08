@@ -19,12 +19,21 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { SettingsItemSeparator } from "@/components/settings";
-import { DownloadIcon, Trash2Icon } from "lucide-react";
+import { BrushCleaningIcon, DownloadIcon, Trash2Icon } from "lucide-react";
 import { useRxCollection } from "rxdb/plugins/react";
 import { toast } from "sonner";
 
+/** Disables every action while one is running — the purge holds a write lock. */
+type BusyAction = "export" | "cleanup" | "clear";
+
 function DataSettingsPage() {
   const [clearOpen, setClearOpen] = useState(false);
+  const [busy, setBusy] = useState<BusyAction | null>(null);
+
+  const runExclusive = (action: BusyAction, work: () => Promise<void>) => {
+    setBusy(action);
+    return work().finally(() => setBusy(null));
+  };
 
   const topicsCollection = useRxCollection("topics");
   const entriesCollection = useRxCollection("entries");
@@ -66,10 +75,32 @@ function DataSettingsPage() {
       URL.revokeObjectURL(url);
     };
 
-    toast.promise(p(), {
+    toast.promise(runExclusive("export", p), {
       loading: "Exporting data...",
       success: "Data exported successfully",
       error: "Failed to export data",
+    });
+  };
+
+  const handleCleanup = () => {
+    if (!topicsCollection || !entriesCollection || !blocksCollection) return;
+
+    const p = async () => {
+      //* Purges rows already flagged `_deleted` from IndexedDB. Live documents
+      //* are never matched, so this cannot touch data the user can still see.
+      //* Batched here on purpose: each call costs about the same whether it
+      //* reclaims one row or a thousand, so it is worth doing rarely.
+      await Promise.all([
+        topicsCollection.cleanup(0),
+        entriesCollection.cleanup(0),
+        blocksCollection.cleanup(0),
+      ]);
+    };
+
+    toast.promise(runExclusive("cleanup", p), {
+      loading: "Cleaning up database...",
+      success: "Database cleaned up",
+      error: "Failed to clean up database",
     });
   };
 
@@ -93,7 +124,7 @@ function DataSettingsPage() {
       ]);
     };
 
-    toast.promise(p(), {
+    toast.promise(runExclusive("clear", p), {
       loading: "Clearing all data...",
       success: "All data cleared",
       error: "Failed to clear data",
@@ -109,10 +140,10 @@ function DataSettingsPage() {
             <Item
               variant="muted"
               size="sm"
-              className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl hover:cursor-pointer /*bg-clip-padding*/"
+              className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl hover:cursor-pointer disabled:opacity-55 disabled:pointer-events-none /*bg-clip-padding*/"
               asChild
             >
-              <button onClick={handleExport}>
+              <button onClick={handleExport} disabled={busy !== null}>
                 <ItemMedia variant="icon">
                   <DownloadIcon className="size-5 text-emerald-500" />
                 </ItemMedia>
@@ -132,10 +163,36 @@ function DataSettingsPage() {
             <Item
               variant="muted"
               size="sm"
-              className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl hover:cursor-pointer"
+              className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl hover:cursor-pointer disabled:opacity-55 disabled:pointer-events-none"
               asChild
             >
-              <button onClick={() => setClearOpen(true)}>
+              <button onClick={handleCleanup} disabled={busy !== null}>
+                <ItemMedia variant="icon">
+                  <BrushCleaningIcon className="size-5 text-sky-500" />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>
+                    {busy === "cleanup" ? "Cleaning up..." : "Clean Up Database"}
+                  </ItemTitle>
+                </ItemContent>
+              </button>
+            </Item>
+            <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
+              Reclaim space still held by items you have already deleted. Your
+              topics, entries, and notes are not affected.
+            </p>
+          </article>
+          <article>
+            <Item
+              variant="muted"
+              size="sm"
+              className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl hover:cursor-pointer disabled:opacity-55 disabled:pointer-events-none"
+              asChild
+            >
+              <button
+                onClick={() => setClearOpen(true)}
+                disabled={busy !== null}
+              >
                 <ItemMedia variant="icon">
                   <Trash2Icon className="size-5 text-red-500" />
                 </ItemMedia>

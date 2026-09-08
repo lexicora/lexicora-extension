@@ -23,47 +23,64 @@ promises an unbuilt feature is visible to users.
 |---|---|
 | **Bookmark-only capture** | Capture a page from its metadata alone — title, URL, favicon, site name, description — with no page content and no editor blocks. Essentially a "super bookmark": faster than a full capture, useful for pages worth keeping but not worth reading into the library. Should sit alongside the existing capture action rather than replacing it. |
 | **Export and rich copy** ([#156](https://github.com/lexicora/lexicora-extension/issues/156)) | Get data back out of Lexicora and into a long-term knowledge base (Obsidian, Tolaria, Notion). Two halves: a **download** action producing Markdown, and a **copy** action that puts rich content on the clipboard — HTML for targets that render formatting, with Markdown as the `text/plain` fallback, so a single copy pastes correctly into both a rich editor and a plain-text one. Should be available from entry and topic detail pages, and worth exposing for multi-select or whole-library export too. BlockNote already provides both conversions (`editor.blocksToMarkdownLossy()` / `blocksToHTMLLossy()`), so the work is mostly clipboard plumbing, file naming and where the actions live. |
-| **Vacuum / purge verification** | Soft-deleted rows must reliably become real deletions. The machinery exists — `RxDBCleanupPlugin` with `minimumDeletedTime: 1 day`, plus `cleanup(0)` on "Clear all data" — but three gaps remain, see [Vacuum notes](#vacuum-notes) below. |
 | **Empty and sparse UI states** | The popup, side-panel home and top-bar have visible gaps now that the AI surfaces are gated. Needs a layout pass. |
 | **ESLint** | The config currently fails to run: `typescript-eslint` does not support TypeScript 7. No `lint` script exists either. |
 | **Release prep** | Version bump, README scope statement, privacy policy, store listing copy and permission justifications. Store submission is deferred until the product is judged ready. |
 
 ### Vacuum notes
 
-What already runs: `RxDBCleanupPlugin` is registered in
-[`src/db/index.ts`](../src/db/index.ts) with `minimumDeletedTime` set to one day.
-Its background loop physically purges `_deleted` rows from IndexedDB, and
-"Clear all data" calls `collection.cleanup(0)` directly to purge immediately
-rather than waiting for the policy.
+Deletion in RxDB is soft: documents are flagged `_deleted` and only the cleanup
+plugin physically purges them. Lexicora has no undelete — both confirmation
+dialogs say the action cannot be undone, and nothing reads `_deleted` — so
+tombstones serve no purpose here beyond wasted bytes. (Archiving is a different
+thing entirely: `isArchived` is a field on a live document, structurally out of
+the purge's reach.)
 
-Three things still need checking or building:
+**What is in place**
 
-1. **The background loop may rarely get to run.** RxDB defaults to
-   `minimumCollectionAge: 60s` and `runEach: 5min`, and the loop lives only as
-   long as an extension context holding the database is open. A user who deletes
-   an entry and closes the side panel a minute later leaves tombstones that no
-   session ever sweeps, because every later session is also short. This has not
-   been observed either way — it needs measuring against a real profile before
-   deciding whether to lower the thresholds or trigger an explicit `cleanup()`
-   on startup.
+- **Settings → Data Management → "Clean Up Database"** runs `cleanup(0)` on all
+  three collections. It is the guaranteed path, and it is deliberately manual:
+  a purge scans every document older than the cutoff to find the tombstones
+  among them, so a call costs roughly the same whether it reclaims one row or a
+  thousand. Cost tracks how often it runs, not how much it frees — which makes
+  one batched, user-initiated action the cheapest possible schedule. Every
+  action on the page is disabled while it runs, matching the write lock the
+  purge already holds.
+- **The automatic `cleanupPolicy`** (`minimumDeletedTime: 1 day`) still runs,
+  unchanged. It fires 60s after a collection opens, then after writes every 5
+  minutes. Because only `RxDBProvider` opens the database — never the background
+  — this only happens while the side panel or window stays open a full minute,
+  so it is opportunistic rather than reliable. That is fine now that the button
+  exists as the guarantee.
+- **Cascade deletion** lives in [`src/db/cascade-delete.ts`](../src/db/cascade-delete.ts)
+  and is shared by all four call sites, so a new deletion path cannot silently
+  orphan blocks. It is also a bulk operation: deleting a topic costs three
+  writes regardless of its size, where the previous per-document loop cost one
+  write per block.
 
-2. **Cascade deletion is hand-rolled and duplicated.** Removing an entry's
-   blocks is done at each call site — `entry-item.tsx`, `topic-item.tsx`,
-   `entry-detail.tsx`, `topic-detail.tsx` — so a fifth deletion path that
-   forgets it silently orphans blocks, and orphans are invisible: nothing lists
-   blocks whose entry is gone. Wanted: one cascade helper the call sites share,
-   and an orphan sweep at startup as a backstop. `entry-edit.tsx` already has a
-   local orphan cleanup, which is the same idea at a smaller scale.
+**Open, possible future work**
 
-3. **Archived is not deleted, and should stay that way.** `isArchived` is an
-   application-level state the user can undo; `_deleted` is a storage-level
-   tombstone the user cannot. Vacuuming must never touch the first. Worth
-   stating explicitly so a future "clean up old data" feature doesn't conflate
-   them.
-
-Bear in mind these are separate layers: (1) is storage reclaiming space, (2) is
-referential integrity, (3) is a product decision. Only (1) is what RxDB's
-cleanup policy addresses.
+- **Scheduled background cleanup.** `browser.alarms` could wake the service
+  worker to purge on a timer, removing the need for the user to ever press the
+  button. Two things block it today: the background never opens the database, so
+  it would construct a second RxDB instance over the same IndexedDB (legal under
+  `multiInstance`, but a full open); and the MV3 background is a classic script,
+  not `"type": "module"`, so there is no dynamic `import()` and RxDB plus Dexie
+  would be statically bundled into a service worker that currently sits at 28 KB
+  and is parsed on every wake. Making the background an ESM worker first would
+  let the purge live in a lazily-loaded chunk. If it is built, it should call
+  `cleanup(0)` explicitly rather than leave the policy loop running there — a
+  service worker killed while holding leadership stalls the side panel's own
+  cleanup until the elector times it out.
+- **Storage usage display.** `navigator.storage.estimate()` works in extension
+  pages and covers IndexedDB, so the number could sit next to the cleanup
+  button for context. Two caveats: the estimate is deliberately padded and is
+  origin-wide, so it includes `storage.local` and caches — an indicator, not a
+  precise figure — and it will not visibly drop right after a cleanup, because
+  IndexedDB does not return freed pages to the OS immediately. A "storage is
+  filling up" *warning* is not worth building: there is no `unlimitedStorage`
+  permission, so the quota is Chrome's default of roughly 60% of free disk,
+  which a text library will never approach.
 
 ### Explicitly out of scope for v1.0
 

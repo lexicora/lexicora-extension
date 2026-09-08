@@ -31,6 +31,7 @@ import {
 import { Avatar } from "radix-ui";
 import { useNavigate } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
+import { deleteEntryCascade } from "@/db/cascade-delete";
 
 export interface EntryItemProps {
   entry: EntryDocType;
@@ -90,17 +91,10 @@ export function EntryItem({
     e.stopPropagation();
     if (!collection) return;
 
-    const doc = await collection.findOne({ selector: { id: entry.id } }).exec();
-    if (!doc) return;
-
-    // Delete associated blocks first, then the entry
-    const blocks = await blocksCollection
-      ?.find({ selector: { entryId: entry.id } })
-      .exec();
-    if (blocks) {
-      await Promise.all(blocks.map((b) => b.remove()));
-    }
-    await doc.remove();
+    await deleteEntryCascade(entry.id, {
+      entries: collection,
+      blocks: blocksCollection,
+    });
   };
 
   const handleNavigate = (

@@ -44,6 +44,7 @@ import { Avatar } from "radix-ui";
 import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
+import { deleteEntryCascade } from "@/db/cascade-delete";
 import { useEntryDetail } from "./__hooks__/use-entry-detail";
 
 type CopyableEditor = {
@@ -163,16 +164,10 @@ function EntryDetailPage() {
 
   const handleDelete = async () => {
     if (!entriesCollection || !entry) return;
-    const doc = await entriesCollection
-      .findOne({ selector: { id: entry.id } })
-      .exec();
-    if (!doc) return;
-    const existingBlocks = await blocksCollection
-      ?.find({ selector: { entryId: entry.id } })
-      .exec();
-    if (existingBlocks)
-      await Promise.all(existingBlocks.map((b) => b.remove()));
-    await doc.remove();
+    await deleteEntryCascade(entry.id, {
+      entries: entriesCollection,
+      blocks: blocksCollection,
+    });
     navigate(-1);
   };
 

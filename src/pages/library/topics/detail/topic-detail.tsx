@@ -33,6 +33,7 @@ import {
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
+import { deleteTopicCascade } from "@/db/cascade-delete";
 import { useTopicDetail } from "./__hooks__/use-topic-detail";
 
 function TopicDetailPage() {
@@ -98,20 +99,11 @@ function TopicDetailPage() {
   const handleDelete = async () => {
     if (!collection || !topic) return;
 
-    const doc = await collection.findOne({ selector: { id: topic.id } }).exec();
-    if (!doc) return;
-
-    const entries = await entriesCollection
-      ?.find({ selector: { topicId: topic.id } })
-      .exec();
-    for (const entry of entries ?? []) {
-      const blocks = await blocksCollection
-        ?.find({ selector: { entryId: entry.id } })
-        .exec();
-      if (blocks) await Promise.all(blocks.map((b) => b.remove()));
-      await entry.remove();
-    }
-    await doc.remove();
+    await deleteTopicCascade(topic.id, {
+      topics: collection,
+      entries: entriesCollection,
+      blocks: blocksCollection,
+    });
 
     navigate("/library", { replace: true, viewTransition: true });
   };

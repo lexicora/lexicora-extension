@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
+import { deleteTopicCascade } from "@/db/cascade-delete";
 
 export interface TopicItemProps {
   topic: TopicDocType;
@@ -89,23 +90,11 @@ export function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
     e.stopPropagation();
     if (!collection) return;
 
-    const doc = await collection.findOne({ selector: { id: topic.id } }).exec();
-    if (!doc) return;
-
-    // Cascade: delete all blocks → entries → topic
-    const entries = await entriesCollection
-      ?.find({ selector: { topicId: topic.id } })
-      .exec();
-    for (const entry of entries ?? []) {
-      const blocks = await blocksCollection
-        ?.find({ selector: { entryId: entry.id } })
-        .exec();
-      if (blocks) {
-        await Promise.all(blocks.map((b) => b.remove()));
-      }
-      await entry.remove();
-    }
-    await doc.remove();
+    await deleteTopicCascade(topic.id, {
+      topics: collection,
+      entries: entriesCollection,
+      blocks: blocksCollection,
+    });
   };
 
   const handleNavigate = (
