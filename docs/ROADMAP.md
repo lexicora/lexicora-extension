@@ -23,9 +23,47 @@ promises an unbuilt feature is visible to users.
 |---|---|
 | **Bookmark-only capture** | Capture a page from its metadata alone — title, URL, favicon, site name, description — with no page content and no editor blocks. Essentially a "super bookmark": faster than a full capture, useful for pages worth keeping but not worth reading into the library. Should sit alongside the existing capture action rather than replacing it. |
 | **Export and rich copy** ([#156](https://github.com/lexicora/lexicora-extension/issues/156)) | Get data back out of Lexicora and into a long-term knowledge base (Obsidian, Tolaria, Notion). Two halves: a **download** action producing Markdown, and a **copy** action that puts rich content on the clipboard — HTML for targets that render formatting, with Markdown as the `text/plain` fallback, so a single copy pastes correctly into both a rich editor and a plain-text one. Should be available from entry and topic detail pages, and worth exposing for multi-select or whole-library export too. BlockNote already provides both conversions (`editor.blocksToMarkdownLossy()` / `blocksToHTMLLossy()`), so the work is mostly clipboard plumbing, file naming and where the actions live. |
+| **Vacuum / purge verification** | Soft-deleted rows must reliably become real deletions. The machinery exists — `RxDBCleanupPlugin` with `minimumDeletedTime: 1 day`, plus `cleanup(0)` on "Clear all data" — but three gaps remain, see [Vacuum notes](#vacuum-notes) below. |
 | **Empty and sparse UI states** | The popup, side-panel home and top-bar have visible gaps now that the AI surfaces are gated. Needs a layout pass. |
 | **ESLint** | The config currently fails to run: `typescript-eslint` does not support TypeScript 7. No `lint` script exists either. |
 | **Release prep** | Version bump, README scope statement, privacy policy, store listing copy and permission justifications. Store submission is deferred until the product is judged ready. |
+
+### Vacuum notes
+
+What already runs: `RxDBCleanupPlugin` is registered in
+[`src/db/index.ts`](../src/db/index.ts) with `minimumDeletedTime` set to one day.
+Its background loop physically purges `_deleted` rows from IndexedDB, and
+"Clear all data" calls `collection.cleanup(0)` directly to purge immediately
+rather than waiting for the policy.
+
+Three things still need checking or building:
+
+1. **The background loop may rarely get to run.** RxDB defaults to
+   `minimumCollectionAge: 60s` and `runEach: 5min`, and the loop lives only as
+   long as an extension context holding the database is open. A user who deletes
+   an entry and closes the side panel a minute later leaves tombstones that no
+   session ever sweeps, because every later session is also short. This has not
+   been observed either way — it needs measuring against a real profile before
+   deciding whether to lower the thresholds or trigger an explicit `cleanup()`
+   on startup.
+
+2. **Cascade deletion is hand-rolled and duplicated.** Removing an entry's
+   blocks is done at each call site — `entry-item.tsx`, `topic-item.tsx`,
+   `entry-detail.tsx`, `topic-detail.tsx` — so a fifth deletion path that
+   forgets it silently orphans blocks, and orphans are invisible: nothing lists
+   blocks whose entry is gone. Wanted: one cascade helper the call sites share,
+   and an orphan sweep at startup as a backstop. `entry-edit.tsx` already has a
+   local orphan cleanup, which is the same idea at a smaller scale.
+
+3. **Archived is not deleted, and should stay that way.** `isArchived` is an
+   application-level state the user can undo; `_deleted` is a storage-level
+   tombstone the user cannot. Vacuuming must never touch the first. Worth
+   stating explicitly so a future "clean up old data" feature doesn't conflate
+   them.
+
+Bear in mind these are separate layers: (1) is storage reclaiming space, (2) is
+referential integrity, (3) is a product decision. Only (1) is what RxDB's
+cleanup policy addresses.
 
 ### Explicitly out of scope for v1.0
 
