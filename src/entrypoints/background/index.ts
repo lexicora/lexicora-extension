@@ -1,4 +1,8 @@
-import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/constants/context-menu-items";
+import {
+  CONTEXT_MENU_ITEMS,
+  CONTEXT_MENU_ITEMS_AI,
+} from "@/constants/context-menu-items";
+import { FEATURES } from "@/constants/features";
 import {
   setupContextMenuActions,
   setupContextMenuStateSync,
@@ -14,6 +18,11 @@ export default defineBackground(() => {
 
     // Create context menu items from the imported constants
     for (const contextMenuItem of CONTEXT_MENU_ITEMS) {
+      if (
+        !FEATURES.AI &&
+        CONTEXT_MENU_ITEMS_AI.includes(contextMenuItem?.id as string)
+      )
+        continue;
       browser.contextMenus.create(contextMenuItem);
     }
 

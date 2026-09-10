@@ -11,6 +11,7 @@ export const CMI_ID = {
   CAPTURE_SELECTION_AS_IS: "save-selection-as-is",
   CAPTURE_PAGE_AI_ASSISTED: "save-page-ai-assisted",
   CAPTURE_PAGE_AS_IS: "save-page-as-is",
+  CAPTURE_PAGE_BOOKMARK: "save-page-bookmark",
   //CAPTURE_FROM_CLIPBOARD: "save-from-clipboard",
 } as const;
 
@@ -58,6 +59,12 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
     contexts: ["page", "selection", "link", "image", "video", "audio", "frame"],
     documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   },
+  {
+    id: CMI_ID.CAPTURE_PAGE_BOOKMARK,
+    title: "Bookmark Page",
+    contexts: ["all"],
+    documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
+  },
   // {
   //   id: CMI_ID.CAPTURE_FROM_CLIPBOARD,
   //   title: "Capture from Clipboard",
@@ -68,4 +75,13 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   //type: "normal" is the default.
   // Add more browser-specific excluded URLs if needed (like extensions own pages)
   // documentUrlPatterns: ["https://**", "https://**"] (put in each item if needed)
+];
+
+/**
+ * Use this to disable ai context menu items if the feature is not available or disabled.
+ */
+export const CONTEXT_MENU_ITEMS_AI: string[] = [
+  CMI_ID.CAPTURE_SELECTION_AI_ASSISTED,
+  "Separator2",
+  CMI_ID.CAPTURE_PAGE_AI_ASSISTED,
 ];

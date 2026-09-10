@@ -45,7 +45,7 @@ export async function handleCaptureRequest(
 
   // Push logic if side panel is already open
   const clearPendingCaptureData = await sendMessage(
-    MSG.SEND_PAGE_SELECTION_DATA,
+    MSG.SEND_PAGE_CAPTURE_DATA,
     { windowId: tabData.windowId, payload: pageSelectionData },
   ).catch(() => null);
 

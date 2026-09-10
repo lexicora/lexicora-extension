@@ -24,7 +24,7 @@ export const MSG = {
   //GET_PAGE_HTML: "content/GET_PAGE_HTML",
 
   // From anywhere to side-panel
-  SEND_PAGE_SELECTION_DATA: "sidepanel/SEND_PAGE_SELECTION_DATA",
+  SEND_PAGE_CAPTURE_DATA: "sidepanel/SEND_PAGE_CAPTURE_DATA",
   NAVIGATE_IN_SIDEPANEL: "sidepanel/NAVIGATE_IN_SIDEPANEL",
 
   // From side-panel to background

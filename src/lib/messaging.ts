@@ -8,14 +8,23 @@ interface ProtocolMap {
   [MSG.OPEN_SIDEPANEL](): void;
   [MSG.REQUEST_PENDING_DATA](data: null): PageData | null;
   [MSG.REQUEST_PENDING_NAVIGATION](data: null): string | null;
-  [MSG.REQUEST_PAGE_CAPTURE](data: TabData & { fromContext: string; mode?: CaptureMode }): void;
+  [MSG.REQUEST_PAGE_CAPTURE](
+    data: TabData & { fromContext: string; mode?: CaptureMode },
+  ): void;
 
   // Sidepanel-targeted push (background → sidepanel; windowId in data for per-window filtering)
-  [MSG.NAVIGATE_IN_SIDEPANEL](data: { windowId: number | string; path: string }): boolean | null;
-  [MSG.SEND_PAGE_SELECTION_DATA](data: { windowId: number | string; payload: PageData | null }): boolean | null;
+  [MSG.NAVIGATE_IN_SIDEPANEL](data: {
+    windowId: number | string;
+    path: string;
+  }): boolean | null;
+  [MSG.SEND_PAGE_CAPTURE_DATA](data: {
+    windowId: number | string;
+    payload: PageData | null;
+  }): boolean | null;
 
   // Content-targeted (AI feature, pending full implementation)
   [MSG.GET_PAGE_SELECTION_ARTICLE](data: null): PageData | null;
 }
 
-export const { sendMessage, onMessage } = defineExtensionMessaging<ProtocolMap>();
+export const { sendMessage, onMessage } =
+  defineExtensionMessaging<ProtocolMap>();

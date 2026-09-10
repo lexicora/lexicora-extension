@@ -19,7 +19,7 @@ export function useCaptureData() {
     };
 
     // Push Listener: Catches data if the Side Panel is already open
-    const unsubscribe = onMessage(MSG.SEND_PAGE_SELECTION_DATA, (msg) => {
+    const unsubscribe = onMessage(MSG.SEND_PAGE_CAPTURE_DATA, (msg) => {
       if (msg.data.windowId !== windowId) return null;
       if (!msg.data.payload) return null;
       handleIncomingData(msg.data.payload);
