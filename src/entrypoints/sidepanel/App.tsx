@@ -132,8 +132,9 @@ function App() {
       <RxDBProvider>
         <RouterProvider router={router} />
         <Toaster
+          closeButton
           mobileOffset={13}
-          //className="py-3.5!"
+          className="py-3.5! text-left"
           position="top-right"
           offset={16}
         />
