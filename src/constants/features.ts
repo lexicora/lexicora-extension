@@ -36,7 +36,9 @@
  * |---------------------|-------------------------------------------------------|
  * | `AI`                | popup; side-panel home main + capture footer; entry    |
  * |                     | create and edit bottom prompt bars; Settings AI item,  |
- * |                     | which needs a `/settings/ai` route registering first   |
+ * |                     | which needs a `/settings/ai` route registering first.  |
+ * |                     | The AI footers predate Bookmark and do not offer it,   |
+ * |                     | so turning AI on hides Bookmark until they are redone  |
  * | `ACCOUNTS`          | top bar; popup header; Settings account item, which    |
  * |                     | needs a `/settings/account` route registering first    |
  * | `SIDE_PANEL_TOP_BAR`| every side-panel page's top offset, and PageHeader's   |

@@ -2,6 +2,7 @@ import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.s
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
 
 import { AccountMenu } from "@/components/account-menu";
+import { CaptureActions } from "@/components/capture/capture-actions";
 import { CurrentPageCard } from "@/components/capture/current-page-card";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRightIcon, PanelRightIcon } from "lucide-react";
@@ -11,6 +12,7 @@ interface PopupCompactLayoutProps {
   isSupported: boolean;
   onOpenSidePanel: () => void;
   onCapturePage: () => void;
+  onBookmarkPage: () => void;
 }
 
 /**
@@ -18,15 +20,14 @@ interface PopupCompactLayoutProps {
  *
  * The AI layout's tall prompt gave the popup its height; without it the same
  * structure is mostly padding. This one sizes to its content — a compact header,
- * the page a capture would save, and the capture action.
- *
- * The planned bookmark-only capture belongs next to the capture button here.
+ * the page a capture would save, and the capture and bookmark actions.
  */
 export function PopupCompactLayout({
   activeTab,
   isSupported,
   onOpenSidePanel,
   onCapturePage,
+  onBookmarkPage,
 }: PopupCompactLayoutProps) {
   return (
     <div className="w-85 select-none px-3 pt-3 pb-3.5">
@@ -69,18 +70,11 @@ export function PopupCompactLayout({
       />
 
       <footer className="mt-3">
-        <Button
-          title={
-            isSupported
-              ? "Capture page"
-              : "You are currently on a unsupported page for capturing."
-          }
-          className="w-full hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary"
-          disabled={!isSupported}
-          onClick={onCapturePage}
-        >
-          Capture page
-        </Button>
+        <CaptureActions
+          isSupported={isSupported}
+          onCapturePage={onCapturePage}
+          onBookmarkPage={onBookmarkPage}
+        />
         <div className="flex justify-center mt-2.5">
           <a
             href="https://lexicora.com"

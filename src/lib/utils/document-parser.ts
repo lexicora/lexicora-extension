@@ -15,6 +15,74 @@ export interface ParseResult {
   faviconUrl: string | null;
 }
 
+/** The metadata half of a {@link ParseResult}: everything except the content. */
+export type PageMetadata = Pick<
+  ParseResult,
+  "title" | "excerpt" | "byline" | "siteName" | "publishedTime" | "faviconUrl"
+>;
+
+/**
+ * Reads a page's metadata from its `<head>` and a few well-known body markers,
+ * without touching or parsing its content.
+ *
+ * Read-only, so it is safe to call on the live document — no clone needed. This
+ * is the whole of a bookmark capture, and the first step of the full and
+ * selection parsers.
+ *
+ * `excerpt` comes only from the page's own description meta tags. It never
+ * falls back to the page text, so a metadata-only capture carries no content.
+ */
+export function extractPageMetadata(doc: Document): PageMetadata {
+  const title =
+    doc.title ||
+    doc.querySelector('meta[property="og:title"]')?.getAttribute("content") ||
+    "";
+  const excerpt =
+    doc.querySelector('meta[name="description"]')?.getAttribute("content") ||
+    doc
+      .querySelector('meta[property="og:description"]')
+      ?.getAttribute("content") ||
+    null;
+  const byline =
+    doc.querySelector('meta[name="author"]')?.getAttribute("content") ||
+    doc.querySelector('[itemprop="author"]')?.textContent?.trim() || // Schema.org fallback
+    doc.querySelector(".author-name, .byline")?.textContent?.trim() || // Common class fallback
+    null;
+  const siteName =
+    doc
+      .querySelector('meta[property="og:site_name"]')
+      ?.getAttribute("content") || null;
+  const publishedTime =
+    doc
+      .querySelector('meta[property="article:published_time"]')
+      ?.getAttribute("content") ||
+    doc.querySelector("time[datetime]")?.getAttribute("datetime") || // HTML5 <time> fallback
+    doc.querySelector('[itemprop="datePublished"]')?.getAttribute("content") ||
+    null;
+
+  let faviconUrl =
+    doc.querySelector('link[rel="icon"]')?.getAttribute("href") ||
+    doc.querySelector('link[rel="shortcut icon"]')?.getAttribute("href") ||
+    doc.querySelector('link[rel="apple-touch-icon"]')?.getAttribute("href") ||
+    null;
+
+  if (faviconUrl) {
+    try {
+      faviconUrl = new URL(faviconUrl, doc.baseURI).href;
+    } catch (e) {
+      faviconUrl = null;
+    }
+  } else {
+    try {
+      faviconUrl = new URL("/favicon.ico", doc.baseURI).href;
+    } catch (e) {
+      faviconUrl = null;
+    }
+  }
+
+  return { title, excerpt, byline, siteName, publishedTime, faviconUrl };
+}
+
 // A quick conceptual look at the future architecture
 // function parsePage(doc: Document, url: string): ParseResult {
 //   const hostname = new URL(url).hostname;
@@ -221,52 +289,9 @@ function normalizeMediaAndLinks(root: Document | Element) {
  */
 export function parseDocument(doc: Document): ParseResult {
   // STEP 1: EXTRACT METADATA
-  const title =
-    doc.title ||
-    doc.querySelector('meta[property="og:title"]')?.getAttribute("content") ||
-    "";
-  const excerpt =
-    doc.querySelector('meta[name="description"]')?.getAttribute("content") ||
-    doc
-      .querySelector('meta[property="og:description"]')
-      ?.getAttribute("content") ||
-    null;
-  const byline =
-    doc.querySelector('meta[name="author"]')?.getAttribute("content") ||
-    doc.querySelector('[itemprop="author"]')?.textContent?.trim() || // Schema.org fallback
-    doc.querySelector(".author-name, .byline")?.textContent?.trim() || // Common class fallback
-    null;
-  const siteName =
-    doc
-      .querySelector('meta[property="og:site_name"]')
-      ?.getAttribute("content") || null;
-  const publishedTime =
-    doc
-      .querySelector('meta[property="article:published_time"]')
-      ?.getAttribute("content") ||
-    doc.querySelector("time[datetime]")?.getAttribute("datetime") || // HTML5 <time> fallback
-    doc.querySelector('[itemprop="datePublished"]')?.getAttribute("content") ||
-    null;
-
-  let faviconUrl =
-    doc.querySelector('link[rel="icon"]')?.getAttribute("href") ||
-    doc.querySelector('link[rel="shortcut icon"]')?.getAttribute("href") ||
-    doc.querySelector('link[rel="apple-touch-icon"]')?.getAttribute("href") ||
-    null;
-
-  if (faviconUrl) {
-    try {
-      faviconUrl = new URL(faviconUrl, doc.baseURI).href;
-    } catch (e) {
-      faviconUrl = null;
-    }
-  } else {
-    try {
-      faviconUrl = new URL("/favicon.ico", doc.baseURI).href;
-    } catch (e) {
-      faviconUrl = null;
-    }
-  }
+  //* Must run before normalization and pruning below, which mutate `doc`.
+  const { title, excerpt, byline, siteName, publishedTime, faviconUrl } =
+    extractPageMetadata(doc);
 
   // STEP 2: BULLETPROOF IMAGE NORMALIZATION
   normalizeMediaAndLinks(doc);
@@ -531,52 +556,8 @@ export function parseSnippet(snippet: Element, doc: Document): ParseResult {
 
   // 3. EXTRACT METADATA FROM THE MAIN DOCUMENT
   // Even though they only highlighted a snippet, we still want the context!
-  const title =
-    doc.title ||
-    doc.querySelector('meta[property="og:title"]')?.getAttribute("content") ||
-    "";
-  const excerpt =
-    doc.querySelector('meta[name="description"]')?.getAttribute("content") ||
-    doc
-      .querySelector('meta[property="og:description"]')
-      ?.getAttribute("content") ||
-    null;
-  const byline =
-    doc.querySelector('meta[name="author"]')?.getAttribute("content") ||
-    doc.querySelector('[itemprop="author"]')?.textContent?.trim() ||
-    doc.querySelector(".author-name, .byline")?.textContent?.trim() ||
-    null;
-  const siteName =
-    doc
-      .querySelector('meta[property="og:site_name"]')
-      ?.getAttribute("content") || null;
-  const publishedTime =
-    doc
-      .querySelector('meta[property="article:published_time"]')
-      ?.getAttribute("content") ||
-    doc.querySelector("time[datetime]")?.getAttribute("datetime") ||
-    doc.querySelector('[itemprop="datePublished"]')?.getAttribute("content") ||
-    null;
-
-  let faviconUrl =
-    doc.querySelector('link[rel="icon"]')?.getAttribute("href") ||
-    doc.querySelector('link[rel="shortcut icon"]')?.getAttribute("href") ||
-    doc.querySelector('link[rel="apple-touch-icon"]')?.getAttribute("href") ||
-    null;
-
-  if (faviconUrl) {
-    try {
-      faviconUrl = new URL(faviconUrl, doc.baseURI).href;
-    } catch (e) {
-      faviconUrl = null;
-    }
-  } else {
-    try {
-      faviconUrl = new URL("/favicon.ico", doc.baseURI).href;
-    } catch (e) {
-      faviconUrl = null;
-    }
-  }
+  const { title, excerpt, byline, siteName, publishedTime, faviconUrl } =
+    extractPageMetadata(doc);
 
   return {
     content: sanitizedContent,

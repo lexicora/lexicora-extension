@@ -43,7 +43,7 @@ export function setupMessagingHandlers() {
   });
 
   onMessage(MSG.REQUEST_PAGE_CAPTURE, async ({ data }) =>
-    handleCaptureRequest(data.fromContext, data),
+    handleCaptureRequest(data.fromContext, data, data.mode),
   );
 
   // Native messaging, not needed for this currently

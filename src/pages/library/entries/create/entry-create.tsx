@@ -202,13 +202,7 @@ function EntryCreatePage() {
   };
 
   useLayoutEffect(() => {
-    if (capturedData?.content) {
-      setLanguage(capturedData.lang || navigator.language || "en");
-      const blocks = editor.tryParseHTMLToBlocks(capturedData.content);
-      if (capturedData.misc.overrideExisting) {
-        editor.replaceBlocks(editor.document, blocks);
-        return;
-      }
+    const isEditorEmpty = () => {
       const currentBlocks = editor.document;
       const firstBlock = currentBlocks[0];
       const firstContent = firstBlock?.content;
@@ -219,13 +213,36 @@ function EntryCreatePage() {
       const isChildrenEmpty =
         !firstChildren || firstChildren.length === 0;
 
-      const isEmpty =
+      return (
         currentBlocks.length === 1 &&
         firstBlock?.type === "paragraph" &&
         isContentEmpty &&
-        isChildrenEmpty;
+        isChildrenEmpty
+      );
+    };
 
-      if (isEmpty) {
+    //* A bookmark has no content by design. Clear anything an earlier capture
+    //* left in the editor, so this page's metadata is never saved alongside
+    //* another page's content. An already-empty editor is left alone to avoid
+    //* marking the form dirty for nothing.
+    if (capturedData?.misc.metadataOnly) {
+      setLanguage(capturedData.lang || navigator.language || "en");
+      if (!isEditorEmpty()) {
+        editor.replaceBlocks(editor.document, [{ type: "paragraph" }]);
+      }
+      return;
+    }
+
+    if (capturedData?.content) {
+      setLanguage(capturedData.lang || navigator.language || "en");
+      const blocks = editor.tryParseHTMLToBlocks(capturedData.content);
+      if (capturedData.misc.overrideExisting) {
+        editor.replaceBlocks(editor.document, blocks);
+        return;
+      }
+      const currentBlocks = editor.document;
+
+      if (isEditorEmpty()) {
         editor.replaceBlocks(currentBlocks, blocks);
       } else {
         const lastBlock = currentBlocks[currentBlocks.length - 1];

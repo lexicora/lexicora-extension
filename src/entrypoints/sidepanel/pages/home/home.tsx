@@ -15,6 +15,7 @@ import { useTabSupport } from "@/hooks/use-tab-support";
 import { FEATURES } from "@/constants/features";
 import { MSG } from "@/constants/messaging";
 import type { TabData } from "@/types/tab-data.types";
+import type { CaptureMode } from "@/types/page-data.types";
 import { sendMessage } from "@/lib/messaging";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ import { useHomeData } from "./__hooks__/use-home-data";
 import { AiPromptSection } from "@/components/home/ai-prompt-section";
 import { LibraryEmptyState } from "@/components/home/library-empty-state";
 import { RecentEntries } from "@/components/home/recent-entries";
+import { CaptureActions } from "@/components/capture/capture-actions";
 
 function formatFavoriteCount(count: number): string {
   if (count < 1000) return String(count);
@@ -57,7 +59,7 @@ function HomePage() {
       ? "empty-state"
       : "recent-entries";
 
-  const capturePage = async () => {
+  const capturePage = async (mode: CaptureMode = "page") => {
     if (!isSupported) return;
     let finalTab = activeTab;
     if (!finalTab?.id || !finalTab?.windowId) {
@@ -75,6 +77,7 @@ function HomePage() {
     sendMessage(MSG.REQUEST_PAGE_CAPTURE, {
       ...tabData,
       fromContext: "side-panel",
+      mode,
     }).catch(() => null);
     navigate("/library/entries/new", {
       viewTransition: true,
@@ -230,7 +233,7 @@ function HomePage() {
                       "disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-secondary!",
                     )}
                     disabled={promptText.trimEnd() !== "" || !isSupported}
-                    onClick={capturePage}
+                    onClick={() => capturePage("page")}
                   >
                     Capture
                   </Button>
@@ -250,21 +253,11 @@ function HomePage() {
                 </div>
               </>
             ) : (
-              /* Without AI there is a single action, so it takes the full bar. */
-              <div className="flex justify-start flex-1">
-                <Button
-                  title={
-                    isSupported
-                      ? "Capture page"
-                      : "You are currently on a unsupported page for capturing."
-                  }
-                  className="w-full hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary"
-                  disabled={!isSupported}
-                  onClick={capturePage}
-                >
-                  Capture page
-                </Button>
-              </div>
+              <CaptureActions
+                isSupported={isSupported}
+                onCapturePage={() => capturePage("page")}
+                onBookmarkPage={() => capturePage("bookmark")}
+              />
             )}
           </div>
         </section>

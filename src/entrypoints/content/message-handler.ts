@@ -1,5 +1,6 @@
 import { MSG } from "@/constants/messaging";
 import { getPageData } from "./capture/page";
+import { getPageMetadata } from "./capture/bookmark";
 import { getSelectionPageData } from "./capture/selection";
 
 /**
@@ -16,6 +17,10 @@ export function setupMessagingHandlers() {
 
       case MSG.GET_PAGE_DATA:
         Promise.resolve(getPageData()).then(sendResponse);
+        return true; // Return true to indicate an asynchronous response
+
+      case MSG.GET_PAGE_METADATA:
+        Promise.resolve(getPageMetadata()).then(sendResponse);
         return true; // Return true to indicate an asynchronous response
     }
   });

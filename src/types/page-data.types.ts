@@ -30,6 +30,21 @@ export type PageData = {
   };
   misc: {
     overrideExisting: boolean; // Whether to replace the existing editor content and form data with the parsed content
+    /**
+     * Set by a bookmark capture: `content` is empty on purpose, not because
+     * parsing failed, so consumers should treat the entry as contentless rather
+     * than skip the capture.
+     */
+    metadataOnly?: boolean;
   };
   //Todo: Add more fields if needed
 };
+
+/**
+ * What a capture request takes from the page.
+ *
+ * - `page` — metadata plus the parsed main content, filled into the editor.
+ * - `bookmark` — metadata only (title, URL, favicon, site name, description,
+ *   author, date). The page's content is never read or parsed.
+ */
+export type CaptureMode = "page" | "bookmark";

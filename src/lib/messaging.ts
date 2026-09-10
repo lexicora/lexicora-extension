@@ -1,5 +1,5 @@
 import { MSG } from "@/constants/messaging";
-import type { PageData } from "@/types/page-data.types";
+import type { CaptureMode, PageData } from "@/types/page-data.types";
 import type { TabData } from "@/types/tab-data.types";
 import { defineExtensionMessaging } from "@webext-core/messaging";
 
@@ -8,7 +8,7 @@ interface ProtocolMap {
   [MSG.OPEN_SIDEPANEL](): void;
   [MSG.REQUEST_PENDING_DATA](data: null): PageData | null;
   [MSG.REQUEST_PENDING_NAVIGATION](data: null): string | null;
-  [MSG.REQUEST_PAGE_CAPTURE](data: TabData & { fromContext: string }): void;
+  [MSG.REQUEST_PAGE_CAPTURE](data: TabData & { fromContext: string; mode?: CaptureMode }): void;
 
   // Sidepanel-targeted push (background → sidepanel; windowId in data for per-window filtering)
   [MSG.NAVIGATE_IN_SIDEPANEL](data: { windowId: number | string; path: string }): boolean | null;

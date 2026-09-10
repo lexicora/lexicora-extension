@@ -5,6 +5,7 @@ import { FEATURES } from "@/constants/features";
 import { MSG } from "@/constants/messaging";
 import { useTabSupport } from "@/hooks/use-tab-support";
 import type { TabData } from "@/types/tab-data.types";
+import type { CaptureMode } from "@/types/page-data.types";
 
 import { PopupAiLayout } from "./popup-ai-layout";
 import { PopupCompactLayout } from "./popup-compact-layout";
@@ -41,7 +42,7 @@ function Popup() {
     if (closeWindow) window.close();
   };
 
-  const capturePage = async () => {
+  const capturePage = async (mode: CaptureMode = "page") => {
     if (!isSupported) return;
     openSidePanel(false);
     let finalTab = activeTab;
@@ -62,6 +63,7 @@ function Popup() {
     sendMessage(MSG.REQUEST_PAGE_CAPTURE, {
       ...tabData,
       fromContext: "popup",
+      mode,
     }).catch(() => null);
     window.close();
   };
@@ -82,7 +84,7 @@ function Popup() {
         promptText={promptText}
         onPromptTextChange={setPromptText}
         onOpenSidePanel={() => openSidePanel(true)}
-        onCapturePage={capturePage}
+        onCapturePage={() => capturePage("page")}
       />
     );
   }
@@ -92,7 +94,8 @@ function Popup() {
       activeTab={activeTab}
       isSupported={isSupported}
       onOpenSidePanel={() => openSidePanel(true)}
-      onCapturePage={capturePage}
+      onCapturePage={() => capturePage("page")}
+      onBookmarkPage={() => capturePage("bookmark")}
     />
   );
 }
