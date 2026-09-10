@@ -7,6 +7,10 @@ import {
 export function useTabSupport() {
   const [isSupported, setIsSupported] = useState(true);
   const [activeTab, setActiveTab] = useState<Browser.tabs.Tab | null>(null);
+  // `isSupported` and `activeTab` are placeholders until the first check
+  // finishes. Surfaces that paint once and briefly, like the popup, can wait
+  // for this instead of rendering the placeholders and then correcting them.
+  const [isResolved, setIsResolved] = useState(false);
 
   const checkUrlSupport = useCallback(async () => {
     try {
@@ -29,6 +33,8 @@ export function useTabSupport() {
     } catch (error) {
       console.error("Support check failed:", error);
       setIsSupported(false);
+    } finally {
+      setIsResolved(true);
     }
   }, []);
 
@@ -57,5 +63,10 @@ export function useTabSupport() {
     };
   }, [checkUrlSupport]);
 
-  return { isSupported, activeTab, refreshSupport: checkUrlSupport };
+  return {
+    isSupported,
+    activeTab,
+    isResolved,
+    refreshSupport: checkUrlSupport,
+  };
 }

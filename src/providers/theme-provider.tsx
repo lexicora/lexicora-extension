@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
 import { themeStorage, type Theme } from "@/lib/storage/settings";
 
 type ThemeProviderState = {
@@ -37,7 +43,7 @@ export function ThemeProvider({
     }
   };
 
-  // Initial Load & Syncing (maybe use layout effect to avoid flicker?)
+  // Initial Load & Syncing
   useEffect(() => {
     async function initTheme() {
       // Get the value from async storage
@@ -72,8 +78,12 @@ export function ThemeProvider({
     };
   }, [theme]);
 
-  // Class Logic (Your existing logic is fine, just ensure it runs after loading)
-  useEffect(() => {
+  // Layout effect, not a passive one: children first mount in the same commit
+  // that ends loading, and a passive effect runs after the browser has painted
+  // that commit. The first frame would be drawn without the theme class, and
+  // anything with a colour transition (every Button has `transition-all`)
+  // would then visibly fade into the dark palette on open.
+  useLayoutEffect(() => {
     if (!isLoading) applyThemeToDocument(theme);
   }, [theme, isLoading]);
 

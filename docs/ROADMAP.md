@@ -23,6 +23,7 @@ promises an unbuilt feature is visible to users.
 |---|---|
 | **Bookmark-only capture** ✅ | Capture a page from its metadata alone — title, URL, favicon, site name, description — with no page content and no editor blocks. A secondary "Bookmark" button beside "Capture page" on the side-panel home and the popup (`components/capture/capture-actions.tsx`). The content script answers `GET_PAGE_METADATA` by reading meta tags from the live page, without cloning or parsing it; the description comes only from the page's meta tags, never its text. The entry still goes through the create page so a topic can be picked. Open: the AI layouts have no Bookmark button yet, and a bookmark sent from the popup while the side panel is on an entry's *edit* page is ignored, since there is no content to merge. |
 | **Export and rich copy** ([#156](https://github.com/lexicora/lexicora-extension/issues/156)) | Get data back out of Lexicora and into a long-term knowledge base (Obsidian, Tolaria, Notion). Two halves: a **download** action producing Markdown, and a **copy** action that puts rich content on the clipboard — HTML for targets that render formatting, with Markdown as the `text/plain` fallback, so a single copy pastes correctly into both a rich editor and a plain-text one. Should be available from entry and topic detail pages, and worth exposing for multi-select or whole-library export too. BlockNote already provides both conversions (`editor.blocksToMarkdownLossy()` / `blocksToHTMLLossy()`), so the work is mostly clipboard plumbing, file naming and where the actions live. |
+| **Keyboard shortcuts** ([#145](https://github.com/lexicora/lexicora-extension/issues/145)) | Two different mechanisms, worth keeping apart. **Browser-level** shortcuts work from any tab and are declared in the manifest's `commands` key — open the popup (`_execute_action`), open the side panel, capture page, bookmark page — handled in the background via `browser.commands.onCommand`. Chrome allows at most four *suggested* key bindings per extension (users can bind the rest at `chrome://extensions/shortcuts`), so pick the four that matter most. Firefox has a built-in `_execute_sidebar_action`; on Chrome, opening the side panel from a command needs verifying, since `sidePanel.open()` requires a user gesture. **In-app** shortcuts work only while Lexicora has focus — save entry, focus search, go back, new entry — and are ordinary key handlers; #145 suggests TanStack Hotkeys for these. Either kind should avoid bindings the host browser or common pages already use. |
 | **Empty and sparse UI states** | The popup, side-panel home and top-bar have visible gaps now that the AI surfaces are gated. Needs a layout pass. |
 | **ESLint** | The config currently fails to run: `typescript-eslint` does not support TypeScript 7. No `lint` script exists either. |
 | **Release prep** | Version bump, README scope statement, privacy policy, store listing copy and permission justifications. Store submission is deferred until the product is judged ready. |
@@ -85,9 +86,9 @@ the purge's reach.)
 ### Explicitly out of scope for v1.0
 
 Supabase sync and the web app (#68, #69), all AI features (#52, #190),
-onboarding (#44), hot-keys (#145), the editor backlog (#8, #56, #60, #61, #62),
-filter popover (#144), heading map (#164), windowed polish (#179, #180, #182,
-#184), and the parking lot at the bottom of this file.
+onboarding (#44), the editor backlog (#8, #56, #60, #61, #62), filter popover
+(#144), heading map (#164), windowed polish (#179, #180, #182, #184), and the
+parking lot at the bottom of this file.
 
 ---
 

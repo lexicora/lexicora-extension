@@ -19,7 +19,7 @@ import { PopupCompactLayout } from "./popup-compact-layout";
  * AI is off. They are never combined.
  */
 function Popup() {
-  const { isSupported, activeTab } = useTabSupport();
+  const { isSupported, activeTab, isResolved } = useTabSupport();
   const [promptText, setPromptText] = useState("");
 
   // MAYBE: Force side panel to open to home page with messaging navigation implementation.
@@ -69,13 +69,21 @@ function Popup() {
   };
 
   useEffect(() => {
-    if (!FEATURES.AI) return;
+    // Waits for isResolved: the textarea is not rendered before then.
+    if (!FEATURES.AI || !isResolved) return;
     // Focus the textarea on component mount, for better UX
     setTimeout(() => {
       document.getElementById("ai-prompt-textarea")?.focus();
       //* NOTE: Having this enabled makes the buttons below flicker, when opening the pupup
     }, 100);
-  }, []);
+  }, [isResolved]);
+
+  // The popup is opened, painted and read in a second, so render it once with
+  // the real tab rather than with placeholders that are corrected a frame
+  // later — the buttons would fade from enabled to disabled on unsupported
+  // pages, and the current-page card would pop in. The check is a single
+  // `tabs.query`, so the wait is not noticeable.
+  if (!isResolved) return null;
 
   if (FEATURES.AI) {
     return (
