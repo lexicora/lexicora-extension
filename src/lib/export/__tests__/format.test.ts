@@ -12,6 +12,7 @@ import {
   reserveFilename,
   toFrontMatterTag,
   toSafeFilename,
+  topicToClipboardHtml,
   topicToClipboardMarkdown,
   topicToMarkdownFile,
 } from "../format";
@@ -324,7 +325,38 @@ describe("topicToClipboardMarkdown", () => {
     ]);
 
     expect(md).toContain("**Entries:** 2");
-    expect(md).toContain("- [How RxDB works](https://rxdb.info/how-it-works.html)");
-    expect(md).toContain("- No link \\[yet\\]");
+    expect(md).toContain("- [How RxDB works](https://rxdb.info/how-it-works.html) — A description.");
+    expect(md).toContain("- No link \\[yet\\] — A description.");
+  });
+
+  it("omits the separator for entries without a description", () => {
+    const md = topicToClipboardMarkdown(makeTopic(), [
+      makeEntry({ description: "" }),
+    ]);
+
+    expect(md).toMatch(/^- \[How RxDB works\]\(https:\/\/rxdb\.info\/how-it-works\.html\)$/m);
+  });
+
+  it("keeps a multi-paragraph description inside its list item", () => {
+    const md = topicToClipboardMarkdown(makeTopic(), [
+      makeEntry({ description: "First paragraph.\n\n- not a new item\n\tlast" }),
+    ]);
+    const listLines = md.split("## Entries\n\n")[1]!.split("\n");
+
+    expect(listLines).toEqual([
+      "- [How RxDB works](https://rxdb.info/how-it-works.html) — First paragraph. - not a new item last",
+    ]);
+  });
+});
+
+describe("topicToClipboardHtml", () => {
+  it("adds each entry's description, escaped", () => {
+    const html = topicToClipboardHtml(makeTopic(), [
+      makeEntry({ description: "Uses <IndexedDB> & more" }),
+    ]);
+
+    expect(html).toContain(
+      '<li><a href="https://rxdb.info/how-it-works.html">How RxDB works</a> — Uses &lt;IndexedDB&gt; &amp; more</li>',
+    );
   });
 });

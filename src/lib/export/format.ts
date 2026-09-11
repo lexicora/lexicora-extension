@@ -162,6 +162,15 @@ export function reserveFilename(
   return candidate;
 }
 
+/**
+ * Text collapsed onto a single line, for use inside a list item. A description
+ * can span paragraphs, and in Markdown a blank line or a line starting with "-"
+ * would end the item or start a new one.
+ */
+function toOneLine(value: string): string {
+  return value.replace(/\s+/g, " ").trim();
+}
+
 /** A relative link to a sibling file, encoded so spaces and parentheses survive. */
 function fileLink(filename: string): string {
   return encodeURIComponent(filename).replace(/\(/g, "%28").replace(/\)/g, "%29");
@@ -327,7 +336,10 @@ export function topicToMarkdownFile(
   return `${frontMatter}\n\n${body.join("\n\n")}\n`;
 }
 
-/** A topic for the clipboard: readable header, then its entries linked to their sources. */
+/**
+ * A topic for the clipboard: readable header, then its entries linked to their
+ * sources, each followed by its description.
+ */
 export function topicToClipboardMarkdown(
   topic: TopicDocType,
   entries: EntryDocType[],
@@ -343,11 +355,12 @@ export function topicToClipboardMarkdown(
     lines.push("", "## Entries", "");
     for (const entry of entries) {
       const title = escapeLinkText(entry.title);
-      lines.push(
+      const item =
         entry.url && isSafeHref(entry.url)
           ? `- [${title}](${markdownDestination(entry.url)})`
-          : `- ${title}`,
-      );
+          : `- ${title}`;
+      const description = toOneLine(entry.description ?? "");
+      lines.push(description ? `${item} — ${description}` : item);
     }
   }
 
@@ -373,9 +386,14 @@ export function topicToClipboardHtml(
   if (entries.length > 0) {
     const items = entries.map((entry) => {
       const title = escapeHtml(entry.title);
-      return entry.url && isSafeHref(entry.url)
-        ? `<li><a href="${escapeHtml(entry.url)}">${title}</a></li>`
-        : `<li>${title}</li>`;
+      const label =
+        entry.url && isSafeHref(entry.url)
+          ? `<a href="${escapeHtml(entry.url)}">${title}</a>`
+          : title;
+      const description = toOneLine(entry.description ?? "");
+      return description
+        ? `<li>${label} — ${escapeHtml(description)}</li>`
+        : `<li>${label}</li>`;
     });
     parts.push("<h2>Entries</h2>", `<ul>${items.join("")}</ul>`);
   }
