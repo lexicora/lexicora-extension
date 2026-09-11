@@ -11,12 +11,8 @@ import {
   PinIcon,
   StarIcon,
 } from "lucide-react";
-import { useTabSupport } from "@/hooks/use-tab-support";
+import { useCaptureActiveTab } from "@/hooks/sidepanel/use-capture-active-tab";
 import { FEATURES } from "@/constants/features";
-import { MSG } from "@/constants/messaging";
-import type { TabData } from "@/types/tab-data.types";
-import type { CaptureMode } from "@/types/page-data.types";
-import { sendMessage } from "@/lib/messaging";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useHomeData } from "./__hooks__/use-home-data";
@@ -36,7 +32,7 @@ function formatFavoriteCount(count: number): string {
 
 function HomePage() {
   const navigate = useNavigate();
-  const { isSupported, activeTab } = useTabSupport();
+  const { capture: capturePage, isSupported } = useCaptureActiveTab();
   const [promptText, setPromptText] = useState("");
 
   const {
@@ -58,32 +54,6 @@ function HomePage() {
     : isLibraryEmpty
       ? "empty-state"
       : "recent-entries";
-
-  const capturePage = async (mode: CaptureMode = "page") => {
-    if (!isSupported) return;
-    let finalTab = activeTab;
-    if (!finalTab?.id || !finalTab?.windowId) {
-      const [queriedTab] = await browser.tabs.query({
-        active: true,
-        currentWindow: true,
-      });
-      finalTab = queriedTab ?? null;
-    }
-    if (!finalTab?.id || !finalTab?.windowId) return;
-    const tabData: TabData = {
-      tabId: finalTab.id,
-      windowId: finalTab.windowId,
-    };
-    sendMessage(MSG.REQUEST_PAGE_CAPTURE, {
-      ...tabData,
-      fromContext: "side-panel",
-      mode,
-    }).catch(() => null);
-    navigate("/library/entries/new", {
-      viewTransition: true,
-      state: { isCapturePending: true },
-    });
-  };
 
   return (
     <PageContainer id="lc-home-page" classNameInner="flex flex-col">

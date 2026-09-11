@@ -14,7 +14,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { useDeferredValue, useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -77,6 +77,16 @@ function LibraryPage() {
 
   const activeTab = searchParams.get("tab") || "entries";
   const targetTabRef = useRef(activeTab);
+
+  // Set by the "/" shortcut when it had to navigate here. Read once on mount:
+  // the search-param sync below replaces the location, which drops its state.
+  const location = useLocation();
+  const focusSearchOnMount = useRef(location.state?.focusSearch === true);
+  useEffect(() => {
+    if (focusSearchOnMount.current) {
+      document.getElementById("search-input")?.focus();
+    }
+  }, []);
 
   useEffect(() => {
     targetTabRef.current = activeTab;
@@ -143,6 +153,7 @@ function LibraryPage() {
                   </InputGroupAddon>
                   <InputGroupInput
                     id="search-input"
+                    data-shortcut-search
                     //type="search"
                     placeholder="Search..."
                     className="h-8 px-2"

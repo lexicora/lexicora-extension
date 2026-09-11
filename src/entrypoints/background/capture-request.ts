@@ -1,13 +1,14 @@
 import { MSG } from "@/constants/messaging";
 import { sendMessage } from "@/lib/messaging";
 import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
+import { captureMessagesFor, fetchCaptureData } from "./capture-flow";
 import type { TabData } from "@/types/tab-data.types";
 import type { CaptureMode } from "@/types/page-data.types";
 
 /**
  * Asks the tab's content script for page data and hands it to the side panel.
  *
- * `mode` only changes which content message is sent. Navigation, the pending
+ * `mode` only changes which content messages are sent. Navigation, the pending
  * pull store and the push to an already open side panel are shared, so a
  * bookmark lands on the same entry-create page as a full capture.
  */
@@ -31,12 +32,10 @@ export async function handleCaptureRequest(
     }
   }
 
-  // Request page data from content script via native messaging (faster than @webext-core/messaging)
-  const pageSelectionData = await browser.tabs
-    .sendMessage(tabData.tabId ?? 0, {
-      type: mode === "bookmark" ? MSG.GET_PAGE_METADATA : MSG.GET_PAGE_DATA,
-    })
-    .catch(() => null);
+  const pageSelectionData = await fetchCaptureData(
+    tabData.tabId ?? 0,
+    captureMessagesFor(mode),
+  );
 
   if (!pageSelectionData) return;
 

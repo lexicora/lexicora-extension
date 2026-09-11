@@ -8,6 +8,7 @@ import {
   setupContextMenuStateSync,
 } from "./context-menu";
 import { setupMessagingHandlers } from "./messaging-handler";
+import { setupCommands } from "./commands";
 import { setupPortHandlers } from "./port-handler";
 
 export default defineBackground(() => {
@@ -53,6 +54,9 @@ export default defineBackground(() => {
 
   // Messaging handlers
   setupMessagingHandlers();
+
+  // Browser-wide keyboard shortcuts
+  setupCommands();
 
   // Port handlers
   //* NOTE: Feature parity discrepancy: Firefox does not support stuff related to the unsupported capture suggestions feature.

@@ -20,6 +20,7 @@ import {
   FileTextIcon,
   HeartPlusIcon,
   InfoIcon,
+  KeyboardIcon,
   LanguagesIcon,
   LifeBuoyIcon,
   LightbulbIcon,
@@ -116,7 +117,7 @@ function SettingsPage() {
                 MediaIcon={CameraIcon}
                 mediaIconColor="text-red-500"
                 itemTitle="Capture Suggestions"
-                roundingClass={FEATURES.AI ? "rounded-t-none" : ""}
+                roundingClass={FEATURES.AI ? "rounded-none!" : "rounded-b-none"}
                 disabled
                 disabledReason="Not supported in Firefox based browsers"
               />
@@ -127,10 +128,18 @@ function SettingsPage() {
                 MediaIcon={CameraIcon}
                 mediaIconColor="text-red-500"
                 itemTitle="Capture Suggestions"
-                roundingClass={FEATURES.AI ? "rounded-t-none" : ""}
+                roundingClass={FEATURES.AI ? "rounded-none!" : "rounded-b-none"}
               />
               //Add reminder feature, that reminds the user if he already has an entry with the same URL of the current page.
             )}
+            <SettingsItem
+              to="/settings/keyboard-shortcuts"
+              size="sm"
+              MediaIcon={KeyboardIcon}
+              mediaIconColor="text-slate-500"
+              itemTitle="Keyboard Shortcuts"
+              roundingClass="rounded-t-none"
+            />
           </div>
         </section>
         <section id="personalization-settings">

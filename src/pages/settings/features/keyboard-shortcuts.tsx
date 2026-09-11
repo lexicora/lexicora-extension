@@ -1,0 +1,195 @@
+import { useEffect, useState } from "react";
+
+import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
+import { SettingsItemSeparator } from "@/components/settings";
+import { Button } from "@/components/ui/button";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemHeader,
+  ItemMedia,
+} from "@/components/ui/item";
+import { Label } from "@/components/ui/label";
+import {
+  COMMAND_DESCRIPTIONS,
+  PANEL_SHORTCUTS,
+  type PanelShortcut,
+} from "@/constants/shortcuts";
+import { cn } from "@/lib/utils";
+import { GlobeIcon, KeyboardIcon, PanelRightIcon } from "lucide-react";
+
+const IS_MAC = /Mac|iPhone|iPad/.test(navigator.userAgent);
+
+function Kbd({ children, muted }: { children: React.ReactNode; muted?: boolean }) {
+  return (
+    <kbd
+      className={cn(
+        "inline-flex items-center justify-center min-w-6 h-6 px-1.5 rounded-md border bg-muted font-sans text-xs font-medium whitespace-nowrap",
+        muted ? "text-muted-foreground italic" : "text-foreground",
+      )}
+    >
+      {children}
+    </kbd>
+  );
+}
+
+/** Letters shown as keycaps are printed upper-case; symbols as they are. */
+function panelKeyLabel({ key, mod }: PanelShortcut): string {
+  const label = /^[a-z]$/.test(key) ? key.toUpperCase() : key;
+  if (!mod) return label;
+  return IS_MAC ? `⌘${label}` : `Ctrl+${label}`;
+}
+
+function ShortcutRow({
+  description,
+  keys,
+  muted,
+  rounding,
+}: {
+  description: string;
+  keys: string;
+  muted?: boolean;
+  rounding: string;
+}) {
+  return (
+    <Item
+      variant="muted"
+      size="sm"
+      className={cn("transition-none bg-card rounded-2xl py-2.5", rounding)}
+    >
+      <ItemContent>
+        <span className="text-sm text-pretty">{description}</span>
+      </ItemContent>
+      <Kbd muted={muted}>{keys}</Kbd>
+    </Item>
+  );
+}
+
+/** Rounds the first and last row of a stacked group only. */
+function rowRounding(index: number, count: number): string {
+  if (count === 1) return "";
+  if (index === 0) return "rounded-b-none";
+  if (index === count - 1) return "rounded-t-none";
+  return "rounded-none!";
+}
+
+async function openBrowserShortcutSettings() {
+  if (import.meta.env.FIREFOX) {
+    // Firefox-only API; opens "Manage Extension Shortcuts".
+    const commands = browser.commands as typeof browser.commands & {
+      openShortcutSettings?: () => Promise<void>;
+    };
+    await commands.openShortcutSettings?.();
+  } else {
+    await browser.tabs.create({ url: "chrome://extensions/shortcuts" });
+  }
+}
+
+function KeyboardShortcutsSettingsPage() {
+  const [commands, setCommands] = useState<Browser.commands.Command[] | null>(
+    null,
+  );
+
+  // Re-read on focus: bindings are changed in the browser's own settings, and
+  // the list should be current when the user comes back.
+  useEffect(() => {
+    const load = () =>
+      browser.commands
+        .getAll()
+        .then((all) => setCommands(all.filter((c) => c.name && c.name in COMMAND_DESCRIPTIONS)))
+        .catch(() => setCommands([]));
+    load();
+    window.addEventListener("focus", load);
+    return () => window.removeEventListener("focus", load);
+  }, []);
+
+  return (
+    <PageContainer>
+      <PageHeader title="Keyboard Shortcuts" goBackButton />
+      <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-1">
+        <section className="not-dark:shadow-xs rounded-2xl">
+          <Item
+            variant="muted"
+            size="default"
+            className="group py-2.5 gap-2 transition-none bg-card rounded-2xl"
+          >
+            <ItemHeader>
+              <ItemMedia variant="icon">
+                <KeyboardIcon className="size-8 text-slate-500" />
+              </ItemMedia>
+            </ItemHeader>
+            <ItemContent>
+              <ItemDescription className="text-pretty line-clamp-none">
+                Browser-wide shortcuts work on any page. Side panel shortcuts
+                only work while the panel has focus, so they never interfere
+                with the page you are on.
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+        </section>
+
+        <section>
+          <Label className="text-sm ml-2 mb-0.5">
+            <GlobeIcon className="size-3.5 text-blue-400" /> Browser-wide
+          </Label>
+          <div className="rounded-2xl not-dark:shadow-xs">
+            {commands?.map((command, index) => (
+              <div key={command.name}>
+                {index > 0 && <SettingsItemSeparator symmetric />}
+                <ShortcutRow
+                  description={
+                    COMMAND_DESCRIPTIONS[command.name!] ?? command.description ?? ""
+                  }
+                  keys={command.shortcut || "Not set"}
+                  muted={!command.shortcut}
+                  rounding={rowRounding(index, commands.length)}
+                />
+              </div>
+            ))}
+          </div>
+          <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
+            A shortcut shows <em>Not set</em> when the browser or another
+            extension already uses its keys.
+          </p>
+          <div className="flex justify-center mt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-muted-foreground not-dark:hover:bg-muted/50"
+              onClick={() => openBrowserShortcutSettings()}
+            >
+              Change in browser settings
+            </Button>
+          </div>
+        </section>
+
+        <section>
+          <Label className="text-sm ml-2 mb-0.5">
+            <PanelRightIcon className="size-3.5 text-violet-400" /> In the side
+            panel
+          </Label>
+          <div className="rounded-2xl not-dark:shadow-xs">
+            {PANEL_SHORTCUTS.map((shortcut, index) => (
+              <div key={shortcut.action}>
+                {index > 0 && <SettingsItemSeparator symmetric />}
+                <ShortcutRow
+                  description={shortcut.description}
+                  keys={panelKeyLabel(shortcut)}
+                  rounding={rowRounding(index, PANEL_SHORTCUTS.length)}
+                />
+              </div>
+            ))}
+          </div>
+          <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
+            Single keys are ignored while you type in a field or the editor.{" "}
+            {IS_MAC ? "⌘S" : "Ctrl+S"} works everywhere.
+          </p>
+        </section>
+      </main>
+    </PageContainer>
+  );
+}
+
+export default KeyboardShortcutsSettingsPage;

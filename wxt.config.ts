@@ -1,5 +1,6 @@
 import { defineConfig, type UserManifest } from "wxt";
 import tailwindcss from "@tailwindcss/vite";
+import { manifestCommands } from "./src/constants/shortcuts";
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -45,6 +46,8 @@ export default defineConfig({
         ...(browser === "firefox" ? [] : (["sidePanel"] as const)),
       ],
       //host_permissions: ["<all_urls>"], //* NOTE: Not needed, activeTab should be enough
+      // Browser-wide keyboard shortcuts — see src/constants/shortcuts.ts
+      commands: manifestCommands(browser),
     };
 
     let userManifest: UserManifest = manifestBase;

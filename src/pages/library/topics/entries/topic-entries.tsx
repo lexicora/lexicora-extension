@@ -137,6 +137,7 @@ function TopicEntriesPage() {
               </InputGroupAddon>
               <InputGroupInput
                 name="search"
+                data-shortcut-search
                 placeholder="Search entries..."
                 className="h-8 px-2"
                 value={search}

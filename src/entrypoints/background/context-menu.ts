@@ -2,53 +2,14 @@ import { sendMessage } from "@/lib/messaging";
 import { MSG } from "@/constants/messaging";
 import { FEATURES } from "@/constants/features";
 import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/constants/context-menu-items";
-import type { PageData } from "@/types/page-data.types";
-import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
+import {
+  captureMessagesFor,
+  openSidePanel,
+  requestAndForwardCapture,
+} from "./capture-flow";
 import { UNSUPPORTED_URL_REGEX } from "@/constants/support-capture-sites";
 
 // TODO: Add messages for users (if exceptions occur, e.g., no selection made)
-
-const NEW_ENTRY_PATH = "/library/entries/new";
-
-type CaptureMessage =
-  | typeof MSG.GET_PAGE_SELECTION_DATA
-  | typeof MSG.GET_PAGE_DATA
-  | typeof MSG.GET_PAGE_METADATA;
-
-/** Requests capture data and delivers it to the sidepanel when already open. */
-async function requestAndForwardCapture(
-  tabId: number,
-  windowId: number,
-  messageType: CaptureMessage,
-): Promise<PageData | null> {
-  const pageCaptureData = await browser.tabs
-    .sendMessage(tabId, { type: messageType })
-    .catch(() => null);
-
-  if (!pageCaptureData) return null;
-
-  setPendingCapture(pageCaptureData);
-
-  const clearPendingNavigation = await sendMessage(MSG.NAVIGATE_IN_SIDEPANEL, {
-    windowId,
-    path: NEW_ENTRY_PATH,
-  }).catch(() => null);
-
-  if (clearPendingNavigation === true) {
-    setPendingNavigation(null);
-  }
-
-  const clearPendingCaptureData = await sendMessage(
-    MSG.SEND_PAGE_CAPTURE_DATA,
-    { windowId, payload: pageCaptureData },
-  ).catch(() => null);
-
-  if (clearPendingCaptureData === true) {
-    setPendingCapture(null);
-  }
-
-  return pageCaptureData;
-}
 
 /**
  * Handles context menu item clicks and actions.
@@ -88,18 +49,12 @@ export function setupContextMenuActions() {
         break;
       }
       case CMI_ID.CAPTURE_SELECTION_AS_IS: {
-        setPendingNavigation(NEW_ENTRY_PATH);
-        if (import.meta.env.FIREFOX) {
-          // @ts-ignore: sidebarAction is a Firefox-specific API
-          browser.sidebarAction.open();
-        } else {
-          browser.sidePanel.open({ windowId: tab.windowId });
-        }
+        openSidePanel(tab.windowId, { forCapture: true });
 
         const pageCaptureData = await requestAndForwardCapture(
           tab.id ?? 0,
           tab.windowId,
-          MSG.GET_PAGE_SELECTION_DATA,
+          [MSG.GET_PAGE_SELECTION_DATA],
         );
 
         //* INFO: Debug logs
@@ -114,18 +69,12 @@ export function setupContextMenuActions() {
         break;
       }
       case CMI_ID.CAPTURE_PAGE_AS_IS: {
-        setPendingNavigation(NEW_ENTRY_PATH);
-        if (import.meta.env.FIREFOX) {
-          // @ts-ignore: sidebarAction is a Firefox-specific API
-          browser.sidebarAction.open();
-        } else {
-          browser.sidePanel.open({ windowId: tab.windowId });
-        }
+        openSidePanel(tab.windowId, { forCapture: true });
 
         const pageCaptureData = await requestAndForwardCapture(
           tab.id ?? 0,
           tab.windowId,
-          MSG.GET_PAGE_DATA,
+          captureMessagesFor("page"),
         );
 
         //* INFO: Debug logs
@@ -136,18 +85,12 @@ export function setupContextMenuActions() {
         break;
       }
       case CMI_ID.CAPTURE_PAGE_BOOKMARK: {
-        setPendingNavigation(NEW_ENTRY_PATH);
-        if (import.meta.env.FIREFOX) {
-          // @ts-ignore: sidebarAction is a Firefox-specific API
-          browser.sidebarAction.open();
-        } else {
-          browser.sidePanel.open({ windowId: tab.windowId });
-        }
+        openSidePanel(tab.windowId, { forCapture: true });
 
         const pageCaptureData = await requestAndForwardCapture(
           tab.id ?? 0,
           tab.windowId,
-          MSG.GET_PAGE_METADATA,
+          captureMessagesFor("bookmark"),
         );
 
         //* INFO: Debug logs

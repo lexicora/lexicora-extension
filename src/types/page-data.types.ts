@@ -46,5 +46,7 @@ export type PageData = {
  * - `page` — metadata plus the parsed main content, filled into the editor.
  * - `bookmark` — metadata only (title, URL, favicon, site name, description,
  *   author, date). The page's content is never read or parsed.
+ * - `auto` — the selection when there is one, otherwise `page`. Used by the
+ *   capture shortcuts, which have no separate "capture selection" key.
  */
-export type CaptureMode = "page" | "bookmark";
+export type CaptureMode = "page" | "bookmark" | "auto";

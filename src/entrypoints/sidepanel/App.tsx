@@ -9,6 +9,7 @@ import {
 
 // Hooks, Providers and Components
 import { RouterListener } from "@/hooks/sidepanel/router-listener";
+import { usePanelShortcuts } from "@/hooks/sidepanel/use-panel-shortcuts";
 //import { MessageListener } from "@/hooks/sidepanel/message-listener";
 import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
 import { useSidePanelConnection } from "@/hooks/sidepanel/use-sidepanel-connection";
@@ -47,6 +48,7 @@ import SettingsPage from "@/pages/settings/settings";
 // Sub-settings pages
 import ThemePersonalizationSettingsPage from "@/pages/settings/personalization/theme";
 import CaptureSuggestionsSettingsPage from "@/pages/settings/features/capture-suggestions";
+import KeyboardShortcutsSettingsPage from "@/pages/settings/features/keyboard-shortcuts";
 import DataSettingsPage from "@/pages/settings/data/data";
 import FaqPage from "@/pages/settings/help/faq";
 import TipsAndTricksPage from "@/pages/settings/help/tips-and-tricks";
@@ -56,6 +58,7 @@ import LicensesPage from "@/pages/settings/about/licenses";
 
 function RootLayout() {
   useMouseNavigation();
+  usePanelShortcuts();
   const location = useLocation();
   //* NOTE: Feature parity discrepancy: Firefox does not support stuff related to the unsupported capture suggestions feature.
   // Also Firefox natively handles state of the side-panel already being open or closed.
@@ -113,6 +116,10 @@ const router = createMemoryRouter([
       {
         path: "settings/capture-suggestions",
         element: <CaptureSuggestionsSettingsPage />,
+      },
+      {
+        path: "settings/keyboard-shortcuts",
+        element: <KeyboardShortcutsSettingsPage />,
       },
       { path: "settings/data", element: <DataSettingsPage /> },
       { path: "settings/help/faq", element: <FaqPage /> },
