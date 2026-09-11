@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Toggle } from "@/components/ui/toggle";
 import { getDb } from "@/db";
 import { cn } from "@/lib/utils";
+import { findTopicNameConflict } from "@/lib/utils/topic-name";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StarIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
@@ -29,19 +30,11 @@ const createFormSchema = (currentTopicId?: string) =>
       .refine(async (name) => {
         const db = await getDb();
         if (!db?.topics) return true;
-        const existing = await db.topics
-          .findOne({
-            selector: {
-              name: { $regex: `^${name}$`, $options: "i" }, // Case-insensitive match
-            },
-          })
-          .exec();
-
-        // If topic exists and it's not the one we're currently editing
-        if (existing && existing.id !== currentTopicId) {
-          return false;
-        }
-        return true;
+        // Compared in JS rather than with a $regex query, which read the name
+        // as a pattern — see lib/utils/topic-name. Topics are few, so loading
+        // them all is cheap.
+        const topics = await db.topics.find().exec();
+        return !findTopicNameConflict(name, topics, currentTopicId);
       }, "A topic with this name already exists."),
     tags: z.string().max(550, "Tags input is too long."), // TODO: Improve validation, we will split and validate individual tags later also filter out duplicates
     description: z

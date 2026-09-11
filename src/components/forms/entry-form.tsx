@@ -27,6 +27,7 @@ import { Toggle } from "@/components/ui/toggle";
 import type { TopicDocType } from "@/db/schemas/topic";
 import { useTabSupport } from "@/hooks/use-tab-support";
 import { cn } from "@/lib/utils";
+import { isSameTopicName } from "@/lib/utils/topic-name";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDownIcon, RefreshCw, StarIcon } from "lucide-react";
 import { Avatar } from "radix-ui";
@@ -355,8 +356,8 @@ export function EntryForm({
 
               // Only non-archived topics are selectable; check all topics for name uniqueness.
               const availableTopics = topics.filter((t) => !t.isArchived);
-              const hasExactTopicMatch = topics.some(
-                (t) => t.name.toLowerCase() === typed.toLowerCase(),
+              const hasExactTopicMatch = topics.some((t) =>
+                isSameTopicName(t.name, typed),
               );
 
               const isCustomValue =
