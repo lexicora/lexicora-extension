@@ -14,6 +14,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import type { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
@@ -23,6 +31,8 @@ import {
   ArchiveIcon,
   ChevronRightIcon,
   ClipboardIcon,
+  DownloadIcon,
+  EllipsisIcon,
   LayoutListIcon,
   PinIcon,
   PlusIcon,
@@ -34,6 +44,8 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
 import { deleteTopicCascade } from "@/db/cascade-delete";
+import { copyTopic, downloadTopic } from "@/lib/export";
+import { toast } from "sonner";
 import { useTopicDetail } from "./__hooks__/use-topic-detail";
 
 function TopicDetailPage() {
@@ -76,24 +88,30 @@ function TopicDetailPage() {
     await doc.incrementalPatch(patch);
   };
 
-  const handleCopyMarkdown = async () => {
+  const handleCopy = async () => {
     if (!topic) return;
     try {
-      const lines: string[] = [];
-      lines.push("**Topic**", "");
-      lines.push(`# ${topic.name}`, "");
-      if (topic.description) lines.push(topic.description, "");
-      if (topic.tags && topic.tags.length > 0)
-        lines.push(`**Tags:** ${topic.tags.join(", ")}`, "");
-      lines.push(
-        `**Entries:** ${entriesCount} | **Created:** ${formatDate(topic.createdAt)} | **Updated:** ${formatDate(topic.updatedAt)}`,
-        "",
-      );
-      // TODO: Include topic entries in the copy output when implemented
-      await navigator.clipboard.writeText(lines.join("\n").trimEnd());
+      await copyTopic(topic, { entries: entriesCollection });
+      toast.success("Topic copied");
     } catch (e) {
-      console.error("Failed to copy topic as Markdown:", e);
+      console.error("Failed to copy topic:", e);
+      toast.error("Failed to copy");
     }
+  };
+
+  const handleDownload = () => {
+    if (!topic) return;
+    toast.promise(
+      downloadTopic(topic, {
+        entries: entriesCollection,
+        blocks: blocksCollection,
+      }),
+      {
+        loading: "Preparing export...",
+        success: "Topic exported",
+        error: "Failed to export topic",
+      },
+    );
   };
 
   const handleDelete = async () => {
@@ -254,15 +272,44 @@ function TopicDetailPage() {
             />
           </Button>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            title="Copy topic as Markdown"
-            onClick={handleCopyMarkdown}
-            className="ml-auto size-9 rounded-lg hover:bg-blue-200/80 hover:text-blue-700 dark:hover:bg-blue-900/50 dark:hover:text-blue-400 text-muted-foreground"
-          >
-            <ClipboardIcon className="size-4.5" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                title="Copy and export"
+                className={cn(
+                  "ml-auto size-9 rounded-lg not-hover:text-muted-foreground",
+                  "hover:bg-blue-200/80 hover:text-blue-700 dark:hover:bg-blue-900/50 dark:hover:text-blue-400",
+                  "aria-expanded:bg-blue-200/80 aria-expanded:text-blue-700 dark:aria-expanded:bg-blue-900/50 dark:aria-expanded:text-blue-400",
+                )}
+              >
+                <EllipsisIcon className="size-4.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center" side="left" className="w-44">
+              <DropdownMenuLabel className="text-xs font-medium select-none text-muted-foreground py-1">
+                Copy
+              </DropdownMenuLabel>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                title="Name, description, tags and the list of entries, linked to their sources"
+                onClick={handleCopy}
+              >
+                <ClipboardIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
+                Topic
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="cursor-pointer"
+                title="Save as a zip: a folder with a note for the topic and one per entry"
+                onClick={handleDownload}
+              >
+                <DownloadIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
+                Download .zip
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button
             variant="ghost"
             size="icon"

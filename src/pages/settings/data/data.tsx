@@ -22,6 +22,7 @@ import { SettingsItemSeparator } from "@/components/settings";
 import { BrushCleaningIcon, DownloadIcon, Trash2Icon } from "lucide-react";
 import { useRxCollection } from "rxdb/plugins/react";
 import { toast } from "sonner";
+import { downloadBlob } from "@/lib/export/download";
 
 /** Disables every action while one is running — the purge holds a write lock. */
 type BusyAction = "export" | "cleanup" | "clear";
@@ -60,19 +61,12 @@ function DataSettingsPage() {
       const blob = new Blob([JSON.stringify(data, null, 2)], {
         type: "application/json",
       });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
       const timestamp = new Date()
         .toISOString()
         .slice(0, 19)
         .replace("T", "_")
         .replace(/:/g, "-");
-      a.download = `lexicora-export-${timestamp}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      downloadBlob(blob, `lexicora-export-${timestamp}.json`);
     };
 
     toast.promise(runExclusive("export", p), {

@@ -33,6 +33,7 @@ import {
   ArchiveIcon,
   ChevronRightIcon,
   ClipboardIcon,
+  DownloadIcon,
   EllipsisIcon,
   FileTextIcon,
   PinIcon,
@@ -41,24 +42,18 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { Avatar } from "radix-ui";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
 import { deleteEntryCascade } from "@/db/cascade-delete";
+import { copyEntry, downloadEntry } from "@/lib/export";
+import { toast } from "sonner";
 import { useEntryDetail } from "./__hooks__/use-entry-detail";
-
-type CopyableEditor = {
-  blocksToMarkdownLossy(blocks?: BlockNoteBlock[]): Promise<string>;
-  blocksToHTMLLossy(blocks?: BlockNoteBlock[]): Promise<string>;
-  document: BlockNoteBlock[];
-};
 
 function EntryContentViewer({
   initialBlocks,
-  onEditorReady,
 }: {
   initialBlocks: BlockNoteBlock[];
-  onEditorReady?: (editor: CopyableEditor) => void;
 }) {
   const editor = useCreateBlockNote({
     ...appBlockNoteConfig,
@@ -66,10 +61,6 @@ function EntryContentViewer({
     initialContent:
       initialBlocks.length > 0 ? (initialBlocks as any[]) : undefined,
   });
-
-  useEffect(() => {
-    onEditorReady?.(editor as unknown as CopyableEditor);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <BlockNoteView
@@ -89,7 +80,6 @@ function EntryDetailPage() {
 
   const { entry, topic, blocks } = useEntryDetail(id);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const editorRef = useRef<CopyableEditor | null>(null);
 
   const handleAttributeToggle = async (
     attribute: "isFavorite" | "isPinned" | "isArchived",
@@ -112,53 +102,26 @@ function EntryDetailPage() {
     await doc.incrementalPatch(patch);
   };
 
-  const handleCopyContentMarkdown = async () => {
-    if (!editorRef.current) return;
+  // Exports read the stored blocks rather than the on-screen viewer, so they
+  // work for entries with no content (bookmarks) and match what was saved.
+  const handleCopy = async (contentOnly: boolean) => {
+    if (!entry) return;
     try {
-      const md = await editorRef.current.blocksToMarkdownLossy(
-        editorRef.current.document,
-      );
-      await navigator.clipboard.writeText(md);
+      await copyEntry(entry, topic, blocks ?? [], { contentOnly });
+      toast.success(contentOnly ? "Content copied" : "Entry copied");
     } catch (e) {
-      console.error("Failed to copy as Markdown:", e);
+      console.error("Failed to copy entry:", e);
+      toast.error("Failed to copy");
     }
   };
 
-  const handleCopyEntryMarkdown = async (entry: EntryDocType) => {
+  const handleDownload = () => {
+    if (!entry) return;
     try {
-      const lines: string[] = [];
-      lines.push("**Entry**", "");
-      lines.push(`# ${entry.title}`, "");
-      if (topic) {
-        lines.push(`**Topic:** ${topic.name}`, "");
-      }
-      if (entry.url) {
-        const label = entry.siteName || entry.hostnameUrl || entry.url;
-        lines.push(`**Source:** [${label}](${entry.url})`, "");
-      } else if (entry.siteName) {
-        lines.push(`**Source:** ${entry.siteName}`, "");
-      }
-      if (entry.description) {
-        lines.push(entry.description, "");
-      }
-      if (entry.tags && entry.tags.length > 0) {
-        lines.push(`**Tags:** ${entry.tags.join(", ")}`, "");
-      }
-      lines.push(
-        `**Created:** ${formatDate(entry.createdAt)} | **Updated:** ${formatDate(entry.updatedAt)}`,
-        "",
-      );
-      if (editorRef.current) {
-        const contentMd = await editorRef.current.blocksToMarkdownLossy(
-          editorRef.current.document,
-        );
-        if (contentMd.trim()) {
-          lines.push("---", "", contentMd);
-        }
-      }
-      await navigator.clipboard.writeText(lines.join("\n"));
+      downloadEntry(entry, topic, blocks ?? []);
     } catch (e) {
-      console.error("Failed to copy entry as Markdown:", e);
+      console.error("Failed to download entry:", e);
+      toast.error("Failed to download entry");
     }
   };
 
@@ -385,7 +348,7 @@ function EntryDetailPage() {
               <Button
                 variant="ghost"
                 size="icon"
-                title="Copy actions"
+                title="Copy and export"
                 className={cn(
                   "ml-auto size-9 rounded-lg not-hover:text-muted-foreground",
                   "hover:bg-blue-200/80 hover:text-blue-700 dark:hover:bg-blue-900/50 dark:hover:text-blue-400",
@@ -395,25 +358,34 @@ function EntryDetailPage() {
                 <EllipsisIcon className="size-4.5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="center" side="left" className="w-39">
+            <DropdownMenuContent align="center" side="left" className="w-44">
               <DropdownMenuLabel className="text-xs font-medium select-none text-muted-foreground py-1">
-                Copy content...
+                Copy
               </DropdownMenuLabel>
               <DropdownMenuItem
                 className="cursor-pointer"
+                title="Title, source, tags and content. Keeps formatting where the target supports it, otherwise pastes Markdown."
+                onClick={() => handleCopy(false)}
+              >
+                <ClipboardIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
+                Entry
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
                 disabled={!hasContent}
-                onClick={handleCopyContentMarkdown}
+                onClick={() => handleCopy(true)}
               >
                 <FileTextIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
-                As Markdown
+                Content only
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="cursor-pointer"
-                onClick={() => handleCopyEntryMarkdown(entry)}
+                title="Save as a Markdown note, with metadata as front matter"
+                onClick={handleDownload}
               >
-                <ClipboardIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
-                With metadata
+                <DownloadIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
+                Download .md
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -447,12 +419,7 @@ function EntryDetailPage() {
         <section className="mx-auto w-full /*max-w-[calc(var(--lc-content-max-width)+0.25rem)]*/ mt-2 mb-2">
           {/* <Separator className="mx-auto max-w-[calc(100%-8px)] mb-5 opacity-60" /> */}
           {hasContent ? (
-            <EntryContentViewer
-              initialBlocks={blocks!}
-              onEditorReady={(editor) => {
-                editorRef.current = editor;
-              }}
-            />
+            <EntryContentViewer initialBlocks={blocks!} />
           ) : (
             <p className="italic text-muted-foreground text-sm px-4 py-3">
               No content.
