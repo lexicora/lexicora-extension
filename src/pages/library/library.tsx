@@ -33,6 +33,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { useAppHost } from "@/providers/app-host";
+import { FEATURES } from "@/constants/features";
 
 // TODO: Potentially make searching faster, when entering a search query, because on every character, a navigation takes place.
 // TODO: Also ensure, that when on a tab, the other tabs should not be rendered and in a way put to sleep, so they don't do unnecessary processing.
@@ -125,6 +126,9 @@ function LibraryPage() {
       { replace: true, viewTransition: true },
     );
   };
+
+  const topUIScrollOffset = FEATURES.SIDE_PANEL_TOP_BAR ? 234 : 176;
+  // 176 = 234 - 58 (top bar height) = 176, because the top bar is not present in the new side panel design.
 
   return (
     <PageContainer className="pb-1.75!" isWindowed={isWindowed}>
@@ -240,7 +244,7 @@ function LibraryPage() {
             <EntryList
               search={deferredSearch}
               filter={filter}
-              topUIScrollOffset={234}
+              topUIScrollOffset={topUIScrollOffset}
             />
           </main>
         </TabsContent>
@@ -249,7 +253,7 @@ function LibraryPage() {
             <TopicList
               search={deferredSearch}
               filter={filter}
-              topUIScrollOffset={234}
+              topUIScrollOffset={topUIScrollOffset}
             />
           </main>
         </TabsContent>

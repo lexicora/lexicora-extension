@@ -26,6 +26,7 @@ import {
 } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
 import { useAppHost } from "@/providers/app-host";
+import { FEATURES } from "@/constants/features";
 
 function TopicEntriesPage() {
   const { isWindowed } = useAppHost();
@@ -116,6 +117,9 @@ function TopicEntriesPage() {
     }
   };
 
+  const topUIScrollOffset = FEATURES.SIDE_PANEL_TOP_BAR ? 185 : 127;
+  // 127 = 234 - 107 (top bar height) = 127, because the top bar is not present in the new side panel design.
+
   return (
     <PageContainer id="lc-topic-entries-page">
       <PageHeader
@@ -184,7 +188,7 @@ function TopicEntriesPage() {
             search={deferredSearch}
             filter={filter}
             scrollStorageKey={`entryList:${id}`}
-            topUIScrollOffset={185}
+            topUIScrollOffset={topUIScrollOffset}
             disableCreate={topicIsArchived}
             restoredScrollTop={restoredScrollTop}
           />
