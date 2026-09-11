@@ -162,7 +162,8 @@ function EntryDetailPage() {
       blocks.length === 0 ||
       (blocks.length === 1 &&
         firstBlock?.type === "paragraph" &&
-        (!firstBlock?.content || (firstBlock.content as unknown[]).length === 0) &&
+        (!firstBlock?.content ||
+          (firstBlock.content as unknown[]).length === 0) &&
         (!firstBlock?.children || firstBlock.children.length === 0))
     );
 
@@ -198,6 +199,10 @@ function EntryDetailPage() {
         {/* Source line: favicon + site name / hostname + subtle path.
             faviconUrl and siteName are independent metadata (not derived from url).
             hostnameUrl / pathnameUrl / searchUrl are derived from url and only exist when url is set. */}
+        {/* <p className="text-sm text-muted-foreground/60">
+          Source: {entry.faviconUrl ? "Favicon" : ""}{" "}
+          {entry.siteName ? entry.siteName : ""} {entry.url ? entry.url : ""}
+        </p> */}
         {(entry.faviconUrl || entry.siteName || entry.url) && (
           <div className="flex items-center gap-1.5 mt-3 min-w-0">
             {entry.faviconUrl && (
@@ -231,7 +236,7 @@ function EntryDetailPage() {
                 )}
                 {entry.pathnameUrl && entry.pathnameUrl !== "/" && (
                   <span className="text-xs mt-px text-muted-foreground/60 truncate">
-                    {entry.pathnameUrl}
+                    {entry.pathnameUrl.replace(/\/$/, "")}
                     {entry.searchUrl || ""}
                   </span>
                 )}
