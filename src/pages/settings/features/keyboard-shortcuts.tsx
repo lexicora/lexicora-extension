@@ -22,7 +22,13 @@ import { GlobeIcon, KeyboardIcon, PanelRightIcon } from "lucide-react";
 
 const IS_MAC = /Mac|iPhone|iPad/.test(navigator.userAgent);
 
-function Kbd({ children, muted }: { children: React.ReactNode; muted?: boolean }) {
+function Kbd({
+  children,
+  muted,
+}: {
+  children: React.ReactNode;
+  muted?: boolean;
+}) {
   return (
     <kbd
       className={cn(
@@ -60,7 +66,7 @@ function ShortcutRow({
       className={cn("transition-none bg-card rounded-2xl py-2.5", rounding)}
     >
       <ItemContent>
-        <span className="text-sm text-pretty">{description}</span>
+        <span className="text-sm text-pretty text-left">{description}</span>
       </ItemContent>
       <Kbd muted={muted}>{keys}</Kbd>
     </Item>
@@ -98,7 +104,11 @@ function KeyboardShortcutsSettingsPage() {
     const load = () =>
       browser.commands
         .getAll()
-        .then((all) => setCommands(all.filter((c) => c.name && c.name in COMMAND_DESCRIPTIONS)))
+        .then((all) =>
+          setCommands(
+            all.filter((c) => c.name && c.name in COMMAND_DESCRIPTIONS),
+          ),
+        )
         .catch(() => setCommands([]));
     load();
     window.addEventListener("focus", load);
@@ -140,7 +150,9 @@ function KeyboardShortcutsSettingsPage() {
                 {index > 0 && <SettingsItemSeparator symmetric />}
                 <ShortcutRow
                   description={
-                    COMMAND_DESCRIPTIONS[command.name!] ?? command.description ?? ""
+                    COMMAND_DESCRIPTIONS[command.name!] ??
+                    command.description ??
+                    ""
                   }
                   keys={command.shortcut || "Not set"}
                   muted={!command.shortcut}
