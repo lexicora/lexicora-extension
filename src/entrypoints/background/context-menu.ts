@@ -3,11 +3,52 @@ import { MSG } from "@/constants/messaging";
 import { FEATURES } from "@/constants/features";
 import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/constants/context-menu-items";
 import type { PageData } from "@/types/page-data.types";
-import turndownService from "@/lib/turndown";
 import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
 import { UNSUPPORTED_URL_REGEX } from "@/constants/support-capture-sites";
 
 // TODO: Add messages for users (if exceptions occur, e.g., no selection made)
+
+const NEW_ENTRY_PATH = "/library/entries/new";
+
+type CaptureMessage =
+  | typeof MSG.GET_PAGE_SELECTION_DATA
+  | typeof MSG.GET_PAGE_DATA
+  | typeof MSG.GET_PAGE_METADATA;
+
+/** Requests capture data and delivers it to the sidepanel when already open. */
+async function requestAndForwardCapture(
+  tabId: number,
+  windowId: number,
+  messageType: CaptureMessage,
+): Promise<PageData | null> {
+  const pageCaptureData = await browser.tabs
+    .sendMessage(tabId, { type: messageType })
+    .catch(() => null);
+
+  if (!pageCaptureData) return null;
+
+  setPendingCapture(pageCaptureData);
+
+  const clearPendingNavigation = await sendMessage(MSG.NAVIGATE_IN_SIDEPANEL, {
+    windowId,
+    path: NEW_ENTRY_PATH,
+  }).catch(() => null);
+
+  if (clearPendingNavigation === true) {
+    setPendingNavigation(null);
+  }
+
+  const clearPendingCaptureData = await sendMessage(
+    MSG.SEND_PAGE_CAPTURE_DATA,
+    { windowId, payload: pageCaptureData },
+  ).catch(() => null);
+
+  if (clearPendingCaptureData === true) {
+    setPendingCapture(null);
+  }
+
+  return pageCaptureData;
+}
 
 /**
  * Handles context menu item clicks and actions.
@@ -47,8 +88,7 @@ export function setupContextMenuActions() {
         break;
       }
       case CMI_ID.CAPTURE_SELECTION_AS_IS: {
-        setPendingNavigation("/library/entries/new"); // Maybe put this below opening the sidepanel
-        // update panel scope to tab scope if needed
+        setPendingNavigation(NEW_ENTRY_PATH);
         if (import.meta.env.FIREFOX) {
           // @ts-ignore: sidebarAction is a Firefox-specific API
           browser.sidebarAction.open();
@@ -56,37 +96,11 @@ export function setupContextMenuActions() {
           browser.sidePanel.open({ windowId: tab.windowId });
         }
 
-        // Request page selection data from content script (maybe query tab, if the tab.id is null, realistically it should never be null here)
-        const pageCaptureData = await browser.tabs
-          .sendMessage(tab.id ?? 0, { type: MSG.GET_PAGE_SELECTION_DATA })
-          .catch(() => null); // Native messaging (faster than below)
-        //const pageSelectionData = await sendMessage(MSG.GET_PAGE_SELECTION_DATA, null, tab?.id);
-
-        if (pageCaptureData) {
-          // Store for pull logic in side panel
-          setPendingCapture(pageCaptureData);
-
-          // Push logic if side panel is already open
-          // TODO: Maybe move this right after calling the opening of the sidepanel.
-          const clearPendingNavigation = await sendMessage(
-            MSG.NAVIGATE_IN_SIDEPANEL,
-            { windowId: tab.windowId, path: "/library/entries/new" },
-          ).catch(() => null);
-
-          if (clearPendingNavigation === true) {
-            setPendingNavigation(null);
-          }
-
-          // Push logic if side panel is already open
-          const clearPendingCaptureData = await sendMessage(
-            MSG.SEND_PAGE_CAPTURE_DATA,
-            { windowId: tab.windowId, payload: pageCaptureData },
-          ).catch(() => null);
-
-          if (clearPendingCaptureData === true) {
-            setPendingCapture(null);
-          }
-        }
+        const pageCaptureData = await requestAndForwardCapture(
+          tab.id ?? 0,
+          tab.windowId,
+          MSG.GET_PAGE_SELECTION_DATA,
+        );
 
         //* INFO: Debug logs
         if (import.meta.env.DEV) {
@@ -100,8 +114,7 @@ export function setupContextMenuActions() {
         break;
       }
       case CMI_ID.CAPTURE_PAGE_AS_IS: {
-        setPendingNavigation("/library/entries/new");
-        // update panel scope to tab scope if needed
+        setPendingNavigation(NEW_ENTRY_PATH);
         if (import.meta.env.FIREFOX) {
           // @ts-ignore: sidebarAction is a Firefox-specific API
           browser.sidebarAction.open();
@@ -109,36 +122,11 @@ export function setupContextMenuActions() {
           browser.sidePanel.open({ windowId: tab.windowId });
         }
 
-        // Request page selection data from content script (maybe query tab, if the tab.id is null, realistically it should never be null here)
-        const pageCaptureData = await browser.tabs
-          .sendMessage(tab.id ?? 0, { type: MSG.GET_PAGE_DATA })
-          .catch(() => null); // Native messaging (faster than below)
-        //const pageSelectionData = await sendMessage(MSG.GET_PAGE_DATA, null, tab?.id);
-
-        if (pageCaptureData) {
-          // Store for pull logic in side panel
-          setPendingCapture(pageCaptureData);
-
-          // Push logic if side panel is already open
-          const clearPendingNavigation = await sendMessage(
-            MSG.NAVIGATE_IN_SIDEPANEL,
-            { windowId: tab.windowId, path: "/library/entries/new" },
-          ).catch(() => null);
-
-          if (clearPendingNavigation === true) {
-            setPendingNavigation(null);
-          }
-
-          // Push logic if side panel is already open
-          const clearPendingCaptureData = await sendMessage(
-            MSG.SEND_PAGE_CAPTURE_DATA,
-            { windowId: tab.windowId, payload: pageCaptureData },
-          ).catch(() => null);
-
-          if (clearPendingCaptureData === true) {
-            setPendingCapture(null);
-          }
-        }
+        const pageCaptureData = await requestAndForwardCapture(
+          tab.id ?? 0,
+          tab.windowId,
+          MSG.GET_PAGE_DATA,
+        );
 
         //* INFO: Debug logs
         if (import.meta.env.DEV) {
@@ -148,8 +136,7 @@ export function setupContextMenuActions() {
         break;
       }
       case CMI_ID.CAPTURE_PAGE_BOOKMARK: {
-        setPendingNavigation("/library/entries/new");
-        // update panel scope to tab scope if needed
+        setPendingNavigation(NEW_ENTRY_PATH);
         if (import.meta.env.FIREFOX) {
           // @ts-ignore: sidebarAction is a Firefox-specific API
           browser.sidebarAction.open();
@@ -157,34 +144,11 @@ export function setupContextMenuActions() {
           browser.sidePanel.open({ windowId: tab.windowId });
         }
 
-        const pageCaptureData = await browser.tabs
-          .sendMessage(tab.id ?? 0, { type: MSG.GET_PAGE_METADATA })
-          .catch(() => null); // Native messaging (faster than below)
-
-        if (pageCaptureData) {
-          // Store for pull logic in side panel
-          setPendingCapture(pageCaptureData);
-
-          // Push logic if side panel is already open
-          const clearPendingNavigation = await sendMessage(
-            MSG.NAVIGATE_IN_SIDEPANEL,
-            { windowId: tab.windowId, path: "/library/entries/new" },
-          ).catch(() => null);
-
-          if (clearPendingNavigation === true) {
-            setPendingNavigation(null);
-          }
-
-          // Push logic if side panel is already open
-          const clearPendingCaptureData = await sendMessage(
-            MSG.SEND_PAGE_CAPTURE_DATA,
-            { windowId: tab.windowId, payload: pageCaptureData },
-          ).catch(() => null);
-
-          if (clearPendingCaptureData === true) {
-            setPendingCapture(null);
-          }
-        }
+        const pageCaptureData = await requestAndForwardCapture(
+          tab.id ?? 0,
+          tab.windowId,
+          MSG.GET_PAGE_METADATA,
+        );
 
         //* INFO: Debug logs
         if (import.meta.env.DEV) {
@@ -234,6 +198,10 @@ export function setupContextMenuStateSync(/*menuId: string*/) {
         visible: !isDisabled,
       });
       await browser.contextMenus.update(CMI_ID.CAPTURE_PAGE_AS_IS, {
+        //enabled: !isDisabled,
+        visible: !isDisabled,
+      });
+      await browser.contextMenus.update(CMI_ID.CAPTURE_PAGE_BOOKMARK, {
         //enabled: !isDisabled,
         visible: !isDisabled,
       });
