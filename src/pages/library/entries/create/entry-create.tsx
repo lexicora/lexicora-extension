@@ -304,6 +304,7 @@ function EntryCreatePage() {
                 id="entry-create-form"
                 topics={topics}
                 overrideExisting={capturedData?.misc?.overrideExisting ?? true}
+                expandMetadata={capturedData?.misc?.metadataOnly === true}
                 initialData={{
                   title: capturedData?.title || searchParams.get("title") || "",
                   topicId: searchParams.get("topicId") || "",

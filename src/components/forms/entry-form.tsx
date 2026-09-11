@@ -103,6 +103,13 @@ interface EntryFormProps {
   id?: string;
   initialData?: Partial<EntryFormData>;
   overrideExisting?: boolean;
+  /**
+   * Opens "Additional fields & metadata" whenever new `initialData` arrives
+   * with this set. Used for bookmarks: with no content to review, the metadata
+   * is the whole entry, so it should not be hidden. Only ever opens — the user
+   * can still collapse it, and captures without it leave it as it was.
+   */
+  expandMetadata?: boolean;
   topics: TopicDocType[];
   onSubmit: (data: EntryFormData) => void | Promise<void>;
   isLoading?: boolean;
@@ -114,6 +121,7 @@ export function EntryForm({
   id,
   initialData,
   overrideExisting = true,
+  expandMetadata = false,
   topics,
   onSubmit,
   isLoading,
@@ -145,6 +153,7 @@ export function EntryForm({
   });
 
   const prevInitialDataId = useRef<string | null>(null);
+  const [isMetadataOpen, setIsMetadataOpen] = useState(false);
   const [topicInputValue, setTopicInputValue] = useState("");
   const topicDisplayInitialized = useRef(false);
 
@@ -182,9 +191,13 @@ export function EntryForm({
 
     // Simple hash/stringification to avoid infinite loops if initialData object reference changes but content doesn't.
     // If performance is an issue, a more granular check or passing individual values could be done.
-    const currentDataId = JSON.stringify(initialData);
+    // expandMetadata is part of the key so that bookmarking a page already
+    // captured in full, whose fields are identical, still opens the section.
+    const currentDataId = JSON.stringify([initialData, expandMetadata]);
     if (prevInitialDataId.current === currentDataId) return;
     prevInitialDataId.current = currentDataId;
+
+    if (expandMetadata) setIsMetadataOpen(true);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateField = (name: keyof FormValues, newValue: any) => {
@@ -207,7 +220,7 @@ export function EntryForm({
     updateField("siteName", initialData.siteName);
     updateField("languageCode", initialData.languageCode);
     updateField("isFavorite", initialData.isFavorite);
-  }, [initialData, overrideExisting, setValue, getValues]);
+  }, [initialData, overrideExisting, expandMetadata, setValue, getValues]);
 
   const onValidSubmit = (data: FormValues) => {
     const tagsArray = data.tags
@@ -516,7 +529,11 @@ export function EntryForm({
           )}
         </Field>
 
-        <Collapsible className="w-full">
+        <Collapsible
+          className="w-full"
+          open={isMetadataOpen}
+          onOpenChange={setIsMetadataOpen}
+        >
           <CollapsibleTrigger asChild>
             <Button
               variant="ghost"
