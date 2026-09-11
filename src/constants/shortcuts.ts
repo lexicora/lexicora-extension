@@ -38,7 +38,7 @@ export const BROWSER_COMMANDS: Record<
   BrowserCommand
 > = {
   openSidePanel: {
-    description: "Open the Lexicora side panel",
+    description: "Open or close the Lexicora side panel",
     suggestedKey: { default: "Alt+Shift+L", mac: "MacCtrl+Shift+L" },
   },
   capture: {
@@ -86,38 +86,123 @@ export function manifestCommands(browser: string) {
 
 export type PanelShortcutAction =
   | "search"
+  | "home"
+  | "back"
+  | "forward"
   | "newEntry"
   | "capture"
   | "bookmark"
   | "showShortcuts"
   | "save";
 
-export interface PanelShortcut {
-  action: PanelShortcutAction;
+/**
+ * One key combination. `mod` is ⌘ on macOS and Ctrl on Windows and Linux —
+ * never either on either — so each platform gets its own convention.
+ */
+export interface KeyBinding {
   /**
-   * The character the key produces (`KeyboardEvent.key`), not the physical key,
-   * so "/" works wherever the layout puts it — Shift+7 on German keyboards.
+   * `KeyboardEvent.key`, lower-cased: the character produced, not the physical
+   * key, so "/" works wherever the layout puts it (Shift+7 on Swiss and German
+   * keyboards). Named keys are lower-cased too, e.g. "arrowleft".
    */
   key: string;
-  /** Needs ⌘ on macOS or Ctrl elsewhere, and works while typing. */
   mod?: boolean;
-  description: string;
+  alt?: boolean;
+  /** Limit the binding to macOS ("mac") or to Windows and Linux ("other"). */
+  platform?: "mac" | "other";
 }
 
+export interface PanelShortcut {
+  action: PanelShortcutAction;
+  /** Alternatives; any one triggers the action. The first that applies is shown in Settings. */
+  bindings: KeyBinding[];
+  description: string;
+  /** Also fires while typing in a field or the editor. Only ⌘/Ctrl+S needs this. */
+  whileTyping?: boolean;
+}
+
+/**
+ * Single keys for most actions, as GitHub, Gmail and YouTube do: nearly every
+ * ⌘/Ctrl+letter is already the browser's (new window, new tab, bookmarks,
+ * address bar), and some of those cannot be taken by a page at all. The few
+ * ⌘/Ctrl combinations here are ones sites commonly claim safely.
+ *
+ * Back and forward reuse each platform's own browser keys. The side panel's
+ * router keeps its history in memory, where the browser cannot see it, so
+ * without these the keys do nothing in the panel — the same reason the mouse
+ * back and forward buttons are handled in `use-mouse-navigation`.
+ */
 export const PANEL_SHORTCUTS: PanelShortcut[] = [
-  { action: "search", key: "/", description: "Search the library" },
-  { action: "newEntry", key: "n", description: "New entry" },
+  {
+    action: "search",
+    // ⌘/Ctrl+K as well, for layouts where "/" needs Shift.
+    bindings: [{ key: "/" }, { key: "k", mod: true }],
+    description: "Search the library",
+  },
+  { action: "home", bindings: [{ key: "h" }], description: "Go to Home" },
+  {
+    action: "back",
+    bindings: [
+      { key: "arrowleft", mod: true, platform: "mac" },
+      { key: "[", mod: true, platform: "mac" },
+      { key: "arrowleft", alt: true, platform: "other" },
+    ],
+    description: "Go back",
+  },
+  {
+    action: "forward",
+    bindings: [
+      { key: "arrowright", mod: true, platform: "mac" },
+      { key: "]", mod: true, platform: "mac" },
+      { key: "arrowright", alt: true, platform: "other" },
+    ],
+    description: "Go forward",
+  },
+  { action: "newEntry", bindings: [{ key: "n" }], description: "New entry" },
   {
     action: "capture",
-    key: "c",
+    bindings: [{ key: "c" }],
     description: "Capture the selection, or the page if nothing is selected",
   },
-  { action: "bookmark", key: "b", description: "Bookmark the current page" },
-  { action: "showShortcuts", key: "?", description: "Show keyboard shortcuts" },
+  {
+    action: "bookmark",
+    bindings: [{ key: "b" }],
+    description: "Bookmark the current page",
+  },
+  {
+    action: "showShortcuts",
+    bindings: [{ key: "?" }],
+    description: "Show keyboard shortcuts",
+  },
   {
     action: "save",
-    key: "s",
-    mod: true,
+    bindings: [{ key: "s", mod: true }],
     description: "Save, on entry and topic create and edit pages",
+    whileTyping: true,
   },
 ];
+
+/** Whether a binding applies on the current platform. */
+export function bindingApplies(binding: KeyBinding, isMac: boolean): boolean {
+  if (binding.platform === "mac") return isMac;
+  if (binding.platform === "other") return !isMac;
+  return true;
+}
+
+const KEY_LABELS: Record<string, string> = {
+  arrowleft: "←",
+  arrowright: "→",
+};
+
+/** A binding as shown to the user: "⌘K" on macOS, "Ctrl+K" elsewhere. */
+export function formatBinding(binding: KeyBinding, isMac: boolean): string {
+  const key =
+    KEY_LABELS[binding.key] ??
+    (/^[a-z]$/.test(binding.key) ? binding.key.toUpperCase() : binding.key);
+  const mods = [
+    binding.mod && (isMac ? "⌘" : "Ctrl"),
+    binding.alt && (isMac ? "⌥" : "Alt"),
+  ].filter(Boolean);
+  if (mods.length === 0) return key;
+  return isMac ? `${mods.join("")}${key}` : `${mods.join("+")}+${key}`;
+}

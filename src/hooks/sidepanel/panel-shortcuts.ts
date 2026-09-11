@@ -1,14 +1,21 @@
-import { PANEL_SHORTCUTS, type PanelShortcutAction } from "@/constants/shortcuts";
+import {
+  bindingApplies,
+  PANEL_SHORTCUTS,
+  type KeyBinding,
+  type PanelShortcutAction,
+} from "@/constants/shortcuts";
 
 /**
  * Matches a keydown in the side panel to a shortcut action. Pure — the
  * listener lives in `use-panel-shortcuts` — so the rules are testable.
  *
- * Plain-key shortcuts are skipped while the user is typing, and inside dialogs
- * and menus, which use letter keys themselves (a menu's type-ahead, for one).
- * ⌘/Ctrl shortcuts work everywhere, including while typing, which is the
- * point of ⌘/Ctrl+S.
+ * Shortcuts are skipped while the user is typing, and inside dialogs and
+ * menus, which use keys themselves (a menu's type-ahead, for one) — except
+ * those marked `whileTyping`, which is the point of ⌘/Ctrl+S.
  */
+
+export const IS_MAC =
+  typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.userAgent);
 
 export type ShortcutKeyEvent = Pick<
   KeyboardEvent,
@@ -33,24 +40,37 @@ export function isKeyOwnedByTarget(target: EventTarget | null): boolean {
   return target.closest(`${TYPING_SELECTOR}, ${OVERLAY_SELECTOR}`) !== null;
 }
 
+function matchesBinding(
+  event: ShortcutKeyEvent,
+  binding: KeyBinding,
+  isMac: boolean,
+): boolean {
+  if (!bindingApplies(binding, isMac)) return false;
+
+  // The platform's modifier must match exactly, and the other one must be up:
+  // Ctrl+K on a Mac is not ⌘K, and ⌘ on Windows is the Windows key.
+  const mod = isMac ? event.metaKey : event.ctrlKey;
+  const otherMod = isMac ? event.ctrlKey : event.metaKey;
+  if (otherMod || mod !== Boolean(binding.mod)) return false;
+  if (event.altKey !== Boolean(binding.alt)) return false;
+
+  // Shift is not checked: "?" and, on many layouts, "/" need it. Lower-casing
+  // also keeps letters working with Caps Lock on.
+  return event.key.toLowerCase() === binding.key;
+}
+
 export function resolvePanelShortcut(
   event: ShortcutKeyEvent,
+  isMac: boolean = IS_MAC,
 ): PanelShortcutAction | null {
   // IME composition (e.g. typing Japanese) sends keydowns that are not commands.
   if (event.defaultPrevented || event.isComposing) return null;
 
-  if (event.metaKey || event.ctrlKey) {
-    if (event.altKey) return null;
-    const key = event.key.toLowerCase();
-    return PANEL_SHORTCUTS.find((s) => s.mod && s.key === key)?.action ?? null;
-  }
-
-  // Any other modifier combination is left to the browser and the OS.
-  if (event.altKey) return null;
-  if (isKeyOwnedByTarget(event.target)) return null;
-
-  // Shift is allowed: "?" and, on many layouts, "/" need it. Letters match in
-  // either case, so the shortcuts keep working with Caps Lock on.
-  const key = event.key.toLowerCase();
-  return PANEL_SHORTCUTS.find((s) => !s.mod && s.key === key)?.action ?? null;
+  const typing = isKeyOwnedByTarget(event.target);
+  const shortcut = PANEL_SHORTCUTS.find(
+    (s) =>
+      (!typing || s.whileTyping) &&
+      s.bindings.some((b) => matchesBinding(event, b, isMac)),
+  );
+  return shortcut?.action ?? null;
 }

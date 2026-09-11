@@ -10,6 +10,7 @@ import {
 // Hooks, Providers and Components
 import { RouterListener } from "@/hooks/sidepanel/router-listener";
 import { usePanelShortcuts } from "@/hooks/sidepanel/use-panel-shortcuts";
+import { SidePanelToggleListener } from "@/hooks/sidepanel/side-panel-toggle-listener";
 //import { MessageListener } from "@/hooks/sidepanel/message-listener";
 import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
 import { useSidePanelConnection } from "@/hooks/sidepanel/use-sidepanel-connection";
@@ -77,6 +78,7 @@ function RootLayout() {
   return (
     <AppMessagingProvider>
       <RouterListener />
+      {!import.meta.env.FIREFOX && <SidePanelToggleListener />}
       {disableScrollRestoration || <ScrollRestoration />}
       <ScrollObserverProvider>
         {FEATURES.SIDE_PANEL_TOP_BAR && <TopBar />}

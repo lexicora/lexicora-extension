@@ -17,6 +17,8 @@ interface ProtocolMap {
     windowId: number | string;
     path: string;
   }): boolean | null;
+  /** Closes the panel in `windowId` if it was already open; see SidePanelToggleListener. */
+  [MSG.TOGGLE_SIDEPANEL](data: { windowId: number | string }): boolean | null;
   [MSG.SEND_PAGE_CAPTURE_DATA](data: {
     windowId: number | string;
     payload: PageData | null;

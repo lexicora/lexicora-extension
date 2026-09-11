@@ -102,11 +102,24 @@ describe("browser-wide shortcuts", () => {
     expect(tabsSendMessage).not.toHaveBeenCalled();
   });
 
-  it("opens the side panel for its own shortcut without capturing", async () => {
+  it("toggles with its own shortcut: opens synchronously, then asks an open panel to close", async () => {
+    const runtimeSendMessage = vi
+      .spyOn(browser.runtime, "sendMessage")
+      .mockImplementation((async () => null) as never);
+
     onCommand(COMMAND_ID.OPEN_SIDE_PANEL, tab("https://example.com"));
+    expect(sidePanelOpen).toHaveBeenCalledWith({ windowId: 3 });
     await flush();
 
-    expect(sidePanelOpen).toHaveBeenCalledWith({ windowId: 3 });
+    const sent = runtimeSendMessage.mock.calls.map(
+      ([message]) => message as unknown as { type: string; data: unknown },
+    );
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        type: MSG.TOGGLE_SIDEPANEL,
+        data: { windowId: 3 },
+      }),
+    );
     expect(tabsSendMessage).not.toHaveBeenCalled();
   });
 });

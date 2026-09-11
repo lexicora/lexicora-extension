@@ -81,6 +81,18 @@ export function usePanelShortcuts() {
           if (!captured) toast.error("This page can't be captured");
           return;
         }
+        case "home": {
+          if (location.pathname !== "/") navigate("/", { viewTransition: true });
+          return;
+        }
+        case "back": {
+          navigate(-1);
+          return;
+        }
+        case "forward": {
+          navigate(1);
+          return;
+        }
         case "showShortcuts": {
           navigate("/settings/keyboard-shortcuts", { viewTransition: true });
           return;
@@ -92,8 +104,10 @@ export function usePanelShortcuts() {
       const action = resolvePanelShortcut(event);
       if (!action) return;
 
-      // ⌘/Ctrl+S would otherwise open the browser's "Save page as" for the
-      // panel itself, so it is always swallowed, even with nothing to save.
+      // Swallowed even when the action turns out to have nothing to do: ⌘/Ctrl+S
+      // would otherwise open "Save page as" for the panel itself, and the
+      // browser's own back and forward keys would act on its history rather
+      // than the panel's.
       event.preventDefault();
       if (action !== "save" && navLock.isLocked()) return;
       run(action);

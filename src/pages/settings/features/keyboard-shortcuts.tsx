@@ -13,14 +13,15 @@ import {
 } from "@/components/ui/item";
 import { Label } from "@/components/ui/label";
 import {
+  bindingApplies,
   COMMAND_DESCRIPTIONS,
+  formatBinding,
   PANEL_SHORTCUTS,
   type PanelShortcut,
 } from "@/constants/shortcuts";
+import { IS_MAC } from "@/hooks/sidepanel/panel-shortcuts";
 import { cn } from "@/lib/utils";
 import { GlobeIcon, KeyboardIcon, PanelRightIcon } from "lucide-react";
-
-const IS_MAC = /Mac|iPhone|iPad/.test(navigator.userAgent);
 
 function Kbd({
   children,
@@ -41,11 +42,11 @@ function Kbd({
   );
 }
 
-/** Letters shown as keycaps are printed upper-case; symbols as they are. */
-function panelKeyLabel({ key, mod }: PanelShortcut): string {
-  const label = /^[a-z]$/.test(key) ? key.toUpperCase() : key;
-  if (!mod) return label;
-  return IS_MAC ? `⌘${label}` : `Ctrl+${label}`;
+/** Every binding of a shortcut that works on this platform, as keycap labels. */
+function panelKeyLabels({ bindings }: PanelShortcut): string[] {
+  return bindings
+    .filter((binding) => bindingApplies(binding, IS_MAC))
+    .map((binding) => formatBinding(binding, IS_MAC));
 }
 
 function ShortcutRow({
@@ -55,7 +56,7 @@ function ShortcutRow({
   rounding,
 }: {
   description: string;
-  keys: string;
+  keys: string[];
   muted?: boolean;
   rounding: string;
 }) {
@@ -68,7 +69,13 @@ function ShortcutRow({
       <ItemContent>
         <span className="text-sm text-pretty text-left">{description}</span>
       </ItemContent>
-      <Kbd muted={muted}>{keys}</Kbd>
+      <div className="flex flex-wrap justify-end gap-1 shrink-0">
+        {keys.map((key) => (
+          <Kbd key={key} muted={muted}>
+            {key}
+          </Kbd>
+        ))}
+      </div>
     </Item>
   );
 }
@@ -154,7 +161,7 @@ function KeyboardShortcutsSettingsPage() {
                     command.description ??
                     ""
                   }
-                  keys={command.shortcut || "Not set"}
+                  keys={[command.shortcut || "Not set"]}
                   muted={!command.shortcut}
                   rounding={rowRounding(index, commands.length)}
                 />
@@ -188,7 +195,7 @@ function KeyboardShortcutsSettingsPage() {
                 {index > 0 && <SettingsItemSeparator symmetric />}
                 <ShortcutRow
                   description={shortcut.description}
-                  keys={panelKeyLabel(shortcut)}
+                  keys={panelKeyLabels(shortcut)}
                   rounding={rowRounding(index, PANEL_SHORTCUTS.length)}
                 />
               </div>

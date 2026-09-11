@@ -26,6 +26,7 @@ export const MSG = {
   // From anywhere to side-panel
   SEND_PAGE_CAPTURE_DATA: "sidepanel/SEND_PAGE_CAPTURE_DATA",
   NAVIGATE_IN_SIDEPANEL: "sidepanel/NAVIGATE_IN_SIDEPANEL",
+  TOGGLE_SIDEPANEL: "sidepanel/TOGGLE_SIDEPANEL",
 
   // From side-panel to background
   REQUEST_PENDING_DATA: "background/REQUEST_PENDING_DATA",

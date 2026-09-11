@@ -3,6 +3,8 @@ import {
   BROWSER_COMMANDS,
   COMMAND_ID,
   PANEL_SHORTCUTS,
+  bindingApplies,
+  formatBinding,
   manifestCommands,
 } from "../shortcuts";
 import { isCapturableUrl } from "../support-capture-sites";
@@ -53,13 +55,43 @@ describe("browser-wide commands", () => {
 });
 
 describe("panel shortcuts", () => {
-  it("has no duplicate keys", () => {
-    const keys = PANEL_SHORTCUTS.map((s) => `${s.mod ? "mod+" : ""}${s.key}`);
-    expect(new Set(keys).size).toBe(keys.length);
+  it.each([true, false])("has no binding claimed twice (isMac: %s)", (isMac) => {
+    const seen = PANEL_SHORTCUTS.flatMap((s) =>
+      s.bindings
+        .filter((b) => bindingApplies(b, isMac))
+        .map((b) => `${b.mod ? "mod+" : ""}${b.alt ? "alt+" : ""}${b.key}`),
+    );
+    expect(new Set(seen).size).toBe(seen.length);
+  });
+
+  it("gives every action a binding on both platforms", () => {
+    for (const shortcut of PANEL_SHORTCUTS) {
+      expect(shortcut.bindings.some((b) => bindingApplies(b, true))).toBe(true);
+      expect(shortcut.bindings.some((b) => bindingApplies(b, false))).toBe(true);
+    }
   });
 
   it("stores keys lower-case, as the resolver compares them", () => {
-    for (const { key } of PANEL_SHORTCUTS) expect(key).toBe(key.toLowerCase());
+    for (const { bindings } of PANEL_SHORTCUTS) {
+      for (const { key } of bindings) expect(key).toBe(key.toLowerCase());
+    }
+  });
+
+  it("lets only save fire while typing", () => {
+    const whileTyping = PANEL_SHORTCUTS.filter((s) => s.whileTyping);
+    expect(whileTyping.map((s) => s.action)).toEqual(["save"]);
+  });
+});
+
+describe("formatBinding", () => {
+  it.each([
+    [{ key: "k", mod: true }, "⌘K", "Ctrl+K"],
+    [{ key: "arrowleft", alt: true }, "⌥←", "Alt+←"],
+    [{ key: "/" }, "/", "/"],
+    [{ key: "n" }, "N", "N"],
+  ])("%o → %s on macOS, %s elsewhere", (binding, mac, other) => {
+    expect(formatBinding(binding, true)).toBe(mac);
+    expect(formatBinding(binding, false)).toBe(other);
   });
 });
 
