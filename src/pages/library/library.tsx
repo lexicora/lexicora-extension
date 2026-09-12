@@ -154,6 +154,11 @@ function LibraryPage() {
                   <InputGroupInput
                     id="search-input"
                     data-shortcut-search
+                    onKeyDown={(e) => {
+                      if (e.key !== "Escape") return;
+                      e.preventDefault();
+                      document.getElementById("search-input")?.blur();
+                    }}
                     //type="search"
                     placeholder="Search..."
                     className="h-8 px-2"
