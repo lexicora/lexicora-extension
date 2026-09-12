@@ -139,9 +139,14 @@ function KeyboardShortcutsSettingsPage() {
             </ItemHeader>
             <ItemContent>
               <ItemDescription className="text-pretty line-clamp-none">
-                Browser-wide shortcuts work on any page. Side panel shortcuts
-                only work while the panel has focus, so they never interfere
-                with the page you are on.
+                Browser-wide shortcuts work on any page, whether or not
+                Lexicora is open.
+              </ItemDescription>
+              <ItemDescription className="text-pretty line-clamp-none mt-1.5">
+                Side panel shortcuts need the panel focused — click into it
+                once. While it is focused the website does not receive these
+                keys at all, so its own shortcuts do not fire; click back into
+                the page and they work again.
               </ItemDescription>
             </ItemContent>
           </Item>
@@ -216,10 +221,25 @@ function KeyboardShortcutsSettingsPage() {
               </div>
             );
           })}
-          <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
-            Single keys are ignored while you type in a field or the editor.{" "}
-            {IS_MAC ? "⌘S" : "Ctrl+S"} works everywhere.
-          </p>
+          <div className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2 flex flex-col gap-1.5">
+            <p>
+              Single keys are ignored while you type in a field or the editor.{" "}
+              {IS_MAC ? "⌘S" : "Ctrl+S"} works everywhere.
+            </p>
+            {!import.meta.env.FIREFOX && (
+              <p>
+                The mouse side buttons go back and forward here too. Hovering
+                over the panel is enough — no click needed.
+              </p>
+            )}
+            {IS_MAC && (
+              <p>
+                ⌘[ and ⌘] (⌘Ö and ⌘Ä on Swiss and German keyboards) are left to
+                the browser, so they still move the web page's history while
+                the panel is focused.
+              </p>
+            )}
+          </div>
         </section>
       </main>
     </PageContainer>

@@ -140,13 +140,16 @@ export interface PanelShortcut {
  * address bar), and some of those cannot be taken by a page at all. The few
  * ⌘/Ctrl combinations here are ones sites commonly claim safely.
  *
- * Back and forward reuse each platform's own browser keys. The side panel's
- * router keeps its history in memory, where the browser cannot see it, so
- * without these the keys do nothing in the panel — the same reason the mouse
- * back and forward buttons are handled in `use-mouse-navigation`. macOS labels
- * that pair by character, so it differs per layout: ⌘[ and ⌘] on US keyboards,
- * ⌘Ö and ⌘Ä on Swiss and German ones. Both are bound, along with ⌘← and ⌘→,
- * which are the same everywhere.
+ * Back and forward take only the arrow pair — ⌘← / ⌘→ on macOS, Alt+← / Alt+→
+ * elsewhere — which is identical on every keyboard layout. The other pair
+ * macOS labels for back and forward (⌘[ / ⌘] on US keyboards, ⌘Ö / ⌘Ä on Swiss
+ * and German ones) is deliberately left unbound, so that while the panel has
+ * focus those keys still reach the browser and move the web page's history.
+ * One pair drives the panel, the other the page.
+ *
+ * The panel needs its own pair at all because its router keeps history in
+ * memory, where the browser cannot see it — the same reason the mouse back and
+ * forward buttons are handled in `use-mouse-navigation`.
  */
 export const PANEL_SHORTCUTS: PanelShortcut[] = [
   {
@@ -171,8 +174,6 @@ export const PANEL_SHORTCUTS: PanelShortcut[] = [
     action: "back",
     bindings: [
       { key: "arrowleft", mod: true, platform: "mac" },
-      { key: "[", mod: true, platform: "mac" },
-      { key: "ö", mod: true, platform: "mac" },
       { key: "arrowleft", alt: true, platform: "other" },
     ],
     description: "Go back",
@@ -182,8 +183,6 @@ export const PANEL_SHORTCUTS: PanelShortcut[] = [
     action: "forward",
     bindings: [
       { key: "arrowright", mod: true, platform: "mac" },
-      { key: "]", mod: true, platform: "mac" },
-      { key: "ä", mod: true, platform: "mac" },
       { key: "arrowright", alt: true, platform: "other" },
     ],
     description: "Go forward",
@@ -191,7 +190,9 @@ export const PANEL_SHORTCUTS: PanelShortcut[] = [
   },
   {
     action: "scrollToTop",
-    bindings: [{ key: "t" }, { key: "home" }],
+    // Home is left unbound: the browser already jumps to the top with it, and
+    // instantly, where this scrolls smoothly like clicking the page title.
+    bindings: [{ key: "t" }],
     description: "Scroll to the top",
     group: "navigate",
   },
@@ -257,7 +258,6 @@ export function bindingApplies(binding: KeyBinding, isMac: boolean): boolean {
 const KEY_LABELS: Record<string, string> = {
   arrowleft: "←",
   arrowright: "→",
-  home: "Home",
 };
 
 /** A binding as shown to the user: "⌘K" on macOS, "Ctrl+K" elsewhere. */

@@ -44,7 +44,6 @@ describe("single keys", () => {
     ["l", "library"],
     ["s", "settings"],
     ["t", "scrollToTop"],
-    ["Home", "scrollToTop"],
     ["n", "newEntry"],
     ["e", "edit"],
     ["c", "capture"],
@@ -127,18 +126,21 @@ describe("⌘ on macOS, Ctrl elsewhere", () => {
 });
 
 describe("back and forward", () => {
-  it("uses ⌘← / ⌘→ and ⌘[ / ⌘] on macOS", () => {
+  it("uses ⌘← / ⌘→ on macOS", () => {
     expect(resolvePanelShortcut(press("ArrowLeft", { metaKey: true }), MAC)).toBe("back");
     expect(resolvePanelShortcut(press("ArrowRight", { metaKey: true }), MAC)).toBe("forward");
-    expect(resolvePanelShortcut(press("[", { metaKey: true }), MAC)).toBe("back");
-    expect(resolvePanelShortcut(press("]", { metaKey: true }), MAC)).toBe("forward");
   });
 
-  it("uses ⌘Ö / ⌘Ä on macOS, where Swiss and German layouts put those keys", () => {
-    expect(resolvePanelShortcut(press("ö", { metaKey: true }), MAC)).toBe("back");
-    expect(resolvePanelShortcut(press("ä", { metaKey: true }), MAC)).toBe("forward");
-    // Caps Lock, or Shift, still reaches the same binding.
-    expect(resolvePanelShortcut(press("Ö", { metaKey: true }), MAC)).toBe("back");
+  it.each([
+    ["[", "]"],
+    ["ö", "ä"], // Swiss and German layouts
+  ])("leaves ⌘%s / ⌘%s to the browser, for the web page's history", (back, forward) => {
+    expect(resolvePanelShortcut(press(back, { metaKey: true }), MAC)).toBeNull();
+    expect(resolvePanelShortcut(press(forward, { metaKey: true }), MAC)).toBeNull();
+  });
+
+  it("leaves Home to the browser, which already jumps to the top", () => {
+    expect(resolvePanelShortcut(press("Home"), MAC)).toBeNull();
   });
 
   it("uses Alt+← / Alt+→ on Windows and Linux", () => {

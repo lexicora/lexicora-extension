@@ -91,8 +91,6 @@ describe("formatBinding", () => {
     [{ key: "k", mod: true }, "⌘K", "Ctrl+K"],
     [{ key: "arrowleft", alt: true }, "⌥←", "Alt+←"],
     [{ key: "n", shift: true }, "⇧N", "Shift+N"],
-    [{ key: "ö", mod: true }, "⌘Ö", "Ctrl+Ö"],
-    [{ key: "home" }, "Home", "Home"],
     [{ key: "/" }, "/", "/"],
     [{ key: "n" }, "N", "N"],
   ])("%o → %s on macOS, %s elsewhere", (binding, mac, other) => {
