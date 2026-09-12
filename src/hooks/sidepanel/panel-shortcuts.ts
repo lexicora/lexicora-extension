@@ -23,6 +23,7 @@ export type ShortcutKeyEvent = Pick<
   | "metaKey"
   | "ctrlKey"
   | "altKey"
+  | "shiftKey"
   | "isComposing"
   | "defaultPrevented"
   | "target"
@@ -54,8 +55,14 @@ function matchesBinding(
   if (otherMod || mod !== Boolean(binding.mod)) return false;
   if (event.altKey !== Boolean(binding.alt)) return false;
 
-  // Shift is not checked: "?" and, on many layouts, "/" need it. Lower-casing
-  // also keeps letters working with Caps Lock on.
+  // Shift is checked for letters only, where it separates "n" from "N". For
+  // symbols it is ignored, because which characters need Shift depends on the
+  // layout: "/" is Shift+7 on a Swiss keyboard.
+  if (/^[a-z]$/.test(binding.key) && event.shiftKey !== Boolean(binding.shift)) {
+    return false;
+  }
+
+  // Lower-casing keeps letters working with Caps Lock on.
   return event.key.toLowerCase() === binding.key;
 }
 

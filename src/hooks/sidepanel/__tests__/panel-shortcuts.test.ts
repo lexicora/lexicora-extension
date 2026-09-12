@@ -20,6 +20,7 @@ function press(
     metaKey: false,
     ctrlKey: false,
     altKey: false,
+    shiftKey: false,
     isComposing: false,
     defaultPrevented: false,
     target,
@@ -40,17 +41,33 @@ describe("single keys", () => {
   it.each([
     ["/", "search"],
     ["h", "home"],
+    ["l", "library"],
+    ["s", "settings"],
+    ["t", "scrollToTop"],
+    ["Home", "scrollToTop"],
     ["n", "newEntry"],
+    ["e", "edit"],
     ["c", "capture"],
     ["b", "bookmark"],
-    ["?", "showShortcuts"],
   ])("maps %s to %s on every platform", (key, action) => {
     expect(resolvePanelShortcut(press(key), MAC)).toBe(action);
     expect(resolvePanelShortcut(press(key), OTHER)).toBe(action);
   });
 
   it("matches letters with Caps Lock on", () => {
+    // Caps Lock reports the upper-case letter without Shift being held.
     expect(resolvePanelShortcut(press("N"), MAC)).toBe("newEntry");
+  });
+
+  it("separates Shift+N from n", () => {
+    expect(resolvePanelShortcut(press("N", { shiftKey: true }), MAC)).toBe("newTopic");
+    expect(resolvePanelShortcut(press("n", { shiftKey: true }), MAC)).toBe("newTopic");
+  });
+
+  it("ignores Shift for symbols, whose layout decides it", () => {
+    // "?" is Shift+' on a Swiss keyboard and Shift+/ on a US one.
+    expect(resolvePanelShortcut(press("?", { shiftKey: true }), MAC)).toBe("showShortcuts");
+    expect(resolvePanelShortcut(press("/", { shiftKey: true }), MAC)).toBe("search");
   });
 
   it.each([
@@ -85,6 +102,11 @@ describe("⌘ on macOS, Ctrl elsewhere", () => {
     ).toBe("save");
   });
 
+  it("edits with ⌘E / Ctrl+E as well as the plain key", () => {
+    expect(resolvePanelShortcut(press("e", { metaKey: true }), MAC)).toBe("edit");
+    expect(resolvePanelShortcut(press("e", { ctrlKey: true }), OTHER)).toBe("edit");
+  });
+
   it("searches with ⌘K / Ctrl+K, for layouts where / needs Shift", () => {
     expect(resolvePanelShortcut(press("k", { metaKey: true }), MAC)).toBe("search");
     expect(resolvePanelShortcut(press("k", { ctrlKey: true }), OTHER)).toBe("search");
@@ -110,6 +132,13 @@ describe("back and forward", () => {
     expect(resolvePanelShortcut(press("ArrowRight", { metaKey: true }), MAC)).toBe("forward");
     expect(resolvePanelShortcut(press("[", { metaKey: true }), MAC)).toBe("back");
     expect(resolvePanelShortcut(press("]", { metaKey: true }), MAC)).toBe("forward");
+  });
+
+  it("uses ⌘Ö / ⌘Ä on macOS, where Swiss and German layouts put those keys", () => {
+    expect(resolvePanelShortcut(press("ö", { metaKey: true }), MAC)).toBe("back");
+    expect(resolvePanelShortcut(press("ä", { metaKey: true }), MAC)).toBe("forward");
+    // Caps Lock, or Shift, still reaches the same binding.
+    expect(resolvePanelShortcut(press("Ö", { metaKey: true }), MAC)).toBe("back");
   });
 
   it("uses Alt+← / Alt+→ on Windows and Linux", () => {

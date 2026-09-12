@@ -8,11 +8,26 @@ import { resolvePanelShortcut } from "./panel-shortcuts";
 import { useCaptureActiveTab } from "./use-capture-active-tab";
 
 const NEW_ENTRY_PATH = "/library/entries/new";
+const NEW_TOPIC_PATH = "/library/topics/new";
 
 /** The topic id when the panel is on one of a topic's pages, so a new entry lands in it. */
 function currentTopicId(pathname: string): string | null {
   const id = pathname.match(/^\/library\/topics\/([^/]+)/)?.[1];
   return id && id !== "new" ? id : null;
+}
+
+/**
+ * The edit page for whatever detail page is open, or null elsewhere. Matches
+ * an entry's detail page, and a topic's detail and entries pages.
+ */
+function editPathFor(pathname: string): string | null {
+  const entry = pathname.match(/^\/library\/entries\/([^/]+)$/)?.[1];
+  if (entry && entry !== "new") return `/library/entries/${entry}/edit`;
+
+  const topic = pathname.match(/^\/library\/topics\/([^/]+)(?:\/entries)?$/)?.[1];
+  if (topic && topic !== "new") return `/library/topics/${topic}/edit`;
+
+  return null;
 }
 
 /**
@@ -81,8 +96,32 @@ export function usePanelShortcuts() {
           if (!captured) toast.error("This page can't be captured");
           return;
         }
-        case "home": {
-          if (location.pathname !== "/") navigate("/", { viewTransition: true });
+        case "home":
+        case "library":
+        case "settings": {
+          const path =
+            action === "home"
+              ? "/"
+              : action === "library"
+                ? "/library"
+                : "/settings";
+          if (location.pathname !== path) navigate(path, { viewTransition: true });
+          return;
+        }
+        case "scrollToTop": {
+          // Same as clicking the page title in the header.
+          window.scrollTo({ top: 0 });
+          return;
+        }
+        case "edit": {
+          const editPath = editPathFor(location.pathname);
+          if (editPath) navigate(editPath, { viewTransition: true });
+          return;
+        }
+        case "newTopic": {
+          if (location.pathname !== NEW_TOPIC_PATH) {
+            navigate(NEW_TOPIC_PATH, { viewTransition: true });
+          }
           return;
         }
         case "back": {

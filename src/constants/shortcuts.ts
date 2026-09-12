@@ -85,11 +85,16 @@ export function manifestCommands(browser: string) {
 }
 
 export type PanelShortcutAction =
-  | "search"
   | "home"
+  | "library"
+  | "settings"
   | "back"
   | "forward"
+  | "scrollToTop"
+  | "search"
   | "newEntry"
+  | "newTopic"
+  | "edit"
   | "capture"
   | "bookmark"
   | "showShortcuts"
@@ -108,15 +113,23 @@ export interface KeyBinding {
   key: string;
   mod?: boolean;
   alt?: boolean;
+  /**
+   * Only meaningful for letters, where Shift is what separates "n" from "N".
+   * For symbols it is ignored: whether a character needs Shift depends on the
+   * layout, so requiring it would break "/" and "?" outside US keyboards.
+   */
+  shift?: boolean;
   /** Limit the binding to macOS ("mac") or to Windows and Linux ("other"). */
   platform?: "mac" | "other";
 }
 
 export interface PanelShortcut {
   action: PanelShortcutAction;
-  /** Alternatives; any one triggers the action. The first that applies is shown in Settings. */
+  /** Alternatives; any one triggers the action. All that apply are shown in Settings. */
   bindings: KeyBinding[];
   description: string;
+  /** Grouping for the settings page. */
+  group: "navigate" | "act";
   /** Also fires while typing in a field or the editor. Only ⌘/Ctrl+S needs this. */
   whileTyping?: boolean;
 }
@@ -130,55 +143,107 @@ export interface PanelShortcut {
  * Back and forward reuse each platform's own browser keys. The side panel's
  * router keeps its history in memory, where the browser cannot see it, so
  * without these the keys do nothing in the panel — the same reason the mouse
- * back and forward buttons are handled in `use-mouse-navigation`.
+ * back and forward buttons are handled in `use-mouse-navigation`. macOS labels
+ * that pair by character, so it differs per layout: ⌘[ and ⌘] on US keyboards,
+ * ⌘Ö and ⌘Ä on Swiss and German ones. Both are bound, along with ⌘← and ⌘→,
+ * which are the same everywhere.
  */
 export const PANEL_SHORTCUTS: PanelShortcut[] = [
   {
-    action: "search",
-    // ⌘/Ctrl+K as well, for layouts where "/" needs Shift.
-    bindings: [{ key: "/" }, { key: "k", mod: true }],
-    description: "Search the library",
+    action: "home",
+    bindings: [{ key: "h" }],
+    description: "Go to Home",
+    group: "navigate",
   },
-  { action: "home", bindings: [{ key: "h" }], description: "Go to Home" },
+  {
+    action: "library",
+    bindings: [{ key: "l" }],
+    description: "Go to Library",
+    group: "navigate",
+  },
+  {
+    action: "settings",
+    bindings: [{ key: "s" }],
+    description: "Go to Settings",
+    group: "navigate",
+  },
   {
     action: "back",
     bindings: [
       { key: "arrowleft", mod: true, platform: "mac" },
       { key: "[", mod: true, platform: "mac" },
+      { key: "ö", mod: true, platform: "mac" },
       { key: "arrowleft", alt: true, platform: "other" },
     ],
     description: "Go back",
+    group: "navigate",
   },
   {
     action: "forward",
     bindings: [
       { key: "arrowright", mod: true, platform: "mac" },
       { key: "]", mod: true, platform: "mac" },
+      { key: "ä", mod: true, platform: "mac" },
       { key: "arrowright", alt: true, platform: "other" },
     ],
     description: "Go forward",
+    group: "navigate",
   },
-  { action: "newEntry", bindings: [{ key: "n" }], description: "New entry" },
+  {
+    action: "scrollToTop",
+    bindings: [{ key: "t" }, { key: "home" }],
+    description: "Scroll to the top",
+    group: "navigate",
+  },
+  {
+    action: "search",
+    // ⌘/Ctrl+K as well, for layouts where "/" needs Shift.
+    bindings: [{ key: "/" }, { key: "k", mod: true }],
+    description: "Search the library",
+    group: "act",
+  },
+  {
+    action: "newEntry",
+    bindings: [{ key: "n" }],
+    description: "New entry",
+    group: "act",
+  },
+  {
+    action: "newTopic",
+    bindings: [{ key: "n", shift: true }],
+    description: "New topic",
+    group: "act",
+  },
+  {
+    action: "edit",
+    bindings: [{ key: "e" }, { key: "e", mod: true }],
+    description: "Edit the open entry or topic",
+    group: "act",
+  },
   {
     action: "capture",
     bindings: [{ key: "c" }],
     description: "Capture the selection, or the page if nothing is selected",
+    group: "act",
   },
   {
     action: "bookmark",
     bindings: [{ key: "b" }],
     description: "Bookmark the current page",
-  },
-  {
-    action: "showShortcuts",
-    bindings: [{ key: "?" }],
-    description: "Show keyboard shortcuts",
+    group: "act",
   },
   {
     action: "save",
     bindings: [{ key: "s", mod: true }],
     description: "Save, on entry and topic create and edit pages",
+    group: "act",
     whileTyping: true,
+  },
+  {
+    action: "showShortcuts",
+    bindings: [{ key: "?" }],
+    description: "Show keyboard shortcuts",
+    group: "act",
   },
 ];
 
@@ -192,16 +257,18 @@ export function bindingApplies(binding: KeyBinding, isMac: boolean): boolean {
 const KEY_LABELS: Record<string, string> = {
   arrowleft: "←",
   arrowright: "→",
+  home: "Home",
 };
 
 /** A binding as shown to the user: "⌘K" on macOS, "Ctrl+K" elsewhere. */
 export function formatBinding(binding: KeyBinding, isMac: boolean): string {
   const key =
     KEY_LABELS[binding.key] ??
-    (/^[a-z]$/.test(binding.key) ? binding.key.toUpperCase() : binding.key);
+    (binding.key.length === 1 ? binding.key.toUpperCase() : binding.key);
   const mods = [
     binding.mod && (isMac ? "⌘" : "Ctrl"),
     binding.alt && (isMac ? "⌥" : "Alt"),
+    binding.shift && (isMac ? "⇧" : "Shift"),
   ].filter(Boolean);
   if (mods.length === 0) return key;
   return isMac ? `${mods.join("")}${key}` : `${mods.join("+")}+${key}`;

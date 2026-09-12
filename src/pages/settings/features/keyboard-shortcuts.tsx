@@ -189,18 +189,33 @@ function KeyboardShortcutsSettingsPage() {
             <PanelRightIcon className="size-3.5 text-violet-400" /> In the side
             panel
           </Label>
-          <div className="rounded-2xl not-dark:shadow-xs">
-            {PANEL_SHORTCUTS.map((shortcut, index) => (
-              <div key={shortcut.action}>
-                {index > 0 && <SettingsItemSeparator symmetric />}
-                <ShortcutRow
-                  description={shortcut.description}
-                  keys={panelKeyLabels(shortcut)}
-                  rounding={rowRounding(index, PANEL_SHORTCUTS.length)}
-                />
+          {(
+            [
+              ["navigate", "Navigate"],
+              ["act", "Actions"],
+            ] as const
+          ).map(([group, heading]) => {
+            const shortcuts = PANEL_SHORTCUTS.filter((s) => s.group === group);
+            return (
+              <div key={group} className="mt-2 first:mt-0">
+                <p className="text-xs text-muted-foreground ml-2.5 mb-1">
+                  {heading}
+                </p>
+                <div className="rounded-2xl not-dark:shadow-xs">
+                  {shortcuts.map((shortcut, index) => (
+                    <div key={shortcut.action}>
+                      {index > 0 && <SettingsItemSeparator symmetric />}
+                      <ShortcutRow
+                        description={shortcut.description}
+                        keys={panelKeyLabels(shortcut)}
+                        rounding={rowRounding(index, shortcuts.length)}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
           <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
             Single keys are ignored while you type in a field or the editor.{" "}
             {IS_MAC ? "⌘S" : "Ctrl+S"} works everywhere.
