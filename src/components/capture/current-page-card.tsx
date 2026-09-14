@@ -6,6 +6,8 @@ interface CurrentPageCardProps {
   activeTab: Browser.tabs.Tab | null;
   /** False for browser and extension pages, which cannot be captured. */
   isSupported: boolean;
+  /** One line instead of two: for the side panel, which shows this permanently. */
+  compact?: boolean;
   className?: string;
 }
 
@@ -28,6 +30,7 @@ function hostnameOf(url: string | undefined): string | null {
 export function CurrentPageCard({
   activeTab,
   isSupported,
+  compact = false,
   className,
 }: CurrentPageCardProps) {
   const title = activeTab?.title?.trim();
@@ -36,7 +39,8 @@ export function CurrentPageCard({
   return (
     <section
       className={cn(
-        "flex items-center gap-2.5 rounded-xl bg-card not-dark:shadow-xs px-3 py-2.5 text-left",
+        "flex items-center gap-2.5 rounded-xl bg-card not-dark:shadow-xs text-left",
+        compact ? "px-3 py-2" : "px-3 py-2.5",
         !isSupported && "opacity-70",
         className,
       )}
@@ -55,16 +59,29 @@ export function CurrentPageCard({
       ) : (
         <GlobeIcon className="size-4 shrink-0 text-muted-foreground" />
       )}
-      <div className="min-w-0 flex-1">
-        <p className="text-sm truncate">
-          {isSupported ? (title ?? "Untitled page") : "Can't capture this page"}
-        </p>
-        <p className="text-xs text-muted-foreground truncate">
-          {isSupported
-            ? (hostname ?? "Unknown site")
-            : "Browser & extension pages are not supported"}
-        </p>
-      </div>
+      {compact ? (
+        // The hostname trails the title rather than sitting under it, and is
+        // the first thing to be cut when the title is long.
+        <div className="min-w-0 flex-1 flex items-baseline gap-1.5">
+          <span className="text-sm truncate">
+            {isSupported ? (title ?? "Untitled page") : "Can't capture this page"}
+          </span>
+          <span className="text-xs text-muted-foreground truncate shrink-[2]">
+            {isSupported ? (hostname ?? "") : "not supported"}
+          </span>
+        </div>
+      ) : (
+        <div className="min-w-0 flex-1">
+          <p className="text-sm truncate">
+            {isSupported ? (title ?? "Untitled page") : "Can't capture this page"}
+          </p>
+          <p className="text-xs text-muted-foreground truncate">
+            {isSupported
+              ? (hostname ?? "Unknown site")
+              : "Browser & extension pages are not supported"}
+          </p>
+        </div>
+      )}
     </section>
   );
 }

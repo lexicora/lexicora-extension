@@ -19,10 +19,11 @@ const MIN_ENTRY_ROWS = 2;
 
 /**
  * Everything above and below the rows: the logo header, the favourites row,
- * the fixed capture bar (60px) and the bottom navigation (59px). Approximate
- * and the one number to tune if the page ends up scrolling or leaving a gap.
+ * the fixed bottom bar (104px — the current-page card above the capture
+ * buttons) and the bottom navigation (59px). Approximate, and the one number
+ * to tune if the page ends up scrolling or leaving a gap.
  */
-const FIXED_CHROME_HEIGHT = 265;
+const FIXED_CHROME_HEIGHT = 252;
 
 /** The height left for suggestion rows in a panel of this height. */
 export function homeRowSpace(viewportHeight: number): number {

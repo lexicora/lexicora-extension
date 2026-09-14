@@ -14,6 +14,7 @@ import { AiPromptSection } from "@/components/home/ai-prompt-section";
 import { LibraryEmptyState } from "@/components/home/library-empty-state";
 import { RecentEntries } from "@/components/home/recent-entries";
 import { CaptureActions } from "@/components/capture/capture-actions";
+import { CurrentPageCard } from "@/components/capture/current-page-card";
 import { WebsiteLink } from "@/components/website-link";
 
 function formatFavoriteCount(count: number): string {
@@ -27,7 +28,7 @@ function formatFavoriteCount(count: number): string {
 
 function HomePage() {
   const navigate = useNavigate();
-  const { capture: capturePage, isSupported } = useCaptureActiveTab();
+  const { capture: capturePage, isSupported, activeTab } = useCaptureActiveTab();
   const [promptText, setPromptText] = useState("");
 
   const {
@@ -166,7 +167,22 @@ function HomePage() {
         )}
       </main>
       <footer className={styles.bottomFooter}>
-        <section className="fixed bottom-14.75 left-0 h-15 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-10 lc-bottom-bar-styled-bg">
+        <section
+          className={cn(
+            "fixed bottom-14.75 left-0 w-full p-3 pr-[calc(var(--lc-scrollbar-offset)+2px)] z-10 lc-bottom-bar-styled-bg",
+            // Taller without AI: the capture buttons sit under the card naming
+            // the page they would save. See FIXED_CHROME_HEIGHT in home-capacity.
+            FEATURES.AI ? "h-15" : "h-26",
+          )}
+        >
+          {!FEATURES.AI && (
+            <CurrentPageCard
+              compact
+              activeTab={activeTab}
+              isSupported={isSupported}
+              className="w-full max-w-(--lc-content-max-width) mx-auto mb-2"
+            />
+          )}
           <div className="flex gap-0 items-center justify-between w-full max-w-(--lc-content-max-width) mx-auto inset-x-0">
             {FEATURES.AI ? (
               <>
