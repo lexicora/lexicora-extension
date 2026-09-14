@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useRxCollection } from "rxdb/plugins/react";
 import type { TopicDocType } from "@/db/schemas/topic";
 import type { EntryDocType } from "@/db/schemas/entry";
+import { FEATURES } from "@/constants/features";
+import { aiTopicRows, allocateHomeRows, homeRowSpace } from "../home-capacity";
 
 /**
  * How many rows the queries fetch. The home page shows as many as fit, which
@@ -13,11 +15,10 @@ const QUERY_LIMIT = 12;
 export interface HomeData {
   favoriteTopicsCount: number;
   favoriteEntriesCount: number;
-  /** Pinned first, then recent, de-duplicated. Not truncated: the page decides how many fit. */
+  /** Pinned first, then recent, de-duplicated, cut to what fits. */
   combinedTopics: TopicDocType[];
-  /** Only used while `FEATURES.AI` is on, where the prompt takes the space instead. */
+  /** How many topics fit, so the page knows whether to offer "Create a topic". */
   maxTopicsToShow: number;
-  /** Not truncated, like `combinedTopics`. */
   recentEntries: EntryDocType[];
   /** True once both collections are known to hold nothing at all. */
   isLibraryEmpty: boolean;
@@ -34,10 +35,9 @@ export function useHomeData(): HomeData {
   const [recentEntries, setRecentEntries] = useState<EntryDocType[]>([]);
   const [topicsCount, setTopicsCount] = useState<number | null>(null);
   const [entriesCount, setEntriesCount] = useState<number | null>(null);
-  const [maxTopicsToShow, setMaxTopicsToShow] = useState(() => {
-    const h = document.documentElement.clientHeight;
-    return h >= 870 ? 5 : h >= 825 ? 4 : 3;
-  });
+  const [viewportHeight, setViewportHeight] = useState(
+    () => document.documentElement.clientHeight,
+  );
 
   useEffect(() => {
     if (!topicsCollection) return;
@@ -130,28 +130,39 @@ export function useHomeData(): HomeData {
   }, [entriesCollection]);
 
   useEffect(() => {
-    const update = () => {
-      const h = document.documentElement.clientHeight;
-      setMaxTopicsToShow(h >= 870 ? 5 : h >= 825 ? 4 : 3);
-    };
+    const update = () => setViewportHeight(document.documentElement.clientHeight);
     const ro = new ResizeObserver(update);
     ro.observe(document.documentElement);
     return () => ro.disconnect();
   }, []);
 
-  const combinedTopics = [
+  const allTopics = [
     ...pinnedTopics,
     ...recentTopics.filter(
       (topic) => !pinnedTopics.some((pinned) => pinned.id === topic.id),
     ),
   ];
 
+  // With the AI prompt on, the topic count is what is left once the textarea
+  // has its height. With it off, the rows share out the space the textarea is
+  // not using, which is why the page no longer stops at three.
+  const { maxTopics, maxEntries } = FEATURES.AI
+    ? {
+        maxTopics: aiTopicRows(viewportHeight),
+        maxEntries: Math.max(2, aiTopicRows(viewportHeight) - 1),
+      }
+    : allocateHomeRows({
+        availablePx: homeRowSpace(viewportHeight),
+        topicsAvailable: allTopics.length,
+        entriesAvailable: recentEntries.length,
+      });
+
   return {
     favoriteTopicsCount,
     favoriteEntriesCount,
-    combinedTopics,
-    maxTopicsToShow,
-    recentEntries,
+    combinedTopics: allTopics.slice(0, maxTopics),
+    maxTopicsToShow: maxTopics,
+    recentEntries: recentEntries.slice(0, maxEntries),
     // Stays false until both counts have actually arrived, so the empty state
     // never flashes while the database is still opening.
     isLibraryEmpty: topicsCount === 0 && entriesCount === 0,

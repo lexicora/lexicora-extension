@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import styles from "./home.module.css";
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
@@ -18,9 +18,6 @@ import { useHomeData } from "./__hooks__/use-home-data";
 import { AiPromptSection } from "@/components/home/ai-prompt-section";
 import { LibraryEmptyState } from "@/components/home/library-empty-state";
 import { RecentEntries } from "@/components/home/recent-entries";
-import { HomeTopics } from "@/components/home/home-topics";
-import { useAvailableHeight } from "@/hooks/use-available-height";
-import { allocateHomeRows } from "./home-capacity";
 import { CaptureActions } from "@/components/capture/capture-actions";
 import { WebsiteLink } from "@/components/website-link";
 
@@ -46,22 +43,6 @@ function HomePage() {
     recentEntries,
     isLibraryEmpty,
   } = useHomeData();
-
-  // Without the AI prompt the suggestions fill the free space instead, so how
-  // many are shown is measured rather than guessed from the window height.
-  const fillRef = useRef<HTMLDivElement>(null);
-  const availablePx = useAvailableHeight(fillRef);
-  const { maxTopics, maxEntries } = allocateHomeRows({
-    availablePx,
-    topicsAvailable: combinedTopics.length,
-    entriesAvailable: recentEntries.length,
-  });
-
-  const topicsToShow = combinedTopics.slice(
-    0,
-    FEATURES.AI ? maxTopicsToShow : maxTopics,
-  );
-  const entriesToShow = recentEntries.slice(0, maxEntries);
 
   /**
    * Single composition point for the flexible middle of the page. The three
@@ -136,41 +117,57 @@ function HomePage() {
               <ChevronRightIcon className="transition-opacity size-3 shrink-0 opacity-70 group-hover:opacity-90" />
             </Button>
           </div>
-        </section>
-
-        {FEATURES.AI ? (
-          <>
-            <HomeTopics
-              topics={topicsToShow}
-              showCreateLink={topicsToShow.length < maxTopicsToShow}
-            />
-            <AiPromptSection
-              isSupported={isSupported}
-              promptText={promptText}
-              onPromptTextChange={setPromptText}
-            />
-          </>
-        ) : (
-          /* Takes the space the AI prompt would occupy, and fills it with as
-             many suggestions as measurably fit. Clipped, so its height depends
-             on the layout around it and never on what is rendered inside. */
-          <div
-            ref={fillRef}
-            className="flex-1 min-h-0 overflow-hidden flex flex-col"
-          >
-            <HomeTopics
-              topics={topicsToShow}
-              showCreateLink={
-                mainContent !== "empty-state" &&
-                topicsToShow.length < maxTopics
-              }
-            />
-            {mainContent === "empty-state" ? (
-              <LibraryEmptyState />
-            ) : (
-              <RecentEntries entries={entriesToShow} />
+          <div className="flex flex-col gap-1.75 mt-2">
+            {combinedTopics.map((topic, index) => (
+              <Button
+                key={topic.id}
+                variant="secondary"
+                className={cn(
+                  "group w-full flex items-center h-9.5 gap-2 px-3 bg-card hover:bg-card-hover not-dark:shadow-xs rounded-xl text-left transition-colors",
+                  index === 0 && "mt-1.75",
+                )}
+                //title="View topic"
+                onClick={() =>
+                  navigate(`/library/topics/${topic.id}`, {
+                    viewTransition: true,
+                  })
+                }
+              >
+                {topic.isPinned ? (
+                  <PinIcon className="size-3.5 text-blue-600 fill-blue-600 dark:text-blue-500 dark:fill-blue-500 shrink-0" />
+                ) : (
+                  <HistoryIcon className="size-3.5 text-muted-foreground shrink-0" />
+                )}
+                <span className="text-sm truncate flex-1">{topic.name}</span>
+                <ChevronRightIcon className="transition-opacity size-3.5 text-muted-foreground shrink-0 opacity-70 group-hover:opacity-100" />
+              </Button>
+            ))}
+            {mainContent !== "empty-state" &&
+              combinedTopics.length < maxTopicsToShow && (
+              <Button
+                variant="link"
+                size="sm"
+                onClick={() =>
+                  navigate("/library/topics/new", { viewTransition: true })
+                }
+                className="self-center -mb-2"
+              >
+                Create a topic
+              </Button>
             )}
           </div>
+        </section>
+
+        {mainContent === "ai-prompt" && (
+          <AiPromptSection
+            isSupported={isSupported}
+            promptText={promptText}
+            onPromptTextChange={setPromptText}
+          />
+        )}
+        {mainContent === "empty-state" && <LibraryEmptyState />}
+        {mainContent === "recent-entries" && (
+          <RecentEntries entries={recentEntries} />
         )}
       </main>
       <footer className={styles.bottomFooter}>

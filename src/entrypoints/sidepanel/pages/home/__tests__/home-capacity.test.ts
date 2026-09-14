@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { allocateHomeRows } from "../home-capacity";
+import { aiTopicRows, allocateHomeRows, homeRowSpace } from "../home-capacity";
 
 /**
- * Covers how the home page divides its free space between topic and entry
- * rows. A row is 45px; the entries header costs 52px; the "Create a topic"
- * link costs 26px when there are fewer topics than would fit.
+ * Covers how many suggestion rows the home page shows. A row is 45px; the
+ * entries header costs 52px; the "Create a topic" link costs 26px when there
+ * are fewer topics than would fit.
  */
 
 const alloc = (
@@ -71,5 +71,39 @@ describe("allocateHomeRows", () => {
         (maxTopics + maxEntries) * 45 + (maxEntries > 0 ? 52 : 0);
       expect(used).toBeLessThanOrEqual(px);
     }
+  });
+});
+
+describe("aiTopicRows", () => {
+  it("keeps the thresholds the AI layout was tuned around", () => {
+    // The prompt's textarea grows with the viewport, so the topic count steps
+    // rather than filling. Unchanged from before the AI surfaces were gated.
+    expect(aiTopicRows(800)).toBe(3);
+    expect(aiTopicRows(825)).toBe(4);
+    expect(aiTopicRows(870)).toBe(5);
+    expect(aiTopicRows(1200)).toBe(5);
+  });
+});
+
+describe("homeRowSpace", () => {
+  it("never goes below zero on a very short panel", () => {
+    expect(homeRowSpace(100)).toBe(0);
+  });
+
+  it("grows with the panel", () => {
+    expect(homeRowSpace(900)).toBeGreaterThan(homeRowSpace(700));
+  });
+
+  it("shows more than the AI layout's three topics and two entries", () => {
+    // 704px is a normal side-panel height; the old fixed counts left roughly
+    // four rows of the panel empty once the AI prompt was gated off.
+    const { maxTopics, maxEntries } = allocateHomeRows({
+      availablePx: homeRowSpace(704),
+      topicsAvailable: 12,
+      entriesAvailable: 12,
+    });
+
+    expect(maxTopics).toBeGreaterThan(3);
+    expect(maxEntries).toBeGreaterThan(2);
   });
 });

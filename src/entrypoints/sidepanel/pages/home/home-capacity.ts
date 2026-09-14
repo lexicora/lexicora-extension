@@ -1,11 +1,11 @@
 /**
- * How many topic and entry rows the home page's flexible middle can hold.
+ * How many topic and entry rows the home page shows.
  *
- * With the AI prompt gated off, that area is empty space rather than a
- * textarea, so the page fills it with suggestions instead of leaving a gap.
- * The counts come from the measured height of the area, not from the window
- * height: the side panel is resizable, and what fits depends on the layout
- * around it, which changes with the feature flags.
+ * Driven by the viewport height, like the original threshold logic: the panel
+ * is resizable, so the count follows its height. What changed is the budget.
+ * The thresholds were tuned around the AI prompt, whose textarea takes the
+ * height that is otherwise free — with `FEATURES.AI` off that space was left
+ * empty, so the rows are now worked out from what the textarea is not using.
  */
 
 /** Row height (`h-9.5`) plus the gap between rows (`gap-1.75`). */
@@ -16,6 +16,23 @@ const ENTRIES_HEADER_HEIGHT = 52;
 const CREATE_LINK_HEIGHT = 26;
 /** Below this, the entries header costs more space than the rows it introduces. */
 const MIN_ENTRY_ROWS = 2;
+
+/**
+ * Everything above and below the rows: the logo header, the favourites row,
+ * the fixed capture bar (60px) and the bottom navigation (59px). Approximate
+ * and the one number to tune if the page ends up scrolling or leaving a gap.
+ */
+const FIXED_CHROME_HEIGHT = 265;
+
+/** The height left for suggestion rows in a panel of this height. */
+export function homeRowSpace(viewportHeight: number): number {
+  return Math.max(0, viewportHeight - FIXED_CHROME_HEIGHT);
+}
+
+/** Topics shown alongside the AI prompt, which needs the rest of the height. */
+export function aiTopicRows(viewportHeight: number): number {
+  return viewportHeight >= 870 ? 5 : viewportHeight >= 825 ? 4 : 3;
+}
 
 export interface HomeRowAllocation {
   maxTopics: number;
