@@ -3,7 +3,7 @@ import { uuidSchema, uuidWithNilDefault } from './common';
 
 const topicSchemaLiteral = {
   title: 'topic schema',
-  version: 1,
+  version: 0,
   description: 'Describes a topic',
   primaryKey: 'id',
   type: 'object',

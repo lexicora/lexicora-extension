@@ -27,11 +27,6 @@ const isDev = import.meta.env.DEV;
  * which must be overwritten by a plugin". Electing a leader also keeps the loop
  * from running redundantly in every open context.
  *
- * Migration: any schema change — including adding or dropping an index —
- * changes the schema's hash, so every collection carries a version and a
- * strategy. That plugin is registered by `db/collections`, next to the
- * migrations that need it.
- *
  * Both must be registered before any database is created.
  */
 addRxPlugin(RxDBCleanupPlugin);

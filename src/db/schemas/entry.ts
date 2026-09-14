@@ -3,7 +3,7 @@ import { uuidSchema, uuidWithNilDefault } from './common';
 
 const entrySchemaLiteral = {
   title: 'entry schema',
-  version: 1,
+  version: 0,
   description: 'Describes an entry within a topic',
   primaryKey: 'id',
   type: 'object',

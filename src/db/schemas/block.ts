@@ -3,7 +3,7 @@ import { blockTypes, uuidSchema, uuidWithNilDefault } from './common';
 
 const blockSchemaLiteral = {
   title: 'block schema',
-  version: 1,
+  version: 0,
   description: 'Describes a block component of an entry',
   primaryKey: 'id',
   type: 'object',
