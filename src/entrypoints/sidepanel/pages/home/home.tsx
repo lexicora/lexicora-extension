@@ -30,7 +30,11 @@ function formatFavoriteCount(count: number): string {
 
 function HomePage() {
   const navigate = useNavigate();
-  const { capture: capturePage, isSupported, activeTab } = useCaptureActiveTab();
+  const {
+    capture: capturePage,
+    isSupported,
+    activeTab,
+  } = useCaptureActiveTab();
   const { capturedPage, fromThisSite } = useSiteEntries(activeTab);
   const [promptText, setPromptText] = useState("");
 
@@ -59,7 +63,7 @@ function HomePage() {
     <PageContainer id="lc-home-page">
       <PageHeader
         title="Home"
-        classNameHeaderElement="mb-0"
+        classNameHeaderElement="mt-4 mb-5!"
         titleContent={
           <>
             <span className="flex justify-center gap-3 items-baseline mb-3">
@@ -86,7 +90,7 @@ function HomePage() {
       {/* Scrolls like every other page: the capture bar and bottom navigation
           are fixed, so the list clears them with padding rather than by
           trimming itself to fit. */}
-      <main className="pb-33">
+      <main className="pb-16">
         <section className="mt-3">
           <div className="flex items-center justify-center gap-2.75">
             <Button
@@ -233,6 +237,7 @@ function HomePage() {
                 isSupported={isSupported}
                 onCapturePage={() => capturePage("page")}
                 onBookmarkPage={() => capturePage("bookmark")}
+                solidWhenDisabled={true}
               />
             )}
           </div>

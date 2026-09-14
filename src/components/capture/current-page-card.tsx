@@ -6,7 +6,12 @@ interface CurrentPageCardProps {
   activeTab: Browser.tabs.Tab | null;
   /** False for browser and extension pages, which cannot be captured. */
   isSupported: boolean;
-  /** One line instead of two: for the side panel, which shows this permanently. */
+  /**
+   * One line instead of two. Built for the side-panel home page, which showed
+   * it permanently above the capture buttons; that was taken out again because
+   * it did not sit well there. Unused for now — the popup uses the two-line
+   * default — and kept for whenever the panel wants it back.
+   */
   compact?: boolean;
   className?: string;
 }
@@ -40,7 +45,7 @@ export function CurrentPageCard({
     <section
       className={cn(
         "flex items-center gap-2.5 rounded-xl bg-card not-dark:shadow-xs text-left",
-        compact ? "px-3 py-2" : "px-3 py-2.5",
+        compact ? "px-3 py-2 border" : "px-3 py-2.5",
         !isSupported && "opacity-70",
         className,
       )}
@@ -64,16 +69,20 @@ export function CurrentPageCard({
         // the first thing to be cut when the title is long.
         <div className="min-w-0 flex-1 flex items-baseline gap-1.5">
           <span className="text-sm truncate">
-            {isSupported ? (title ?? "Untitled page") : "Can't capture this page"}
+            {isSupported
+              ? (title ?? "Untitled page")
+              : "Can't capture this page"}
           </span>
-          <span className="text-xs text-muted-foreground truncate shrink-[2]">
+          <span className="text-xs text-muted-foreground truncate shrink-0">
             {isSupported ? (hostname ?? "") : "not supported"}
           </span>
         </div>
       ) : (
         <div className="min-w-0 flex-1">
           <p className="text-sm truncate">
-            {isSupported ? (title ?? "Untitled page") : "Can't capture this page"}
+            {isSupported
+              ? (title ?? "Untitled page")
+              : "Can't capture this page"}
           </p>
           <p className="text-xs text-muted-foreground truncate">
             {isSupported

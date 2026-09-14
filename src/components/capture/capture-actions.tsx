@@ -9,6 +9,7 @@ interface CaptureActionsProps {
   onCapturePage: () => void;
   onBookmarkPage: () => void;
   className?: string;
+  solidWhenDisabled?: boolean;
 }
 
 /**
@@ -28,6 +29,7 @@ export function CaptureActions({
   onCapturePage,
   onBookmarkPage,
   className,
+  solidWhenDisabled = false,
 }: CaptureActionsProps) {
   return (
     <div className={cn("flex items-center gap-3 w-full", className)}>
@@ -41,6 +43,10 @@ export function CaptureActions({
         className={cn(
           "flex-1 min-w-0 hover:bg-[color-mix(in_oklab,var(--secondary),black_7%)] dark:hover:bg-[color-mix(in_oklab,var(--secondary)80%,var(--background))] overflow-hidden",
           "disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-secondary!",
+          {
+            "disabled:opacity-100 disabled:bg-[color-mix(in_oklab,var(--secondary)60%,var(--background))] disabled:hover:bg-[color-mix(in_oklab,var(--secondary)60%,var(--background))]!":
+              solidWhenDisabled,
+          },
         )}
         disabled={!isSupported}
         onClick={onBookmarkPage}
@@ -49,7 +55,13 @@ export function CaptureActions({
       </Button>
       <Button
         title={isSupported ? "Capture page" : UNSUPPORTED_PAGE_TITLE}
-        className="flex-1 min-w-0 hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary"
+        className={cn(
+          "flex-1 min-w-0 hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary",
+          {
+            "disabled:opacity-100 disabled:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))]":
+              solidWhenDisabled,
+          },
+        )}
         disabled={!isSupported}
         onClick={onCapturePage}
       >
