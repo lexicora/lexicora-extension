@@ -85,6 +85,12 @@ export const FEATURES = {
   SIDE_PANEL_NEW_BOTTOM_NAV_STYLE: true,
 
   /**
+   * The general settings section, which will contain various settings for the
+   * application. Off until the settings are fully implemented and tested.
+   */
+  GENERAL_SETTINGS_SECTION: false,
+
+  /**
    * The standalone windowed app (`window.html`). The entrypoint is functional
    * but unpolished — its home page is a placeholder and several window-specific
    * issues are open (#179, #180, #182, #184). Off until that work is finished;

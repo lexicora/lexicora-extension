@@ -172,47 +172,49 @@ function SettingsPage() {
             />
           </div>
         </section>
-        <section id="general-settings">
-          <Label htmlFor="" className="text-sm ml-2 mb-0.5">
-            <HeroCogIcon className="size-3.5 text-gray-400" /> General
-          </Label>
-          <div className="rounded-2xl not-dark:shadow-xs">
-            {/*MAYBE: Add General page in of itself  */}
-            <SettingsItem
-              to="/settings/general/accessibility"
-              size="sm"
-              MediaIcon={PersonStandingIcon}
-              mediaIconColor="text-teal-500"
-              itemTitle="Accessibility"
-              roundingClass="rounded-b-none"
-            />
-            <SettingsItem
-              to="/settings/general/language"
-              size="sm"
-              MediaIcon={LanguagesIcon}
-              mediaIconColor="text-sky-500"
-              itemTitle="Language"
-              roundingClass="rounded-none!"
-            />
-            <SettingsItem
-              //Maybe make this an external link
-              to="/settings/general/privacy-policy"
-              size="sm"
-              MediaIcon={ShieldCheckIcon}
-              mediaIconColor="text-indigo-500"
-              itemTitle="Privacy policy"
-              roundingClass="rounded-none!"
-            />
-            <SettingsItem
-              to="/settings/general/miscellaneous"
-              size="sm"
-              MediaIcon={EllipsisIcon}
-              mediaIconColor="text-slate-500"
-              itemTitle="Miscellaneous"
-              roundingClass="rounded-t-none"
-            />
-          </div>
-        </section>
+        {FEATURES.GENERAL_SETTINGS_SECTION && (
+          <section id="general-settings">
+            <Label htmlFor="" className="text-sm ml-2 mb-0.5">
+              <HeroCogIcon className="size-3.5 text-gray-400" /> General
+            </Label>
+            <div className="rounded-2xl not-dark:shadow-xs">
+              {/*MAYBE: Add General page in of itself  */}
+              <SettingsItem
+                to="/settings/general/accessibility"
+                size="sm"
+                MediaIcon={PersonStandingIcon}
+                mediaIconColor="text-teal-500"
+                itemTitle="Accessibility"
+                roundingClass="rounded-b-none"
+              />
+              <SettingsItem
+                to="/settings/general/language"
+                size="sm"
+                MediaIcon={LanguagesIcon}
+                mediaIconColor="text-sky-500"
+                itemTitle="Language"
+                roundingClass="rounded-none!"
+              />
+              <SettingsItem
+                //Maybe make this an external link
+                to="/settings/general/privacy-policy"
+                size="sm"
+                MediaIcon={ShieldCheckIcon}
+                mediaIconColor="text-indigo-500"
+                itemTitle="Privacy policy"
+                roundingClass="rounded-none!"
+              />
+              <SettingsItem
+                to="/settings/general/miscellaneous"
+                size="sm"
+                MediaIcon={EllipsisIcon}
+                mediaIconColor="text-slate-500"
+                itemTitle="Miscellaneous"
+                roundingClass="rounded-t-none"
+              />
+            </div>
+          </section>
+        )}
         <section id="help-faq-tipsntricks-section">
           <Label htmlFor="" className="text-sm ml-2 mb-0.5">
             <LifeBuoyIcon className="size-3.5 text-pink-400" /> Help
