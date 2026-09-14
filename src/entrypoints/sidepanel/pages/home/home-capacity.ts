@@ -19,11 +19,13 @@ const MIN_ENTRY_ROWS = 2;
 
 /**
  * Everything above and below the rows: the logo header, the favourites row,
- * the fixed bottom bar (104px — the current-page card above the capture
- * buttons) and the bottom navigation (59px). Approximate, and the one number
- * to tune if the page ends up scrolling or leaving a gap.
+ * the fixed capture bar (60px) and the bottom navigation (59px). The one
+ * number to tune if the page ends up scrolling or leaving a gap.
+ *
+ * 268 was the measured fit while a current-page card sat above the capture
+ * buttons; that card and its spacing were 44px of it.
  */
-const FIXED_CHROME_HEIGHT = 252;
+const FIXED_CHROME_HEIGHT = 224;
 
 /** The height left for suggestion rows in a panel of this height. */
 export function homeRowSpace(viewportHeight: number): number {
@@ -53,7 +55,9 @@ export function allocateHomeRows({
   // exactly when there is slack to hold it.
   const rowsBeforeLink = Math.floor(availablePx / ROW_HEIGHT);
   const usablePx =
-    topicsAvailable < rowsBeforeLink ? availablePx - CREATE_LINK_HEIGHT : availablePx;
+    topicsAvailable < rowsBeforeLink
+      ? availablePx - CREATE_LINK_HEIGHT
+      : availablePx;
 
   const rows = Math.max(0, Math.floor(usablePx / ROW_HEIGHT));
 
