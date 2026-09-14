@@ -3,11 +3,21 @@ import { useRxCollection } from "rxdb/plugins/react";
 import type { TopicDocType } from "@/db/schemas/topic";
 import type { EntryDocType } from "@/db/schemas/entry";
 
+/**
+ * How many rows the queries fetch. The home page shows as many as fit, which
+ * on a tall side panel is more than the old fixed three — this is the ceiling
+ * on that, not the number displayed.
+ */
+const QUERY_LIMIT = 12;
+
 export interface HomeData {
   favoriteTopicsCount: number;
   favoriteEntriesCount: number;
+  /** Pinned first, then recent, de-duplicated. Not truncated: the page decides how many fit. */
   combinedTopics: TopicDocType[];
+  /** Only used while `FEATURES.AI` is on, where the prompt takes the space instead. */
   maxTopicsToShow: number;
+  /** Not truncated, like `combinedTopics`. */
   recentEntries: EntryDocType[];
   /** True once both collections are known to hold nothing at all. */
   isLibraryEmpty: boolean;
@@ -57,7 +67,7 @@ export function useHomeData(): HomeData {
       .find({
         selector: { isPinned: true, isArchived: false },
         sort: [{ updatedAt: "desc" }],
-        limit: 5,
+        limit: QUERY_LIMIT,
       })
       .$.subscribe({
         next: (docs) =>
@@ -73,7 +83,7 @@ export function useHomeData(): HomeData {
       .find({
         selector: { isArchived: false },
         sort: [{ updatedAt: "desc" }],
-        limit: 6,
+        limit: QUERY_LIMIT,
       })
       .$.subscribe({
         next: (docs) =>
@@ -89,7 +99,7 @@ export function useHomeData(): HomeData {
       .find({
         selector: { isArchived: false },
         sort: [{ updatedAt: "desc" }],
-        limit: 6,
+        limit: QUERY_LIMIT,
       })
       .$.subscribe({
         next: (docs) =>
@@ -134,18 +144,14 @@ export function useHomeData(): HomeData {
     ...recentTopics.filter(
       (topic) => !pinnedTopics.some((pinned) => pinned.id === topic.id),
     ),
-  ].slice(0, maxTopicsToShow);
-
-  // Show fewer entries than topics: topics are the primary way in, and the
-  // panel still has to fit the capture button.
-  const maxEntriesToShow = Math.max(2, maxTopicsToShow - 1);
+  ];
 
   return {
     favoriteTopicsCount,
     favoriteEntriesCount,
     combinedTopics,
     maxTopicsToShow,
-    recentEntries: recentEntries.slice(0, maxEntriesToShow),
+    recentEntries,
     // Stays false until both counts have actually arrived, so the empty state
     // never flashes while the database is still opening.
     isLibraryEmpty: topicsCount === 0 && entriesCount === 0,

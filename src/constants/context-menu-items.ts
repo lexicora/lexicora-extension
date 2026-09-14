@@ -77,6 +77,9 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   // documentUrlPatterns: ["https://**", "https://**"] (put in each item if needed)
 ];
 
+/** Items shown only while `FEATURES.WEBSITE` is on. */
+export const CONTEXT_MENU_ITEMS_WEBSITE: string[] = [CMI_ID.OPEN_LEXICORA];
+
 /**
  * Use this to disable ai context menu items if the feature is not available or disabled.
  */

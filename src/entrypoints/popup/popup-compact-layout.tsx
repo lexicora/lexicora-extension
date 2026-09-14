@@ -3,9 +3,10 @@ import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.sv
 
 import { AccountMenu } from "@/components/account-menu";
 import { CaptureActions } from "@/components/capture/capture-actions";
+import { WebsiteLink } from "@/components/website-link";
 import { CurrentPageCard } from "@/components/capture/current-page-card";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRightIcon, PanelRightIcon } from "lucide-react";
+import { PanelRightIcon } from "lucide-react";
 
 interface PopupCompactLayoutProps {
   activeTab: Browser.tabs.Tab | null;
@@ -75,16 +76,7 @@ export function PopupCompactLayout({
           onCapturePage={onCapturePage}
           onBookmarkPage={onBookmarkPage}
         />
-        <div className="flex justify-center mt-2.5">
-          <a
-            href="https://lexicora.com"
-            target="_blank"
-            className="text-xs text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 hover:text-lc-muted-foreground-hover"
-            title="https://lexicora.com"
-          >
-            Visit Lexicora.com <ArrowUpRightIcon className="inline" size={13} />
-          </a>
-        </div>
+        <WebsiteLink className="mt-2.5" size="xs" />
       </footer>
     </div>
   );

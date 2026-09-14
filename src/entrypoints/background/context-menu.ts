@@ -8,6 +8,7 @@ import {
   requestAndForwardCapture,
 } from "./capture-flow";
 import { UNSUPPORTED_URL_REGEX } from "@/constants/support-capture-sites";
+import { WEBSITE_URL } from "@/constants/site";
 
 // TODO: Add messages for users (if exceptions occur, e.g., no selection made)
 
@@ -20,7 +21,7 @@ export function setupContextMenuActions() {
     // Add browser-specific excluded URLs if needed (like extensions own pages)
     switch (info.menuItemId) {
       case CMI_ID.OPEN_LEXICORA: {
-        browser.tabs.create({ url: "https://lexicora.com" });
+        browser.tabs.create({ url: WEBSITE_URL });
         break;
       }
       case CMI_ID.CAPTURE_SELECTION_AI_ASSISTED: {

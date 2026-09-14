@@ -1,6 +1,7 @@
 import {
   CONTEXT_MENU_ITEMS,
   CONTEXT_MENU_ITEMS_AI,
+  CONTEXT_MENU_ITEMS_WEBSITE,
 } from "@/constants/context-menu-items";
 import { FEATURES } from "@/constants/features";
 import {
@@ -19,11 +20,9 @@ export default defineBackground(() => {
 
     // Create context menu items from the imported constants
     for (const contextMenuItem of CONTEXT_MENU_ITEMS) {
-      if (
-        !FEATURES.AI &&
-        CONTEXT_MENU_ITEMS_AI.includes(contextMenuItem?.id as string)
-      )
-        continue;
+      const id = contextMenuItem?.id as string;
+      if (!FEATURES.AI && CONTEXT_MENU_ITEMS_AI.includes(id)) continue;
+      if (!FEATURES.WEBSITE && CONTEXT_MENU_ITEMS_WEBSITE.includes(id)) continue;
       browser.contextMenus.create(contextMenuItem);
     }
 

@@ -41,6 +41,8 @@
  * |                     | so turning AI on hides Bookmark until they are redone  |
  * | `ACCOUNTS`          | top bar; popup header; Settings account item, which    |
  * |                     | needs a `/settings/account` route registering first    |
+ * | `WEBSITE`           | side-panel home header; popup footers; the "Open       |
+ * |                     | Lexicora Website" context menu item                   |
  * | `SIDE_PANEL_TOP_BAR`| every side-panel page's top offset, and PageHeader's   |
  * |                     | compact strip while scrolling                          |
  * | `WINDOWED_APP`      | top-bar button; the whole `window/` entrypoint         |
@@ -61,6 +63,14 @@ export const FEATURES = {
    * settings page. Off until Supabase auth exists — see issue #69.
    */
   ACCOUNTS: false,
+
+  /**
+   * Links to lexicora.com: the "Visit Lexicora.com" line on the side-panel
+   * home and in the popup, and the "Open Lexicora Website" context menu item.
+   * Off until the website is actually live, so v1.0 never points at a page
+   * that may not exist.
+   */
+  WEBSITE: false,
 
   /**
    * The side-panel top bar.
