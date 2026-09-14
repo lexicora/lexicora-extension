@@ -4,10 +4,9 @@ import type { TopicDocType } from "@/db/schemas/topic";
 import type { EntryDocType } from "@/db/schemas/entry";
 import { FEATURES } from "@/constants/features";
 import {
-  CAPTURED_ROW_HEIGHT,
+  HOME_ENTRY_LIMIT,
+  HOME_TOPIC_LIMIT,
   aiTopicRows,
-  allocateHomeRows,
-  homeRowSpace,
   splitEntryRows,
 } from "../home-capacity";
 
@@ -51,6 +50,7 @@ export function useHomeData({
   const [recentEntries, setRecentEntries] = useState<EntryDocType[]>([]);
   const [topicsCount, setTopicsCount] = useState<number | null>(null);
   const [entriesCount, setEntriesCount] = useState<number | null>(null);
+  // Only drives the AI layout's topic count; see home-capacity.
   const [viewportHeight, setViewportHeight] = useState(
     () => document.documentElement.clientHeight,
   );
@@ -165,23 +165,14 @@ export function useHomeData({
   const claimed = new Set([capturedPage?.id, ...sitePool.map((e) => e.id)]);
   const recentPool = recentEntries.filter((entry) => !claimed.has(entry.id));
 
-  // With the AI prompt on, the topic count is what is left once the textarea
-  // has its height. With it off, the rows share out the space the textarea is
-  // not using, which is why the page no longer stops at three.
+  // Fixed counts, since the page scrolls. The AI layout keeps stepping with
+  // the viewport, because its textarea claims whatever height is left.
   const { maxTopics, maxEntries } = FEATURES.AI
     ? {
         maxTopics: aiTopicRows(viewportHeight),
         maxEntries: Math.max(2, aiTopicRows(viewportHeight) - 1),
       }
-    : allocateHomeRows({
-        availablePx:
-          homeRowSpace(viewportHeight) -
-          (capturedPage ? CAPTURED_ROW_HEIGHT : 0),
-        topicsAvailable: allTopics.length,
-        entriesAvailable: sitePool.length + recentPool.length,
-        entryGroups:
-          (sitePool.length > 0 ? 1 : 0) + (recentPool.length > 0 ? 1 : 0),
-      });
+    : { maxTopics: HOME_TOPIC_LIMIT, maxEntries: HOME_ENTRY_LIMIT };
 
   const { siteRows, recentRows } = splitEntryRows({
     maxEntries,

@@ -22,6 +22,11 @@ interface ActionButtonConfig {
 
 interface PageHeaderProps {
   title: string;
+  /**
+   * Replaces the large title while keeping `title` for the compact strip that
+   * appears on scroll. For the home page, whose large title is the wordmark.
+   */
+  titleContent?: React.ReactNode;
   children?: React.ReactNode; // Added children for custom UI
   hoverOnScroll?: boolean;
   headerTextAlignment?: "center" | "left";
@@ -64,6 +69,7 @@ function WindowedCompactStrip({
 
 export function PageHeader({
   title,
+  titleContent,
   children,
   hoverOnScroll = true,
   headerTextAlignment = "center",
@@ -352,15 +358,17 @@ export function PageHeader({
       ) : (
         // Large Title: SIMPLE, had css classes:  flex items-center justify-between
         <div className="mt-1">
-          <h1
+          <div
             className={cn(
-              "text-2xl font-semibold will-change-opacity transition-opacity duration-300",
+              "will-change-opacity transition-opacity duration-300",
               isAtTop ? "opacity-100" : "opacity-0 duration-50",
               isLeftAligned ? "text-left" : "text-center",
             )}
           >
-            {title}
-          </h1>
+            {titleContent ?? (
+              <h1 className="text-2xl font-semibold">{title}</h1>
+            )}
+          </div>
         </div>
       )}
       {/* Children rendered next to the simple title */}

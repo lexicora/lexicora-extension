@@ -3,6 +3,7 @@ import styles from "./home.module.css";
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
 import { PageContainer } from "@/components/page-container";
+import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { ChevronRightIcon, HistoryIcon, PinIcon, StarIcon } from "lucide-react";
 import { useCaptureActiveTab } from "@/hooks/sidepanel/use-capture-active-tab";
@@ -55,29 +56,38 @@ function HomePage() {
       : "recent-entries";
 
   return (
-    <PageContainer id="lc-home-page" classNameInner="flex flex-col">
-      <header className="mt-4 shrink-0">
-        <span className="flex justify-center gap-3 items-baseline mb-3">
-          <img
-            src={lexicoraLightThemeLogoNoBg}
-            className="h-6.5 lc-display-light rounded-xs"
-            alt="Lexicora logo"
-            draggable="false"
-          />
-          <img
-            src={lexicoraDarkThemeLogoNoBg}
-            className="h-6.5 lc-display-dark rounded-xs"
-            alt="Lexicora logo"
-            draggable="false"
-          />
-          <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground leading-0">
-            Lexicora
-          </h1>
-        </span>
-        <WebsiteLink className="mt-1" />
-      </header>
-      <main className="flex-1 flex flex-col">
-        <section className="mt-3 shrink-0">
+    <PageContainer id="lc-home-page">
+      <PageHeader
+        title="Home"
+        classNameHeaderElement="mb-0"
+        titleContent={
+          <>
+            <span className="flex justify-center gap-3 items-baseline mb-3">
+              <img
+                src={lexicoraLightThemeLogoNoBg}
+                className="h-6.5 lc-display-light rounded-xs"
+                alt="Lexicora logo"
+                draggable="false"
+              />
+              <img
+                src={lexicoraDarkThemeLogoNoBg}
+                className="h-6.5 lc-display-dark rounded-xs"
+                alt="Lexicora logo"
+                draggable="false"
+              />
+              <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground leading-0">
+                Lexicora
+              </h1>
+            </span>
+            <WebsiteLink className="mt-1" />
+          </>
+        }
+      />
+      {/* Scrolls like every other page: the capture bar and bottom navigation
+          are fixed, so the list clears them with padding rather than by
+          trimming itself to fit. */}
+      <main className="pb-33">
+        <section className="mt-3">
           <div className="flex items-center justify-center gap-2.75">
             <Button
               size="sm"
@@ -116,9 +126,6 @@ function HomePage() {
               <ChevronRightIcon className="transition-opacity size-3 shrink-0 opacity-70 group-hover:opacity-90" />
             </Button>
           </div>
-          {!FEATURES.AI && capturedPage && (
-            <CapturedPageRow entry={capturedPage} />
-          )}
           <div className="flex flex-col gap-1.75 mt-2">
             {combinedTopics.map((topic, index) => (
               <Button
@@ -168,6 +175,9 @@ function HomePage() {
           />
         )}
         {mainContent === "empty-state" && <LibraryEmptyState />}
+        {!FEATURES.AI && capturedPage && (
+          <CapturedPageRow entry={capturedPage} />
+        )}
         {mainContent === "recent-entries" && (
           <>
             <RecentEntries label="From this site" entries={siteEntries} />
