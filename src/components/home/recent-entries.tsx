@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import type { EntryDocType } from "@/db/schemas/entry";
+import { cn } from "@/lib/utils";
 
 interface RecentEntriesProps {
   entries: EntryDocType[];
@@ -37,7 +38,9 @@ export function RecentEntries({
       <h2 className="text-xs font-medium text-muted-foreground text-left ml-2.5 mt-3 mb-1.75 select-none">
         {label}
       </h2>
-      {leadingRow && <div className="mb-3.5">{leadingRow}</div>}
+      {leadingRow && (
+        <div className={cn(entries.length !== 0 && "mb-2")}>{leadingRow}</div>
+      )}
       <div className="flex flex-col gap-1.75">
         {entries.map((entry) => (
           <Button

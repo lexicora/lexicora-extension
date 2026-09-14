@@ -240,7 +240,8 @@ function HomePage() {
                 isSupported={isSupported}
                 onCapturePage={() => capturePage("page")}
                 onBookmarkPage={() => capturePage("bookmark")}
-                solidWhenDisabled={true}
+                solidWhenDisabled
+                extraRounding
               />
             )}
           </div>

@@ -10,6 +10,7 @@ interface CaptureActionsProps {
   onBookmarkPage: () => void;
   className?: string;
   solidWhenDisabled?: boolean;
+  extraRounding?: boolean;
 }
 
 /**
@@ -30,6 +31,7 @@ export function CaptureActions({
   onBookmarkPage,
   className,
   solidWhenDisabled = false,
+  extraRounding = false,
 }: CaptureActionsProps) {
   return (
     <div className={cn("flex items-center gap-3 w-full", className)}>
@@ -43,10 +45,9 @@ export function CaptureActions({
         className={cn(
           "flex-1 min-w-0 hover:bg-[color-mix(in_oklab,var(--secondary),black_7%)] dark:hover:bg-[color-mix(in_oklab,var(--secondary)80%,var(--background))] overflow-hidden",
           "disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-secondary!",
-          {
-            "disabled:opacity-100 disabled:bg-[color-mix(in_oklab,var(--secondary)60%,var(--background))] disabled:hover:bg-[color-mix(in_oklab,var(--secondary)60%,var(--background))]!":
-              solidWhenDisabled,
-          },
+          extraRounding && "rounded-lg",
+          solidWhenDisabled &&
+            "disabled:opacity-100 disabled:text-muted-foreground disabled:bg-[color-mix(in_oklab,var(--secondary)60%,var(--background))] disabled:hover:bg-[color-mix(in_oklab,var(--secondary)60%,var(--background))]!",
         )}
         disabled={!isSupported}
         onClick={onBookmarkPage}
@@ -57,10 +58,9 @@ export function CaptureActions({
         title={isSupported ? "Capture page" : UNSUPPORTED_PAGE_TITLE}
         className={cn(
           "flex-1 min-w-0 hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary",
-          {
-            "disabled:opacity-100 disabled:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))]":
-              solidWhenDisabled,
-          },
+          extraRounding && "rounded-lg",
+          solidWhenDisabled &&
+            "disabled:opacity-100 disabled:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))]",
         )}
         disabled={!isSupported}
         onClick={onCapturePage}

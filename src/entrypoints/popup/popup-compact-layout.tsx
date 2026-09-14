@@ -31,7 +31,7 @@ export function PopupCompactLayout({
   onBookmarkPage,
 }: PopupCompactLayoutProps) {
   return (
-    <div className="w-85 select-none px-3 pt-3 pb-3.5">
+    <div className="w-85 select-none p-3 /*pb-3.5*/">
       <header className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
           <AccountMenu className="bg-secondary/80" />
@@ -75,6 +75,7 @@ export function PopupCompactLayout({
           isSupported={isSupported}
           onCapturePage={onCapturePage}
           onBookmarkPage={onBookmarkPage}
+          //extraRounding
         />
         <WebsiteLink className="mt-2.5" size="xs" />
       </footer>
