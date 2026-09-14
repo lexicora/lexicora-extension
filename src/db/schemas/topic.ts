@@ -3,7 +3,7 @@ import { uuidSchema, uuidWithNilDefault } from './common';
 
 const topicSchemaLiteral = {
   title: 'topic schema',
-  version: 0,
+  version: 1,
   description: 'Describes a topic',
   primaryKey: 'id',
   type: 'object',
@@ -20,14 +20,19 @@ const topicSchemaLiteral = {
     isFavorite: { type: 'boolean' },
     isPinned: { type: 'boolean' },
     isArchived: { type: 'boolean' },
-    createdAt: { type: 'string', format: 'date-time' },
-    updatedAt: { type: 'string', format: 'date-time' },
+    //* maxLength is required on any indexed string; ISO timestamps are 24
+    //* characters ("2026-09-14T12:00:00.000Z"), so 30 leaves room to spare.
+    createdAt: { type: 'string', format: 'date-time', maxLength: 30 },
+    updatedAt: { type: 'string', format: 'date-time', maxLength: 30 },
     // INTERNAL:
     searchBlob: { type: 'string', maxLength: 2020 }, // Auto-populated denormalized search field (name + tags + description snippet + updatedAt date tokens)
   },
   required: ['id', 'userId', 'name', 'tags', 'isFavorite', 'isPinned', 'isArchived', 'createdAt', 'updatedAt'],
   indexes: [
-    'userId',
+    //* NOTE: `userId` is still stored — every document carries the nil UUID
+    //* until accounts exist — but nothing queries by it, so the index only cost
+    //* a key per document. Re-add it when sync actually filters by user.
+    //'userId',
     ['isPinned', 'updatedAt'],
     ['isArchived', 'isPinned', 'updatedAt'],
     ['isFavorite', 'isArchived', 'isPinned', 'updatedAt'],

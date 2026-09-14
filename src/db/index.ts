@@ -2,6 +2,7 @@ import { createRxDatabase, addRxPlugin } from "rxdb";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { RxDBCleanupPlugin } from "rxdb/plugins/cleanup";
 import { RxDBLeaderElectionPlugin } from "rxdb/plugins/leader-election";
+import { COLLECTION_SETTINGS } from "./collections";
 //import { RxDBQueryBuilderPlugin } from "rxdb/plugins/query-builder";
 import { disableWarnings, RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
 
@@ -25,6 +26,11 @@ const isDev = import.meta.env.DEV;
  * open at once). Without this plugin that call throws "You are using a function
  * which must be overwritten by a plugin". Electing a leader also keeps the loop
  * from running redundantly in every open context.
+ *
+ * Migration: any schema change — including adding or dropping an index —
+ * changes the schema's hash, so every collection carries a version and a
+ * strategy. That plugin is registered by `db/collections`, next to the
+ * migrations that need it.
  *
  * Both must be registered before any database is created.
  */
@@ -56,12 +62,8 @@ export async function initializeDb() {
     },
   });
 
-  // Add the collections
-  await db.addCollections({
-    topics: { schema: topicSchema },
-    entries: { schema: entrySchema },
-    blocks: { schema: blockSchema },
-  });
+  // Add the collections — shared with the tests, see db/collections.
+  await db.addCollections(COLLECTION_SETTINGS);
 
   // --- searchBlob middleware hooks ---
   // Automatically populate the searchBlob field on insert and update

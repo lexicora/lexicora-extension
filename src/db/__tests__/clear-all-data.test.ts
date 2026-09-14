@@ -8,9 +8,7 @@ import {
 import { getRxStorageMemory } from "rxdb/plugins/storage-memory";
 import { RxDBCleanupPlugin } from "rxdb/plugins/cleanup";
 
-import { topicSchema } from "../schemas/topic";
-import { entrySchema } from "../schemas/entry";
-import { blockSchema } from "../schemas/block";
+import { COLLECTION_SETTINGS } from "../collections";
 
 /**
  * Covers the "Clear All Data" setting (issue #153).
@@ -46,11 +44,7 @@ beforeEach(async () => {
     eventReduce: true,
   });
 
-  await db.addCollections({
-    topics: { schema: topicSchema },
-    entries: { schema: entrySchema },
-    blocks: { schema: blockSchema },
-  });
+  await db.addCollections(COLLECTION_SETTINGS);
 });
 
 afterEach(async () => {

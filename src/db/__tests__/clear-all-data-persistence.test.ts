@@ -10,9 +10,7 @@ import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { RxDBCleanupPlugin } from "rxdb/plugins/cleanup";
 import Dexie from "dexie";
 
-import { topicSchema } from "../schemas/topic";
-import { entrySchema } from "../schemas/entry";
-import { blockSchema } from "../schemas/block";
+import { COLLECTION_SETTINGS } from "../collections";
 
 /**
  * Reproduction for issue #153 against the *real* storage engine.
@@ -47,11 +45,7 @@ async function openDb(name: string) {
     eventReduce: true,
   });
 
-  await db.addCollections({
-    topics: { schema: topicSchema },
-    entries: { schema: entrySchema },
-    blocks: { schema: blockSchema },
-  });
+  await db.addCollections(COLLECTION_SETTINGS);
 
   open = db;
   return db;
@@ -81,8 +75,14 @@ function makeTopic(id: string) {
  * Reads the collection's rows straight out of IndexedDB, bypassing RxDB, so
  * soft-deleted rows are visible.
  */
-async function rowsInIndexedDb(dbName: string, collection: string) {
-  const dexie = new Dexie(`rxdb-dexie-${dbName}--0--${collection}`);
+async function rowsInIndexedDb(
+  dbName: string,
+  collection: keyof typeof COLLECTION_SETTINGS,
+) {
+  // RxDB puts the schema version in the table name, so it has to come from the
+  // schema rather than be written out here.
+  const { version } = COLLECTION_SETTINGS[collection].schema;
+  const dexie = new Dexie(`rxdb-dexie-${dbName}--${version}--${collection}`);
   dexie.version(1).stores({ docs: "id" });
   await dexie.open();
   const rows = await dexie.table("docs").toArray();

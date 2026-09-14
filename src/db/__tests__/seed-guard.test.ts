@@ -11,9 +11,7 @@ import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { RxDBCleanupPlugin } from "rxdb/plugins/cleanup";
 
 import { seedDummyData } from "../seed";
-import { topicSchema } from "../schemas/topic";
-import { entrySchema } from "../schemas/entry";
-import { blockSchema } from "../schemas/block";
+import { COLLECTION_SETTINGS } from "../collections";
 
 /**
  * Regression test for issue #153.
@@ -51,11 +49,7 @@ async function openDb() {
     eventReduce: true,
   });
 
-  await database.addCollections({
-    topics: { schema: topicSchema },
-    entries: { schema: entrySchema },
-    blocks: { schema: blockSchema },
-  });
+  await database.addCollections(COLLECTION_SETTINGS);
 
   return database;
 }

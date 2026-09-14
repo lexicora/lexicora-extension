@@ -3,7 +3,7 @@ import { uuidSchema, uuidWithNilDefault } from './common';
 
 const entrySchemaLiteral = {
   title: 'entry schema',
-  version: 0,
+  version: 1,
   description: 'Describes an entry within a topic',
   primaryKey: 'id',
   type: 'object',
@@ -29,8 +29,10 @@ const entrySchemaLiteral = {
     searchUrl: { type: 'string', maxLength: 700 }, // search part of the url (hidden from user input derived from url)
     // Maybe add hashUrl
     faviconUrl: { type: 'string', maxLength: 1000 }, // base64 encoded favicon might be too long, for this.
-    createdAt: { type: 'string', format: 'date-time' },
-    updatedAt: { type: 'string', format: 'date-time' },
+    //* maxLength is required on any indexed string; ISO timestamps are 24
+    //* characters ("2026-09-14T12:00:00.000Z"), so 30 leaves room to spare.
+    createdAt: { type: 'string', format: 'date-time', maxLength: 30 },
+    updatedAt: { type: 'string', format: 'date-time', maxLength: 30 },
     siteName: { type: 'string', maxLength: 255 },
     // INTERNAL:
     searchBlob: { type: 'string', maxLength: 3620 }, // Auto-populated denormalized search field (title + tags + description snippet + siteName + hostnameUrl + updatedAt date tokens)
@@ -60,7 +62,13 @@ const entrySchemaLiteral = {
   ],
   indexes: [
     'topicId',
-    'userId',
+    //* NOTE: `userId` is still stored — every document carries the nil UUID
+    //* until accounts exist — but nothing queries by it, so the index only cost
+    //* a key per document. Re-add it when sync actually filters by user.
+    //'userId',
+    //* Used by the home page to find entries captured from the site in the
+    //* active tab, and the page itself among them.
+    'hostnameUrl',
     ['isPinned', 'updatedAt'],
     ['isArchived', 'isPinned', 'updatedAt'],
     ['isFavorite', 'isArchived', 'isPinned', 'updatedAt'],

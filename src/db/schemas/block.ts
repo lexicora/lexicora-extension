@@ -3,7 +3,7 @@ import { blockTypes, uuidSchema, uuidWithNilDefault } from './common';
 
 const blockSchemaLiteral = {
   title: 'block schema',
-  version: 0,
+  version: 1,
   description: 'Describes a block component of an entry',
   primaryKey: 'id',
   type: 'object',
@@ -25,7 +25,9 @@ const blockSchemaLiteral = {
     }
   },
   required: ['id', 'userId', 'entryId', 'order', 'type', 'propsJson'],
-  indexes: ['entryId', 'userId']
+  //* NOTE: `userId` is still stored on every block — the nil UUID until
+  //* accounts exist — but nothing queries by it, so its index is dropped.
+  indexes: ['entryId'] //, 'userId'
 } as const;
 
 export const blockSchema = toTypedRxJsonSchema(blockSchemaLiteral);

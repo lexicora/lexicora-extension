@@ -6,9 +6,7 @@ import {
 } from "rxdb";
 import { getRxStorageMemory } from "rxdb/plugins/storage-memory";
 
-import { topicSchema } from "../schemas/topic";
-import { entrySchema } from "../schemas/entry";
-import { blockSchema } from "../schemas/block";
+import { COLLECTION_SETTINGS } from "../collections";
 import { deleteEntryCascade, deleteTopicCascade } from "../cascade-delete";
 
 /**
@@ -42,11 +40,7 @@ beforeEach(async () => {
     eventReduce: true,
   });
 
-  await db.addCollections({
-    topics: { schema: topicSchema },
-    entries: { schema: entrySchema },
-    blocks: { schema: blockSchema },
-  });
+  await db.addCollections(COLLECTION_SETTINGS);
 });
 
 afterEach(async () => {
