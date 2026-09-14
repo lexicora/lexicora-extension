@@ -12,9 +12,10 @@ interface CapturedPageRowProps {
  * Says that the page in the active tab is already in the library, and opens
  * that entry.
  *
- * Not a suggestion but a statement about the current page, so it sits above
- * the suggestions rather than among them — and it is the answer to capturing
- * the same page twice by accident.
+ * Sits at the top of "From this site", which is where it belongs — it is one
+ * of that site's entries — but set apart from the list below it, because it is
+ * a statement about the current page rather than a suggestion. It is also the
+ * answer to capturing the same page twice by accident.
  */
 export function CapturedPageRow({ entry }: CapturedPageRowProps) {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export function CapturedPageRow({ entry }: CapturedPageRowProps) {
     <Button
       variant="secondary"
       title={`Already captured: ${entry.title}`}
-      className="group w-full flex items-center h-9.5 gap-2 px-3 mt-3 bg-card hover:bg-card-hover not-dark:shadow-xs rounded-xl text-left transition-colors"
+      className="group w-full flex items-center h-9.5 gap-2 px-3 bg-card hover:bg-card-hover not-dark:shadow-xs rounded-xl text-left transition-colors"
       onClick={() =>
         navigate(`/library/entries/${entry.id}`, { viewTransition: true })
       }

@@ -62,7 +62,7 @@ function HomePage() {
   return (
     <PageContainer id="lc-home-page">
       <PageHeader
-        title="Home"
+        title="Lexicora"
         classNameHeaderElement="mt-4 mb-5!"
         titleContent={
           <>
@@ -179,12 +179,15 @@ function HomePage() {
           />
         )}
         {mainContent === "empty-state" && <LibraryEmptyState />}
-        {!FEATURES.AI && capturedPage && (
-          <CapturedPageRow entry={capturedPage} />
-        )}
         {mainContent === "recent-entries" && (
           <>
-            <RecentEntries label="From this site" entries={siteEntries} />
+            <RecentEntries
+              label="From this site"
+              entries={siteEntries}
+              leadingRow={
+                capturedPage ? <CapturedPageRow entry={capturedPage} /> : null
+              }
+            />
             <RecentEntries entries={recentEntries} />
           </>
         )}

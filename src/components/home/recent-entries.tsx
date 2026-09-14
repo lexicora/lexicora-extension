@@ -9,6 +9,11 @@ interface RecentEntriesProps {
   entries: EntryDocType[];
   /** The group's heading — "From this site" for the current site's entries. */
   label?: string;
+  /**
+   * Rendered above the list, set apart from it: the already-captured row,
+   * which belongs to this site but is a statement rather than a suggestion.
+   */
+  leadingRow?: React.ReactNode;
 }
 
 /**
@@ -20,10 +25,11 @@ interface RecentEntriesProps {
 export function RecentEntries({
   entries,
   label = "Recent entries",
+  leadingRow,
 }: RecentEntriesProps) {
   const navigate = useNavigate();
 
-  if (entries.length === 0) return null;
+  if (entries.length === 0 && !leadingRow) return null;
 
   return (
     <section className="mt-4 shrink-0">
@@ -31,6 +37,7 @@ export function RecentEntries({
       <h2 className="text-xs font-medium text-muted-foreground text-left ml-2.5 mt-3 mb-1.75 select-none">
         {label}
       </h2>
+      {leadingRow && <div className="mb-3.5">{leadingRow}</div>}
       <div className="flex flex-col gap-1.75">
         {entries.map((entry) => (
           <Button
