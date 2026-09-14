@@ -141,7 +141,7 @@ export function PopupAiLayout({
             title={
               isSupported
                 ? ""
-                : "You are currently on a unsupported page for capturing."
+                : "you are currently on an unsupported page for capturing."
             }
             value={promptText}
             onChange={(e) => onPromptTextChange(e.target.value)}
@@ -173,7 +173,7 @@ export function PopupAiLayout({
                 title={
                   isSupported
                     ? "Capture page"
-                    : "You are currently on a unsupported page for capturing."
+                    : "you are currently on an unsupported page for capturing."
                 }
                 className={cn(
                   "w-full hover:bg-[color-mix(in_oklab,var(--secondary),black_7%)] dark:hover:bg-[color-mix(in_oklab,var(--secondary)80%,var(--background))] overflow-hidden",
@@ -190,7 +190,7 @@ export function PopupAiLayout({
                 title={
                   isSupported
                     ? "Capture page with AI"
-                    : "You are currently on a unsupported page for capturing."
+                    : "you are currently on an unsupported page for capturing."
                 }
                 className="w-full hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary"
                 disabled={!isSupported}

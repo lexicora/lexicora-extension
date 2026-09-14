@@ -53,7 +53,7 @@ export function AiPromptSection({
             title={
               isSupported
                 ? ""
-                : "You are currently on a unsupported page for capturing."
+                : "you are currently on an unsupported page for capturing."
             }
             value={promptText}
             onChange={(e) => {

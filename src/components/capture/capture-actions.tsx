@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const UNSUPPORTED_PAGE_TITLE =
-  "You are currently on a unsupported page for capturing.";
+  "you are currently on an unsupported page for capturing.";
 
 interface CaptureActionsProps {
   isSupported: boolean;

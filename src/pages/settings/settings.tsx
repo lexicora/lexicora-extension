@@ -272,35 +272,6 @@ function SettingsPage() {
             />
           </div>
         </section>
-        {/*<SettingsItem
-          to="/settings/general/terms-of-service"
-          size="sm"
-          MediaIcon={CogIcon}
-          mediaIconColor="text-gray-500"
-          itemTitle="Terms of Service"
-          roundingClass="rounded-none!"
-        />*/}
-        {/*<SettingsItem
-          to="/settings/help/contact-us"
-          size="sm"
-          MediaIcon={CircleQuestionMarkIcon}
-          mediaIconColor="text-green-500"
-          itemTitle="Contact Us"
-          roundingClass="rounded-none!"
-        />*/}
-        {/*also provide official links and more here*/}
-        {/*<section id="personalization-section">
-          <article id="personalization-theme">
-            <h2 className="text-lg font-semibold mb-2">Theme</h2>
-            <p className="text-sm text-muted-foreground">
-              Customize the appearance of the extension to match your
-              preferences.
-            </p>
-          </article>
-        </section>
-        <section id="notification-section">
-          <article></article>
-        </section>*/}
       </main>
     </PageContainer>
   );

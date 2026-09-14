@@ -62,7 +62,7 @@ export function CurrentPageCard({
         <p className="text-xs text-muted-foreground truncate">
           {isSupported
             ? (hostname ?? "Unknown site")
-            : "Browser and extension pages are not supported"}
+            : "Browser & extension pages are not supported"}
         </p>
       </div>
     </section>

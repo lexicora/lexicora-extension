@@ -37,7 +37,7 @@ export function BottomNavigation() {
         style.bottomNav,
         "fixed bottom-0 w-full h-14.75 px-2.75 pr-[calc(var(--lc-scrollbar-offset)+1px)] z-100 select-none",
         !FEATURES.SIDE_PANEL_NEW_BOTTOM_NAV_STYLE || isNoShadowPath
-          ? "border-t bg-background/80 backdrop-blur-lg"
+          ? "border-t bg-background/80 backdrop-blur-xs"
           : isAtBottom
             ? ""
             : style.styledBackground,

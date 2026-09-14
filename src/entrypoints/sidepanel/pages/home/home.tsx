@@ -4,12 +4,7 @@ import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.s
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
 import { PageContainer } from "@/components/page-container";
 import { Button } from "@/components/ui/button";
-import {
-  ChevronRightIcon,
-  HistoryIcon,
-  PinIcon,
-  StarIcon,
-} from "lucide-react";
+import { ChevronRightIcon, HistoryIcon, PinIcon, StarIcon } from "lucide-react";
 import { useCaptureActiveTab } from "@/hooks/sidepanel/use-capture-active-tab";
 import { FEATURES } from "@/constants/features";
 import { useNavigate } from "react-router-dom";
@@ -144,17 +139,17 @@ function HomePage() {
             ))}
             {mainContent !== "empty-state" &&
               combinedTopics.length < maxTopicsToShow && (
-              <Button
-                variant="link"
-                size="sm"
-                onClick={() =>
-                  navigate("/library/topics/new", { viewTransition: true })
-                }
-                className="self-center -mb-2"
-              >
-                Create a topic
-              </Button>
-            )}
+                <Button
+                  variant="link"
+                  size="sm"
+                  onClick={() =>
+                    navigate("/library/topics/new", { viewTransition: true })
+                  }
+                  className="self-center -mb-2"
+                >
+                  Create a topic
+                </Button>
+              )}
           </div>
         </section>
 
@@ -187,7 +182,7 @@ function HomePage() {
                     title={
                       isSupported
                         ? "Capture page"
-                        : "You are currently on a unsupported page for capturing."
+                        : "you are currently on an unsupported page for capturing."
                     }
                     className={cn(
                       "w-full hover:bg-[color-mix(in_oklab,var(--secondary),black_7%)] dark:hover:bg-[color-mix(in_oklab,var(--secondary)80%,var(--background))] overflow-hidden",
@@ -204,7 +199,7 @@ function HomePage() {
                     title={
                       isSupported
                         ? "Capture page with AI"
-                        : "You are currently on a unsupported page for capturing."
+                        : "you are currently on an unsupported page for capturing."
                     }
                     className="w-full hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary"
                     disabled={!isSupported}
