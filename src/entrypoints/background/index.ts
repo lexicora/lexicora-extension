@@ -1,6 +1,7 @@
 import {
   CONTEXT_MENU_ITEMS,
   CONTEXT_MENU_ITEMS_AI,
+  CONTEXT_MENU_ITEMS_NO_WEBSITE,
   CONTEXT_MENU_ITEMS_WEBSITE,
 } from "@/constants/context-menu-items";
 import { FEATURES } from "@/constants/features";
@@ -23,6 +24,7 @@ export default defineBackground(() => {
       const id = contextMenuItem?.id as string;
       if (!FEATURES.AI && CONTEXT_MENU_ITEMS_AI.includes(id)) continue;
       if (!FEATURES.WEBSITE && CONTEXT_MENU_ITEMS_WEBSITE.includes(id)) continue;
+      if (FEATURES.WEBSITE && CONTEXT_MENU_ITEMS_NO_WEBSITE.includes(id)) continue;
       browser.contextMenus.create(contextMenuItem);
     }
 

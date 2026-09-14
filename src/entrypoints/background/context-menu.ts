@@ -20,6 +20,13 @@ export function setupContextMenuActions() {
     if (!tab) return;
     // Add browser-specific excluded URLs if needed (like extensions own pages)
     switch (info.menuItemId) {
+      case CMI_ID.OPEN_SIDE_PANEL: {
+        // Opened straight from the click: both sidePanel.open() and Firefox's
+        // sidebarAction.open() are only allowed while the user action is still
+        // in scope, which ends at the first await.
+        openSidePanel(tab.windowId);
+        break;
+      }
       case CMI_ID.OPEN_LEXICORA: {
         browser.tabs.create({ url: WEBSITE_URL });
         break;

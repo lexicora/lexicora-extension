@@ -7,6 +7,7 @@ export type ContextMenuCreateProps = Parameters<
  */
 export const CMI_ID = {
   OPEN_LEXICORA: "open-lexicora",
+  OPEN_SIDE_PANEL: "open-side-panel",
   CAPTURE_SELECTION_AI_ASSISTED: "save-selection-ai-assisted",
   CAPTURE_SELECTION_AS_IS: "save-selection-as-is",
   CAPTURE_PAGE_AI_ASSISTED: "save-page-ai-assisted",
@@ -20,6 +21,16 @@ export const CMI_ID = {
  * Context Menu Items Definitions
  */
 export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
+  //* TODO (FEATURES.WEBSITE): these two share the top slot — the side panel
+  //* item only exists while the website link is off. When the website comes
+  //* back, decide what this menu should look like: both entries (and in which
+  //* order, with a separator?), or keep only one. Until then, turning the flag
+  //* on swaps the panel item out for the website one.
+  {
+    id: CMI_ID.OPEN_SIDE_PANEL,
+    title: "Open Lexicora side panel",
+    contexts: ["all"],
+  },
   {
     id: CMI_ID.OPEN_LEXICORA,
     title: "Open Lexicora Website",
@@ -79,6 +90,9 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
 
 /** Items shown only while `FEATURES.WEBSITE` is on. */
 export const CONTEXT_MENU_ITEMS_WEBSITE: string[] = [CMI_ID.OPEN_LEXICORA];
+
+/** Items shown only while `FEATURES.WEBSITE` is off, in the website item's place. */
+export const CONTEXT_MENU_ITEMS_NO_WEBSITE: string[] = [CMI_ID.OPEN_SIDE_PANEL];
 
 /**
  * Use this to disable ai context menu items if the feature is not available or disabled.
