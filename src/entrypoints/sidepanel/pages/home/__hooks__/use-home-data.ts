@@ -3,7 +3,13 @@ import { useRxCollection } from "rxdb/plugins/react";
 import type { TopicDocType } from "@/db/schemas/topic";
 import type { EntryDocType } from "@/db/schemas/entry";
 import { FEATURES } from "@/constants/features";
-import { aiTopicRows, allocateHomeRows, homeRowSpace } from "../home-capacity";
+import {
+  CAPTURED_ROW_HEIGHT,
+  aiTopicRows,
+  allocateHomeRows,
+  homeRowSpace,
+  splitEntryRows,
+} from "../home-capacity";
 
 /**
  * How many rows the queries fetch. The home page shows as many as fit, which
@@ -20,11 +26,21 @@ export interface HomeData {
   /** How many topics fit, so the page knows whether to offer "Create a topic". */
   maxTopicsToShow: number;
   recentEntries: EntryDocType[];
+  /** Entries from the site in the active tab, cut to their share of the rows. */
+  siteEntries: EntryDocType[];
   /** True once both collections are known to hold nothing at all. */
   isLibraryEmpty: boolean;
 }
 
-export function useHomeData(): HomeData {
+export function useHomeData({
+  capturedPage = null,
+  siteEntries = [],
+}: {
+  /** The entry for the page in the active tab, which takes a row of its own. */
+  capturedPage?: EntryDocType | null;
+  /** Everything else captured from that site, before it is cut to size. */
+  siteEntries?: EntryDocType[];
+} = {}): HomeData {
   const topicsCollection = useRxCollection("topics");
   const entriesCollection = useRxCollection("entries");
 
@@ -143,6 +159,12 @@ export function useHomeData(): HomeData {
     ),
   ];
 
+  // Entries from the current site belong to their own group, so they are not
+  // repeated under "Recent entries" — including the ones that did not fit.
+  const sitePool = FEATURES.AI ? [] : siteEntries;
+  const claimed = new Set([capturedPage?.id, ...sitePool.map((e) => e.id)]);
+  const recentPool = recentEntries.filter((entry) => !claimed.has(entry.id));
+
   // With the AI prompt on, the topic count is what is left once the textarea
   // has its height. With it off, the rows share out the space the textarea is
   // not using, which is why the page no longer stops at three.
@@ -152,17 +174,28 @@ export function useHomeData(): HomeData {
         maxEntries: Math.max(2, aiTopicRows(viewportHeight) - 1),
       }
     : allocateHomeRows({
-        availablePx: homeRowSpace(viewportHeight),
+        availablePx:
+          homeRowSpace(viewportHeight) -
+          (capturedPage ? CAPTURED_ROW_HEIGHT : 0),
         topicsAvailable: allTopics.length,
-        entriesAvailable: recentEntries.length,
+        entriesAvailable: sitePool.length + recentPool.length,
+        entryGroups:
+          (sitePool.length > 0 ? 1 : 0) + (recentPool.length > 0 ? 1 : 0),
       });
+
+  const { siteRows, recentRows } = splitEntryRows({
+    maxEntries,
+    siteAvailable: sitePool.length,
+    recentAvailable: recentPool.length,
+  });
 
   return {
     favoriteTopicsCount,
     favoriteEntriesCount,
     combinedTopics: allTopics.slice(0, maxTopics),
     maxTopicsToShow: maxTopics,
-    recentEntries: recentEntries.slice(0, maxEntries),
+    recentEntries: recentPool.slice(0, recentRows),
+    siteEntries: sitePool.slice(0, siteRows),
     // Stays false until both counts have actually arrived, so the empty state
     // never flashes while the database is still opening.
     isLibraryEmpty: topicsCount === 0 && entriesCount === 0,

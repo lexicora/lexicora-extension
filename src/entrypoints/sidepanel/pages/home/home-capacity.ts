@@ -16,6 +16,8 @@ const ENTRIES_HEADER_HEIGHT = 52;
 const CREATE_LINK_HEIGHT = 26;
 /** Below this, the entries header costs more space than the rows it introduces. */
 const MIN_ENTRY_ROWS = 2;
+/** The "already captured" row and the space under it. */
+export const CAPTURED_ROW_HEIGHT = 53;
 
 /**
  * Everything above and below the rows: the logo header, the favourites row,
@@ -25,7 +27,7 @@ const MIN_ENTRY_ROWS = 2;
  * 268 was the measured fit while a current-page card sat above the capture
  * buttons; that card and its spacing were 44px of it.
  */
-const FIXED_CHROME_HEIGHT = 224;
+const FIXED_CHROME_HEIGHT = 226;
 
 /** The height left for suggestion rows in a panel of this height. */
 export function homeRowSpace(viewportHeight: number): number {
@@ -46,10 +48,13 @@ export function allocateHomeRows({
   availablePx,
   topicsAvailable,
   entriesAvailable,
+  entryGroups = 1,
 }: {
   availablePx: number;
   topicsAvailable: number;
   entriesAvailable: number;
+  /** Labelled entry groups ("From this site", "Recent entries"); each costs a header. */
+  entryGroups?: number;
 }): HomeRowAllocation {
   // The link appears when there are fewer topics than would fit, which is
   // exactly when there is slack to hold it.
@@ -67,7 +72,9 @@ export function allocateHomeRows({
 
   const rowsWithEntries = Math.max(
     0,
-    Math.floor((usablePx - ENTRIES_HEADER_HEIGHT) / ROW_HEIGHT),
+    Math.floor(
+      (usablePx - ENTRIES_HEADER_HEIGHT * Math.max(1, entryGroups)) / ROW_HEIGHT,
+    ),
   );
 
   // Topics lead — they are the primary way into the library — but only take
@@ -84,4 +91,27 @@ export function allocateHomeRows({
   }
 
   return { maxTopics, maxEntries };
+}
+
+/**
+ * Divides the entry rows between the two groups. Entries from the current site
+ * take at most half, so they never crowd out the recent ones — unless there
+ * are no recent ones left to show, when the whole budget is theirs rather than
+ * leaving the space empty.
+ */
+export function splitEntryRows({
+  maxEntries,
+  siteAvailable,
+  recentAvailable,
+}: {
+  maxEntries: number;
+  siteAvailable: number;
+  recentAvailable: number;
+}): { siteRows: number; recentRows: number } {
+  const cap = recentAvailable > 0 ? Math.floor(maxEntries / 2) : maxEntries;
+  const siteRows = Math.min(siteAvailable, cap);
+  return {
+    siteRows,
+    recentRows: Math.min(recentAvailable, maxEntries - siteRows),
+  };
 }

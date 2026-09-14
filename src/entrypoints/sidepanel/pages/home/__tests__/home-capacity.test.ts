@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { aiTopicRows, allocateHomeRows, homeRowSpace } from "../home-capacity";
+import {
+  aiTopicRows,
+  allocateHomeRows,
+  homeRowSpace,
+  splitEntryRows,
+} from "../home-capacity";
 
 /**
  * Covers how many suggestion rows the home page shows. A row is 45px; the
@@ -105,5 +110,59 @@ describe("homeRowSpace", () => {
 
     expect(maxTopics).toBeGreaterThan(3);
     expect(maxEntries).toBeGreaterThan(2);
+  });
+});
+
+describe("two entry groups", () => {
+  it("costs a second header, so one fewer row is available", () => {
+    const one = allocateHomeRows({
+      availablePx: 500,
+      topicsAvailable: 12,
+      entriesAvailable: 12,
+      entryGroups: 1,
+    });
+    const two = allocateHomeRows({
+      availablePx: 500,
+      topicsAvailable: 12,
+      entriesAvailable: 12,
+      entryGroups: 2,
+    });
+
+    expect(two.maxTopics + two.maxEntries).toBeLessThan(
+      one.maxTopics + one.maxEntries,
+    );
+  });
+});
+
+describe("splitEntryRows", () => {
+  it("gives the current site's entries at most half the rows", () => {
+    expect(
+      splitEntryRows({ maxEntries: 6, siteAvailable: 10, recentAvailable: 10 }),
+    ).toEqual({ siteRows: 3, recentRows: 3 });
+  });
+
+  it("rounds the half down, so recent entries keep the odd row", () => {
+    expect(
+      splitEntryRows({ maxEntries: 5, siteAvailable: 10, recentAvailable: 10 }),
+    ).toEqual({ siteRows: 2, recentRows: 3 });
+  });
+
+  it("passes rows the site cannot fill to the recent entries", () => {
+    expect(
+      splitEntryRows({ maxEntries: 6, siteAvailable: 1, recentAvailable: 10 }),
+    ).toEqual({ siteRows: 1, recentRows: 5 });
+  });
+
+  it("lets the site take every row when there are no recent entries left", () => {
+    // Everything recent came from this site, so the cap would only leave a gap.
+    expect(
+      splitEntryRows({ maxEntries: 6, siteAvailable: 10, recentAvailable: 0 }),
+    ).toEqual({ siteRows: 6, recentRows: 0 });
+  });
+
+  it("shows nothing from the site when nothing was captured there", () => {
+    expect(
+      splitEntryRows({ maxEntries: 6, siteAvailable: 0, recentAvailable: 10 }),
+    ).toEqual({ siteRows: 0, recentRows: 6 });
   });
 });

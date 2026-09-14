@@ -14,6 +14,8 @@ import { AiPromptSection } from "@/components/home/ai-prompt-section";
 import { LibraryEmptyState } from "@/components/home/library-empty-state";
 import { RecentEntries } from "@/components/home/recent-entries";
 import { CaptureActions } from "@/components/capture/capture-actions";
+import { CapturedPageRow } from "@/components/home/captured-page-row";
+import { useSiteEntries } from "./__hooks__/use-site-entries";
 import { WebsiteLink } from "@/components/website-link";
 
 function formatFavoriteCount(count: number): string {
@@ -27,7 +29,8 @@ function formatFavoriteCount(count: number): string {
 
 function HomePage() {
   const navigate = useNavigate();
-  const { capture: capturePage, isSupported } = useCaptureActiveTab();
+  const { capture: capturePage, isSupported, activeTab } = useCaptureActiveTab();
+  const { capturedPage, fromThisSite } = useSiteEntries(activeTab);
   const [promptText, setPromptText] = useState("");
 
   const {
@@ -36,8 +39,9 @@ function HomePage() {
     combinedTopics,
     maxTopicsToShow,
     recentEntries,
+    siteEntries,
     isLibraryEmpty,
-  } = useHomeData();
+  } = useHomeData({ capturedPage, siteEntries: fromThisSite });
 
   /**
    * Single composition point for the flexible middle of the page. The three
@@ -112,6 +116,9 @@ function HomePage() {
               <ChevronRightIcon className="transition-opacity size-3 shrink-0 opacity-70 group-hover:opacity-90" />
             </Button>
           </div>
+          {!FEATURES.AI && capturedPage && (
+            <CapturedPageRow entry={capturedPage} />
+          )}
           <div className="flex flex-col gap-1.75 mt-2">
             {combinedTopics.map((topic, index) => (
               <Button
@@ -162,7 +169,10 @@ function HomePage() {
         )}
         {mainContent === "empty-state" && <LibraryEmptyState />}
         {mainContent === "recent-entries" && (
-          <RecentEntries entries={recentEntries} />
+          <>
+            <RecentEntries label="From this site" entries={siteEntries} />
+            <RecentEntries entries={recentEntries} />
+          </>
         )}
       </main>
       <footer className={styles.bottomFooter}>

@@ -7,6 +7,8 @@ import type { EntryDocType } from "@/db/schemas/entry";
 
 interface RecentEntriesProps {
   entries: EntryDocType[];
+  /** The group's heading — "From this site" for the current site's entries. */
+  label?: string;
 }
 
 /**
@@ -15,7 +17,10 @@ interface RecentEntriesProps {
  * Fills the space the AI prompt occupies when `FEATURES.AI` is on — the two are
  * alternatives, never shown together. See the composition note in `home.tsx`.
  */
-export function RecentEntries({ entries }: RecentEntriesProps) {
+export function RecentEntries({
+  entries,
+  label = "Recent entries",
+}: RecentEntriesProps) {
   const navigate = useNavigate();
 
   if (entries.length === 0) return null;
@@ -24,7 +29,7 @@ export function RecentEntries({ entries }: RecentEntriesProps) {
     <section className="mt-4 shrink-0">
       <Separator className="mx-auto max-w-[calc(100%-8px)] shrink-0" />
       <h2 className="text-xs font-medium text-muted-foreground text-left ml-2.5 mt-3 mb-1.75 select-none">
-        Recent entries
+        {label}
       </h2>
       <div className="flex flex-col gap-1.75">
         {entries.map((entry) => (
