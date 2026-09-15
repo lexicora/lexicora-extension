@@ -16,6 +16,7 @@ import {
   CameraIcon,
   ChevronRightIcon,
   DatabaseIcon,
+  DownloadIcon,
   EllipsisIcon,
   FileTextIcon,
   HeartPlusIcon,
@@ -163,12 +164,20 @@ function SettingsPage() {
           </Label>
           <div className="rounded-2xl not-dark:shadow-xs">
             <SettingsItem
+              to="/settings/data/export"
+              size="sm"
+              MediaIcon={DownloadIcon}
+              mediaIconColor="text-emerald-500"
+              itemTitle="Export"
+              roundingClass="rounded-b-none"
+            />
+            <SettingsItem
               to="/settings/data"
               size="sm"
               MediaIcon={DatabaseIcon}
               mediaIconColor="text-emerald-500"
               itemTitle="Data Management"
-              roundingClass=""
+              roundingClass="rounded-t-none"
             />
           </div>
         </section>
