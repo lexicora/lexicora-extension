@@ -66,7 +66,7 @@ function AboutPage() {
               </ItemDescription>
             </ItemContent>
           </Item>
-          <SettingsItemSeparator />
+          <SettingsItemSeparator symmetric />
           <Item
             variant="muted"
             size="sm"

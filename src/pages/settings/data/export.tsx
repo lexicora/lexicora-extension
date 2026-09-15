@@ -3,16 +3,26 @@ import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import {
   Item,
-  ItemMedia,
-  ItemContent,
   ItemTitle,
+  ItemContent,
+  ItemDescription,
+  ItemHeader,
+  ItemMedia,
 } from "@/components/ui/item";
-import { DownloadIcon, FileTextIcon } from "lucide-react";
+import {
+  DatabaseArrowDownIcon,
+  DatabaseIcon,
+  DownloadIcon,
+  FileBracesCornerIcon,
+  FileTextIcon,
+  GlobeIcon,
+} from "lucide-react";
 import { useRxCollection } from "rxdb/plugins/react";
 import { toast } from "sonner";
 import { downloadBlob } from "@/lib/export/download";
 import { downloadLibrary } from "@/lib/export";
 import { navLock } from "@/lib/navigation-lock";
+import { Label } from "@/components/ui/label";
 
 /** Disables the other action while one is running. */
 type BusyAction = "export" | "export-markdown";
@@ -115,56 +125,76 @@ function ExportSettingsPage() {
     <PageContainer>
       <PageHeader title="Export" goBackButton />
       <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-1">
-        <section className="flex flex-col gap-8">
-          <article>
-            <Item
-              variant="muted"
-              size="sm"
-              className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl hover:cursor-pointer disabled:opacity-55 disabled:pointer-events-none /*bg-clip-padding*/"
-              asChild
-            >
-              <button onClick={handleExport} disabled={busy !== null}>
-                <ItemMedia variant="icon">
-                  <DownloadIcon className="size-5 text-emerald-500" />
-                </ItemMedia>
-                <ItemContent>
-                  <ItemTitle>Export All Data</ItemTitle>
-                  {/*<ItemDescription>
+        <section className="not-dark:shadow-xs rounded-2xl">
+          <Item
+            variant="muted"
+            size="default"
+            className="group py-2.5 gap-2 transition-none bg-card rounded-2xl"
+          >
+            <ItemHeader>
+              <ItemMedia variant="icon">
+                <DownloadIcon className="size-8 text-emerald-500" />
+              </ItemMedia>
+            </ItemHeader>
+            <ItemContent>
+              <ItemDescription className="text-pretty line-clamp-none">
+                Export your library as a JSON backup or a zip of Markdown notes.
+                A large library takes a moment, and navigation is paused while
+                it runs.
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+        </section>
+        <section>
+          <Label className="text-sm ml-2 mb-0.5">
+            <DatabaseIcon className="size-3.5 text-gray-400" /> Export as
+          </Label>
+          <Item
+            variant="muted"
+            size="sm"
+            className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl rounded-b-none hover:cursor-pointer disabled:opacity-55 disabled:pointer-events-none /*bg-clip-padding*/"
+            asChild
+          >
+            <button onClick={handleExport} disabled={busy !== null}>
+              <ItemMedia variant="icon">
+                <FileBracesCornerIcon className="size-5 text-gray-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>JSON file</ItemTitle>
+                {/*<ItemDescription>
                 Download all your topics, entries, and notes as a JSON file.
               </ItemDescription>*/}
-                </ItemContent>
-              </button>
-            </Item>
-            <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
+              </ItemContent>
+            </button>
+          </Item>
+          {/* <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
               Download all your topics, entries, and notes as a JSON file.
-            </p>
-          </article>
-          <article>
-            <Item
-              variant="muted"
-              size="sm"
-              className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl hover:cursor-pointer disabled:opacity-55 disabled:pointer-events-none"
-              asChild
-            >
-              <button onClick={handleExportMarkdown} disabled={busy !== null}>
-                <ItemMedia variant="icon">
-                  <FileTextIcon className="size-5 text-blue-500" />
-                </ItemMedia>
-                <ItemContent>
-                  <ItemTitle>
-                    {busy === "export-markdown"
-                      ? "Exporting..."
-                      : "Export as Markdown"}
-                  </ItemTitle>
-                </ItemContent>
-              </button>
-            </Item>
-            <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
+          </p> */}
+          <SettingsItemSeparator />
+          <Item
+            variant="muted"
+            size="sm"
+            className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl rounded-t-none hover:cursor-pointer disabled:opacity-55 disabled:pointer-events-none"
+            asChild
+          >
+            <button onClick={handleExportMarkdown} disabled={busy !== null}>
+              <ItemMedia variant="icon">
+                <FileTextIcon className="size-5 text-blue-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>
+                  {busy === "export-markdown"
+                    ? "Exporting..."
+                    : "Markdown Archive"}
+                </ItemTitle>
+              </ItemContent>
+            </button>
+          </Item>
+          {/* <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
               Download everything as a zip of Markdown notes — a folder per
               topic, ready for Obsidian or any editor. A large library takes a
               moment, and navigation is paused while it runs.
-            </p>
-          </article>
+          </p> */}
         </section>
       </main>
     </PageContainer>

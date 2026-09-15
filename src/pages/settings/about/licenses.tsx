@@ -1,6 +1,13 @@
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
-import { Item } from "@/components/ui/item";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemHeader,
+  ItemMedia,
+} from "@/components/ui/item";
+import { FileTextIcon } from "lucide-react";
 
 const LICENSES: { name: string; license: string }[] = [
   { name: "@blocknote/core", license: "MPL-2.0" },
@@ -36,10 +43,29 @@ function LicensesPage() {
     <PageContainer>
       <PageHeader title="Licenses" goBackButton />
       <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-2">
+        <section className="not-dark:shadow-xs rounded-2xl">
+          <Item
+            variant="muted"
+            size="default"
+            className="group py-2.5 gap-2 transition-none bg-card rounded-2xl"
+          >
+            <ItemHeader>
+              <ItemMedia variant="icon" className="-ml-0.75">
+                <FileTextIcon className="size-8 text-emerald-500" />
+              </ItemMedia>
+            </ItemHeader>
+            <ItemContent>
+              <ItemDescription className="text-pretty line-clamp-none">
+                Lexicora is built on the shoulders of these open source
+                projects.
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+        </section>
         <section>
-          <p className="text-sm text-muted-foreground ml-2 mb-3 text-pretty">
+          {/* <p className="text-sm text-muted-foreground ml-2 mb-3 text-pretty">
             Lexicora is built on the shoulders of these open source projects.
-          </p>
+          </p> */}
           <Item
             variant="muted"
             size="xs"
