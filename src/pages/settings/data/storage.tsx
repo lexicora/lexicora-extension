@@ -4,7 +4,9 @@ import { PageHeader } from "@/components/page-header";
 import {
   Item,
   ItemMedia,
+  ItemHeader,
   ItemContent,
+  ItemDescription,
   ItemTitle,
 } from "@/components/ui/item";
 import {
@@ -17,10 +19,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { BrushCleaningIcon, Trash2Icon } from "lucide-react";
+import {
+  BrushCleaningIcon,
+  HardDriveIcon,
+  LocateIcon,
+  Trash2Icon,
+  WandIcon,
+} from "lucide-react";
 import { useRxCollection } from "rxdb/plugins/react";
 import { toast } from "sonner";
 import { cleanupNow } from "@/db/cleanup";
+import { Label } from "@/components/ui/label";
 
 /** Disables every action while one is running — the purge holds a write lock. */
 type BusyAction = "cleanup" | "clear";
@@ -96,58 +105,73 @@ function DataSettingsPage() {
     <PageContainer>
       <PageHeader title="Storage" goBackButton />
       <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-1">
-        <section className="flex flex-col gap-8">
-          <article>
-            <Item
-              variant="muted"
-              size="sm"
-              className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl hover:cursor-pointer disabled:opacity-55 disabled:pointer-events-none"
-              asChild
-            >
-              <button onClick={handleCleanup} disabled={busy !== null}>
-                <ItemMedia variant="icon">
-                  <BrushCleaningIcon className="size-5 text-sky-500" />
-                </ItemMedia>
-                <ItemContent>
-                  <ItemTitle>
-                    {busy === "cleanup"
-                      ? "Cleaning up..."
-                      : "Clean Up Database"}
-                  </ItemTitle>
-                </ItemContent>
-              </button>
-            </Item>
-            <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
+        <section className="not-dark:shadow-xs rounded-2xl">
+          <Item
+            variant="muted"
+            size="default"
+            className="group py-2.5 gap-2 transition-none bg-card rounded-2xl"
+          >
+            <ItemHeader>
+              <ItemMedia variant="icon">
+                <HardDriveIcon className="size-8 text-amber-500" />
+              </ItemMedia>
+            </ItemHeader>
+            <ItemContent>
+              <ItemDescription className="text-pretty line-clamp-none">
+                Manage the space Lexicora uses in your browser. Reclaim space
+                from items you have already deleted, or clear all data (topics,
+                entries, and notes) permanently.
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+        </section>
+        <section>
+          <Label className="text-sm ml-2 mb-0.5">
+            <LocateIcon className="size-3.5 text-purple-400" /> Actions
+          </Label>
+          <Item
+            variant="muted"
+            size="sm"
+            className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl rounded-b-none hover:cursor-pointer disabled:opacity-55 disabled:pointer-events-none"
+            asChild
+          >
+            <button onClick={handleCleanup} disabled={busy !== null}>
+              <ItemMedia variant="icon">
+                <BrushCleaningIcon className="size-5 text-sky-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>
+                  {busy === "cleanup" ? "Cleaning up..." : "Clean Up Database"}
+                </ItemTitle>
+              </ItemContent>
+            </button>
+          </Item>
+          {/* <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
               Reclaim space still held by items you have already deleted. Your
               topics, entries, and notes are not affected.
-            </p>
-          </article>
-          <article>
-            <Item
-              variant="muted"
-              size="sm"
-              className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl hover:cursor-pointer disabled:opacity-55 disabled:pointer-events-none"
-              asChild
-            >
-              <button
-                onClick={() => setClearOpen(true)}
-                disabled={busy !== null}
-              >
-                <ItemMedia variant="icon">
-                  <Trash2Icon className="size-5 text-red-500" />
-                </ItemMedia>
-                <ItemContent>
-                  <ItemTitle className="text-red-600 dark:text-red-400">
-                    Clear All Data
-                  </ItemTitle>
-                </ItemContent>
-              </button>
-            </Item>
-            <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
+            </p> */}
+          <SettingsItemSeparator />
+          <Item
+            variant="muted"
+            size="sm"
+            className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl rounded-t-none hover:cursor-pointer disabled:opacity-55 disabled:pointer-events-none"
+            asChild
+          >
+            <button onClick={() => setClearOpen(true)} disabled={busy !== null}>
+              <ItemMedia variant="icon">
+                <Trash2Icon className="size-5 text-red-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle className="text-red-600 dark:text-red-400">
+                  Clear All Data
+                </ItemTitle>
+              </ItemContent>
+            </button>
+          </Item>
+          {/* <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
               Permanently delete all topics, entries, and notes. This cannot be
               undone — export your data first if you want to keep a copy.
-            </p>
-          </article>
+            </p> */}
         </section>
       </main>
 

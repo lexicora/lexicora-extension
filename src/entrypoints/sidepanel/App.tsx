@@ -50,7 +50,7 @@ import SettingsPage from "@/pages/settings/settings";
 import ThemePersonalizationSettingsPage from "@/pages/settings/personalization/theme";
 import CaptureSuggestionsSettingsPage from "@/pages/settings/features/capture-suggestions";
 import KeyboardShortcutsSettingsPage from "@/pages/settings/features/keyboard-shortcuts";
-import DataSettingsPage from "@/pages/settings/data/data";
+import DataSettingsPage from "@/pages/settings/data/storage";
 import ExportSettingsPage from "@/pages/settings/data/export";
 import FaqPage from "@/pages/settings/help/faq";
 import TipsAndTricksPage from "@/pages/settings/help/tips-and-tricks";
@@ -124,7 +124,7 @@ const router = createMemoryRouter([
         path: "settings/keyboard-shortcuts",
         element: <KeyboardShortcutsSettingsPage />,
       },
-      { path: "settings/data", element: <DataSettingsPage /> },
+      { path: "settings/data/storage", element: <DataSettingsPage /> },
       { path: "settings/data/export", element: <ExportSettingsPage /> },
       { path: "settings/help/faq", element: <FaqPage /> },
       {

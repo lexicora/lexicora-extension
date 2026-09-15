@@ -173,7 +173,7 @@ function SettingsPage() {
               roundingClass="rounded-b-none"
             />
             <SettingsItem
-              to="/settings/data"
+              to="/settings/data/storage"
               size="sm"
               MediaIcon={HardDriveIcon}
               mediaIconColor="text-amber-500"

@@ -52,7 +52,7 @@ import SettingsPage from "@/pages/settings/settings";
 // Sub-settings pages
 import ThemePersonalizationSettingsPage from "@/pages/settings/personalization/theme";
 import CaptureSuggestionsSettingsPage from "@/pages/settings/features/capture-suggestions";
-import DataSettingsPage from "@/pages/settings/data/data";
+import DataSettingsPage from "@/pages/settings/data/storage";
 import ExportSettingsPage from "@/pages/settings/data/export";
 import FaqPage from "@/pages/settings/help/faq";
 import TipsAndTricksPage from "@/pages/settings/help/tips-and-tricks";
