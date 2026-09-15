@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { sendMessage, onMessage } from "@/lib/messaging";
 import { useAppWindowId } from "@/providers/app-messaging";
+import { isEntryEditPath } from "@/lib/routes";
 
 export function RouterListener() {
   const navigate = useNavigate();
@@ -26,9 +27,7 @@ export function RouterListener() {
 
       // If the user is currently editing an entry, absorb capture-triggered
       // navigation to entry-create so the captured data goes into the open editor.
-      const isOnEntryEdit = /^\/library\/entries\/[^/]+\/edit$/.test(
-        location.pathname,
-      );
+      const isOnEntryEdit = isEntryEditPath(location.pathname);
       if (path === "/library/entries/new" && isOnEntryEdit) {
         return true; // Signal background to clear pending navigation; skip navigate()
       }
@@ -60,9 +59,7 @@ export function RouterListener() {
         null,
       ).catch(() => null);
       if (path) {
-        const isOnEntryEdit = /^\/library\/entries\/[^/]+\/edit$/.test(
-          location.pathname,
-        );
+        const isOnEntryEdit = isEntryEditPath(location.pathname);
         const suppressed = path === "/library/entries/new" && isOnEntryEdit;
         if (!suppressed && path !== location.pathname) {
           navigate(path, {

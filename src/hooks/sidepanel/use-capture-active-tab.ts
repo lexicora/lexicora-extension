@@ -1,11 +1,12 @@
 import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { MSG } from "@/constants/messaging";
 import { useTabSupport } from "@/hooks/use-tab-support";
 import { sendMessage } from "@/lib/messaging";
 import type { CaptureMode } from "@/types/page-data.types";
 import type { TabData } from "@/types/tab-data.types";
+import { isEntryEditPath } from "@/lib/routes";
 
 /**
  * Captures the active tab from inside the side panel: asks the background to
@@ -17,6 +18,7 @@ import type { TabData } from "@/types/tab-data.types";
  */
 export function useCaptureActiveTab() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isSupported, activeTab } = useTabSupport();
 
   const capture = useCallback(
@@ -42,13 +44,19 @@ export function useCaptureActiveTab() {
         fromContext: "side-panel",
         mode,
       }).catch(() => null);
-      navigate("/library/entries/new", {
-        viewTransition: true,
-        state: { isCapturePending: true },
-      });
+      // On an entry's edit page the capture belongs to the entry being edited,
+      // which is listening for it — navigating away would start a new one and
+      // abandon the edit. The same rule lets the popup and the browser-wide
+      // shortcuts capture into an open editor; see router-listener.
+      if (!isEntryEditPath(location.pathname)) {
+        navigate("/library/entries/new", {
+          viewTransition: true,
+          state: { isCapturePending: true },
+        });
+      }
       return true;
     },
-    [isSupported, activeTab, navigate],
+    [isSupported, activeTab, navigate, location.pathname],
   );
 
   return { capture, isSupported, activeTab };

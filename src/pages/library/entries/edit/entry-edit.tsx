@@ -86,23 +86,47 @@ function EntryEditContent({
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useLayoutEffect(() => {
-    if (!capturedData?.content) return;
-    const blocks = editor.tryParseHTMLToBlocks(capturedData.content);
+    if (!capturedData) return;
     const api = formApiRef.current;
-    if (capturedData.misc.overrideExisting) {
-      editor.replaceBlocks(editor.document, blocks);
-      // Source fields always overwritten on full-page capture
-      api?.setFieldValue("url", capturedData.location.href || "");
-      api?.setFieldValue(
+
+    /**
+     * Writes the fields describing where the entry came from. `overwrite` is
+     * false for a selection, which adds to an entry that already has a source;
+     * the description is only ever filled in when empty, since the user's own
+     * wording should not be replaced by a page's meta description.
+     */
+    const applySourceFields = (overwrite: boolean) => {
+      if (!api) return;
+      const set = (
+        name: Parameters<EntryFormApi["setFieldValue"]>[0],
+        value: string,
+      ) => {
+        if (overwrite || !api.getFieldValue(name)) api.setFieldValue(name, value);
+      };
+      set("url", capturedData.location.href || "");
+      set(
         "siteName",
         capturedData.metadata.siteName || capturedData.location.hostname || "",
       );
-      api?.setFieldValue("faviconUrl", capturedData.metadata.faviconUrl || "");
-      api?.setFieldValue("languageCode", capturedData.lang || "");
-      // Description only written if currently empty
-      if (api && !api.getFieldValue("description")) {
+      set("faviconUrl", capturedData.metadata.faviconUrl || "");
+      set("languageCode", capturedData.lang || "");
+      if (!api.getFieldValue("description")) {
         api.setFieldValue("description", capturedData.metadata.excerpt || "");
       }
+    };
+
+    // A bookmark carries no content by design: it re-points the entry being
+    // edited at this page, and leaves what is written in it alone.
+    if (capturedData.misc.metadataOnly) {
+      applySourceFields(true);
+      return;
+    }
+
+    if (!capturedData.content) return;
+    const blocks = editor.tryParseHTMLToBlocks(capturedData.content);
+    if (capturedData.misc.overrideExisting) {
+      editor.replaceBlocks(editor.document, blocks);
+      applySourceFields(true);
     } else {
       const current = editor.document;
       const firstBlock = current[0];
@@ -128,27 +152,7 @@ function EntryEditContent({
           editor.insertBlocks(blocks, lastBlock.id, "after");
         }
       }
-      // For selection capture, all metadata fields only written if currently empty
-      if (api) {
-        if (!api.getFieldValue("url"))
-          api.setFieldValue("url", capturedData.location.href || "");
-        if (!api.getFieldValue("siteName"))
-          api.setFieldValue(
-            "siteName",
-            capturedData.metadata.siteName ||
-              capturedData.location.hostname ||
-              "",
-          );
-        if (!api.getFieldValue("faviconUrl"))
-          api.setFieldValue(
-            "faviconUrl",
-            capturedData.metadata.faviconUrl || "",
-          );
-        if (!api.getFieldValue("languageCode"))
-          api.setFieldValue("languageCode", capturedData.lang || "");
-        if (!api.getFieldValue("description"))
-          api.setFieldValue("description", capturedData.metadata.excerpt || "");
-      }
+      applySourceFields(false);
     }
   }, [capturedData, editor]);
 
