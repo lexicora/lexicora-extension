@@ -14,7 +14,7 @@
 /* Without the top bar the container has no top margin, so 58px of the offset
    above no longer applies. See FEATURES.SIDE_PANEL_TOP_BAR. */
 :global(html.lc-no-top-bar #lc-home-page .lc-page-container-inner) {
-  min-height: calc(100dvh - 84px);
+  min-height: calc(100dvh - 87px);
 }
 
 :global(html.lc-no-top-bar #lc-home-page) {

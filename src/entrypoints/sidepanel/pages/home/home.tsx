@@ -91,7 +91,7 @@ function HomePage() {
       {/* Scrolls like every other page: the capture bar and bottom navigation
           are fixed, so the list clears them with padding rather than by
           trimming itself to fit. */}
-      <main className="pb-16">
+      <main className="pb-16.25">
         <section className="mt-3">
           <div className="flex items-center justify-center gap-2.75">
             <Button
