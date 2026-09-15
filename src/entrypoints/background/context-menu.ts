@@ -24,7 +24,7 @@ export function setupContextMenuActions() {
         // Opened straight from the click: both sidePanel.open() and Firefox's
         // sidebarAction.open() are only allowed while the user action is still
         // in scope, which ends at the first await.
-        openSidePanel(tab.windowId);
+        openSidePanel(tab.windowId); // TODO: Replace with toggle functionality, rather than just opening.
         break;
       }
       case CMI_ID.OPEN_LEXICORA: {
@@ -156,6 +156,7 @@ export function setupContextMenuStateSync(/*menuId: string*/) {
         //enabled: !isDisabled,
         visible: !isDisabled,
       });
+      // TODO: Possibly add "separator2" item in enable/disable logic if needed. (Check firefox behavior)
     } catch (e) {
       // Silently catch errors if the menu item hasn't been created yet
     }

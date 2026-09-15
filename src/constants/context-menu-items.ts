@@ -56,24 +56,24 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   {
     id: "separator2",
     type: "separator",
-    contexts: ["page", "selection", "link", "image", "video", "audio", "frame"],
+    contexts: ["page", "selection", "link", "image", "video", "audio", "frame", "editable"], // TODO: Potentially change to just "all". (Check Firefox)
   },
   {
     id: CMI_ID.CAPTURE_PAGE_AI_ASSISTED,
     title: "Capture Page with AI",
-    contexts: ["page", "selection", "link", "image", "video", "audio", "frame"],
+    contexts: ["page", "selection", "link", "image", "video", "audio", "frame", "editable"],
     documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   },
   {
     id: CMI_ID.CAPTURE_PAGE_AS_IS,
     title: "Capture Page",
-    contexts: ["page", "selection", "link", "image", "video", "audio", "frame"],
+    contexts: ["page", "selection", "link", "image", "video", "audio", "frame", "editable"], // TODO: Potentially change to just "all". (Check Firefox)
     documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   },
   {
     id: CMI_ID.CAPTURE_PAGE_BOOKMARK,
     title: "Bookmark Page",
-    contexts: ["all"],
+    contexts: ["page", "selection", "link", "image", "video", "audio", "frame", "editable"], // TODO: Potentially change to just "all". (Check Firefox)
     documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   },
   // {
