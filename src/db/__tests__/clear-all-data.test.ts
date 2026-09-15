@@ -9,6 +9,7 @@ import { getRxStorageMemory } from "rxdb/plugins/storage-memory";
 import { RxDBCleanupPlugin } from "rxdb/plugins/cleanup";
 
 import { COLLECTION_SETTINGS } from "../collections";
+import { withKeyCompression } from "../storage";
 
 /**
  * Covers the "Clear All Data" setting (issue #153).
@@ -36,7 +37,7 @@ beforeEach(async () => {
   db = await createRxDatabase<TestCollections>({
     // Unique per test so instances never collide.
     name: `cleartest${dbCount++}`,
-    storage: getRxStorageMemory(),
+    storage: withKeyCompression(getRxStorageMemory()),
     //* Single-instance so the cleanup plugin's background loop never waits for
     //* leadership. The real database is multi-instance and registers the leader
     //* election plugin for exactly that reason — see src/db/index.ts.

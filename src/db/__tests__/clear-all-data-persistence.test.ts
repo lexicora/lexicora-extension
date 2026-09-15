@@ -11,6 +11,7 @@ import { RxDBCleanupPlugin } from "rxdb/plugins/cleanup";
 import Dexie from "dexie";
 
 import { COLLECTION_SETTINGS } from "../collections";
+import { withKeyCompression } from "../storage";
 
 /**
  * Reproduction for issue #153 against the *real* storage engine.
@@ -40,7 +41,7 @@ let open: RxDatabase<TestCollections> | null = null;
 async function openDb(name: string) {
   const db = await createRxDatabase<TestCollections>({
     name,
-    storage: getRxStorageDexie(),
+    storage: withKeyCompression(getRxStorageDexie()),
     multiInstance: false,
     eventReduce: true,
   });

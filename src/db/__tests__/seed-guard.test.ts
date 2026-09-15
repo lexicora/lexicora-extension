@@ -12,6 +12,7 @@ import { RxDBCleanupPlugin } from "rxdb/plugins/cleanup";
 
 import { seedDummyData } from "../seed";
 import { COLLECTION_SETTINGS } from "../collections";
+import { withKeyCompression } from "../storage";
 
 /**
  * Regression test for issue #153.
@@ -44,7 +45,7 @@ const seed = (database: RxDatabase<TestCollections>) =>
 async function openDb() {
   const database = await createRxDatabase<TestCollections>({
     name: `seedguard${Date.now()}${dbCount++}`,
-    storage: getRxStorageDexie(),
+    storage: withKeyCompression(getRxStorageDexie()),
     multiInstance: false,
     eventReduce: true,
   });

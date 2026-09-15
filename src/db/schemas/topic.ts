@@ -4,6 +4,8 @@ import { uuidSchema, uuidWithNilDefault } from './common';
 const topicSchemaLiteral = {
   title: 'topic schema',
   version: 0,
+  //* Stores shortened property keys; see db/storage.
+  keyCompression: true,
   description: 'Describes a topic',
   primaryKey: 'id',
   type: 'object',

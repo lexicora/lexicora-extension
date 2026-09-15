@@ -4,6 +4,8 @@ import { blockTypes, uuidSchema, uuidWithNilDefault } from './common';
 const blockSchemaLiteral = {
   title: 'block schema',
   version: 0,
+  //* Stores shortened property keys; see db/storage.
+  keyCompression: true,
   description: 'Describes a block component of an entry',
   primaryKey: 'id',
   type: 'object',

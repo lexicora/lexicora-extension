@@ -4,6 +4,8 @@ import { uuidSchema, uuidWithNilDefault } from './common';
 const entrySchemaLiteral = {
   title: 'entry schema',
   version: 0,
+  //* Stores shortened property keys; see db/storage.
+  keyCompression: true,
   description: 'Describes an entry within a topic',
   primaryKey: 'id',
   type: 'object',

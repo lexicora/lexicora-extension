@@ -7,6 +7,7 @@ import {
 import { getRxStorageMemory } from "rxdb/plugins/storage-memory";
 
 import { COLLECTION_SETTINGS } from "../collections";
+import { withKeyCompression } from "../storage";
 import { deleteEntryCascade, deleteTopicCascade } from "../cascade-delete";
 
 /**
@@ -35,7 +36,7 @@ let dbCount = 0;
 beforeEach(async () => {
   db = await createRxDatabase<TestCollections>({
     name: `cascadetest${dbCount++}`,
-    storage: getRxStorageMemory(),
+    storage: withKeyCompression(getRxStorageMemory()),
     multiInstance: false,
     eventReduce: true,
   });
