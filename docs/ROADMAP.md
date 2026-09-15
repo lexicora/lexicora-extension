@@ -81,8 +81,12 @@ the purge's reach.)
 ### Explicitly out of scope for v1.0
 
 Supabase sync and the web app (#68, #69), all AI features (#52, #190),
-onboarding (#44), the editor backlog (#8, #56, #60, #61, #62), the filter popover (#144) — the library's search now takes a `site:` filter, which covers the one case that needed it, heading map (#164), windowed polish (#179, #180, #182, #184), and the
+onboarding (#44), the editor backlog (#8, #56, #60, #61, #62), the filter popover (#144), heading map (#164), windowed polish (#179, #180, #182, #184), and the
 parking lot at the bottom of this file.
+
+On the filter popover (#144): the library's search takes one `site:` filter,
+which covers the case that needed it — "Show all from this site" on the home
+page. A stopgap rather than a syntax; real filtering would replace it.
 
 ---
 
