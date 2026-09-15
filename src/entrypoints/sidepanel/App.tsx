@@ -16,7 +16,7 @@ import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
 import { useSidePanelConnection } from "@/hooks/sidepanel/use-sidepanel-connection";
 import { AppMessagingProvider } from "@/providers/app-messaging";
 import { ScrollObserverProvider } from "@/providers/scroll-observer";
-import { ThemeProvider } from "@/providers/theme-provider";
+import { ThemeProvider, useTheme } from "@/providers/theme-provider";
 import RxDBProvider from "@/providers/rxdb-provider";
 import { FEATURES } from "@/constants/features";
 import { TopBar } from "@/components/top-bar";
@@ -90,6 +90,20 @@ function RootLayout() {
   );
 }
 
+function ToastProvider() {
+  const { theme } = useTheme();
+  return (
+    <Toaster
+      closeButton
+      mobileOffset={13}
+      className="py-3.5! text-left"
+      position="top-right"
+      offset={16}
+      theme={theme}
+    />
+  );
+}
+
 const router = createMemoryRouter([
   {
     path: "/",
@@ -142,13 +156,7 @@ function App() {
     <ThemeProvider defaultTheme="system">
       <RxDBProvider>
         <RouterProvider router={router} />
-        <Toaster
-          closeButton
-          mobileOffset={13}
-          className="py-3.5! text-left"
-          position="top-right"
-          offset={16}
-        />
+        <ToastProvider />
       </RxDBProvider>
     </ThemeProvider>
   );
