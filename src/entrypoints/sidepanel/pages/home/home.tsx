@@ -64,6 +64,7 @@ function HomePage() {
       <PageHeader
         title="Lexicora"
         classNameHeaderElement="mt-4 mb-5!"
+        compactStripBrandColor
         titleContent={
           <>
             <span className="flex justify-center gap-3 items-baseline mb-3">

@@ -36,6 +36,7 @@ interface PageHeaderProps {
   goBackButtonTitle?: string;
   rightActionButton?: ActionButtonConfig;
   classNameHeaderElement?: string;
+  compactStripBrandColor?: boolean;
   heavyTeardown?: boolean;
 }
 
@@ -79,6 +80,7 @@ export function PageHeader({
   goBackButtonTitle = "Go back",
   rightActionButton,
   classNameHeaderElement,
+  compactStripBrandColor = false,
   heavyTeardown = false,
 }: PageHeaderProps) {
   const { isAtTop } = useScrollPos();
@@ -217,6 +219,7 @@ export function PageHeader({
             "mr-[calc(var(--lc-scrollbar-offset)+2.0625em)]",
           isWindowed && !rightActionButton && "lc-strip-offset",
           isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
+          compactStripBrandColor && "text-lc-logo-foreground",
         )}
       >
         <span
@@ -256,6 +259,7 @@ export function PageHeader({
         "ml-2.5 mr-(--lc-scrollbar-offset) mt-1.75 text-base font-semibold transition-transform-opacity-blur duration-300 active-view-transition:transition-none",
         isWindowed && "lc-strip-offset",
         isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
+        compactStripBrandColor && "text-lc-logo-foreground",
       )}
       // Only enabled because FEATURES.SIDE_PANEL_TOP_BAR is disabled, otherwise the top bar is always present and this is redundant.
       onClick={() => window.scrollTo({ top: 0 })}
