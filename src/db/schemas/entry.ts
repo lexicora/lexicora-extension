@@ -1,11 +1,12 @@
 import { type ExtractDocumentTypeFromTypedRxJsonSchema, toTypedRxJsonSchema } from 'rxdb';
 import { uuidSchema, uuidWithNilDefault } from './common';
+import { KEY_COMPRESSION_ENABLED } from '../key-compression';
 
 const entrySchemaLiteral = {
   title: 'entry schema',
   version: 0,
-  //* Stores shortened property keys; see db/storage.
-  keyCompression: true,
+  //* Shortened property keys in production only; see db/key-compression.
+  keyCompression: KEY_COMPRESSION_ENABLED,
   description: 'Describes an entry within a topic',
   primaryKey: 'id',
   type: 'object',

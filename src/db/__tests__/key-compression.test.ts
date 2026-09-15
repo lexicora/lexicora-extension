@@ -7,15 +7,16 @@ import Dexie from "dexie";
 import { blockSchema } from "../schemas/block";
 import { entrySchema } from "../schemas/entry";
 import { topicSchema } from "../schemas/topic";
+import { KEY_COMPRESSION_ENABLED } from "../key-compression";
 import { withKeyCompression } from "../storage";
 
 /**
  * Covers key compression end to end: that documents really are stored with
  * shortened keys, and that they come back out intact.
  *
- * Dropping the storage wrapper fails loudly (RxDB refuses a compressed schema
- * on a plain storage), but dropping `keyCompression: true` from a schema would
- * silently store full keys again — which is what these tests catch.
+ * Compression is switched on explicitly here rather than taken from the
+ * schemas: it is off in development so the rows stay readable in DevTools, and
+ * tests run in development. What the schemas do carry is checked at the bottom.
  */
 
 const NIL_UUID = "00000000-0000-0000-0000-000000000000";
@@ -44,9 +45,7 @@ const entry = {
 
 /** Builds a database, inserts the entry, and returns its raw IndexedDB row. */
 async function storedRow(name: string, compressed: boolean) {
-  const schema = compressed
-    ? entrySchema
-    : { ...entrySchema, keyCompression: false };
+  const schema = { ...entrySchema, keyCompression: compressed };
   const db = await createRxDatabase({
     name,
     storage: compressed
@@ -134,9 +133,7 @@ describe("key compression, blocks", () => {
         await db.addCollections({
           blocks: {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            schema: (compressed
-              ? blockSchema
-              : { ...blockSchema, keyCompression: false }) as any,
+            schema: { ...blockSchema, keyCompression: compressed } as any,
           },
         });
         await db.collections.blocks!.insert(block);
@@ -161,9 +158,15 @@ describe("key compression, blocks", () => {
 });
 
 describe("schemas", () => {
-  it("all opt in, so no collection silently stores full keys", () => {
+  it("all follow the same switch, so none is left storing full keys", () => {
+    // Guards against a schema hardcoding the flag and drifting from the rest,
+    // which would store that collection differently from the others.
     for (const schema of [topicSchema, entrySchema, blockSchema]) {
-      expect(schema.keyCompression).toBe(true);
+      expect(schema.keyCompression).toBe(KEY_COMPRESSION_ENABLED);
     }
+  });
+
+  it("is off while developing, so stored rows stay readable", () => {
+    expect(KEY_COMPRESSION_ENABLED).toBe(false);
   });
 });
