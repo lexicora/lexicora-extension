@@ -1,4 +1,4 @@
-import { CheckIcon, ChevronRightIcon } from "lucide-react";
+import { BookmarkIcon, CheckIcon, ChevronRightIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,10 @@ interface CapturedPageRowProps {
  */
 export function CapturedPageRow({ entry, hasContent }: CapturedPageRowProps) {
   const navigate = useNavigate();
-  const label = hasContent ? "Already captured" : "Already bookmarked";
+  // The row's place at the top of "From this site" already says which page
+  // this is about, so the label only has to say what was saved. Same colour
+  // for both — one state, in the library — with the glyph telling them apart.
+  const label = hasContent ? "Captured" : "Bookmarked";
 
   return (
     <Button
@@ -32,7 +35,11 @@ export function CapturedPageRow({ entry, hasContent }: CapturedPageRowProps) {
         navigate(`/library/entries/${entry.id}`, { viewTransition: true })
       }
     >
-      <CheckIcon className="size-3.5 shrink-0 text-green-600 dark:text-green-500" />
+      {hasContent ? (
+        <CheckIcon className="size-3.5 shrink-0 text-green-600 dark:text-green-500" />
+      ) : (
+        <BookmarkIcon className="size-3.5 shrink-0 fill-green-600 text-green-600 dark:fill-green-500 dark:text-green-500" />
+      )}
       <span className="text-xs text-muted-foreground shrink-0">{label}</span>
       <span className="text-sm truncate flex-1 text-right">{entry.title}</span>
       <ChevronRightIcon className="transition-opacity size-3.5 text-muted-foreground shrink-0 opacity-70 group-hover:opacity-100" />

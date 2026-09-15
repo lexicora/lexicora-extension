@@ -136,8 +136,14 @@ function TopicEntriesPage() {
                 <SearchIcon />
               </InputGroupAddon>
               <InputGroupInput
+                id="search-input"
                 name="search"
                 data-shortcut-search
+                onKeyDown={(e) => {
+                  if (e.key !== "Escape") return;
+                  e.preventDefault();
+                  document.getElementById("search-input")?.blur();
+                }}
                 placeholder="Search entries..."
                 className="h-8 px-2"
                 value={search}

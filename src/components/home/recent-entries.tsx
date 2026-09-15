@@ -80,7 +80,7 @@ export function RecentEntries({
           variant="link"
           size="sm"
           onClick={moreLink.onClick}
-          className="self-center w-full -mb-1 mt-0.5"
+          className="self-center -mb-1 mt-0.5"
         >
           {moreLink.label}
         </Button>
