@@ -7,6 +7,7 @@ import { useScrollPos } from "@/providers/scroll-observer";
 import { useAppHost } from "@/providers/app-host";
 import { useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import { navLock } from "@/lib/navigation-lock";
 
 interface ActionButtonConfig {
   iconSmall: React.ReactNode;
@@ -85,6 +86,8 @@ export function PageHeader({
   const navigate = useNavigate();
 
   const handleGoBack = () => {
+    // Saving or exporting; the bottom navigation is dimmed for the same reason.
+    if (navLock.isLocked()) return;
     if (heavyTeardown) {
       setTimeout(() => navigate(-1), 0);
     } else {

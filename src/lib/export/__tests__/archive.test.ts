@@ -4,7 +4,7 @@ import { strFromU8, unzipSync } from "fflate";
 import type { EntryDocType } from "@/db/schemas/entry";
 import type { TopicDocType } from "@/db/schemas/topic";
 import type { BlockNoteBlock } from "@/lib/utils/block-converter";
-import { buildTopicArchive } from "../index";
+import { buildTopicArchive, buildTopicFolder } from "../index";
 
 /**
  * Covers the topic zip end to end: real block conversion (no mocked editor),
@@ -173,5 +173,18 @@ describe("buildTopicArchive", () => {
     }
 
     expect(found?.getTime()).toBe(new Date(updatedAt).getTime());
+  });
+});
+
+describe("buildTopicFolder", () => {
+  it("returns the folder's files, which the library export nests per topic", () => {
+    const folder = buildTopicFolder(
+      makeTopic(),
+      [makeEntry("e1", "First")],
+      new Map([["e1", blocks]]),
+    );
+
+    // No folder wrapper here: the caller decides where it goes.
+    expect(Object.keys(folder).sort()).toEqual(["First.md", "Research.md"]);
   });
 });

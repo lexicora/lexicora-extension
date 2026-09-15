@@ -6,8 +6,10 @@ import { NavLink, useLocation, matchPath } from "react-router-dom";
 
 import { useScrollPos } from "@/providers/scroll-observer";
 import { FEATURES } from "@/constants/features";
+import { useNavLock } from "@/hooks/use-nav-lock";
 
 export function BottomNavigation() {
+  const isNavLocked = useNavLock();
   const { pathname, search } = useLocation();
   const { isAtBottom } = useScrollPos();
 
@@ -71,7 +73,11 @@ export function BottomNavigation() {
                 isFirst && "ml-3",
                 isLast && "mr-3",
                 // was: ml-2.5 and mr-2.5 respectively
+                // Locked while saving or exporting: dimmed and inert, rather
+                // than looking available and doing nothing.
+                isNavLocked && "opacity-40 pointer-events-none",
               )}
+              aria-disabled={isNavLocked || undefined}
             >
               <NavLink
                 to={

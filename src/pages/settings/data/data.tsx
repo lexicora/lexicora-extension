@@ -19,14 +19,21 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { SettingsItemSeparator } from "@/components/settings";
-import { BrushCleaningIcon, DownloadIcon, Trash2Icon } from "lucide-react";
+import {
+  BrushCleaningIcon,
+  DownloadIcon,
+  FileTextIcon,
+  Trash2Icon,
+} from "lucide-react";
 import { useRxCollection } from "rxdb/plugins/react";
 import { toast } from "sonner";
 import { downloadBlob } from "@/lib/export/download";
 import { cleanupNow } from "@/db/cleanup";
+import { downloadLibrary } from "@/lib/export";
+import { navLock } from "@/lib/navigation-lock";
 
 /** Disables every action while one is running — the purge holds a write lock. */
-type BusyAction = "export" | "cleanup" | "clear";
+type BusyAction = "export" | "export-markdown" | "cleanup" | "clear";
 
 function DataSettingsPage() {
   const [clearOpen, setClearOpen] = useState(false);
@@ -97,6 +104,45 @@ function DataSettingsPage() {
     });
   };
 
+  const handleExportMarkdown = () => {
+    if (!topicsCollection || !entriesCollection || !blocksCollection) return;
+
+    const toastId = toast.loading("Preparing export...");
+    // A large library takes a while, and half of it is written by the time the
+    // user could navigate away, so navigation is held until it finishes.
+    navLock.lock();
+
+    runExclusive("export-markdown", async () => {
+      try {
+        const topicCount = await downloadLibrary(
+          {
+            topics: topicsCollection,
+            entries: entriesCollection,
+            blocks: blocksCollection,
+          },
+          ({ done, total }) =>
+            toast.loading(`Exporting topic ${done} of ${total}...`, {
+              id: toastId,
+            }),
+        );
+
+        if (topicCount === 0) {
+          toast.info("Nothing to export yet", { id: toastId });
+        } else {
+          toast.success(
+            `Exported ${topicCount} ${topicCount === 1 ? "topic" : "topics"}`,
+            { id: toastId },
+          );
+        }
+      } catch (e) {
+        console.error("Failed to export as Markdown:", e);
+        toast.error("Failed to export", { id: toastId });
+      } finally {
+        navLock.unlock();
+      }
+    });
+  };
+
   const handleClear = () => {
     if (!topicsCollection || !entriesCollection || !blocksCollection) return;
 
@@ -150,6 +196,32 @@ function DataSettingsPage() {
             </Item>
             <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
               Download all your topics, entries, and notes as a JSON file.
+            </p>
+          </article>
+          <article>
+            <Item
+              variant="muted"
+              size="sm"
+              className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl hover:cursor-pointer disabled:opacity-55 disabled:pointer-events-none"
+              asChild
+            >
+              <button onClick={handleExportMarkdown} disabled={busy !== null}>
+                <ItemMedia variant="icon">
+                  <FileTextIcon className="size-5 text-blue-500" />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>
+                    {busy === "export-markdown"
+                      ? "Exporting..."
+                      : "Export as Markdown"}
+                  </ItemTitle>
+                </ItemContent>
+              </button>
+            </Item>
+            <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
+              Download everything as a zip of Markdown notes — a folder per
+              topic, ready for Obsidian or any editor. A large library takes a
+              moment, and navigation is paused while it runs.
             </p>
           </article>
           <article>

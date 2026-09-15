@@ -155,11 +155,11 @@ function toDate(iso: string): Date {
  * record's `updatedAt`, so sorting the folder by date in a file manager or vault
  * matches Lexicora.
  */
-export function buildTopicArchive(
+export function buildTopicFolder(
   topic: TopicDocType,
   entries: EntryDocType[],
   blocksByEntry: Map<string, BlockNoteBlock[]>,
-): Uint8Array<ArrayBuffer> {
+): Zippable {
   const used = new Set<string>();
   const topicFilename = reserveFilename(topic.name, "md", used);
   const entryFiles = entries.map((entry) => ({
@@ -181,7 +181,18 @@ export function buildTopicArchive(
     { mtime: toDate(topic.updatedAt) },
   ];
 
-  return zipSync({ [toSafeFilename(topic.name)]: folder }, { level: 6 });
+  return folder;
+}
+
+export function buildTopicArchive(
+  topic: TopicDocType,
+  entries: EntryDocType[],
+  blocksByEntry: Map<string, BlockNoteBlock[]>,
+): Uint8Array<ArrayBuffer> {
+  return zipSync(
+    { [toSafeFilename(topic.name)]: buildTopicFolder(topic, entries, blocksByEntry) },
+    { level: 6 },
+  );
 }
 
 /** Downloads a topic and all its entries as a zip of Markdown notes. */
@@ -202,4 +213,109 @@ export async function downloadTopic(
     new Blob([archive], { type: "application/zip" }),
     `${toSafeFilename(topic.name)}.zip`,
   );
+}
+
+// ---------------------------------------------------------------------------
+// The whole library
+// ---------------------------------------------------------------------------
+
+/** Reserves a folder name, numbering clashes the way file names are numbered. */
+function reserveFolder(name: string, used: Set<string>): string {
+  const base = toSafeFilename(name);
+  let candidate = base;
+  for (let n = 2; used.has(candidate.toLowerCase()); n++) {
+    candidate = `${base} (${n})`;
+  }
+  used.add(candidate.toLowerCase());
+  return candidate;
+}
+
+/** The archive's index note: every topic, linked to its own note. */
+function libraryIndexMarkdown(
+  topics: Array<{ topic: TopicDocType; folder: string; filename: string }>,
+): string {
+  const lines = [
+    "# Lexicora library",
+    "",
+    `${topics.length} ${topics.length === 1 ? "topic" : "topics"}, exported ${new Date().toLocaleString()}.`,
+    "",
+  ];
+  for (const { topic, folder, filename } of topics) {
+    const target = `${encodeURIComponent(folder)}/${encodeURIComponent(filename)}`
+      .replace(/\(/g, "%28")
+      .replace(/\)/g, "%29");
+    lines.push(`- [${topic.name.replace(/([\[\]])/g, "\\$1")}](${target})`);
+  }
+  return `${lines.join("\n")}\n`;
+}
+
+export interface LibraryExportProgress {
+  /** Topics finished so far. */
+  done: number;
+  total: number;
+}
+
+/**
+ * Downloads the whole library as one zip: a folder per topic, each holding its
+ * topic note and one note per entry, plus an index note listing the topics.
+ *
+ * Built a topic at a time rather than loading everything first, so memory
+ * stays bounded by the largest topic and progress can be reported — a library
+ * of any size takes a while, and the caller shows that.
+ */
+export async function downloadLibrary(
+  { topics, entries, blocks }: ExportCollections & { topics?: RxCollection | null },
+  onProgress?: (progress: LibraryExportProgress) => void,
+): Promise<number> {
+  if (!topics) return 0;
+
+  const topicDocs = (await topics.find().exec())
+    .map((doc) => doc.toJSON() as TopicDocType)
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  if (topicDocs.length === 0) return 0;
+
+  const archive: Zippable = {};
+  const usedFolders = new Set<string>();
+  const index: Array<{ topic: TopicDocType; folder: string; filename: string }> = [];
+
+  for (const [position, topic] of topicDocs.entries()) {
+    const topicEntries = entries ? await loadTopicEntries(topic.id, entries) : [];
+    const blocksByEntry = blocks
+      ? await loadBlocksByEntry(
+          topicEntries.map((entry) => entry.id),
+          blocks,
+        )
+      : new Map<string, BlockNoteBlock[]>();
+
+    const folder = reserveFolder(topic.name, usedFolders);
+    const contents = buildTopicFolder(topic, topicEntries, blocksByEntry);
+    archive[folder] = contents;
+
+    // The topic note is the one named after the topic, which buildTopicFolder
+    // reserves first — so it survives an entry of the same name.
+    index.push({
+      topic,
+      folder,
+      filename: `${toSafeFilename(topic.name)}.md`,
+    });
+    onProgress?.({ done: position + 1, total: topicDocs.length });
+  }
+
+  archive["Lexicora library.md"] = [
+    strToU8(libraryIndexMarkdown(index)),
+    { mtime: new Date() },
+  ];
+
+  const timestamp = new Date()
+    .toISOString()
+    .slice(0, 19)
+    .replace("T", "_")
+    .replace(/:/g, "-");
+  downloadBlob(
+    new Blob([zipSync(archive, { level: 6 })], { type: "application/zip" }),
+    `lexicora-markdown-${timestamp}.zip`,
+  );
+
+  return topicDocs.length;
 }
