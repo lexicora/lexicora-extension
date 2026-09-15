@@ -95,10 +95,17 @@ function ToastProvider() {
   return (
     <Toaster
       closeButton
-      mobileOffset={13}
-      className="py-3.5! text-left"
-      position="top-right"
-      offset={16}
+      mobileOffset={12}
+      offset={12}
+      toastOptions={{
+        style: {
+          paddingBlock: "14px",
+          textAlign: "left",
+        },
+      }}
+      //className="py-3.5! text-left"
+      position="top-center"
+      swipeDirections={["right", "left", "top"]}
       theme={theme}
     />
   );
