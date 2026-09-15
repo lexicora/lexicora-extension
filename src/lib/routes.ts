@@ -1,4 +1,6 @@
-/** Route shapes that more than one place needs to recognise. */
+/** Routes that more than one place needs to know. */
+
+export const NEW_ENTRY_PATH = "/library/entries/new";
 
 const ENTRY_EDIT_PATTERN = /^\/library\/entries\/[^/]+\/edit$/;
 

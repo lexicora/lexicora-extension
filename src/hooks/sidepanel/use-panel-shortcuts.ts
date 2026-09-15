@@ -4,10 +4,10 @@ import { toast } from "sonner";
 
 import type { PanelShortcutAction } from "@/constants/shortcuts";
 import { navLock } from "@/lib/navigation-lock";
+import { NEW_ENTRY_PATH } from "@/lib/routes";
 import { resolvePanelShortcut } from "./panel-shortcuts";
 import { useCaptureActiveTab } from "./use-capture-active-tab";
 
-const NEW_ENTRY_PATH = "/library/entries/new";
 const NEW_TOPIC_PATH = "/library/topics/new";
 
 /** The topic id when the panel is on one of a topic's pages, so a new entry lands in it. */

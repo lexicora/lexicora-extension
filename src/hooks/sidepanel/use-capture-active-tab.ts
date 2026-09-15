@@ -6,7 +6,7 @@ import { useTabSupport } from "@/hooks/use-tab-support";
 import { sendMessage } from "@/lib/messaging";
 import type { CaptureMode } from "@/types/page-data.types";
 import type { TabData } from "@/types/tab-data.types";
-import { isEntryEditPath } from "@/lib/routes";
+import { NEW_ENTRY_PATH, isEntryEditPath } from "@/lib/routes";
 
 /**
  * Captures the active tab from inside the side panel: asks the background to
@@ -49,7 +49,14 @@ export function useCaptureActiveTab() {
       // abandon the edit. The same rule lets the popup and the browser-wide
       // shortcuts capture into an open editor; see router-listener.
       if (!isEntryEditPath(location.pathname)) {
-        navigate("/library/entries/new", {
+        // Capturing again from the new-entry page replaces it rather than
+        // stacking a second copy, which Back would otherwise land on. The
+        // state still goes through, so the editor shows its loading skeleton
+        // while the page data arrives.
+        const alreadyThere = location.pathname === NEW_ENTRY_PATH;
+        navigate(NEW_ENTRY_PATH, {
+          replace: alreadyThere,
+          preventScrollReset: alreadyThere,
           viewTransition: true,
           state: { isCapturePending: true },
         });
