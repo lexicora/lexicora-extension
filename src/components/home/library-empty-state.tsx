@@ -12,7 +12,7 @@ export function LibraryEmptyState() {
   const navigate = useNavigate();
 
   return (
-    <section className="flex-1 flex flex-col items-center justify-center text-center px-4 pb-6">
+    <section className="flex-1 flex flex-col items-center justify-center text-center px-4 pt-4 pb-6">
       <div className="flex items-center justify-center size-11 rounded-full bg-card not-dark:shadow-xs mb-3">
         <BookmarkIcon className="size-5 text-muted-foreground" />
       </div>
@@ -23,7 +23,9 @@ export function LibraryEmptyState() {
       <Button
         variant="link"
         size="sm"
-        onClick={() => navigate("/library/topics/new", { viewTransition: true })}
+        onClick={() =>
+          navigate("/library/topics/new", { viewTransition: true })
+        }
         className="mt-2"
       >
         Or create a topic first

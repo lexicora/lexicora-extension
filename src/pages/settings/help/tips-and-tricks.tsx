@@ -6,6 +6,7 @@ import {
   ItemContent,
   ItemTitle,
   ItemDescription,
+  ItemHeader,
 } from "@/components/ui/item";
 import { SettingsItemSeparator } from "@/components/settings";
 import {
@@ -13,6 +14,7 @@ import {
   BookmarkIcon,
   CameraIcon,
   FolderOpenIcon,
+  LightbulbIcon,
   PinIcon,
   SearchIcon,
   TagIcon,
@@ -74,7 +76,27 @@ function TipsAndTricksPage() {
   return (
     <PageContainer>
       <PageHeader title="Tips & Tricks" goBackButton />
-      <main className="flex flex-col gap-0 w-full pt-4.5 px-1 mb-2">
+      <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-2">
+        <section className="not-dark:shadow-xs rounded-2xl">
+          <Item
+            variant="muted"
+            size="default"
+            className="group py-2.5 gap-2 transition-none bg-card rounded-2xl"
+          >
+            <ItemHeader>
+              <ItemMedia variant="icon">
+                <LightbulbIcon className="size-8 text-yellow-500" />
+              </ItemMedia>
+            </ItemHeader>
+            <ItemContent>
+              <ItemDescription className="text-pretty line-clamp-none">
+                Some tips and tricks to help you get the most out of Lexicora.
+                These are just a few ways to make your library more organized,
+                searchable, and useful.
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+        </section>
         <section className="not-dark:shadow-xs rounded-2xl">
           {TIPS.map((tip, i) => {
             const isFirst = i === 0;
