@@ -44,6 +44,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
 import { deleteTopicCascade } from "@/db/cascade-delete";
+import { setTopicEntriesArchived } from "@/db/archive-cascade";
 import { copyTopic, downloadTopic } from "@/lib/export";
 import { toast } from "sonner";
 import { useTopicDetail } from "./__hooks__/use-topic-detail";
@@ -72,17 +73,8 @@ function TopicDetailPage() {
       Pick<TopicDocType, "isFavorite" | "isArchived" | "isPinned">
     > = { [attribute]: newValue };
 
-    if (attribute === "isArchived" && entriesCollection) {
-      const implicitEntries = await entriesCollection
-        .find({
-          selector: { topicId: topic.id, archivedExplicitly: false },
-        })
-        .exec();
-      await Promise.all(
-        implicitEntries.map((e) =>
-          e.incrementalPatch({ isArchived: newValue }),
-        ),
-      );
+    if (attribute === "isArchived") {
+      await setTopicEntriesArchived(topic.id, newValue, entriesCollection);
     }
 
     await doc.incrementalPatch(patch);

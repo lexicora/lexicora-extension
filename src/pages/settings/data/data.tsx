@@ -23,6 +23,7 @@ import { BrushCleaningIcon, DownloadIcon, Trash2Icon } from "lucide-react";
 import { useRxCollection } from "rxdb/plugins/react";
 import { toast } from "sonner";
 import { downloadBlob } from "@/lib/export/download";
+import { cleanupNow } from "@/db/cleanup";
 
 /** Disables every action while one is running — the purge holds a write lock. */
 type BusyAction = "export" | "cleanup" | "clear";
@@ -82,13 +83,11 @@ function DataSettingsPage() {
     const p = async () => {
       //* Purges rows already flagged `_deleted` from IndexedDB. Live documents
       //* are never matched, so this cannot touch data the user can still see.
-      //* Batched here on purpose: each call costs about the same whether it
-      //* reclaims one row or a thousand, so it is worth doing rarely.
-      await Promise.all([
-        topicsCollection.cleanup(0),
-        entriesCollection.cleanup(0),
-        blocksCollection.cleanup(0),
-      ]);
+      await cleanupNow({
+        topics: topicsCollection,
+        entries: entriesCollection,
+        blocks: blocksCollection,
+      });
     };
 
     toast.promise(runExclusive("cleanup", p), {
@@ -111,11 +110,11 @@ function DataSettingsPage() {
         blocksCollection.find().remove(),
       ]);
 
-      await Promise.all([
-        topicsCollection.cleanup(0),
-        entriesCollection.cleanup(0),
-        blocksCollection.cleanup(0),
-      ]);
+      await cleanupNow({
+        topics: topicsCollection,
+        entries: entriesCollection,
+        blocks: blocksCollection,
+      });
     };
 
     toast.promise(runExclusive("clear", p), {

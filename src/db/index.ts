@@ -50,10 +50,18 @@ export async function initializeDb() {
     ignoreDuplicate: false, // true is only allowed in development.
     closeDuplicates: isDev, // TODO: Maybe set to true always. automatically close duplicate instances (e.g. from hot reload) - only relevant if ignoreDuplicate is true (enable if needed)
     eventReduce: true,
+    //* The periodic half of the purge; the other two are in db/cleanup. RxDB's
+    //* defaults assume a long-lived app: it waits a minute after the collection
+    //* opens and keeps tombstones for a month. An extension session is often
+    //* shorter than that first wait, so nothing was ever collected.
+    //*
+    //* Nothing here reads tombstones — there is no replication — so they can go
+    //* as soon as they are cold. The loop only runs after writes, so an idle
+    //* panel does not scan.
     cleanupPolicy: {
-      //* Lexicora has no replication, so deleted documents serve no purpose once
-      //* they are a day old. Keeps IndexedDB from growing with tombstones.
-      minimumDeletedTime: 1000 * 60 * 60 * 24, // 1 day
+      minimumCollectionAge: 1000 * 10, // start collecting 10s after opening
+      minimumDeletedTime: 1000 * 60, // a minute cold is cold enough
+      runEach: 1000 * 60 * 2, // and again every 2 minutes, after writes
     },
   });
 

@@ -1,5 +1,7 @@
 import type { RxCollection } from "rxdb";
 
+import { scheduleCleanup } from "./cleanup";
+
 /**
  * Cascade deletion for the topic → entries → blocks hierarchy.
  *
@@ -8,11 +10,9 @@ import type { RxCollection } from "rxdb";
  * so the cascade has to be correct at every call site. Keeping it here means
  * there is one place to fix rather than four.
  *
- * Deletion is soft: RxDB flags documents `_deleted` and only the cleanup plugin
- * physically purges them. That purge is deliberately not triggered here — its
- * cost is per call and barely depends on how much it reclaims, so it belongs in
- * one batched, user-initiated action (Settings → Data Management) rather than
- * after every delete.
+ * Deletion is soft: RxDB flags documents `_deleted` and only a cleanup purges
+ * the rows. Each cascade queues one — debounced, so deleting several things in
+ * a row still costs a single purge. See `db/cleanup`.
  *
  * Children are removed before their parent. If the second step fails, the user
  * is left with a visibly empty entry or topic they can delete again, rather
@@ -45,6 +45,8 @@ export async function deleteEntryCascade(
 
   const entryDoc = await entries.findOne({ selector: { id: entryId } }).exec();
   if (entryDoc) await entryDoc.remove();
+
+  scheduleCleanup({ entries, blocks });
 }
 
 /**
@@ -77,4 +79,6 @@ export async function deleteTopicCascade(
 
   const topicDoc = await topics.findOne({ selector: { id: topicId } }).exec();
   if (topicDoc) await topicDoc.remove();
+
+  scheduleCleanup({ topics, entries, blocks });
 }

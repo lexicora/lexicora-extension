@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import type { TopicDocType } from "@/db/schemas/topic";
 import { navLock } from "@/lib/navigation-lock";
+import { hasChanges } from "@/db/doc-changes";
 import { useEffect, useState } from "react";
 import { useBlocker, useNavigate, useParams } from "react-router-dom";
 import { useRxCollection } from "rxdb/plugins/react";
@@ -60,13 +61,21 @@ function TopicEditPage() {
     const promise = (async () => {
       const doc = await collection.findOne({ selector: { id } }).exec();
       if (!doc) throw new Error("Topic not found");
-      await doc.incrementalPatch({
+
+      // Saving without edits should not write, and should not move the topic
+      // to the top of the library by refreshing updatedAt.
+      const fields = {
         name: data.name,
         description: data.description,
         tags: data.tags,
         isFavorite: data.isFavorite,
-        updatedAt: new Date().toISOString(),
-      });
+      };
+      if (hasChanges(doc.toJSON() as TopicDocType, fields)) {
+        await doc.incrementalPatch({
+          ...fields,
+          updatedAt: new Date().toISOString(),
+        });
+      }
     })();
 
     toast.promise(promise, {

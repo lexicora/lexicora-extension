@@ -23,6 +23,8 @@ import {
   type EntryFormData,
 } from "@/components/forms/entry-form";
 import type { BlockDocType } from "@/db/schemas/block";
+import { findOrphanedBlocks, pickChangedBlocks } from "@/db/block-sync";
+import { hasChanges } from "@/db/doc-changes";
 import type { EntryDocType } from "@/db/schemas/entry";
 import type { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "@/lib/utils";
@@ -373,7 +375,10 @@ function EntryEditPage() {
         .exec();
       if (!doc) throw new Error("Entry not found");
 
-      await doc.incrementalPatch({
+      // Saving without edits should not write, and should not move the entry
+      // to the top of the library by refreshing updatedAt. Blocks are compared
+      // separately below.
+      const fields = {
         title: data.title,
         topicId: finalTopicId,
         description: data.description,
@@ -386,8 +391,13 @@ function EntryEditPage() {
         siteName: data.siteName,
         languageCode: data.languageCode,
         isFavorite: data.isFavorite,
-        updatedAt: new Date().toISOString(),
-      });
+      };
+      if (hasChanges(doc.toJSON() as EntryDocType, fields)) {
+        await doc.incrementalPatch({
+          ...fields,
+          updatedAt: new Date().toISOString(),
+        });
+      }
 
       // Reconcile blocks: v7 IDs are preserved (update in place), v4 IDs get new v7s (insert).
       const newDbBlocks = convertBlockNoteBlocks(editorBlocks, entry.id);
