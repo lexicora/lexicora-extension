@@ -35,7 +35,8 @@ function HomePage() {
     isSupported,
     activeTab,
   } = useCaptureActiveTab();
-  const { capturedPage, fromThisSite } = useSiteEntries(activeTab);
+  const { capturedPage, fromThisSite, hostname, capturedPageHasContent } =
+    useSiteEntries(activeTab);
   const [promptText, setPromptText] = useState("");
 
   const {
@@ -186,7 +187,27 @@ function HomePage() {
               label="From this site"
               entries={siteEntries}
               leadingRow={
-                capturedPage ? <CapturedPageRow entry={capturedPage} /> : null
+                capturedPage ? (
+                  <CapturedPageRow
+                    entry={capturedPage}
+                    hasContent={capturedPageHasContent}
+                  />
+                ) : null
+              }
+              moreLink={
+                // The list is capped so one site cannot crowd out everything
+                // else; the rest are a search away, since the library's search
+                // covers the hostname.
+                hostname && fromThisSite.length > siteEntries.length
+                  ? {
+                      label: `Show all from ${hostname}`,
+                      onClick: () =>
+                        navigate(
+                          `/library?tab=entries&q=${encodeURIComponent(hostname)}`,
+                          { viewTransition: true },
+                        ),
+                    }
+                  : undefined
               }
             />
             <RecentEntries entries={recentEntries} />

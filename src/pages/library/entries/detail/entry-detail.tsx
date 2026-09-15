@@ -26,7 +26,10 @@ import {
 import { Separator } from "@/components/ui/separator";
 import type { EntryDocType } from "@/db/schemas/entry";
 import { cn } from "@/lib/utils";
-import { type BlockNoteBlock } from "@/lib/utils/block-converter";
+import {
+  hasEditorContent,
+  type BlockNoteBlock,
+} from "@/lib/utils/block-converter";
 import { formatDate } from "@/lib/utils/date-formatter";
 import { useCreateBlockNote } from "@blocknote/react";
 import {
@@ -155,17 +158,7 @@ function EntryDetailPage() {
     );
   }
 
-  const firstBlock = blocks?.[0];
-  const hasContent =
-    !!blocks &&
-    !(
-      blocks.length === 0 ||
-      (blocks.length === 1 &&
-        firstBlock?.type === "paragraph" &&
-        (!firstBlock?.content ||
-          (firstBlock.content as unknown[]).length === 0) &&
-        (!firstBlock?.children || firstBlock.children.length === 0))
-    );
+  const hasContent = hasEditorContent(blocks);
 
   return (
     <PageContainer id="lc-entry-detail-page">

@@ -15,6 +15,8 @@ interface RecentEntriesProps {
    * which belongs to this site but is a statement rather than a suggestion.
    */
   leadingRow?: React.ReactNode;
+  /** Shown under the list when it is only part of what there is. */
+  moreLink?: { label: string; onClick: () => void };
 }
 
 /**
@@ -27,6 +29,7 @@ export function RecentEntries({
   entries,
   label = "Recent entries",
   leadingRow,
+  moreLink,
 }: RecentEntriesProps) {
   const navigate = useNavigate();
 
@@ -72,6 +75,16 @@ export function RecentEntries({
           </Button>
         ))}
       </div>
+      {moreLink && (
+        <Button
+          variant="link"
+          size="sm"
+          onClick={moreLink.onClick}
+          className="self-center w-full -mb-1 mt-0.5"
+        >
+          {moreLink.label}
+        </Button>
+      )}
     </section>
   );
 }

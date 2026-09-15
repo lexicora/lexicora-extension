@@ -138,3 +138,24 @@ export function convertDbBlocksToBlockNote(blocks: BlockDocType[]): BlockNoteBlo
 
   return topLevelBlocks.map(buildBlock);
 }
+
+/**
+ * Whether an entry's blocks amount to anything.
+ *
+ * A fresh editor holds one empty paragraph, so "has blocks" is not the same as
+ * "has content" — an entry that looks empty is empty, and a bookmark never had
+ * content to begin with.
+ */
+export function hasEditorContent(
+  blocks: BlockNoteBlock[] | null | undefined,
+): boolean {
+  if (!blocks || blocks.length === 0) return false;
+  if (blocks.length > 1) return true;
+
+  const [only] = blocks;
+  if (only?.type !== "paragraph") return true;
+  const content = only.content;
+  const isEmpty =
+    !content || (Array.isArray(content) && content.length === 0);
+  return !isEmpty || (only.children?.length ?? 0) > 0;
+}
