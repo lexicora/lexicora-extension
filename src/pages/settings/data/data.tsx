@@ -26,8 +26,8 @@ import { cleanupNow } from "@/db/cleanup";
 type BusyAction = "cleanup" | "clear";
 
 /**
- * What can be done *to* the database: reclaim the space deleted items still
- * hold, and delete everything.
+ * The space the library takes up: reclaiming what deleted items still hold,
+ * and deleting everything.
  *
  * Exporting lives on its own page, so these irreversible actions do not sit
  * next to one that is done routinely.
@@ -94,7 +94,7 @@ function DataSettingsPage() {
 
   return (
     <PageContainer>
-      <PageHeader title="Data Management" goBackButton />
+      <PageHeader title="Storage" goBackButton />
       <main className="flex flex-col gap-5.75 w-full pt-4.5 px-1 mb-1">
         <section className="flex flex-col gap-8">
           <article>

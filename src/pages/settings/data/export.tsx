@@ -21,8 +21,8 @@ type BusyAction = "export" | "export-markdown";
  * Getting the library out of Lexicora: a JSON backup the app can read back,
  * and Markdown notes for a vault.
  *
- * Kept apart from Data Management, which holds the destructive actions — those
- * should not sit one tap from something done routinely.
+ * Kept apart from Storage, which holds the destructive actions — those should
+ * not sit one tap from something done routinely.
  */
 function ExportSettingsPage() {
   const [busy, setBusy] = useState<BusyAction | null>(null);

@@ -12,7 +12,7 @@ import type { RxCollection } from "rxdb";
  *    so its cost barely depends on how much it reclaims: doing it once per
  *    burst is what keeps it cheap.
  * 2. **Periodically** — RxDB's own `cleanupPolicy`, configured in `db/index`.
- * 3. **On request** — `cleanupNow`, behind the button in Data Management.
+ * 3. **On request** — `cleanupNow`, behind the button in Settings → Storage.
  *
  * The side panel can close before a scheduled purge fires. That is what the
  * other two are for: nothing depends on any single one of them running.

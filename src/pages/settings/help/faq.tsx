@@ -42,7 +42,7 @@ const FAQ_ITEMS = [
   {
     question: "How do I export my data?",
     answer:
-      "Go to Settings → Data Management → Export All Data. This downloads a JSON file containing all your topics, entries, and notes that you can use for backup or migration.",
+      "Go to Settings → Export. \"Export All Data\" downloads a JSON file with all your topics, entries, and notes, for backup or moving to another browser. \"Export as Markdown\" downloads them as Markdown notes instead, a folder per topic, for apps like Obsidian.",
   },
 ] as const;
 

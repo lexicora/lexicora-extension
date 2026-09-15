@@ -96,7 +96,7 @@ describe("scheduleCleanup", () => {
 });
 
 describe("cleanupNow", () => {
-  it("purges immediately, for the button in Data Management", async () => {
+  it("purges immediately, for the button in Settings → Storage", async () => {
     const { cleanup, collections } = fakeCollections();
 
     await cleanupNow(collections);

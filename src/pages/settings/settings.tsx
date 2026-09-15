@@ -17,6 +17,7 @@ import {
   ChevronRightIcon,
   DatabaseIcon,
   DownloadIcon,
+  HardDriveIcon,
   EllipsisIcon,
   FileTextIcon,
   HeartPlusIcon,
@@ -174,9 +175,9 @@ function SettingsPage() {
             <SettingsItem
               to="/settings/data"
               size="sm"
-              MediaIcon={DatabaseIcon}
-              mediaIconColor="text-emerald-500"
-              itemTitle="Data Management"
+              MediaIcon={HardDriveIcon}
+              mediaIconColor="text-amber-500"
+              itemTitle="Storage"
               roundingClass="rounded-t-none"
             />
           </div>
