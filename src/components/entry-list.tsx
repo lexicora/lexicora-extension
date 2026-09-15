@@ -10,6 +10,7 @@ import { useNavigate, useNavigationType } from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
 import { useRxCollection } from "rxdb/plugins/react";
 import type { MangoQuerySelector } from "rxdb";
+import { parseSearchQuery, siteHostnames } from "@/lib/search-query";
 
 // TODO: Maybe put the logic of setting the stuff for session storage in the return of component useEffect return statement for unmount.
 
@@ -95,10 +96,18 @@ export function EntryList({
       selector.isFavorite = true;
     }
 
-    if (search.trim()) {
+    // "site:react.dev" narrows to one host through the hostnameUrl index;
+    // whatever else is typed is still matched as text. See lib/search-query.
+    const { site, text } = parseSearchQuery(search);
+
+    if (site) {
+      selector.hostnameUrl = { $in: siteHostnames(site) };
+    }
+
+    if (text.trim()) {
       try {
         // Escape special characters so they are treated as literals
-        const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const escapedSearch = text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
         // Test the regex string before using it
         new RegExp(escapedSearch, "i");

@@ -18,6 +18,7 @@ import { CaptureActions } from "@/components/capture/capture-actions";
 import { CapturedPageRow } from "@/components/home/captured-page-row";
 import { useSiteEntries } from "./__hooks__/use-site-entries";
 import { WebsiteLink } from "@/components/website-link";
+import { siteSearchQuery } from "@/lib/search-query";
 
 function formatFavoriteCount(count: number): string {
   if (count < 1000) return String(count);
@@ -196,14 +197,14 @@ function HomePage() {
               }
               moreLink={
                 // The list is capped so one site cannot crowd out everything
-                // else; the rest are a search away, since the library's search
-                // covers the hostname.
+                // else; the rest are one search away, filtered to the host
+                // rather than merely mentioning it.
                 hostname && fromThisSite.length > siteEntries.length
                   ? {
                       label: `Show all from ${hostname}`,
                       onClick: () =>
                         navigate(
-                          `/library?tab=entries&q=${encodeURIComponent(hostname)}`,
+                          `/library?tab=entries&q=${encodeURIComponent(siteSearchQuery(hostname))}`,
                           { viewTransition: true },
                         ),
                     }

@@ -9,6 +9,7 @@ import { useNavigate, useNavigationType } from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
 import { useRxCollection } from "rxdb/plugins/react";
 import type { MangoQuerySelector } from "rxdb";
+import { parseSearchQuery } from "@/lib/search-query";
 
 // TODO: Maybe put the logic of setting the stuff for session storage in the return of component useEffect return statement for unmount.
 
@@ -61,6 +62,15 @@ export function TopicList({
   useEffect(() => {
     if (!collection) return;
 
+    // A site filter is about where an entry was captured from, and a topic
+    // has no site — so it matches no topics, rather than being ignored and
+    // quietly listing every one of them.
+    const { site, text } = parseSearchQuery(search);
+    if (site) {
+      setTopics([]);
+      return;
+    }
+
     const selector: MangoQuerySelector<TopicDocType> = {};
     if (onlyArchived) {
       selector.isArchived = true;
@@ -72,10 +82,10 @@ export function TopicList({
       selector.isFavorite = true;
     }
 
-    if (search.trim()) {
+    if (text.trim()) {
       try {
         // Escape special characters so they are treated as literals
-        const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const escapedSearch = text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
         // Test the regex string before using it
         new RegExp(escapedSearch, "i");
