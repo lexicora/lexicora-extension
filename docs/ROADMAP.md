@@ -84,6 +84,16 @@ Supabase sync and the web app (#68, #69), all AI features (#52, #190),
 onboarding (#44), the editor backlog (#8, #56, #60, #61, #62), the filter popover (#144), heading map (#164), windowed polish (#179, #180, #182, #184), and the
 parking lot at the bottom of this file.
 
+On the BlockNote upgrade (#195): stay on 0.52. From the next versions the shadcn
+variant is built on Base UI instead of Radix, and it was tried — it runs, but
+it is fundamentally at odds with the editor's heavily customised CSS selectors
+and other custom implementations, so it is worse rather than better. There is
+no feature waiting on it. `^0.52.1` already keeps installs on 0.52.x, since a
+caret on a 0.x version does not cross minors. If it is ever revisited, the
+`prosemirror-model` / `prosemirror-view` overrides in package.json need
+checking against whatever versions the new BlockNote expects — they exist to
+keep a single copy of each, without which Enter stops creating blocks.
+
 On the filter popover (#144): the library's search takes one `site:` filter,
 which covers the case that needed it — "Show all from this site" on the home
 page. A stopgap rather than a syntax; real filtering would replace it.
