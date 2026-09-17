@@ -69,7 +69,7 @@ function EntryContentViewer({
     <BlockNoteView
       editor={editor}
       editable={false}
-      className="text-left select-text"
+      className="text-left select-text /*text-pretty*/"
       id="lc-blocknote-view-entry-detail"
     />
   );
