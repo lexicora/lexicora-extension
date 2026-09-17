@@ -101,7 +101,8 @@ function EntryEditContent({
         name: Parameters<EntryFormApi["setFieldValue"]>[0],
         value: string,
       ) => {
-        if (overwrite || !api.getFieldValue(name)) api.setFieldValue(name, value);
+        if (overwrite || !api.getFieldValue(name))
+          api.setFieldValue(name, value);
       };
       set("url", capturedData.location.href || "");
       set(
@@ -135,8 +136,7 @@ function EntryEditContent({
       const isContentEmpty =
         !firstContent ||
         (Array.isArray(firstContent) && firstContent.length === 0);
-      const isChildrenEmpty =
-        !firstChildren || firstChildren.length === 0;
+      const isChildrenEmpty = !firstChildren || firstChildren.length === 0;
 
       const isEmpty =
         current.length === 1 &&
@@ -457,7 +457,10 @@ function EntryEditPage() {
   }
 
   return (
-    <PageContainer id="lc-entry-edit-page" className="mb-0!">
+    <PageContainer
+      id="lc-entry-edit-page"
+      className="mb-0! min-h-[calc(100vh-2px)]"
+    >
       <EntryEditContent
         entry={entry}
         initialBlocks={blocks}
@@ -492,7 +495,9 @@ function EntryEditPage() {
                   "transition-all duration-150 py-2.5",
                   "text-base! field-sizing-content resize-none max-h-[35vh] min-h-10.5 focus-visible:ring-0 scrollbar-thin scrollbar-bg-transparent",
                   "border-neutral-400/50 dark:not-focus-visible:border-neutral-400/40 dark:bg-[#121724]/85 dark:focus-visible:bg-[#121724] bg-[#fefefe]/85 focus-visible:bg-[#fefefe]",
-                  isPromptActive ? "pb-11 backdrop-blur-lg" : "backdrop-blur-md",
+                  isPromptActive
+                    ? "pb-11 backdrop-blur-lg"
+                    : "backdrop-blur-md",
                   isAtBottom
                     ? "shadow-none"
                     : "shadow-[0_-6px_6px_1px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_1px_#000010]/25",

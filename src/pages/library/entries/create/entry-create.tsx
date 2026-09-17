@@ -286,7 +286,10 @@ function EntryCreatePage() {
 
   return (
     //* NOTE: Opt in for now, because of editor styles being changed
-    <PageContainer id="lc-new-entry-page" className="mb-0!">
+    <PageContainer
+      id="lc-new-entry-page"
+      className="mb-0! min-h-[calc(100vh-2px)]"
+    >
       {/*Make the inner container as tall (min-height) as the vh (but not overflowing) to prevent issues with editor*/}
       <PageHeader
         title="New Entry"
