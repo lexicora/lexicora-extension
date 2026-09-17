@@ -49,7 +49,34 @@
   @apply focus-visible:border-ring focus-visible:ring-ring/50 border border-transparent bg-clip-padding focus-visible:ring-[3px] whitespace-nowrap transition-all outline-none select-none;
 }
 
+/* The floating create button on the list pages. Same shape, size, inset ring
+   and shadow as the green original below — only the colour changes, to the
+   app's primary, which the home page's "Capture page" button uses too.
+   Primary is dark navy in light mode and near-white in dark mode, so the ring
+   flips with it: a light edge on the dark fill, a dark edge on the light one,
+   keeping the same slightly raised look in both.
+
+   At rest the fill leans toward the background: full primary made it the
+   highest-contrast block on the page, pulling the eye from the content it
+   floats over. Mixing toward the background softens it in both modes with one
+   rule — near-white dims to light grey, navy lifts toward slate — and hover
+   brings full primary back, so it brightens when reached for.
+
+   That matches the page header's right action button (`bg-primary/80`,
+   `hover:bg-primary`) on a plain background. It is a mix rather than 80%
+   opacity on purpose: this button floats over cards and scrolling content,
+   which would show through a translucent fill and change its colour as they
+   pass beneath. The header's sits over the background or a blurred strip,
+   where translucency is part of the look. */
 .button-create {
+  @apply text-primary-foreground bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] hover:bg-primary
+    ring-1 ring-inset ring-white/15 dark:ring-black/20 hover:ring-white/25 dark:hover:ring-black/25
+    size-9 rounded-[12px] shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)] focus-visible:ring-offset-1;
+}
+
+/* The original green version, kept for comparison. Swap the class on the list
+   pages' create buttons back to use it. */
+.button-create-old {
   @apply text-lc-light-foreground bg-green-500 hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800 
     ring-1 ring-inset ring-black/20 dark:ring-white/30 hover:ring-black/25 dark:hover:ring-white/25 
     size-9 rounded-[12px] shadow-[0px_0px_6px_3px_rgba(0,0,0,0.1)] focus-visible:ring-offset-1;
