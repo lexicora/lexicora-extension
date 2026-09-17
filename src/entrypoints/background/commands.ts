@@ -1,12 +1,11 @@
-import { MSG } from "@/constants/messaging";
 import { COMMAND_ID } from "@/constants/shortcuts";
-import { sendMessage } from "@/lib/messaging";
 import { isCapturableUrl } from "@/constants/support-capture-sites";
 import type { CaptureMode } from "@/types/page-data.types";
 import {
   captureMessagesFor,
   openSidePanel,
   requestAndForwardCapture,
+  toggleSidePanel,
 } from "./capture-flow";
 
 /**
@@ -32,23 +31,6 @@ export function setupCommands() {
         break;
     }
   });
-}
-
-/**
- * Opens the side panel, or closes it if it was already open.
- *
- * Whether it is open has to be known synchronously — `open()` must run before
- * any `await` — and the background does not reliably know: its state is lost
- * whenever the service worker sleeps. So it always opens (a no-op when already
- * open) and asks that window's panel to close itself. A panel that was already
- * open receives the request and closes; one that is only now opening is still
- * loading, is not listening yet, and stays open. Firefox toggles natively with
- * `_execute_sidebar_action` and never gets here.
- */
-function toggleSidePanel(windowId: number | undefined): void {
-  if (windowId === undefined) return;
-  openSidePanel(windowId);
-  sendMessage(MSG.TOGGLE_SIDEPANEL, { windowId }).catch(() => null);
 }
 
 function captureWithShortcut(

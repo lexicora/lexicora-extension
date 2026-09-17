@@ -70,6 +70,32 @@ export function openSidePanel(
 }
 
 /**
+ * Opens the side panel, or closes it if it was already open. Shared by the
+ * open/close keyboard shortcut and the context menu item.
+ *
+ * Like `openSidePanel`, it must be called synchronously from the user-action
+ * handler: both browsers only allow opening while that action is in scope.
+ *
+ * Firefox toggles natively. Chromium has no toggle, and whether the panel is
+ * open has to be known before any `await` — which the background cannot, since
+ * its state is lost whenever the service worker sleeps. So it always opens (a
+ * no-op when already open) and asks that window's panel to close itself. A
+ * panel that was already open receives the request and closes; one that is
+ * only now opening is still loading, is not listening yet, and stays open.
+ */
+export function toggleSidePanel(windowId: number | undefined): void {
+  if (import.meta.env.FIREFOX) {
+    // @ts-ignore: sidebarAction is a Firefox-specific API
+    browser.sidebarAction.toggle();
+    return;
+  }
+
+  if (windowId === undefined) return;
+  openSidePanel(windowId);
+  sendMessage(MSG.TOGGLE_SIDEPANEL, { windowId }).catch(() => null);
+}
+
+/**
  * Fetches capture data and delivers it to the side panel — pushed if it is
  * already open, otherwise left pending for it to pull once it loads.
  */

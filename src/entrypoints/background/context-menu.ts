@@ -6,6 +6,7 @@ import {
   captureMessagesFor,
   openSidePanel,
   requestAndForwardCapture,
+  toggleSidePanel,
 } from "./capture-flow";
 import { UNSUPPORTED_URL_REGEX } from "@/constants/support-capture-sites";
 import { WEBSITE_URL } from "@/constants/site";
@@ -20,11 +21,10 @@ export function setupContextMenuActions() {
     if (!tab) return;
     // Add browser-specific excluded URLs if needed (like extensions own pages)
     switch (info.menuItemId) {
-      case CMI_ID.OPEN_SIDE_PANEL: {
-        // Opened straight from the click: both sidePanel.open() and Firefox's
-        // sidebarAction.open() are only allowed while the user action is still
-        // in scope, which ends at the first await.
-        openSidePanel(tab.windowId); // TODO: Replace with toggle functionality, rather than just opening.
+      case CMI_ID.TOGGLE_SIDE_PANEL: {
+        // Toggled straight from the click: opening is only allowed while the
+        // user action is still in scope, which ends at the first await.
+        toggleSidePanel(tab.windowId);
         break;
       }
       case CMI_ID.OPEN_LEXICORA: {
