@@ -29,7 +29,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   {
     id: CMI_ID.TOGGLE_SIDE_PANEL,
     // Closes an open panel too, like the keyboard shortcut.
-    title: "Open or close Lexicora side panel",
+    title: "Toggle side panel",
     contexts: ["all"],
   },
   {
@@ -57,24 +57,60 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   {
     id: "separator2",
     type: "separator",
-    contexts: ["page", "selection", "link", "image", "video", "audio", "frame", "editable"], // TODO: Potentially change to just "all". (Check Firefox)
+    contexts: [
+      "page",
+      "selection",
+      "link",
+      "image",
+      "video",
+      "audio",
+      "frame",
+      "editable",
+    ], // TODO: Potentially change to just "all". (Check Firefox)
   },
   {
     id: CMI_ID.CAPTURE_PAGE_AI_ASSISTED,
     title: "Capture Page with AI",
-    contexts: ["page", "selection", "link", "image", "video", "audio", "frame", "editable"],
+    contexts: [
+      "page",
+      "selection",
+      "link",
+      "image",
+      "video",
+      "audio",
+      "frame",
+      "editable",
+    ],
     documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   },
   {
     id: CMI_ID.CAPTURE_PAGE_AS_IS,
     title: "Capture Page",
-    contexts: ["page", "selection", "link", "image", "video", "audio", "frame", "editable"], // TODO: Potentially change to just "all". (Check Firefox)
+    contexts: [
+      "page",
+      "selection",
+      "link",
+      "image",
+      "video",
+      "audio",
+      "frame",
+      "editable",
+    ], // TODO: Potentially change to just "all". (Check Firefox)
     documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   },
   {
     id: CMI_ID.CAPTURE_PAGE_BOOKMARK,
     title: "Bookmark Page",
-    contexts: ["page", "selection", "link", "image", "video", "audio", "frame", "editable"], // TODO: Potentially change to just "all". (Check Firefox)
+    contexts: [
+      "page",
+      "selection",
+      "link",
+      "image",
+      "video",
+      "audio",
+      "frame",
+      "editable",
+    ], // TODO: Potentially change to just "all". (Check Firefox)
     documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   },
   // {
@@ -93,7 +129,9 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
 export const CONTEXT_MENU_ITEMS_WEBSITE: string[] = [CMI_ID.OPEN_LEXICORA];
 
 /** Items shown only while `FEATURES.WEBSITE` is off, in the website item's place. */
-export const CONTEXT_MENU_ITEMS_NO_WEBSITE: string[] = [CMI_ID.TOGGLE_SIDE_PANEL];
+export const CONTEXT_MENU_ITEMS_NO_WEBSITE: string[] = [
+  CMI_ID.TOGGLE_SIDE_PANEL,
+];
 
 /**
  * Use this to disable ai context menu items if the feature is not available or disabled.
