@@ -41,6 +41,7 @@ import { convertBlockNoteBlocks } from "@/lib/utils/block-converter";
 import { uuidv7 } from "uuidv7";
 
 import { ArrowUpIcon, SaveIcon } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 // TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 
 function EntryCreatePage() {
@@ -210,8 +211,7 @@ function EntryCreatePage() {
       const isContentEmpty =
         !firstContent ||
         (Array.isArray(firstContent) && firstContent.length === 0);
-      const isChildrenEmpty =
-        !firstChildren || firstChildren.length === 0;
+      const isChildrenEmpty = !firstChildren || firstChildren.length === 0;
 
       return (
         currentBlocks.length === 1 &&
@@ -348,16 +348,7 @@ function EntryCreatePage() {
           <div className="relative">
             {/*Unused css classes for div className="relative overflow-x-hidden min-h-[55vh] mt-1" */}
             {/* --- SKELETON LOADER OVERLAY (update to shadcn-ui component later)--- */}
-            {showSkeleton && (
-              <div className="absolute inset-0 z-10 p-2 space-y-4 animate-pulse">
-                <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-3/4"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-5/6"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-4/5"></div>
-              </div>
-            )}
+            {showSkeleton && <Skeleton className="h-50 w-full" />}
             {/* --- ACTUAL EDITOR --- */}
             {/* It is ALWAYS mounted to prevent the Floating UI crash. We just hide it visually until ready. */}
             <div
@@ -413,7 +404,9 @@ function EntryCreatePage() {
                   "transition-all duration-150 py-2.5",
                   "text-base! field-sizing-content resize-none max-h-[35vh] min-h-10.5 focus-visible:ring-0 scrollbar-thin scrollbar-bg-transparent",
                   "border-neutral-400/50 dark:not-focus-visible:border-neutral-400/40 dark:bg-[#121724]/85 dark:focus-visible:bg-[#121724] bg-[#fefefe]/85 focus-visible:bg-[#fefefe]",
-                  isPromptActive ? "pb-11 backdrop-blur-lg" : "backdrop-blur-md",
+                  isPromptActive
+                    ? "pb-11 backdrop-blur-lg"
+                    : "backdrop-blur-md",
                   isAtBottom
                     ? "shadow-none"
                     : "shadow-[0_-6px_6px_1px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_1px_#000010]/25",
