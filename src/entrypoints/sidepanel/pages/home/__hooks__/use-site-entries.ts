@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRxCollection } from "rxdb/plugins/react";
 
 import type { BlockDocType } from "@/db/schemas/block";
+import { siteCount$ } from "@/db/site-count";
 import type { EntryDocType } from "@/db/schemas/entry";
 import {
   convertDbBlocksToBlockNote,
@@ -79,21 +80,22 @@ export function useSiteEntries(activeTab: Browser.tabs.Tab | null): SiteEntries 
     return () => sub.unsubscribe();
   }, [entriesCollection, hostKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Counted separately: the list above is capped, the total is not. An
-  // indexed count, so it stays cheap however much comes from the site.
+  // Counted separately: the list above is capped, the total is not. See
+  // db/site-count for why it is one indexed count per spelling of the host.
   useEffect(() => {
     if (!entriesCollection || hostKey === "") {
       setSiteTotal(0);
       return;
     }
-    const sub = entriesCollection
-      .count({
-        selector: { hostnameUrl: { $in: hostKey.split("|") }, isArchived: false },
-      })
-      .$.subscribe({
-        next: setSiteTotal,
-        error: () => setSiteTotal(0),
-      });
+    const sub = siteCount$(entriesCollection, hostKey.split("|")).subscribe({
+      next: setSiteTotal,
+      error: (error) => {
+        // Logged rather than swallowed: a count RxDB refuses otherwise shows as
+        // a plausible-looking zero, which is how this broke unnoticed before.
+        console.error("Failed to count entries from this site:", error);
+        setSiteTotal(0);
+      },
+    });
     return () => sub.unsubscribe();
   }, [entriesCollection, hostKey]);
 

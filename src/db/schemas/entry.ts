@@ -66,9 +66,13 @@ const entrySchemaLiteral = {
     //* until accounts exist — but nothing queries by it, so the index only cost
     //* a key per document. Re-add it when sync actually filters by user.
     //'userId',
-    //* Used by the home page to find entries captured from the site in the
-    //* active tab, and the page itself among them.
-    'hostnameUrl',
+    //* Entries captured from one site: the home page's "From this site" list
+    //* and its total, and the library's `site:` search. Compound because a
+    //* count on Dexie must be answerable from an index alone — with
+    //* `hostnameUrl` by itself, filtering out archived entries was not, and
+    //* RxDB refused the count. Leading with `hostnameUrl` still serves the
+    //* queries that filter by host alone.
+    ['hostnameUrl', 'isArchived'],
     ['isPinned', 'updatedAt'],
     ['isArchived', 'isPinned', 'updatedAt'],
     ['isFavorite', 'isArchived', 'isPinned', 'updatedAt'],
