@@ -22,6 +22,7 @@ web-ext.config.ts
 .zed/*
 # !.vscode/mcp.json
 !.vscode/extensions.json
+!.vscode/settings.json
 .idea
 .DS_Store
 *.suo
