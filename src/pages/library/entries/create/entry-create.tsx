@@ -305,9 +305,10 @@ function EntryCreatePage() {
                 topics={topics}
                 overrideExisting={capturedData?.misc?.overrideExisting ?? true}
                 expandMetadata={capturedData?.misc?.metadataOnly === true}
+                isCapturePending={showSkeleton}
                 initialData={{
                   title: capturedData?.title || searchParams.get("title") || "",
-                  topicId: searchParams.get("topicId") || "",
+                  topicId: searchParams.get("topicId") || undefined,
                   faviconUrl: capturedData?.metadata?.faviconUrl || "",
                   url: capturedData?.location?.href || "",
                   siteName:

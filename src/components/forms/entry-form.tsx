@@ -111,6 +111,12 @@ interface EntryFormProps {
    * can still collapse it, and captures without it leave it as it was.
    */
   expandMetadata?: boolean;
+  /**
+   * Set while a page capture is still loading. The fields the capture fills
+   * are read-only until it arrives, since it would overwrite anything typed
+   * into them in the meantime.
+   */
+  isCapturePending?: boolean;
   topics: TopicDocType[];
   onSubmit: (data: EntryFormData) => void | Promise<void>;
   isLoading?: boolean;
@@ -123,6 +129,7 @@ export function EntryForm({
   initialData,
   overrideExisting = true,
   expandMetadata = false,
+  isCapturePending = false,
   topics,
   onSubmit,
   isLoading,
@@ -186,6 +193,8 @@ export function EntryForm({
   }, [topics, watchTopicId]);
 
   const currentDescription = watch("description") || "";
+  const capturePlaceholder = (placeholder: string) =>
+    isCapturePending ? "Loading page data..." : placeholder;
 
   useEffect(() => {
     if (!initialData) return;
@@ -491,7 +500,8 @@ export function EntryForm({
           <InputGroup>
             <InputGroupInput
               id="title"
-              placeholder="Entry Title"
+              placeholder={capturePlaceholder("Entry Title")}
+              readOnly={isCapturePending}
               aria-invalid={!!errors.title}
               {...register("title")}
               className="text-base! py-2"
@@ -576,7 +586,10 @@ export function EntryForm({
               <InputGroup>
                 <InputGroupTextarea
                   id="description"
-                  placeholder="A brief description of this entry"
+                  placeholder={capturePlaceholder(
+                    "A brief description of this entry",
+                  )}
+                  readOnly={isCapturePending}
                   rows={3}
                   className="min-h-16 max-h-48 resize-none scrollbar-thin scrollbar-bg-transparent"
                   aria-invalid={!!errors.description}
@@ -606,7 +619,8 @@ export function EntryForm({
                 </Label>
                 <Input
                   id="siteName"
-                  placeholder="e.g. GitHub"
+                  placeholder={capturePlaceholder("e.g. GitHub")}
+                  readOnly={isCapturePending}
                   aria-invalid={!!errors.siteName}
                   {...register("siteName")}
                 />
@@ -630,7 +644,8 @@ export function EntryForm({
                 </Label>
                 <Input
                   id="languageCode"
-                  placeholder="e.g. en"
+                  placeholder={capturePlaceholder("e.g. en")}
+                  readOnly={isCapturePending}
                   aria-invalid={!!errors.languageCode}
                   {...register("languageCode")}
                 />
@@ -651,7 +666,10 @@ export function EntryForm({
               </Label>
               <Input
                 id="url"
-                placeholder="e.g. https://example.com/path"
+                placeholder={capturePlaceholder(
+                  "e.g. https://example.com/path",
+                )}
+                readOnly={isCapturePending}
                 aria-invalid={!!errors.url}
                 {...register("url")}
               />
@@ -687,7 +705,10 @@ export function EntryForm({
                 </Avatar.Root>
                 <Input
                   id="faviconUrl"
-                  placeholder="e.g. https://example.com/favicon.ico"
+                  placeholder={capturePlaceholder(
+                    "e.g. https://example.com/favicon.ico",
+                  )}
+                  readOnly={isCapturePending}
                   aria-invalid={!!errors.faviconUrl}
                   {...register("faviconUrl")}
                 />
@@ -715,7 +736,7 @@ export function EntryForm({
                   title="Fetch current tab's metadata"
                   onClick={handleFetchMetadata}
                   className="shrink-0 text-muted-foreground not-dark:hover:bg-muted/50"
-                  disabled={!isSupported}
+                  disabled={!isSupported || isCapturePending}
                 >
                   <RefreshCw className="size-4" /> Refresh Metadata
                 </Button>
