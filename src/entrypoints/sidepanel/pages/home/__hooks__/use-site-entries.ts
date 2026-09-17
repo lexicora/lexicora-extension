@@ -43,6 +43,11 @@ export interface SiteEntries extends SiteSuggestions {
    * and saying "captured" for one overstates what is stored.
    */
   capturedPageHasContent: boolean;
+  /**
+   * Every entry from this site, the captured page included and archived ones
+   * excluded — the number the library shows for the same `site:` search.
+   */
+  siteTotal: number;
 }
 
 export function useSiteEntries(activeTab: Browser.tabs.Tab | null): SiteEntries {
@@ -50,6 +55,7 @@ export function useSiteEntries(activeTab: Browser.tabs.Tab | null): SiteEntries 
   const blocksCollection = useRxCollection("blocks");
   const [siteEntries, setSiteEntries] = useState<EntryDocType[]>([]);
   const [capturedPageHasContent, setCapturedPageHasContent] = useState(false);
+  const [siteTotal, setSiteTotal] = useState(0);
 
   const hosts = hostVariants(activeTab?.url);
   const hostKey = hosts.join("|");
@@ -72,6 +78,24 @@ export function useSiteEntries(activeTab: Browser.tabs.Tab | null): SiteEntries 
       });
     return () => sub.unsubscribe();
   }, [entriesCollection, hostKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Counted separately: the list above is capped, the total is not. An
+  // indexed count, so it stays cheap however much comes from the site.
+  useEffect(() => {
+    if (!entriesCollection || hostKey === "") {
+      setSiteTotal(0);
+      return;
+    }
+    const sub = entriesCollection
+      .count({
+        selector: { hostnameUrl: { $in: hostKey.split("|") }, isArchived: false },
+      })
+      .$.subscribe({
+        next: setSiteTotal,
+        error: () => setSiteTotal(0),
+      });
+    return () => sub.unsubscribe();
+  }, [entriesCollection, hostKey]);
 
   const suggestions = splitSiteEntries(siteEntries, locationOf(activeTab?.url));
   const capturedId = suggestions.capturedPage?.id ?? null;
@@ -103,5 +127,6 @@ export function useSiteEntries(activeTab: Browser.tabs.Tab | null): SiteEntries 
     ...suggestions,
     hostname: hosts[0] ?? null,
     capturedPageHasContent,
+    siteTotal,
   };
 }

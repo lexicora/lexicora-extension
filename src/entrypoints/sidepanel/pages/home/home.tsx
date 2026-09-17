@@ -36,8 +36,13 @@ function HomePage() {
     isSupported,
     activeTab,
   } = useCaptureActiveTab();
-  const { capturedPage, fromThisSite, hostname, capturedPageHasContent } =
-    useSiteEntries(activeTab);
+  const {
+    capturedPage,
+    fromThisSite,
+    hostname,
+    capturedPageHasContent,
+    siteTotal,
+  } = useSiteEntries(activeTab);
   const [promptText, setPromptText] = useState("");
 
   const {
@@ -195,13 +200,13 @@ function HomePage() {
                   />
                 ) : null
               }
-              moreLink={
-                // The list is capped so one site cannot crowd out everything
-                // else; the rest are one search away, filtered to the host
-                // rather than merely mentioning it.
-                hostname && fromThisSite.length > siteEntries.length
+              headerLink={
+                // Always there, not only when the list is cut short: it is the
+                // way to everything from this site, filtered to the host.
+                hostname
                   ? {
-                      label: `Show all from ${hostname}`,
+                      label: `Total ${siteTotal}`,
+                      title: `View all from ${hostname}`,
                       onClick: () =>
                         navigate(
                           `/library?tab=entries&q=${encodeURIComponent(siteSearchQuery(hostname))}`,

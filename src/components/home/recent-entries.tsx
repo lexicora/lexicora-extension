@@ -15,8 +15,11 @@ interface RecentEntriesProps {
    * which belongs to this site but is a statement rather than a suggestion.
    */
   leadingRow?: React.ReactNode;
-  /** Shown under the list when it is only part of what there is. */
-  moreLink?: { label: string; onClick: () => void };
+  /**
+   * A small link at the right of the heading to the full list in the library,
+   * as the topic page does for its favourites ("Total 11 ›").
+   */
+  headerLink?: { label: string; title?: string; onClick: () => void };
 }
 
 /**
@@ -29,7 +32,7 @@ export function RecentEntries({
   entries,
   label = "Recent entries",
   leadingRow,
-  moreLink,
+  headerLink,
 }: RecentEntriesProps) {
   const navigate = useNavigate();
 
@@ -38,9 +41,21 @@ export function RecentEntries({
   return (
     <section className="mt-4 shrink-0">
       <Separator className="mx-auto max-w-[calc(100%-8px)] shrink-0" />
-      <h2 className="text-xs font-medium text-muted-foreground text-left ml-2.5 mt-3 mb-1.75 select-none">
-        {label}
-      </h2>
+      <div className="flex items-center gap-1.5 ml-2.5 mr-1.5 mt-3 mb-1.75">
+        <h2 className="text-xs font-medium text-muted-foreground text-left select-none">
+          {label}
+        </h2>
+        {headerLink && (
+          <button
+            className="ml-auto flex items-center gap-1 text-xs text-muted-foreground hover:text-lc-muted-foreground-hover hover:underline underline-offset-2 transition-colors cursor-pointer"
+            title={headerLink.title}
+            onClick={headerLink.onClick}
+          >
+            <span className="font-medium!">{headerLink.label}</span>
+            <ChevronRightIcon className="size-3.5 shrink-0 opacity-70" />
+          </button>
+        )}
+      </div>
       {leadingRow && (
         <div className={cn(entries.length !== 0 && "mb-2")}>{leadingRow}</div>
       )}
@@ -75,16 +90,6 @@ export function RecentEntries({
           </Button>
         ))}
       </div>
-      {moreLink && (
-        <Button
-          variant="link"
-          size="sm"
-          onClick={moreLink.onClick}
-          className="self-center -mb-1 mt-0.5"
-        >
-          {moreLink.label}
-        </Button>
-      )}
     </section>
   );
 }
