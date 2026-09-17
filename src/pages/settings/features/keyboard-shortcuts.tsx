@@ -54,17 +54,23 @@ function ShortcutRow({
   keys,
   muted,
   rounding,
+  noTopRounding = false,
 }: {
   description: string;
   keys: string[];
   muted?: boolean;
   rounding: string;
+  noTopRounding?: boolean;
 }) {
   return (
     <Item
       variant="muted"
       size="sm"
-      className={cn("transition-none bg-card rounded-2xl py-2.5", rounding)}
+      className={cn(
+        "transition-none bg-card rounded-2xl py-2.5",
+        rounding,
+        noTopRounding && "rounded-t-none",
+      )}
     >
       <ItemContent>
         <span className="text-sm text-pretty text-left">{description}</span>
@@ -139,8 +145,8 @@ function KeyboardShortcutsSettingsPage() {
             </ItemHeader>
             <ItemContent>
               <ItemDescription className="text-pretty line-clamp-none">
-                Browser-wide shortcuts work on any page, whether or not
-                Lexicora is open.
+                Browser-wide shortcuts work on any page, whether or not Lexicora
+                is open.
               </ItemDescription>
               <ItemDescription className="text-pretty line-clamp-none mt-1.5">
                 Side panel shortcuts need the panel focused — click into it
@@ -194,33 +200,50 @@ function KeyboardShortcutsSettingsPage() {
             <PanelRightIcon className="size-3.5 text-violet-400" /> In the side
             panel
           </Label>
-          {(
-            [
-              ["navigate", "Navigate"],
-              ["act", "Actions"],
-            ] as const
-          ).map(([group, heading]) => {
-            const shortcuts = PANEL_SHORTCUTS.filter((s) => s.group === group);
-            return (
-              <div key={group} className="mt-2 first:mt-0">
-                <p className="text-xs text-muted-foreground ml-2.5 mb-1">
+          <div className="flex flex-col gap-3">
+            {(
+              [
+                ["navigate", "Navigate"],
+                ["act", "Actions"],
+              ] as const
+            ).map(([group, heading]) => {
+              const shortcuts = PANEL_SHORTCUTS.filter(
+                (s) => s.group === group,
+              );
+              return (
+                <div key={group} className="mt-2 first:mt-0">
+                  {/* <p className="text-xs text-muted-foreground ml-2.5 mb-1">
                   {heading}
-                </p>
-                <div className="rounded-2xl not-dark:shadow-xs">
-                  {shortcuts.map((shortcut, index) => (
-                    <div key={shortcut.action}>
-                      {index > 0 && <SettingsItemSeparator symmetric />}
-                      <ShortcutRow
-                        description={shortcut.description}
-                        keys={panelKeyLabels(shortcut)}
-                        rounding={rowRounding(index, shortcuts.length)}
-                      />
-                    </div>
-                  ))}
+                </p> */}
+                  <Item
+                    variant="muted"
+                    size="sm"
+                    className="bg-card p-1.5 rounded-2xl rounded-b-none"
+                  >
+                    <ItemContent>
+                      <span className="text-sm text-muted-foreground text-pretty text-center">
+                        {heading}
+                      </span>
+                    </ItemContent>
+                  </Item>
+                  <SettingsItemSeparator symmetric />
+                  <div className="rounded-2xl not-dark:shadow-xs">
+                    {shortcuts.map((shortcut, index) => (
+                      <div key={shortcut.action}>
+                        {index > 0 && <SettingsItemSeparator symmetric />}
+                        <ShortcutRow
+                          description={shortcut.description}
+                          keys={panelKeyLabels(shortcut)}
+                          rounding={rowRounding(index, shortcuts.length)}
+                          noTopRounding={index === 0}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
           <div className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2 flex flex-col gap-1.5">
             <p>
               Single keys are ignored while you type in a field or the editor.{" "}
@@ -235,8 +258,8 @@ function KeyboardShortcutsSettingsPage() {
             {IS_MAC && (
               <p>
                 ⌘[ and ⌘] (⌘Ö and ⌘Ä on Swiss and German keyboards) are left to
-                the browser, so they still move the web page's history while
-                the panel is focused.
+                the browser, so they still move the web page's history while the
+                panel is focused.
               </p>
             )}
           </div>
