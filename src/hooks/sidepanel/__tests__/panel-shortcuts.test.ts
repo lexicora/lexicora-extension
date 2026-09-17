@@ -1,5 +1,10 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { resolvePanelShortcut, type ShortcutKeyEvent } from "../panel-shortcuts";
+import { LIBRARY_SHORTCUTS } from "@/constants/shortcuts";
+import {
+  resolvePanelShortcut,
+  resolveShortcut,
+  type ShortcutKeyEvent,
+} from "../panel-shortcuts";
 
 /**
  * Covers which keydowns in the side panel become shortcuts, on each platform.
@@ -173,5 +178,34 @@ describe("ignored events", () => {
     expect(resolvePanelShortcut(press("x"), MAC)).toBeNull();
     expect(resolvePanelShortcut(press("Enter"), MAC)).toBeNull();
     expect(resolvePanelShortcut(press("ArrowLeft"), MAC)).toBeNull();
+  });
+});
+
+describe("library shortcuts", () => {
+  it.each([
+    ["1", "showEntries"],
+    ["2", "showTopics"],
+    ["f", "toggleFavorites"],
+    ["a", "toggleArchived"],
+  ])("maps %s to %s", (key, action) => {
+    expect(resolveShortcut(press(key), LIBRARY_SHORTCUTS, MAC)).toBe(action);
+    expect(resolveShortcut(press(key), LIBRARY_SHORTCUTS, OTHER)).toBe(action);
+  });
+
+  it("stay quiet while typing in the search box", () => {
+    // Typing "fast api" must not toggle favourites on its first letter.
+    const search = element('<input placeholder="Search...">', "input");
+
+    expect(resolveShortcut(press("f", { target: search }), LIBRARY_SHORTCUTS, MAC)).toBeNull();
+    expect(resolveShortcut(press("1", { target: search }), LIBRARY_SHORTCUTS, MAC)).toBeNull();
+  });
+
+  it("are not panel shortcuts, so they do nothing elsewhere", () => {
+    expect(resolvePanelShortcut(press("f"), MAC)).toBeNull();
+    expect(resolvePanelShortcut(press("1"), MAC)).toBeNull();
+  });
+
+  it("leave Shift+F alone, keeping room for a separate shortcut", () => {
+    expect(resolveShortcut(press("F", { shiftKey: true }), LIBRARY_SHORTCUTS, MAC)).toBeNull();
   });
 });

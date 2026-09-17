@@ -34,12 +34,19 @@ import {
 } from "@/components/ui/input-group";
 import { useAppHost } from "@/providers/app-host";
 import { FEATURES } from "@/constants/features";
+import { LIBRARY_SHORTCUTS } from "@/constants/shortcuts";
+import { usePageShortcuts } from "@/hooks/sidepanel/use-page-shortcuts";
 
 // TODO: Potentially make searching faster, when entering a search query, because on every character, a navigation takes place.
 // TODO: Also ensure, that when on a tab, the other tabs should not be rendered and in a way put to sleep, so they don't do unnecessary processing.
 
 // NOTE: Pages are side-panel-first, so `isWindowed` defaults to false. The windowed
 // entrypoint opts in via App.tsx. TODO: migrate host detection to a provider later.
+/** Defined once, outside the component, so the listener is not re-attached. */
+const LIBRARY_PAGE_SHORTCUTS = LIBRARY_SHORTCUTS.filter((shortcut) =>
+  shortcut.pages.includes("library"),
+);
+
 function LibraryPage() {
   const { isWindowed } = useAppHost();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -136,6 +143,19 @@ function LibraryPage() {
       { replace: true, viewTransition: true },
     );
   };
+
+  usePageShortcuts(LIBRARY_PAGE_SHORTCUTS, (action) => {
+    switch (action) {
+      case "showEntries":
+        return handleTabChange("entries");
+      case "showTopics":
+        return handleTabChange("topics");
+      case "toggleFavorites":
+        return handleToggleFilter("favorites", !showFavorites);
+      case "toggleArchived":
+        return handleToggleFilter("archived", !showArchived);
+    }
+  });
 
   const topUIScrollOffset = FEATURES.SIDE_PANEL_TOP_BAR ? 234 : 176;
   // 176 = 234 - 58 (top bar height) = 176, because the top bar is not present in the new side panel design.

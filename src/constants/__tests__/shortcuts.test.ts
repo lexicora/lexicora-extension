@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   BROWSER_COMMANDS,
   COMMAND_ID,
+  LIBRARY_SHORTCUTS,
   PANEL_SHORTCUTS,
   bindingApplies,
   formatBinding,
@@ -83,6 +84,45 @@ describe("panel shortcuts", () => {
   it("lets only save fire while typing", () => {
     const whileTyping = PANEL_SHORTCUTS.filter((s) => s.whileTyping);
     expect(whileTyping.map((s) => s.action)).toEqual(["save"]);
+  });
+});
+
+describe("library shortcuts", () => {
+  const bindingKey = (b: { key: string; mod?: boolean; alt?: boolean; shift?: boolean }) =>
+    `${b.mod ? "mod+" : ""}${b.alt ? "alt+" : ""}${b.shift ? "shift+" : ""}${b.key}`;
+
+  it.each([true, false])(
+    "never share a key with the panel-wide shortcuts (isMac: %s)",
+    (isMac) => {
+      // Both are listened for on the same keypress, so a shared key would fire
+      // a library action and a panel action at once.
+      const panelKeys = new Set(
+        PANEL_SHORTCUTS.flatMap((s) =>
+          s.bindings.filter((b) => bindingApplies(b, isMac)).map(bindingKey),
+        ),
+      );
+      const clashes = LIBRARY_SHORTCUTS.flatMap((s) =>
+        s.bindings
+          .filter((b) => bindingApplies(b, isMac))
+          .map(bindingKey)
+          .filter((key) => panelKeys.has(key)),
+      );
+
+      expect(clashes).toEqual([]);
+    },
+  );
+
+  it("store keys lower-case, as the resolver compares them", () => {
+    for (const { bindings } of LIBRARY_SHORTCUTS) {
+      for (const { key } of bindings) expect(key).toBe(key.toLowerCase());
+    }
+  });
+
+  it("give the tabs to the Library only, since the topic page has none", () => {
+    const tabs = LIBRARY_SHORTCUTS.filter((s) =>
+      ["showEntries", "showTopics"].includes(s.action),
+    );
+    for (const shortcut of tabs) expect(shortcut.pages).toEqual(["library"]);
   });
 });
 

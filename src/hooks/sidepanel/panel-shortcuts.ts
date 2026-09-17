@@ -3,6 +3,7 @@ import {
   PANEL_SHORTCUTS,
   type KeyBinding,
   type PanelShortcutAction,
+  type Shortcut,
 } from "@/constants/shortcuts";
 
 /**
@@ -66,18 +67,31 @@ function matchesBinding(
   return event.key.toLowerCase() === binding.key;
 }
 
-export function resolvePanelShortcut(
+/**
+ * The action a keydown triggers from a list of shortcuts, applying the same
+ * rules to every scope: skipped while typing unless marked otherwise, and
+ * never for an event something else already handled.
+ */
+export function resolveShortcut<A extends string>(
   event: ShortcutKeyEvent,
+  shortcuts: readonly Shortcut<A>[],
   isMac: boolean = IS_MAC,
-): PanelShortcutAction | null {
+): A | null {
   // IME composition (e.g. typing Japanese) sends keydowns that are not commands.
   if (event.defaultPrevented || event.isComposing) return null;
 
   const typing = isKeyOwnedByTarget(event.target);
-  const shortcut = PANEL_SHORTCUTS.find(
+  const shortcut = shortcuts.find(
     (s) =>
       (!typing || s.whileTyping) &&
       s.bindings.some((b) => matchesBinding(event, b, isMac)),
   );
   return shortcut?.action ?? null;
+}
+
+export function resolvePanelShortcut(
+  event: ShortcutKeyEvent,
+  isMac: boolean = IS_MAC,
+): PanelShortcutAction | null {
+  return resolveShortcut(event, PANEL_SHORTCUTS, isMac);
 }

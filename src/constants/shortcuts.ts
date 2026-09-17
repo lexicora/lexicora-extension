@@ -123,15 +123,19 @@ export interface KeyBinding {
   platform?: "mac" | "other";
 }
 
-export interface PanelShortcut {
-  action: PanelShortcutAction;
+/** A shortcut of any scope: the panel-wide set, or one page's own. */
+export interface Shortcut<A extends string = string> {
+  action: A;
   /** Alternatives; any one triggers the action. All that apply are shown in Settings. */
   bindings: KeyBinding[];
   description: string;
-  /** Grouping for the settings page. */
-  group: "navigate" | "act";
   /** Also fires while typing in a field or the editor. Only ⌘/Ctrl+S needs this. */
   whileTyping?: boolean;
+}
+
+export interface PanelShortcut extends Shortcut<PanelShortcutAction> {
+  /** Grouping for the settings page. */
+  group: "navigate" | "act";
 }
 
 /**
@@ -273,3 +277,51 @@ export function formatBinding(binding: KeyBinding, isMac: boolean): string {
   if (mods.length === 0) return key;
   return isMac ? `${mods.join("")}${key}` : `${mods.join("+")}+${key}`;
 }
+
+export type LibraryShortcutAction =
+  | "showEntries"
+  | "showTopics"
+  | "toggleFavorites"
+  | "toggleArchived";
+
+export interface LibraryShortcut extends Shortcut<LibraryShortcutAction> {
+  /** Where it works: the tabs only exist on the Library itself. */
+  pages: Array<"library" | "topicEntries">;
+}
+
+/**
+ * Shortcuts that only exist on the library's list pages, handled by the page
+ * that owns the state they change (see `usePageShortcuts`). They are listened
+ * for alongside the panel-wide set, so they must never share a key with it — a
+ * test holds that.
+ *
+ * Tabs get direct keys rather than one that switches back and forth, so where
+ * a key lands never depends on where you are — and a third tab would simply be
+ * `3`.
+ */
+export const LIBRARY_SHORTCUTS: LibraryShortcut[] = [
+  {
+    action: "showEntries",
+    bindings: [{ key: "1" }],
+    description: "Show entries",
+    pages: ["library"],
+  },
+  {
+    action: "showTopics",
+    bindings: [{ key: "2" }],
+    description: "Show topics",
+    pages: ["library"],
+  },
+  {
+    action: "toggleFavorites",
+    bindings: [{ key: "f" }],
+    description: "Only favorites, or show all again",
+    pages: ["library", "topicEntries"],
+  },
+  {
+    action: "toggleArchived",
+    bindings: [{ key: "a" }],
+    description: "Only archived, or show all again",
+    pages: ["library", "topicEntries"],
+  },
+];

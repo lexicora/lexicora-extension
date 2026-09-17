@@ -16,8 +16,9 @@ import {
   bindingApplies,
   COMMAND_DESCRIPTIONS,
   formatBinding,
+  LIBRARY_SHORTCUTS,
   PANEL_SHORTCUTS,
-  type PanelShortcut,
+  type Shortcut,
 } from "@/constants/shortcuts";
 import { IS_MAC } from "@/hooks/sidepanel/panel-shortcuts";
 import { cn } from "@/lib/utils";
@@ -43,7 +44,7 @@ function Kbd({
 }
 
 /** Every binding of a shortcut that works on this platform, as keycap labels. */
-function panelKeyLabels({ bindings }: PanelShortcut): string[] {
+function panelKeyLabels({ bindings }: Shortcut): string[] {
   return bindings
     .filter((binding) => bindingApplies(binding, IS_MAC))
     .map((binding) => formatBinding(binding, IS_MAC));
@@ -105,6 +106,28 @@ async function openBrowserShortcutSettings() {
     await browser.tabs.create({ url: "chrome://extensions/shortcuts" });
   }
 }
+
+/**
+ * The panel-wide shortcuts by group, then the Library's own — which only work
+ * on the library's list pages, and say so in their heading.
+ */
+const SHORTCUT_SECTIONS: Array<{
+  group: string;
+  heading: string;
+  shortcuts: readonly Shortcut[];
+}> = [
+  {
+    group: "navigate",
+    heading: "Navigate",
+    shortcuts: PANEL_SHORTCUTS.filter((s) => s.group === "navigate"),
+  },
+  {
+    group: "act",
+    heading: "Actions",
+    shortcuts: PANEL_SHORTCUTS.filter((s) => s.group === "act"),
+  },
+  { group: "library", heading: "In the Library", shortcuts: LIBRARY_SHORTCUTS },
+];
 
 function KeyboardShortcutsSettingsPage() {
   const [commands, setCommands] = useState<Browser.commands.Command[] | null>(
@@ -201,15 +224,7 @@ function KeyboardShortcutsSettingsPage() {
             panel
           </Label>
           <div className="flex flex-col gap-3">
-            {(
-              [
-                ["navigate", "Navigate"],
-                ["act", "Actions"],
-              ] as const
-            ).map(([group, heading]) => {
-              const shortcuts = PANEL_SHORTCUTS.filter(
-                (s) => s.group === group,
-              );
+            {SHORTCUT_SECTIONS.map(({ group, heading, shortcuts }) => {
               return (
                 <div key={group} className="mt-2 first:mt-0">
                   {/* <p className="text-xs text-muted-foreground ml-2.5 mb-1">

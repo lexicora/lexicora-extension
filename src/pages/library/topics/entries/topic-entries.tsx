@@ -27,6 +27,13 @@ import {
 import { useRxCollection } from "rxdb/plugins/react";
 import { useAppHost } from "@/providers/app-host";
 import { FEATURES } from "@/constants/features";
+import { LIBRARY_SHORTCUTS } from "@/constants/shortcuts";
+import { usePageShortcuts } from "@/hooks/sidepanel/use-page-shortcuts";
+
+/** Defined once, outside the component, so the listener is not re-attached. */
+const TOPIC_ENTRIES_SHORTCUTS = LIBRARY_SHORTCUTS.filter((shortcut) =>
+  shortcut.pages.includes("topicEntries"),
+);
 
 function TopicEntriesPage() {
   const { isWindowed } = useAppHost();
@@ -116,6 +123,14 @@ function TopicEntriesPage() {
       if (pressed) setShowFavorites(false);
     }
   };
+
+  usePageShortcuts(TOPIC_ENTRIES_SHORTCUTS, (action) => {
+    if (action === "toggleFavorites") {
+      handleToggleFilter("favorites", !showFavorites);
+    } else if (action === "toggleArchived") {
+      handleToggleFilter("archived", !showArchived);
+    }
+  });
 
   const topUIScrollOffset = FEATURES.SIDE_PANEL_TOP_BAR ? 185 : 127;
   // 127 = 234 - 107 (top bar height) = 127, because the top bar is not present in the new side panel design.
