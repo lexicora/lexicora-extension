@@ -12,6 +12,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Focus rings only while navigating with the keyboard — see lib/input-modality.
+   Overrides Tailwind's built-in variant, so every focus-visible: utility in the
+   app follows it without changes. Text fields are exempt: they show focus on a
+   click too, as browsers do, because the caret needs finding. */
+@custom-variant focus-visible (&:focus-visible:is([data-input-modality="keyboard"] *, input, textarea, select, [contenteditable]:not([contenteditable="false"])));
+
 @custom-variant active-view-transition (&:is(html:active-view-transition *));
 
 /* Data attribute variants for shadcn-ui components */
@@ -188,6 +194,13 @@
 @layer base {
   * {
     @apply border-border outline-ring/50 scroll-smooth;
+  }
+  /* The browser's default focus outline, for elements with no focus styles of
+     their own (the bottom navigation links, for one), under the same rule as
+     the focus-visible variant above. */
+  :root:not([data-input-modality="keyboard"])
+    :focus-visible:not(input, textarea, select, [contenteditable]:not([contenteditable="false"])) {
+    outline: none;
   }
   body {
     @apply bg-background text-foreground;

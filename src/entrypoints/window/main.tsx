@@ -15,6 +15,10 @@ import "@fontsource/jetbrains-mono/300.css";
 import "@fontsource/jetbrains-mono/400.css";
 import "../../assets/styles/globals.css";
 import App from "./App.tsx";
+import { installInputModality } from "@/lib/input-modality";
+
+// Focus rings for keyboard navigation only, not for shortcut keys.
+installInputModality();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
