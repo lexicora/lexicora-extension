@@ -122,18 +122,11 @@ html:has(
   padding-inline-start: 50px; /*TODO: Maybe increase to 52px later*/
   padding-inline-end: 8px !important;
   /*TODO: Maybe revert inline padding to default if enough space is available*/
-  min-height: 200px;
+  min-height: var(--lc-editor-min-height);
   border: 1px solid var(--input); /*was: var(--input)*/
   box-shadow:
     0 1px 2px 0 rgba(0, 0, 0, 0.05),
     0 1px 3px 0 rgba(0, 0, 0, 0.05);
-}
-
-/* The editable editor grows with the viewport so an empty entry reads as a
-   writing surface in tall windows. Read-only keeps the 200px floor above, and
-   the create page's skeleton uses the same variable (see globals.css). */
-.bn-root[data-color-scheme] .bn-editor[contenteditable="true"] {
-  min-height: var(--lc-editor-min-height);
 }
 
 .bn-root[data-color-scheme] .bn-editor[contenteditable] img,
