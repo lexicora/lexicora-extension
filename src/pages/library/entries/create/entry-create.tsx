@@ -381,7 +381,14 @@ function EntryCreatePage() {
             <div className="relative">
               {/*Unused css classes for div className="relative overflow-x-hidden min-h-[55vh] mt-1" */}
               {/* --- SKELETON LOADER OVERLAY (update to shadcn-ui component later)--- */}
-              {showSkeleton && <Skeleton className="h-50 w-full" />}
+              {showSkeleton && (
+                <Skeleton
+                  className={cn(
+                    "h-50 w-full",
+                    editorWide.isWide && "rounded-none",
+                  )}
+                />
+              )}
               {/* --- ACTUAL EDITOR --- */}
               {/* It is ALWAYS mounted to prevent the Floating UI crash. We just hide it visually until ready. */}
               <div
