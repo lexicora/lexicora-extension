@@ -29,7 +29,9 @@ import {
 import { useRxCollection } from "rxdb/plugins/react";
 import { toast } from "sonner";
 import { cleanupNow } from "@/db/cleanup";
+import { clearAllData } from "@/db/clear-all";
 import { Label } from "@/components/ui/label";
+import { SettingsItemSeparator } from "@/components/settings";
 
 /** Disables every action while one is running — the purge holds a write lock. */
 type BusyAction = "cleanup" | "clear";
@@ -41,7 +43,7 @@ type BusyAction = "cleanup" | "clear";
  * Exporting lives on its own page, so these irreversible actions do not sit
  * next to one that is done routinely.
  */
-function DataSettingsPage() {
+function StorageSettingsPage() {
   const [clearOpen, setClearOpen] = useState(false);
   const [busy, setBusy] = useState<BusyAction | null>(null);
 
@@ -77,22 +79,13 @@ function DataSettingsPage() {
   const handleClear = () => {
     if (!topicsCollection || !entriesCollection || !blocksCollection) return;
 
-    const p = async () => {
-      //* NOTE: `remove()` only soft-deletes (sets `_deleted: true`), so each
-      //* collection is then cleaned up with a zero threshold to physically purge
-      //* the documents from IndexedDB. Requires RxDBCleanupPlugin (see src/db).
-      await Promise.all([
-        topicsCollection.find().remove(),
-        entriesCollection.find().remove(),
-        blocksCollection.find().remove(),
-      ]);
-
-      await cleanupNow({
+    // Soft-deletes then purges, so the rows really leave IndexedDB — see db/clear-all.
+    const p = () =>
+      clearAllData({
         topics: topicsCollection,
         entries: entriesCollection,
         blocks: blocksCollection,
       });
-    };
 
     toast.promise(runExclusive("clear", p), {
       loading: "Clearing all data...",
@@ -113,7 +106,7 @@ function DataSettingsPage() {
           >
             <ItemHeader>
               <ItemMedia variant="icon">
-                <HardDriveIcon className="size-8 text-amber-500" />
+                <HardDriveIcon className="size-8 text-sky-500" />
               </ItemMedia>
             </ItemHeader>
             <ItemContent>
@@ -137,7 +130,7 @@ function DataSettingsPage() {
           >
             <button onClick={handleCleanup} disabled={busy !== null}>
               <ItemMedia variant="icon">
-                <BrushCleaningIcon className="size-5 text-sky-500" />
+                <BrushCleaningIcon className="size-5 text-cyan-500" />
               </ItemMedia>
               <ItemContent>
                 <ItemTitle>
@@ -198,4 +191,4 @@ function DataSettingsPage() {
   );
 }
 
-export default DataSettingsPage;
+export default StorageSettingsPage;

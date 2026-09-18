@@ -9,6 +9,7 @@ import { getRxStorageMemory } from "rxdb/plugins/storage-memory";
 import { RxDBCleanupPlugin } from "rxdb/plugins/cleanup";
 
 import { COLLECTION_SETTINGS } from "../collections";
+import { clearAllData } from "../clear-all";
 
 /**
  * Covers the "Clear All Data" setting (issue #153).
@@ -112,6 +113,19 @@ describe("clear all data", () => {
     // described after reopening the extension.
     expect(await db.collections.topics.find().exec()).toHaveLength(0);
     expect(await db.collections.topics.findOne("a").exec()).toBeNull();
+  });
+
+  it("clearAllData empties every collection and purges the rows", async () => {
+    await db.collections.topics.bulkInsert([makeTopic("a"), makeTopic("b")]);
+
+    await clearAllData({
+      topics: db.collections.topics,
+      entries: db.collections.entries,
+      blocks: db.collections.blocks,
+    });
+
+    expect(await db.collections.topics.find().exec()).toHaveLength(0);
+    expect(await rawDocCount(["a", "b"])).toBe(0);
   });
 
   it("can be re-populated after a clear", async () => {

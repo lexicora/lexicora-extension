@@ -28,6 +28,7 @@ export const blockTypes = [
   "video",
   "audio",
   "table",
+  "alert",
 ] as const;
 
 // (Optional) Export a TypeScript type for use in your frontend components

@@ -10,19 +10,18 @@ import {
   ItemMedia,
 } from "@/components/ui/item";
 import {
-  DatabaseArrowDownIcon,
   DatabaseIcon,
-  DownloadIcon,
   FileBracesCornerIcon,
   FileTextIcon,
-  GlobeIcon,
+  UploadIcon,
 } from "lucide-react";
 import { useRxCollection } from "rxdb/plugins/react";
 import { toast } from "sonner";
-import { downloadBlob } from "@/lib/export/download";
+import { downloadBackup } from "@/lib/backup";
 import { downloadLibrary } from "@/lib/export";
 import { navLock } from "@/lib/navigation-lock";
 import { Label } from "@/components/ui/label";
+import { SettingsItemSeparator } from "@/components/settings";
 
 /** Disables the other action while one is running. */
 type BusyAction = "export" | "export-markdown";
@@ -49,31 +48,13 @@ function ExportSettingsPage() {
   const handleExport = () => {
     if (!topicsCollection || !entriesCollection || !blocksCollection) return;
 
-    const p = async () => {
-      const [topics, entries, blocks] = await Promise.all([
-        topicsCollection.find().exec(),
-        entriesCollection.find().exec(),
-        blocksCollection.find().exec(),
-      ]);
-
-      const data = {
-        exportedAt: new Date().toISOString(),
-        version: 1,
-        topics: topics.map((d) => d.toJSON()),
-        entries: entries.map((d) => d.toJSON()),
-        blocks: blocks.map((d) => d.toJSON()),
-      };
-
-      const blob = new Blob([JSON.stringify(data, null, 2)], {
-        type: "application/json",
+    // The file's shape lives in lib/backup, shared with the Import page.
+    const p = () =>
+      downloadBackup({
+        topics: topicsCollection,
+        entries: entriesCollection,
+        blocks: blocksCollection,
       });
-      const timestamp = new Date()
-        .toISOString()
-        .slice(0, 19)
-        .replace("T", "_")
-        .replace(/:/g, "-");
-      downloadBlob(blob, `lexicora-export-${timestamp}.json`);
-    };
 
     toast.promise(runExclusive("export", p), {
       loading: "Exporting data...",
@@ -133,7 +114,7 @@ function ExportSettingsPage() {
           >
             <ItemHeader>
               <ItemMedia variant="icon">
-                <DownloadIcon className="size-8 text-emerald-500" />
+                <UploadIcon className="size-8 text-emerald-500" />
               </ItemMedia>
             </ItemHeader>
             <ItemContent>

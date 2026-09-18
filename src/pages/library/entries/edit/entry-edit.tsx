@@ -379,9 +379,24 @@ function EntryEditPage() {
         .exec();
       if (!doc) throw new Error("Entry not found");
 
+      // Reconcile blocks: v7 IDs are preserved (update in place), v4 IDs get new v7s (insert).
+      // Only blocks that differ from what is stored are written, and only the
+      // ones the editor no longer has are removed.
+      const newDbBlocks = convertBlockNoteBlocks(editorBlocks, entry.id);
+      const existingBlocks = await blocksCollection
+        .find({ selector: { entryId: entry.id } })
+        .exec();
+      const changedBlocks = pickChangedBlocks(
+        newDbBlocks,
+        existingBlocks.map((b) => b.toJSON() as BlockDocType),
+      );
+      const orphaned = findOrphanedBlocks(newDbBlocks, existingBlocks);
+      const notesChanged = changedBlocks.length > 0 || orphaned.length > 0;
+
       // Saving without edits should not write, and should not move the entry
-      // to the top of the library by refreshing updatedAt. Blocks are compared
-      // separately below.
+      // to the top of the library by refreshing updatedAt. A change to the
+      // notes alone counts as an edit: the library sorts by updatedAt, and a
+      // backup import decides which copy of an entry is newer by it.
       const fields = {
         title: data.title,
         topicId: finalTopicId,
@@ -396,25 +411,16 @@ function EntryEditPage() {
         languageCode: data.languageCode,
         isFavorite: data.isFavorite,
       };
-      if (hasChanges(doc.toJSON() as EntryDocType, fields)) {
+      if (notesChanged || hasChanges(doc.toJSON() as EntryDocType, fields)) {
         await doc.incrementalPatch({
           ...fields,
           updatedAt: new Date().toISOString(),
         });
       }
 
-      // Reconcile blocks: v7 IDs are preserved (update in place), v4 IDs get new v7s (insert).
-      const newDbBlocks = convertBlockNoteBlocks(editorBlocks, entry.id);
-      const newBlockIdSet = new Set(newDbBlocks.map((b) => b.id));
-
-      const existingBlocks = await blocksCollection
-        .find({ selector: { entryId: entry.id } })
-        .exec();
-      const orphaned = existingBlocks.filter((b) => !newBlockIdSet.has(b.id));
-
       await Promise.all(orphaned.map((b) => b.remove()));
-      if (newDbBlocks.length > 0) {
-        await blocksCollection.bulkUpsert(newDbBlocks);
+      if (changedBlocks.length > 0) {
+        await blocksCollection.bulkUpsert(changedBlocks);
       }
     })();
 

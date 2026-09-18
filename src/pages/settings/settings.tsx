@@ -32,6 +32,7 @@ import {
   Settings2Icon,
   ShieldCheckIcon,
   SunMoonIcon,
+  UploadIcon,
   UserIcon,
   UserRoundIcon,
 } from "lucide-react";
@@ -167,16 +168,24 @@ function SettingsPage() {
             <SettingsItem
               to="/settings/data/export"
               size="sm"
-              MediaIcon={DownloadIcon}
+              MediaIcon={UploadIcon}
               mediaIconColor="text-emerald-500"
               itemTitle="Export"
               roundingClass="rounded-b-none"
             />
             <SettingsItem
+              to="/settings/data/import"
+              size="sm"
+              MediaIcon={DownloadIcon}
+              mediaIconColor="text-cyan-500"
+              itemTitle="Import"
+              roundingClass="rounded-none!"
+            />
+            <SettingsItem
               to="/settings/data/storage"
               size="sm"
               MediaIcon={HardDriveIcon}
-              mediaIconColor="text-amber-500"
+              mediaIconColor="text-sky-500"
               itemTitle="Storage"
               roundingClass="rounded-t-none"
             />

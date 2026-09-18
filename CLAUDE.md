@@ -48,6 +48,8 @@ The `searchBlob` field on both `topics` and `entries` is a denormalized lowercas
 
 Schema migrations are versioned (currently `version: 0` on all collections). RxDB requires a migration strategy when the schema version is bumped.
 
+The JSON backup (Settings → Export / Import) is defined in `src/lib/backup/`: `format.ts` holds the file shape and its zod validation, `import.ts` the three merge modes. The file carries its own `formatVersion`; bump it when the layout changes and teach `parseBackup` to read the old one. Records are compared by `updatedAt`, never by RxDB's `_rev`.
+
 ### Messaging
 
 All extension messaging uses **`@webext-core/messaging`** (`src/lib/messaging.ts`). Message types are defined in `src/constants/messaging.ts` (`MSG` constants) and typed in the `ProtocolMap` interface. `sendMessage` and `onMessage` are the two exported functions used everywhere.
