@@ -348,20 +348,20 @@ function EntryCreatePage() {
           </section>
         </div>
         <div className={editorWide.wrapperClassName}>
-          <div className="flex items-center justify-between mb-1">
+          <div className="flex items-baseline justify-between mb-1 max-w-(--lc-content-max-width) mx-auto">
             <Label
               htmlFor="lc-blocknote-view-new-entry"
               onClick={() => {
                 editor.focus();
               }}
-              className="text-sm ml-1.75"
+              className="text-sm ml-1.75 mt-1.5"
             >
               Content
             </Label>
             <EditorWidthToggle
               isWide={editorWide.isWide}
               onToggle={editorWide.toggle}
-              className="mr-1"
+              className="mr-1.5 h-6.5"
             />
           </div>
           <div className="relative">

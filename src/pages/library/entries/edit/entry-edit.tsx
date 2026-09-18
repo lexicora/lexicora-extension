@@ -208,18 +208,18 @@ function EntryEditContent({
                 isLoading={isSaving}
                 onDirtyChange={setFormIsDirty}
               />
-              <div className="flex items-center justify-between mb-1">
+              <div className="flex items-baseline justify-between mb-1">
                 <Label
                   htmlFor="lc-blocknote-view-entry-edit"
                   onClick={() => editor.focus()}
-                  className="text-sm ml-1"
+                  className="text-sm ml-1 mt-1.5"
                 >
                   Content
                 </Label>
                 <EditorWidthToggle
                   isWide={editorWide.isWide}
                   onToggle={editorWide.toggle}
-                  className="mr-0.5"
+                  className="mr-0.75 h-6.5"
                 />
               </div>
             </div>
