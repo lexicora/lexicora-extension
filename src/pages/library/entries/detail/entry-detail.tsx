@@ -71,7 +71,6 @@ function EntryContentViewer({
     <BlockNoteView
       editor={editor}
       editable={false}
-      className="text-left text-pretty select-text"
       id="lc-blocknote-view-entry-detail"
     />
   );
@@ -356,6 +355,8 @@ function EntryDetailPage() {
               isWide={editorWide.isWide}
               onToggle={editorWide.toggle}
               disabled={!hasContent}
+              titleWide="Narrow content"
+              titleNarrow="Widen content"
               className="size-9 rounded-lg"
             />
             <DropdownMenu>

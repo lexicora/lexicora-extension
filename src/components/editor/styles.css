@@ -173,7 +173,8 @@ html:has(
     flex-direction: column-reverse;*/
   /*Color picker above delete*/
   margin-left: 24px;
-  margin-bottom: 112px;
+  /*margin-bottom: 112px;*/
+  /** Disabled due to FEATURES.* (no bottom/top UI) */
 }
 
 /*TODO: Maybe enable later*/
@@ -269,8 +270,10 @@ html:has(
   [data-radix-popper-content-wrapper]
   .bn-table-handle-menu
   [data-radix-menu-content].bn-color-picker-dropdown {
-  margin-bottom: 110px;
+  /* margin-bottom: 110px; */
   margin-top: 1px;
+  /** Disabled due to FEATURES.* (no bottom/top UI) */
+  margin-bottom: 6px;
 }
 
 /*.bn-root[data-color-scheme]
@@ -284,9 +287,11 @@ html:has(
   [data-radix-popper-content-wrapper]
   .bn-menu-dropdown.bn-drag-handle-menu
   [data-radix-menu-content].bn-color-picker-dropdown {
-  max-height: calc(100vh - 268px);
-  margin-bottom: 160px;
-  /*transform: translateY(-112px) !important;*/
+  /* max-height: calc(100vh - 268px);
+  margin-bottom: 160px; */
+  /** Disabled due to FEATURES.* (no bottom/top UI) */
+  max-height: calc(100vh - 66px);
+  margin-bottom: 6px;
 }
 
 /*Moved to a different and moe optimal selector above (see line: 85)*/

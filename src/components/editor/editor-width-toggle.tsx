@@ -12,11 +12,15 @@ export function EditorWidthToggle({
   isWide,
   onToggle,
   disabled = false,
+  titleWide = "Narrow editor",
+  titleNarrow = "Widen editor",
   className,
 }: {
   isWide: boolean;
   onToggle: () => void;
   disabled?: boolean;
+  titleWide?: string;
+  titleNarrow?: string;
   className?: string;
 }) {
   const Icon = isWide ? ChevronsRightLeftIcon : ChevronsLeftRightIcon;
@@ -25,7 +29,7 @@ export function EditorWidthToggle({
       type="button"
       variant="ghost"
       size="icon-sm"
-      title={isWide ? "Narrow editor" : "Widen editor"}
+      title={isWide ? titleWide : titleNarrow}
       aria-pressed={isWide}
       onClick={onToggle}
       disabled={disabled}
@@ -35,9 +39,7 @@ export function EditorWidthToggle({
       )}
     >
       <Icon className="size-4" />
-      <span className="sr-only">
-        {isWide ? "Narrow editor" : "Widen editor"}
-      </span>
+      <span className="sr-only">{isWide ? titleWide : titleNarrow}</span>
     </Button>
   );
 }

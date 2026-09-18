@@ -380,9 +380,7 @@ function EntryCreatePage() {
                 editor={editor}
                 lang={language}
                 id="lc-blocknote-view-new-entry"
-                className="text-left"
                 // TODO: Make prop to control min height of editor.
-                //editable={false}
               />
             </div>
           </div>

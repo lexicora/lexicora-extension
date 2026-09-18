@@ -40,6 +40,7 @@ import {
   getCustomSlashMenuItems,
   type AppBlockNoteEditor,
 } from "./config";
+import { cn } from "@/lib/utils";
 
 export function BlockNoteView({
   editor,
@@ -68,7 +69,11 @@ export function BlockNoteView({
   return (
     <BaseBlockNoteView
       editor={editor}
-      className={className}
+      className={cn(
+        "text-left",
+        !editable && "text-pretty select-text",
+        className,
+      )}
       style={style}
       editable={editable}
       theme={resolvedTheme} // can be left for now
