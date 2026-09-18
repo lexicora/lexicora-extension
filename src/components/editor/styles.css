@@ -596,13 +596,6 @@ html:has(
   border-top: 1px solid #5a6270;
 }
 
-@media (min-width: 728px) {
-  .bn-root[data-color-scheme] .bn-editor[contenteditable="true"] {
-    padding-inline-start: 50px;
-    padding-inline-end: 50px !important;
-  }
-}
-
 /* Link color: light mode uses primary token; dark mode inherits BlockNote default */
 .bn-root[data-color-scheme="light"] .bn-block .bn-block-content a {
   color: oklch(58.8% 0.158 241.966);
@@ -751,13 +744,25 @@ html:has(
   border-radius: 0;
   box-shadow: none;
   padding-inline-start: 62px; /*50px + 12px gutter*/
-  padding-inline-end: 20px !important; /*8px + 12px gutter*/
+  padding-inline-end: calc(var(--lc-scrollbar-offset) + 10px) !important;
+  /*10px + 10px gutter (scrollbar width)*/
 }
 
 [data-editor-wide]
   .bn-root[data-color-scheme]
   .bn-editor[contenteditable="false"] {
-  padding-inline: 20px !important; /*8px + 12px gutter*/
+  padding-inline-start: 20px !important; /*8px + 12px gutter*/
+  padding-inline-end: calc(var(--lc-scrollbar-offset) + 10px) !important;
+  /*10px + 10px gutter (scrollbar width)*/
+}
+
+@media (min-width: 728px) {
+  [data-editor-wide]
+    .bn-root[data-color-scheme]
+    .bn-editor[contenteditable="true"] {
+    padding-inline-start: 50px;
+    padding-inline-end: calc(var(--lc-scrollbar-offset) + 40px) !important;
+  }
 }
 
 [data-editor-wide] .bn-root[data-color-scheme] .bn-editor > .bn-block-group {
