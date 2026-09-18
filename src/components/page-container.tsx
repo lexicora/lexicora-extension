@@ -19,6 +19,13 @@ interface PageContainerProps {
    * once more components need it — for now it is drilled as a prop.
    */
   isWindowed?: boolean;
+  /**
+   * Whether the container applies the page's horizontal gutter (12px on the
+   * left, scrollbar-aware on the right). Pages with a block that must run edge
+   * to edge pass `false` and wrap every other block in `.lc-page-gutter`
+   * themselves; see the rule in App.css for the placement constraint.
+   */
+  gutter?: boolean;
 }
 
 export function PageContainer({
@@ -28,11 +35,13 @@ export function PageContainer({
   className,
   classNameInner,
   isWindowed = false,
+  gutter = true,
 }: React.PropsWithChildren<PageContainerProps>) {
   return (
     <div
       id={id}
       data-windowed={isWindowed || undefined}
+      data-gutter={gutter ? undefined : "false"}
       className={cn("lc-page-container", className)}
     >
       <div

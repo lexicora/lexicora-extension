@@ -37,12 +37,34 @@ body[data-scroll-locked] {
  * PageContainer component renders correctly in each host without a prop.
  */
 .lc-page-container {
+  --lc-page-gutter-left: 12px;
+  --lc-page-gutter-right: calc(var(--lc-scrollbar-offset) + 2px);
   padding: 12px;
-  padding-right: calc(var(--lc-scrollbar-offset) + 2px);
+  padding-left: var(--lc-page-gutter-left);
+  padding-right: var(--lc-page-gutter-right);
   margin-top: 0;
   margin-bottom: 1.5rem;
   -webkit-user-select: none;
   user-select: none;
+}
+
+/*
+ * Opt-out of the container's horizontal gutter for pages where one block must
+ * run edge to edge (the wide entry editor, see useEditorWideMode). The page
+ * then applies the gutter per block with .lc-page-gutter. A gutter block must
+ * be a direct child of .lc-page-container-inner (kept at full width), so the
+ * scrollbar-aware right padding resolves against the whole content-area width
+ * exactly as it does on the container itself. Nested deeper, the 100% inside
+ * --lc-scrollbar-offset would shrink by the padding and the layout-shift
+ * compensation would be off.
+ */
+.lc-page-container[data-gutter="false"] {
+  padding-inline: 0;
+}
+
+.lc-page-gutter {
+  padding-left: var(--lc-page-gutter-left);
+  padding-right: var(--lc-page-gutter-right);
 }
 
 .lc-page-container-inner {
@@ -108,7 +130,8 @@ body[data-scroll-locked] {
 } */
 
 html.sidebar-transitioning {
-  & .lc-page-container {
+  & .lc-page-container,
+  & .lc-page-gutter {
     transition: padding-right 200ms linear;
   }
   & .lc-strip-offset {

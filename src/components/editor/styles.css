@@ -738,3 +738,29 @@ html:has(
 [data-slot="dropdown-menu-radio-item"] .lc-alert-icon {
   color: var(--lc-alert-color);
 }
+
+/* * NOTE: Wide editor (src/hooks/use-editor-wide-mode.ts) */
+/* The block around the editor carries data-editor-wide when the user widens
+   the editor. The surface then runs edge to edge across the content area while
+   the blocks stay capped and centred inside it. The inline padding grows by the
+   12px page gutter the block no longer has, so text keeps its position at
+   viewports narrower than the cap. !important mirrors the base padding rules
+   above; these rules must stay below them. */
+[data-editor-wide] .bn-root[data-color-scheme] .bn-editor {
+  border-inline: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding-inline-start: 62px; /*50px + 12px gutter*/
+  padding-inline-end: 20px !important; /*8px + 12px gutter*/
+}
+
+[data-editor-wide]
+  .bn-root[data-color-scheme]
+  .bn-editor[contenteditable="false"] {
+  padding-inline: 20px !important; /*8px + 12px gutter*/
+}
+
+[data-editor-wide] .bn-root[data-color-scheme] .bn-editor > .bn-block-group {
+  max-width: 62.5rem; /*1000px content column*/
+  margin-inline: auto;
+}

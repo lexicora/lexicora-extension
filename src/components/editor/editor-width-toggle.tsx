@@ -1,12 +1,13 @@
 import { ChevronsLeftRightIcon, ChevronsRightLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useEditorWideAvailable } from "@/hooks/use-editor-wide-mode";
 
 /**
  * Switches the entry content editor between the page's content column and the
- * wide layout (see `useEditorWideMode`). Hidden below 46rem, where the viewport
- * is already narrower than the content column plus the page padding and the
- * toggle would change nothing.
+ * wide layout (see `useEditorWideMode`). Not rendered while the viewport is
+ * too narrow for wide mode to apply, so the toggle and the layout it controls
+ * always agree on the same threshold.
  */
 export function EditorWidthToggle({
   isWide,
@@ -23,6 +24,9 @@ export function EditorWidthToggle({
   titleNarrow?: string;
   className?: string;
 }) {
+  const isAvailable = useEditorWideAvailable();
+  if (!isAvailable) return null;
+
   const Icon = isWide ? ChevronsRightLeftIcon : ChevronsLeftRightIcon;
   return (
     <Button
@@ -34,7 +38,7 @@ export function EditorWidthToggle({
       onClick={onToggle}
       disabled={disabled}
       className={cn(
-        "hidden min-[46rem]:inline-flex text-muted-foreground hover:bg-gray-300/75 dark:hover:bg-gray-800",
+        "text-muted-foreground hover:bg-gray-300/75 dark:hover:bg-gray-800",
         className,
       )}
     >

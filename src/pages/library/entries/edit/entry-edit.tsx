@@ -15,7 +15,11 @@ import {
 import { appBlockNoteConfig } from "@/components/editor/config";
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { EditorWidthToggle } from "@/components/editor/editor-width-toggle";
-import { useEditorWideMode } from "@/hooks/use-editor-wide-mode";
+import {
+  editorBleedProps,
+  editorColumnClassName,
+  useEditorWideMode,
+} from "@/hooks/use-editor-wide-mode";
 import { FEATURES } from "@/constants/features";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -175,63 +179,69 @@ function EntryEditContent({
 
   return (
     <>
-      <PageHeader
-        title="Edit Entry"
-        goBackButton
-        goBackButtonVariant="tinted"
-        rightActionButton={saveButton}
-        heavyTeardown={true}
-      />
+      <div className="lc-page-gutter">
+        <PageHeader
+          title="Edit Entry"
+          goBackButton
+          goBackButtonVariant="tinted"
+          rightActionButton={saveButton}
+          heavyTeardown={true}
+        />
+      </div>
       <main>
-        <div className="max-w-(--lc-content-max-width) mx-auto w-full px-0.5">
-          <section className="mx-px">
-            <div className="text-start">
-              <EntryForm
-                id={formId}
-                topics={topics}
-                onFormReady={(api) => {
-                  formApiRef.current = api;
-                }}
-                overrideExisting={true}
-                initialData={{
-                  title: entry.title,
-                  topicId: entry.topicId,
-                  description: entry.description || "",
-                  tags: entry.tags,
-                  faviconUrl: entry.faviconUrl || "",
-                  url: entry.url,
-                  siteName: entry.siteName || "",
-                  languageCode: entry.languageCode,
-                  isFavorite: entry.isFavorite,
-                }}
-                onSubmit={handleSubmit}
-                isLoading={isSaving}
-                onDirtyChange={setFormIsDirty}
-              />
-              <div className="flex items-baseline justify-between mb-1">
-                <Label
-                  htmlFor="lc-blocknote-view-entry-edit"
-                  onClick={() => editor.focus()}
-                  className="text-sm ml-1 mt-1.5"
-                >
-                  Content
-                </Label>
-                <EditorWidthToggle
-                  isWide={editorWide.isWide}
-                  onToggle={editorWide.toggle}
-                  className="mr-0.75 h-6.5"
+        <div className="lc-page-gutter">
+          <div className="max-w-(--lc-content-max-width) mx-auto w-full px-0.5">
+            <section className="mx-px">
+              <div className="text-start">
+                <EntryForm
+                  id={formId}
+                  topics={topics}
+                  onFormReady={(api) => {
+                    formApiRef.current = api;
+                  }}
+                  overrideExisting={true}
+                  initialData={{
+                    title: entry.title,
+                    topicId: entry.topicId,
+                    description: entry.description || "",
+                    tags: entry.tags,
+                    faviconUrl: entry.faviconUrl || "",
+                    url: entry.url,
+                    siteName: entry.siteName || "",
+                    languageCode: entry.languageCode,
+                    isFavorite: entry.isFavorite,
+                  }}
+                  onSubmit={handleSubmit}
+                  isLoading={isSaving}
+                  onDirtyChange={setFormIsDirty}
                 />
+                <div className="flex items-baseline justify-between mb-1">
+                  <Label
+                    htmlFor="lc-blocknote-view-entry-edit"
+                    onClick={() => editor.focus()}
+                    className="text-sm ml-1 mt-1.5"
+                  >
+                    Content
+                  </Label>
+                  <EditorWidthToggle
+                    isWide={editorWide.isWide}
+                    onToggle={editorWide.toggle}
+                    className="mr-0.75 h-6.5"
+                  />
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </div>
         </div>
-        <div className={editorWide.wrapperClassName}>
-          <BlockNoteView
-            editor={editor}
-            lang={entry.languageCode}
-            id="lc-blocknote-view-entry-edit"
-            className="text-left"
-          />
+        <div {...editorBleedProps(editorWide.isWide)}>
+          <div className={editorColumnClassName(editorWide.isWide)}>
+            <BlockNoteView
+              editor={editor}
+              lang={entry.languageCode}
+              id="lc-blocknote-view-entry-edit"
+              className="text-left"
+            />
+          </div>
         </div>
       </main>
       <AlertDialog open={blocker.state === "blocked"}>
@@ -476,11 +486,13 @@ function EntryEditPage() {
     <PageContainer
       id="lc-entry-edit-page"
       className="mb-0! min-h-[calc(100vh-2px)]"
-      // Each block sets its own width so the editor can go wider than the
-      // page's content column (see useEditorWideMode). Important because
-      // .lc-page-container-inner is unlayered CSS and would win over the
-      // layered utility otherwise (same reason as mb-0! above).
+      // The editor block can run edge to edge (see useEditorWideMode), so the
+      // container drops its gutter and every other block applies it with
+      // .lc-page-gutter. The inner width cap is lifted with the important
+      // variant because .lc-page-container-inner is unlayered CSS and would
+      // win over the layered utility otherwise (same reason as mb-0! above).
       classNameInner="max-w-none!"
+      gutter={false}
     >
       <EntryEditContent
         entry={entry}

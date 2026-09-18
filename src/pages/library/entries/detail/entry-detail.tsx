@@ -1,6 +1,10 @@
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { EditorWidthToggle } from "@/components/editor/editor-width-toggle";
-import { useEditorWideMode } from "@/hooks/use-editor-wide-mode";
+import {
+  editorBleedProps,
+  editorColumnClassName,
+  useEditorWideMode,
+} from "@/hooks/use-editor-wide-mode";
 import { appBlockNoteConfig } from "@/components/editor/config";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -161,287 +165,299 @@ function EntryDetailPage() {
   }
 
   const hasContent = hasEditorContent(blocks);
+  // Without content there is only the placeholder, which stays in the column.
+  const isEditorWide = editorWide.isWide && hasContent;
 
   return (
     <PageContainer
       id="lc-entry-detail-page"
-      // Each section sets its own width so the content can go wider than the
-      // page's content column (see useEditorWideMode). Important because
-      // .lc-page-container-inner is unlayered CSS and would win over the
-      // layered utility otherwise.
+      // The content block can run edge to edge (see useEditorWideMode), so the
+      // container drops its gutter and the rest of the page applies it with
+      // .lc-page-gutter. The inner width cap is lifted with the important
+      // variant because .lc-page-container-inner is unlayered CSS and would
+      // win over the layered utility otherwise.
       classNameInner="max-w-none!"
+      gutter={false}
     >
-      <PageHeader
-        title="Entry"
-        classNameHeaderElement="mb-3"
-        goBackButton
-        heavyTeardown
-      />
+      <div className="lc-page-gutter">
+        <PageHeader
+          title="Entry"
+          classNameHeaderElement="mb-3"
+          goBackButton
+          heavyTeardown
+        />
 
-      <section className="px-1 mx-auto w-full max-w-(--lc-content-max-width) text-left select-text">
-        {/* Title */}
-        {topic && (
-          <button
-            className="flex items-center gap-0.5 ml-px mb-1 max-w-full text-xs font-medium text-muted-foreground hover:text-lc-muted-foreground-hover hover:underline underline-offset-2 transition-colors cursor-pointer"
-            //title="View topic"
-            onClick={() =>
-              navigate(`/library/topics/${topic.id}`, {
-                viewTransition: true,
-              })
-            }
-          >
-            <span className="truncate max-w-50">{topic.name}</span>
-            <ChevronRightIcon className="size-3 shrink-0 opacity-70" />
-          </button>
-        )}
-        <h1 className="text-2xl font-semibold leading-tight wrap-break-word text-pretty">
-          {entry.title}
-        </h1>
-
-        {/* Source line: favicon + site name / hostname + subtle path.
-            faviconUrl and siteName are independent metadata (not derived from url).
-            hostnameUrl / pathnameUrl / searchUrl are derived from url and only exist when url is set. */}
-        {/* <p className="text-sm text-muted-foreground/60">
-          Source: {entry.faviconUrl ? "Favicon" : ""}{" "}
-          {entry.siteName ? entry.siteName : ""} {entry.url ? entry.url : ""}
-        </p> */}
-        {(entry.faviconUrl || entry.siteName || entry.url) && (
-          <div className="flex items-center gap-1.5 mt-3 min-w-0">
-            {entry.faviconUrl && (
-              <Avatar.Root className="size-4.5 rounded-sm opacity-90 shrink-0 ml-0.5">
-                <Avatar.Image
-                  className="rounded-sm"
-                  src={entry.faviconUrl}
-                  alt="Favicon"
-                />
-                <Avatar.Fallback delayMs={50}>
-                  <div className="bg-gray-400/35 dark:bg-gray-700/50 size-4.25 rounded-sm" />
-                </Avatar.Fallback>
-              </Avatar.Root>
-            )}
-            {(entry.siteName || entry.hostnameUrl) && (
-              <div className="flex items-center mt-px min-w-0 gap-1">
-                {entry.url ? (
-                  <a
-                    href={entry.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title={"Visit: " + entry.url}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors truncate min-w-0"
-                  >
-                    {entry.siteName || entry.hostnameUrl}
-                  </a>
-                ) : (
-                  <span className="text-sm text-muted-foreground truncate min-w-0">
-                    {entry.siteName}
-                  </span>
-                )}
-                {entry.pathnameUrl && entry.pathnameUrl !== "/" && (
-                  <span className="text-xs mt-px text-muted-foreground/60 truncate">
-                    {entry.pathnameUrl.replace(/\/$/, "")}
-                    {entry.searchUrl || ""}
-                  </span>
-                )}
-                {/* Visually hidden but included in clipboard when user selects and copies */}
-                <span aria-hidden="true" className="sr-only select-text">
-                  {entry.url}
-                </span>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Description */}
-        <p
-          className={cn(
-            "text-sm leading-relaxed whitespace-pre-wrap wrap-break-word text-pretty mt-4",
-            !entry.description && "italic text-muted-foreground select-none",
-          )}
-        >
-          {entry.description || "No description."}
-        </p>
-
-        {/* Tags */}
-        {entry.tags && entry.tags.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5 mt-4">
-            {entry.tags.map((tag, index) => (
-              <Badge
-                key={entry.id + "-tag-" + index}
-                variant="secondary"
-                className="max-w-40 truncate text-muted-foreground-hover"
-              >
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        )}
-
-        {/* Dates */}
-        <div className="flex flex-wrap justify-between gap-x-6 gap-y-1 mt-5 text-xs text-muted-foreground">
-          <span>
-            <span className="font-medium text-lc-muted-foreground-hover">
-              Created
-            </span>{" "}
-            {formatDate(entry.createdAt)}
-          </span>
-          <span>
-            <span className="font-medium text-lc-muted-foreground-hover">
-              Updated
-            </span>{" "}
-            {formatDate(entry.updatedAt)}
-          </span>
-        </div>
-
-        {/* Action bar */}
-        <Separator className="mx-auto max-w-[calc(100%-8px)] mt-4 opacity-60" />
-        <div className="flex items-center gap-1 mt-0 pt-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            title={
-              entry.isFavorite ? "Remove from favorites" : "Add to favorites"
-            }
-            onClick={() => handleAttributeToggle("isFavorite")}
-            className={cn(
-              "size-9 rounded-lg hover:bg-gray-300/75 dark:hover:bg-gray-800",
-              entry.isArchived && "opacity-40 pointer-events-none",
-            )}
-          >
-            <StarIcon
-              className={cn(
-                "size-4.5",
-                entry.isFavorite
-                  ? "text-yellow-600 fill-yellow-600 dark:text-yellow-500 dark:fill-yellow-500"
-                  : "text-muted-foreground",
-              )}
-            />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            title={entry.isPinned ? "Unpin entry" : "Pin entry"}
-            onClick={() => handleAttributeToggle("isPinned")}
-            className={cn(
-              "size-9 rounded-lg hover:bg-gray-300/75 dark:hover:bg-gray-800",
-              entry.isArchived && "opacity-40 pointer-events-none",
-            )}
-          >
-            <PinIcon
-              className={cn(
-                "size-4.5",
-                entry.isPinned
-                  ? "text-blue-600 fill-blue-600 dark:text-blue-500 dark:fill-blue-500"
-                  : "text-muted-foreground",
-              )}
-            />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            title={entry.isArchived ? "Restore entry" : "Archive entry"}
-            onClick={() => handleAttributeToggle("isArchived")}
-            className="size-9 rounded-lg hover:bg-gray-300/75 dark:hover:bg-gray-800"
-          >
-            <ArchiveIcon
-              className={cn(
-                "size-4.5",
-                entry.isArchived ? "text-green-600" : "text-muted-foreground",
-              )}
-            />
-          </Button>
-
-          <div className="ml-auto flex items-center gap-1">
-            <EditorWidthToggle
-              isWide={editorWide.isWide}
-              onToggle={editorWide.toggle}
-              disabled={!hasContent}
-              titleWide="Narrow content"
-              titleNarrow="Widen content"
-              className="size-9 rounded-lg"
-            />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  title="Copy and export"
-                  className={cn(
-                    "size-9 rounded-lg not-hover:text-muted-foreground",
-                    "hover:bg-blue-200/80 hover:text-blue-700 dark:hover:bg-blue-900/50 dark:hover:text-blue-400",
-                    "aria-expanded:bg-blue-200/80 aria-expanded:text-blue-700 dark:aria-expanded:bg-blue-900/50 dark:aria-expanded:text-blue-400",
-                  )}
-                >
-                  <EllipsisIcon className="size-4.5" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="center" side="left" className="w-44">
-                <DropdownMenuLabel className="text-xs font-medium select-none text-muted-foreground py-1">
-                  Copy
-                </DropdownMenuLabel>
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  title="Title, source, tags and content. Keeps formatting where the target supports it, otherwise pastes Markdown."
-                  onClick={() => handleCopy(false)}
-                >
-                  <ClipboardIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
-                  Entry
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  disabled={!hasContent}
-                  onClick={() => handleCopy(true)}
-                >
-                  <FileTextIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
-                  Content only
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  title="Save as a Markdown note, with metadata as front matter"
-                  onClick={handleDownload}
-                >
-                  <DownloadIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
-                  Download .md
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button
-              variant="ghost"
-              size="icon"
-              title="Edit entry"
+        <section className="px-1 mx-auto w-full max-w-(--lc-content-max-width) text-left select-text">
+          {/* Title */}
+          {topic && (
+            <button
+              className="flex items-center gap-0.5 ml-px mb-1 max-w-full text-xs font-medium text-muted-foreground hover:text-lc-muted-foreground-hover hover:underline underline-offset-2 transition-colors cursor-pointer"
+              //title="View topic"
               onClick={() =>
-                navigate(`/library/entries/${entry.id}/edit`, {
+                navigate(`/library/topics/${topic.id}`, {
                   viewTransition: true,
                 })
               }
-              className="size-9 rounded-lg text-muted-foreground hover:bg-green-200/80 hover:text-green-700 dark:hover:bg-green-900/50 dark:hover:text-green-400"
             >
-              <SquarePenIcon className="size-4.5" />
+              <span className="truncate max-w-50">{topic.name}</span>
+              <ChevronRightIcon className="size-3 shrink-0 opacity-70" />
+            </button>
+          )}
+          <h1 className="text-2xl font-semibold leading-tight wrap-break-word text-pretty">
+            {entry.title}
+          </h1>
+
+          {/* Source line: favicon + site name / hostname + subtle path.
+            faviconUrl and siteName are independent metadata (not derived from url).
+            hostnameUrl / pathnameUrl / searchUrl are derived from url and only exist when url is set. */}
+          {/* <p className="text-sm text-muted-foreground/60">
+          Source: {entry.faviconUrl ? "Favicon" : ""}{" "}
+          {entry.siteName ? entry.siteName : ""} {entry.url ? entry.url : ""}
+        </p> */}
+          {(entry.faviconUrl || entry.siteName || entry.url) && (
+            <div className="flex items-center gap-1.5 mt-3 min-w-0">
+              {entry.faviconUrl && (
+                <Avatar.Root className="size-4.5 rounded-sm opacity-90 shrink-0 ml-0.5">
+                  <Avatar.Image
+                    className="rounded-sm"
+                    src={entry.faviconUrl}
+                    alt="Favicon"
+                  />
+                  <Avatar.Fallback delayMs={50}>
+                    <div className="bg-gray-400/35 dark:bg-gray-700/50 size-4.25 rounded-sm" />
+                  </Avatar.Fallback>
+                </Avatar.Root>
+              )}
+              {(entry.siteName || entry.hostnameUrl) && (
+                <div className="flex items-center mt-px min-w-0 gap-1">
+                  {entry.url ? (
+                    <a
+                      href={entry.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={"Visit: " + entry.url}
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors truncate min-w-0"
+                    >
+                      {entry.siteName || entry.hostnameUrl}
+                    </a>
+                  ) : (
+                    <span className="text-sm text-muted-foreground truncate min-w-0">
+                      {entry.siteName}
+                    </span>
+                  )}
+                  {entry.pathnameUrl && entry.pathnameUrl !== "/" && (
+                    <span className="text-xs mt-px text-muted-foreground/60 truncate">
+                      {entry.pathnameUrl.replace(/\/$/, "")}
+                      {entry.searchUrl || ""}
+                    </span>
+                  )}
+                  {/* Visually hidden but included in clipboard when user selects and copies */}
+                  <span aria-hidden="true" className="sr-only select-text">
+                    {entry.url}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Description */}
+          <p
+            className={cn(
+              "text-sm leading-relaxed whitespace-pre-wrap wrap-break-word text-pretty mt-4",
+              !entry.description && "italic text-muted-foreground select-none",
+            )}
+          >
+            {entry.description || "No description."}
+          </p>
+
+          {/* Tags */}
+          {entry.tags && entry.tags.length > 0 && (
+            <div className="flex flex-wrap items-center gap-1.5 mt-4">
+              {entry.tags.map((tag, index) => (
+                <Badge
+                  key={entry.id + "-tag-" + index}
+                  variant="secondary"
+                  className="max-w-40 truncate text-muted-foreground-hover"
+                >
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          )}
+
+          {/* Dates */}
+          <div className="flex flex-wrap justify-between gap-x-6 gap-y-1 mt-5 text-xs text-muted-foreground">
+            <span>
+              <span className="font-medium text-lc-muted-foreground-hover">
+                Created
+              </span>{" "}
+              {formatDate(entry.createdAt)}
+            </span>
+            <span>
+              <span className="font-medium text-lc-muted-foreground-hover">
+                Updated
+              </span>{" "}
+              {formatDate(entry.updatedAt)}
+            </span>
+          </div>
+
+          {/* Action bar */}
+          <Separator className="mx-auto max-w-[calc(100%-8px)] mt-4 opacity-60" />
+          <div className="flex items-center gap-1 mt-0 pt-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              title={
+                entry.isFavorite ? "Remove from favorites" : "Add to favorites"
+              }
+              onClick={() => handleAttributeToggle("isFavorite")}
+              className={cn(
+                "size-9 rounded-lg hover:bg-gray-300/75 dark:hover:bg-gray-800",
+                entry.isArchived && "opacity-40 pointer-events-none",
+              )}
+            >
+              <StarIcon
+                className={cn(
+                  "size-4.5",
+                  entry.isFavorite
+                    ? "text-yellow-600 fill-yellow-600 dark:text-yellow-500 dark:fill-yellow-500"
+                    : "text-muted-foreground",
+                )}
+              />
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              title="Delete entry"
-              onClick={() => setDeleteOpen(true)}
-              className="size-9 rounded-lg text-muted-foreground hover:bg-red-200/80 hover:text-red-700 dark:hover:bg-red-900/50 dark:hover:text-red-400"
+              title={entry.isPinned ? "Unpin entry" : "Pin entry"}
+              onClick={() => handleAttributeToggle("isPinned")}
+              className={cn(
+                "size-9 rounded-lg hover:bg-gray-300/75 dark:hover:bg-gray-800",
+                entry.isArchived && "opacity-40 pointer-events-none",
+              )}
             >
-              <Trash2Icon className="size-4.5" />
+              <PinIcon
+                className={cn(
+                  "size-4.5",
+                  entry.isPinned
+                    ? "text-blue-600 fill-blue-600 dark:text-blue-500 dark:fill-blue-500"
+                    : "text-muted-foreground",
+                )}
+              />
             </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              title={entry.isArchived ? "Restore entry" : "Archive entry"}
+              onClick={() => handleAttributeToggle("isArchived")}
+              className="size-9 rounded-lg hover:bg-gray-300/75 dark:hover:bg-gray-800"
+            >
+              <ArchiveIcon
+                className={cn(
+                  "size-4.5",
+                  entry.isArchived ? "text-green-600" : "text-muted-foreground",
+                )}
+              />
+            </Button>
+
+            <div className="ml-auto flex items-center gap-1">
+              <EditorWidthToggle
+                isWide={editorWide.isWide}
+                onToggle={editorWide.toggle}
+                disabled={!hasContent}
+                titleWide="Narrow content"
+                titleNarrow="Widen content"
+                className="size-9 rounded-lg"
+              />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    title="Copy and export"
+                    className={cn(
+                      "size-9 rounded-lg not-hover:text-muted-foreground",
+                      "hover:bg-blue-200/80 hover:text-blue-700 dark:hover:bg-blue-900/50 dark:hover:text-blue-400",
+                      "aria-expanded:bg-blue-200/80 aria-expanded:text-blue-700 dark:aria-expanded:bg-blue-900/50 dark:aria-expanded:text-blue-400",
+                    )}
+                  >
+                    <EllipsisIcon className="size-4.5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="center"
+                  side="left"
+                  className="w-44"
+                >
+                  <DropdownMenuLabel className="text-xs font-medium select-none text-muted-foreground py-1">
+                    Copy
+                  </DropdownMenuLabel>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    title="Title, source, tags and content. Keeps formatting where the target supports it, otherwise pastes Markdown."
+                    onClick={() => handleCopy(false)}
+                  >
+                    <ClipboardIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
+                    Entry
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    disabled={!hasContent}
+                    onClick={() => handleCopy(true)}
+                  >
+                    <FileTextIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
+                    Content only
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    title="Save as a Markdown note, with metadata as front matter"
+                    onClick={handleDownload}
+                  >
+                    <DownloadIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
+                    Download .md
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button
+                variant="ghost"
+                size="icon"
+                title="Edit entry"
+                onClick={() =>
+                  navigate(`/library/entries/${entry.id}/edit`, {
+                    viewTransition: true,
+                  })
+                }
+                className="size-9 rounded-lg text-muted-foreground hover:bg-green-200/80 hover:text-green-700 dark:hover:bg-green-900/50 dark:hover:text-green-400"
+              >
+                <SquarePenIcon className="size-4.5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                title="Delete entry"
+                onClick={() => setDeleteOpen(true)}
+                className="size-9 rounded-lg text-muted-foreground hover:bg-red-200/80 hover:text-red-700 dark:hover:bg-red-900/50 dark:hover:text-red-400"
+              >
+                <Trash2Icon className="size-4.5" />
+              </Button>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* Rich content */}
       {blocks !== null && (
-        <section className={cn(editorWide.wrapperClassName, "mt-2 mb-2")}>
+        <section {...editorBleedProps(isEditorWide, "mt-2 mb-2")}>
           {/* <Separator className="mx-auto max-w-[calc(100%-8px)] mb-5 opacity-60" /> */}
-          {hasContent ? (
-            <EntryContentViewer initialBlocks={blocks!} />
-          ) : (
-            <p className="italic text-muted-foreground text-sm px-4 py-3">
-              No content.
-            </p>
-          )}
+          <div className={editorColumnClassName(isEditorWide)}>
+            {hasContent ? (
+              <EntryContentViewer initialBlocks={blocks!} />
+            ) : (
+              <p className="italic text-muted-foreground text-sm px-4 py-3">
+                No content.
+              </p>
+            )}
+          </div>
         </section>
       )}
 

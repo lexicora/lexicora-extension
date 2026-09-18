@@ -26,7 +26,11 @@ import { toast } from "sonner";
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { EditorWidthToggle } from "@/components/editor/editor-width-toggle";
-import { useEditorWideMode } from "@/hooks/use-editor-wide-mode";
+import {
+  editorBleedProps,
+  editorColumnClassName,
+  useEditorWideMode,
+} from "@/hooks/use-editor-wide-mode";
 import { FEATURES } from "@/constants/features";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -292,62 +296,69 @@ function EntryCreatePage() {
     <PageContainer
       id="lc-new-entry-page"
       className="mb-0! min-h-[calc(100vh-2px)]"
-      // Each block below sets its own width so the editor can go wider than
-      // the page's content column (see useEditorWideMode). Important because
-      // .lc-page-container-inner is unlayered CSS and would win over the
-      // layered utility otherwise (same reason as mb-0! above).
+      // The editor block can run edge to edge (see useEditorWideMode), so the
+      // container drops its gutter and every other block applies it with
+      // .lc-page-gutter. The inner width cap is lifted with the important
+      // variant because .lc-page-container-inner is unlayered CSS and would
+      // win over the layered utility otherwise (same reason as mb-0! above).
       classNameInner="max-w-none!"
+      gutter={false}
     >
       {/*Make the inner container as tall (min-height) as the vh (but not overflowing) to prevent issues with editor*/}
-      <PageHeader
-        title="New Entry"
-        goBackButton
-        goBackButtonVariant="tinted"
-        rightActionButton={rightActionButton}
-        heavyTeardown={true}
-      />
+      <div className="lc-page-gutter">
+        <PageHeader
+          title="New Entry"
+          goBackButton
+          goBackButtonVariant="tinted"
+          rightActionButton={rightActionButton}
+          heavyTeardown={true}
+        />
+      </div>
       <main>
-        <div className="max-w-(--lc-content-max-width) mx-auto w-full px-0.5">
-          <section className="mx-px">
-            {/*TODO: Maybe add relative and overflow-x-hidden later, when it is guaranteed to fill the entire page (height wise) */}
-            <div className="text-start">
-              <EntryForm
-                id="entry-create-form"
-                topics={topics}
-                overrideExisting={capturedData?.misc?.overrideExisting ?? true}
-                expandMetadata={capturedData?.misc?.metadataOnly === true}
-                isCapturePending={showSkeleton}
-                initialData={{
-                  title: capturedData?.title || searchParams.get("title") || "",
-                  topicId: searchParams.get("topicId") || undefined,
-                  faviconUrl: capturedData?.metadata?.faviconUrl || "",
-                  url: capturedData?.location?.href || "",
-                  siteName:
-                    capturedData?.metadata?.siteName ||
-                    capturedData?.location?.hostname ||
-                    "",
-                  languageCode:
-                    capturedData?.lang || navigator.language || "en",
-                  description: capturedData?.metadata?.excerpt || "",
-                  // capturedData?.textContent
-                  //   ? capturedData?.textContent?.trim().slice(0, 400) + "..."
-                  //   : "",
-                  // [
-                  //   capturedData?.metadata?.byline ? `By ${capturedData.metadata.byline}` : null,
-                  //   capturedData?.metadata?.publishedTime ? `Published: ${capturedData.metadata.publishedTime}` : null,
-                  //   capturedData?.metadata?.excerpt || null,
-                  // ]
-                  //   .filter(Boolean)
-                  //   .join("\n\n") || "",
-                }}
-                onSubmit={handleEntrySubmit}
-                isLoading={isSaving}
-                onDirtyChange={setFormIsDirty}
-              />
-            </div>
-          </section>
-        </div>
-        <div className={editorWide.wrapperClassName}>
+        <div className="lc-page-gutter">
+          <div className="max-w-(--lc-content-max-width) mx-auto w-full px-0.5">
+            <section className="mx-px">
+              {/*TODO: Maybe add relative and overflow-x-hidden later, when it is guaranteed to fill the entire page (height wise) */}
+              <div className="text-start">
+                <EntryForm
+                  id="entry-create-form"
+                  topics={topics}
+                  overrideExisting={
+                    capturedData?.misc?.overrideExisting ?? true
+                  }
+                  expandMetadata={capturedData?.misc?.metadataOnly === true}
+                  isCapturePending={showSkeleton}
+                  initialData={{
+                    title:
+                      capturedData?.title || searchParams.get("title") || "",
+                    topicId: searchParams.get("topicId") || undefined,
+                    faviconUrl: capturedData?.metadata?.faviconUrl || "",
+                    url: capturedData?.location?.href || "",
+                    siteName:
+                      capturedData?.metadata?.siteName ||
+                      capturedData?.location?.hostname ||
+                      "",
+                    languageCode:
+                      capturedData?.lang || navigator.language || "en",
+                    description: capturedData?.metadata?.excerpt || "",
+                    // capturedData?.textContent
+                    //   ? capturedData?.textContent?.trim().slice(0, 400) + "..."
+                    //   : "",
+                    // [
+                    //   capturedData?.metadata?.byline ? `By ${capturedData.metadata.byline}` : null,
+                    //   capturedData?.metadata?.publishedTime ? `Published: ${capturedData.metadata.publishedTime}` : null,
+                    //   capturedData?.metadata?.excerpt || null,
+                    // ]
+                    //   .filter(Boolean)
+                    //   .join("\n\n") || "",
+                  }}
+                  onSubmit={handleEntrySubmit}
+                  isLoading={isSaving}
+                  onDirtyChange={setFormIsDirty}
+                />
+              </div>
+            </section>
+          </div>
           <div className="flex items-baseline justify-between mb-1 max-w-(--lc-content-max-width) mx-auto">
             <Label
               htmlFor="lc-blocknote-view-new-entry"
@@ -364,24 +375,30 @@ function EntryCreatePage() {
               className="mr-1.5 h-6.5"
             />
           </div>
-          <div className="relative">
-            {/*Unused css classes for div className="relative overflow-x-hidden min-h-[55vh] mt-1" */}
-            {/* --- SKELETON LOADER OVERLAY (update to shadcn-ui component later)--- */}
-            {showSkeleton && <Skeleton className="h-50 w-full" />}
-            {/* --- ACTUAL EDITOR --- */}
-            {/* It is ALWAYS mounted to prevent the Floating UI crash. We just hide it visually until ready. */}
-            <div
-              className={cn(
-                "transition-opacity duration-150", //MAYBE: Reduce duration a bit more, dont use will-change-opacity, because editor ui elements are covered by top and bottom ui.
-                showSkeleton ? "opacity-0 pointer-events-none" : "opacity-100",
-              )}
-            >
-              <BlockNoteView
-                editor={editor}
-                lang={language}
-                id="lc-blocknote-view-new-entry"
-                // TODO: Make prop to control min height of editor.
-              />
+        </div>
+        <div {...editorBleedProps(editorWide.isWide)}>
+          <div className={editorColumnClassName(editorWide.isWide)}>
+            <div className="relative">
+              {/*Unused css classes for div className="relative overflow-x-hidden min-h-[55vh] mt-1" */}
+              {/* --- SKELETON LOADER OVERLAY (update to shadcn-ui component later)--- */}
+              {showSkeleton && <Skeleton className="h-50 w-full" />}
+              {/* --- ACTUAL EDITOR --- */}
+              {/* It is ALWAYS mounted to prevent the Floating UI crash. We just hide it visually until ready. */}
+              <div
+                className={cn(
+                  "transition-opacity duration-150", //MAYBE: Reduce duration a bit more, dont use will-change-opacity, because editor ui elements are covered by top and bottom ui.
+                  showSkeleton
+                    ? "opacity-0 pointer-events-none"
+                    : "opacity-100",
+                )}
+              >
+                <BlockNoteView
+                  editor={editor}
+                  lang={language}
+                  id="lc-blocknote-view-new-entry"
+                  // TODO: Make prop to control min height of editor.
+                />
+              </div>
             </div>
           </div>
         </div>
