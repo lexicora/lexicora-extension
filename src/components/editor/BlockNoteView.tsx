@@ -26,7 +26,6 @@ import {
   UnnestBlockButton,
   SuggestionMenuController,
   GridSuggestionMenuController,
-  useCreateBlockNote,
 } from "@blocknote/react";
 import { filterSuggestionItems } from "@blocknote/core/extensions";
 import { BlockNoteView as BaseBlockNoteView } from "@blocknote/shadcn";
@@ -36,7 +35,11 @@ import "@blocknote/shadcn/style.css";
 import "./styles.css";
 
 import { useTheme } from "@/providers/theme-provider";
-//import { getCustomSlashMenuItems } from "./config";
+import {
+  getBlockTypeSelectItems,
+  getCustomSlashMenuItems,
+  type AppBlockNoteEditor,
+} from "./config";
 
 export function BlockNoteView({
   editor,
@@ -50,7 +53,7 @@ export function BlockNoteView({
   //onSelectionChange, //* NOTE: Can be extracted and called like this editor.onSelectionChange
   //ref,
 }: {
-  editor: ReturnType<typeof useCreateBlockNote>;
+  editor: AppBlockNoteEditor;
   className?: string;
   style?: React.CSSProperties;
   editable?: boolean;
@@ -87,10 +90,10 @@ export function BlockNoteView({
         Tooltip,
       }}
       formattingToolbar={false}
+      slashMenu={false}
       emojiPicker={false}
       //onSelectionChange={onSelectionChange}
       //ref={ref}
-      //slashMenu={false}
       //spellCheck={false}
       // MAYBE TODO: Add custom selector property
       //lc-data-theming
@@ -99,7 +102,10 @@ export function BlockNoteView({
       <FormattingToolbarController
         formattingToolbar={() => (
           <FormattingToolbar>
-            <BlockTypeSelect key={"blockTypeSelect"} />
+            <BlockTypeSelect
+              key={"blockTypeSelect"}
+              items={getBlockTypeSelectItems(editor)}
+            />
             {/* Extra button to toggle blue text & background */}
             {/*<BlueButton key={"customButton"} />*/}
             <FileCaptionButton key={"fileCaptionButton"} />
@@ -150,13 +156,13 @@ export function BlockNoteView({
         columns={8}
         minQueryLength={2}
       />
-      {/*<SuggestionMenuController
+      <SuggestionMenuController
         triggerCharacter={"/"}
         // Replaces the default Slash Menu items with our custom ones.
         getItems={async (query) =>
           filterSuggestionItems(getCustomSlashMenuItems(editor), query)
         }
-      />*/}
+      />
     </BaseBlockNoteView>
   );
 }

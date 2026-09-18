@@ -623,3 +623,111 @@ html:has(
   }
 }
 /*TODO: overhaul and make all selectors more consistent, to avoid inconsistent behavior*/
+
+/* * NOTE: Alert block (src/components/editor/blocks/alert) */
+/* One colour per type, as GitHub draws them. Set on both the block and the
+   icons in the type menu, which renders in a portal outside the editor, so the
+   dark values key off the app's root class rather than the editor's scheme. */
+.lc-alert,
+.lc-alert-icon {
+  --lc-alert-color: #0969da;
+}
+:is(.lc-alert, .lc-alert-icon)[data-alert-type="tip"] {
+  --lc-alert-color: #1a7f37;
+}
+:is(.lc-alert, .lc-alert-icon)[data-alert-type="important"] {
+  --lc-alert-color: #8250df;
+}
+:is(.lc-alert, .lc-alert-icon)[data-alert-type="warning"] {
+  --lc-alert-color: #9a6700;
+}
+:is(.lc-alert, .lc-alert-icon)[data-alert-type="caution"] {
+  --lc-alert-color: #cf222e;
+}
+.dark .lc-alert,
+.dark .lc-alert-icon {
+  --lc-alert-color: #4493f8;
+}
+.dark :is(.lc-alert, .lc-alert-icon)[data-alert-type="tip"] {
+  --lc-alert-color: #3fb950;
+}
+.dark :is(.lc-alert, .lc-alert-icon)[data-alert-type="important"] {
+  --lc-alert-color: #ab7df8;
+}
+.dark :is(.lc-alert, .lc-alert-icon)[data-alert-type="warning"] {
+  --lc-alert-color: #d29922;
+}
+.dark :is(.lc-alert, .lc-alert-icon)[data-alert-type="caution"] {
+  --lc-alert-color: #f85149;
+}
+
+.bn-root[data-color-scheme] .lc-alert {
+  flex-grow: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 10px 8px;
+  border-left: 3px solid var(--lc-alert-color);
+  border-radius: 6px;
+  background-color: color-mix(in oklab, var(--lc-alert-color) 8%, transparent);
+}
+
+.bn-root[data-color-scheme] .lc-alert-header {
+  display: flex;
+  align-items: center;
+}
+
+/* The type menu button is not text; the read-only header is */
+.bn-root[data-color-scheme] .bn-editor[contenteditable="true"] .lc-alert-header {
+  user-select: none;
+}
+
+.bn-root[data-color-scheme] .lc-alert-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: -4px;
+  padding: 1px 6px 1px 4px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--lc-alert-color);
+  font: inherit;
+  font-size: 0.875em;
+  font-weight: 600;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: background-color 0.1s ease-in-out;
+}
+
+.bn-root[data-color-scheme] button.lc-alert-type:hover,
+.bn-root[data-color-scheme] .lc-alert-type[aria-expanded="true"] {
+  background-color: color-mix(in oklab, var(--lc-alert-color) 14%, transparent);
+}
+
+.bn-root[data-color-scheme] .lc-alert-type-static {
+  cursor: text;
+  user-select: text;
+}
+
+.bn-root[data-color-scheme] .lc-alert-type svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.bn-root[data-color-scheme] .lc-alert-type .lc-alert-chevron {
+  width: 14px;
+  height: 14px;
+  opacity: 0.7;
+}
+
+.bn-root[data-color-scheme] .lc-alert-content {
+  min-width: 0;
+}
+
+/* Type menu items (portalled, so outside .bn-root) */
+[data-slot="dropdown-menu-radio-item"] .lc-alert-icon {
+  color: var(--lc-alert-color);
+}
