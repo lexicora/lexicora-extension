@@ -384,7 +384,8 @@ function EntryCreatePage() {
               {showSkeleton && (
                 <Skeleton
                   className={cn(
-                    "h-50 w-full",
+                    // Same height as the empty editor (globals.css).
+                    "h-(--lc-editor-min-height) w-full",
                     editorWide.isWide && "rounded-none",
                   )}
                 />

@@ -92,6 +92,11 @@
   );
   /*Used in the default .lc-page-container and is now opt out (so set padding to pr-3! for example)*/
   /*This prevents layout shifts from scrollbars*/
+
+  /* Minimum height of the editable content editor. The create page's skeleton
+     uses it too, so the placeholder matches the editor exactly. 200px floor for
+     short windows, grows with tall ones. */
+  --lc-editor-min-height: max(200px, 30vh);
 }
 
 .dark {

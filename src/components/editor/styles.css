@@ -129,6 +129,13 @@ html:has(
     0 1px 3px 0 rgba(0, 0, 0, 0.05);
 }
 
+/* The editable editor grows with the viewport so an empty entry reads as a
+   writing surface in tall windows. Read-only keeps the 200px floor above, and
+   the create page's skeleton uses the same variable (see globals.css). */
+.bn-root[data-color-scheme] .bn-editor[contenteditable="true"] {
+  min-height: var(--lc-editor-min-height);
+}
+
 .bn-root[data-color-scheme] .bn-editor[contenteditable] img,
 .bn-root[data-color-scheme] .bn-editor[contenteditable] video {
   -webkit-user-select: auto;
@@ -735,34 +742,39 @@ html:has(
 /* * NOTE: Wide editor (src/hooks/use-editor-wide-mode.ts) */
 /* The block around the editor carries data-editor-wide when the user widens
    the editor. The surface then runs edge to edge across the content area while
-   the blocks stay capped and centred inside it. The inline padding grows by the
-   12px page gutter the block no longer has, so text keeps its position at
-   viewports narrower than the cap. !important mirrors the base padding rules
-   above; these rules must stay below them. */
+   the blocks stay capped and centred inside it.
+
+   The right padding mirrors the page gutter's scrollbar compensation: the
+   visual margin is the padding plus the 10px scrollbar, and when there is no
+   scrollbar --lc-scrollbar-offset adds those 10px back, so the text's right
+   edge stays put when the page starts to scroll. The offset resolves correctly
+   here because the editor spans the whole content area in wide mode.
+
+   Wide mode only exists from 46rem up (EDITOR_WIDE_MEDIA_QUERY), so there is
+   no breakpoint to mirror. !important matches the base padding rules above;
+   these rules must stay below them. */
 [data-editor-wide] .bn-root[data-color-scheme] .bn-editor {
   border-inline: 0;
   border-radius: 0;
   box-shadow: none;
-  padding-inline-start: 62px; /*50px + 12px gutter*/
-  padding-inline-end: calc(var(--lc-scrollbar-offset) + 10px) !important;
-  /*10px + 10px gutter (scrollbar width)*/
 }
 
+/* 50px on both sides once the scrollbar is counted in: the side menu keeps
+   its room on the left and the column reads symmetric. */
+[data-editor-wide]
+  .bn-root[data-color-scheme]
+  .bn-editor[contenteditable="true"] {
+  padding-inline-start: 50px;
+  padding-inline-end: calc(var(--lc-scrollbar-offset) + 40px) !important;
+}
+
+/* 20px on both sides once the scrollbar is counted in: the same text position
+   as the contained field's 12px gutter plus 8px padding. */
 [data-editor-wide]
   .bn-root[data-color-scheme]
   .bn-editor[contenteditable="false"] {
-  padding-inline-start: 20px !important; /*8px + 12px gutter*/
+  padding-inline-start: 20px !important;
   padding-inline-end: calc(var(--lc-scrollbar-offset) + 10px) !important;
-  /*10px + 10px gutter (scrollbar width)*/
-}
-
-@media (min-width: 728px) {
-  [data-editor-wide]
-    .bn-root[data-color-scheme]
-    .bn-editor[contenteditable="true"] {
-    padding-inline-start: 50px;
-    padding-inline-end: calc(var(--lc-scrollbar-offset) + 40px) !important;
-  }
 }
 
 [data-editor-wide] .bn-root[data-color-scheme] .bn-editor > .bn-block-group {
