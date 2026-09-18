@@ -36,3 +36,13 @@ export const sidePanelStateStorage = storage.defineItem<boolean>(
   "session:app-state-sidepanel-open",
   { fallback: false },
 );
+
+/**
+ * Whether the entry content editor renders in its wide layout (up to 1000px)
+ * instead of the page's regular content column. Synced so the preference
+ * follows the user across the side panel and the window.
+ */
+export const editorWideModeStorage = storage.defineItem<boolean>(
+  "sync:settings-editor-wide-mode",
+  { fallback: false },
+);

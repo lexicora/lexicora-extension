@@ -99,6 +99,12 @@ export function PageHeader({
 
   const isLeftAligned = headerTextAlignment === "left";
 
+  // The in-flow header sizes itself to the content column rather than relying
+  // on the page container's cap, because pages with a wide content editor lift
+  // that cap (see useEditorWideMode). Same width the compact strip, top bar
+  // and bottom navigation already use.
+  const headerWidthClasses = "max-w-(--lc-content-max-width) mx-auto";
+
   const hoverAnimClasses = {
     hidden: "opacity-0! translate-y-3 blur-xs",
     visible: "opacity-100 translate-y-0 blur-0",
@@ -111,6 +117,7 @@ export function PageHeader({
         <header
           className={cn(
             "flex items-center mb-4 w-full",
+            headerWidthClasses,
             classNameHeaderElement,
           )}
         >
@@ -172,6 +179,7 @@ export function PageHeader({
       <header
         className={cn(
           "mb-4 mt-1", // (had:  flex items-center justify-between) Assuming you might want flex here if you pass children, but relying on your own classes
+          headerWidthClasses,
           classNameHeaderElement,
           isLeftAligned ? "text-left" : "text-center",
         )}
@@ -280,6 +288,7 @@ export function PageHeader({
     <header
       className={cn(
         "flex flex-col w-full mb-4",
+        headerWidthClasses,
         classNameHeaderElement,
         isLeftAligned ? "text-left" : "text-center",
       )}

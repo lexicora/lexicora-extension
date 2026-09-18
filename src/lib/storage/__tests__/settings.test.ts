@@ -5,6 +5,7 @@ import {
   captureSuggestionStorage,
   captureSuggestionDelayMultiplierStorage,
   sidePanelStateStorage,
+  editorWideModeStorage,
 } from "../settings";
 
 describe("settings storage", () => {
@@ -59,6 +60,17 @@ describe("settings storage", () => {
     it("can be set to open", async () => {
       await sidePanelStateStorage.setValue(true);
       expect(await sidePanelStateStorage.getValue()).toBe(true);
+    });
+  });
+
+  describe("editorWideModeStorage", () => {
+    it("defaults to narrow", async () => {
+      expect(await editorWideModeStorage.getValue()).toBe(false);
+    });
+
+    it("persists wide mode", async () => {
+      await editorWideModeStorage.setValue(true);
+      expect(await editorWideModeStorage.getValue()).toBe(true);
     });
   });
 });

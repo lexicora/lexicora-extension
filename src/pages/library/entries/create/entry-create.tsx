@@ -25,6 +25,8 @@ import { toast } from "sonner";
 
 // INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
+import { EditorWidthToggle } from "@/components/editor/editor-width-toggle";
+import { useEditorWideMode } from "@/hooks/use-editor-wide-mode";
 import { FEATURES } from "@/constants/features";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -49,6 +51,7 @@ function EntryCreatePage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const editor = useCreateBlockNote(appBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
+  const editorWide = useEditorWideMode();
   const capturedData = useCaptureData();
   const { isAtBottom } = useScrollPos();
   const [language, setLanguage] = useState(navigator.language || "en");
@@ -289,6 +292,11 @@ function EntryCreatePage() {
     <PageContainer
       id="lc-new-entry-page"
       className="mb-0! min-h-[calc(100vh-2px)]"
+      // Each block below sets its own width so the editor can go wider than
+      // the page's content column (see useEditorWideMode). Important because
+      // .lc-page-container-inner is unlayered CSS and would win over the
+      // layered utility otherwise (same reason as mb-0! above).
+      classNameInner="max-w-none!"
     >
       {/*Make the inner container as tall (min-height) as the vh (but not overflowing) to prevent issues with editor*/}
       <PageHeader
@@ -339,16 +347,23 @@ function EntryCreatePage() {
             </div>
           </section>
         </div>
-        <div className="max-w-(--lc-content-max-width) /*px-px*/ mx-auto w-full">
-          <Label
-            htmlFor="lc-blocknote-view-new-entry"
-            onClick={() => {
-              editor.focus();
-            }}
-            className="text-sm ml-1.75 mb-1 mt-0"
-          >
-            Content
-          </Label>
+        <div className={editorWide.wrapperClassName}>
+          <div className="flex items-center justify-between mb-1">
+            <Label
+              htmlFor="lc-blocknote-view-new-entry"
+              onClick={() => {
+                editor.focus();
+              }}
+              className="text-sm ml-1.75"
+            >
+              Content
+            </Label>
+            <EditorWidthToggle
+              isWide={editorWide.isWide}
+              onToggle={editorWide.toggle}
+              className="mr-1"
+            />
+          </div>
           <div className="relative">
             {/*Unused css classes for div className="relative overflow-x-hidden min-h-[55vh] mt-1" */}
             {/* --- SKELETON LOADER OVERLAY (update to shadcn-ui component later)--- */}

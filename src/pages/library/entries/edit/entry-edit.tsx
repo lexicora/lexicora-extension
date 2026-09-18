@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { appBlockNoteConfig } from "@/components/editor/config";
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
+import { EditorWidthToggle } from "@/components/editor/editor-width-toggle";
+import { useEditorWideMode } from "@/hooks/use-editor-wide-mode";
 import { FEATURES } from "@/constants/features";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -74,6 +76,7 @@ function EntryEditContent({
   const formApiRef = useRef<EntryFormApi | null>(null);
   const [formIsDirty, setFormIsDirty] = useState(false);
   const [editorIsDirty, setEditorIsDirty] = useState(false);
+  const editorWide = useEditorWideMode();
   const initialDocJsonRef = useRef(JSON.stringify(editor.document));
   const blocker = useBlocker((formIsDirty || editorIsDirty) && !isSaving);
 
@@ -205,17 +208,24 @@ function EntryEditContent({
                 isLoading={isSaving}
                 onDirtyChange={setFormIsDirty}
               />
-              <Label
-                htmlFor="lc-blocknote-view-entry-edit"
-                onClick={() => editor.focus()}
-                className="text-sm ml-1 mb-1 mt-0"
-              >
-                Content
-              </Label>
+              <div className="flex items-center justify-between mb-1">
+                <Label
+                  htmlFor="lc-blocknote-view-entry-edit"
+                  onClick={() => editor.focus()}
+                  className="text-sm ml-1"
+                >
+                  Content
+                </Label>
+                <EditorWidthToggle
+                  isWide={editorWide.isWide}
+                  onToggle={editorWide.toggle}
+                  className="mr-0.5"
+                />
+              </div>
             </div>
           </section>
         </div>
-        <div className="max-w-(--lc-content-max-width) /*px-px*/ mx-auto w-full">
+        <div className={editorWide.wrapperClassName}>
           <BlockNoteView
             editor={editor}
             lang={entry.languageCode}
@@ -466,6 +476,11 @@ function EntryEditPage() {
     <PageContainer
       id="lc-entry-edit-page"
       className="mb-0! min-h-[calc(100vh-2px)]"
+      // Each block sets its own width so the editor can go wider than the
+      // page's content column (see useEditorWideMode). Important because
+      // .lc-page-container-inner is unlayered CSS and would win over the
+      // layered utility otherwise (same reason as mb-0! above).
+      classNameInner="max-w-none!"
     >
       <EntryEditContent
         entry={entry}

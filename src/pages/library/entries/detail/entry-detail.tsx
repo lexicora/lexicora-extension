@@ -1,4 +1,6 @@
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
+import { EditorWidthToggle } from "@/components/editor/editor-width-toggle";
+import { useEditorWideMode } from "@/hooks/use-editor-wide-mode";
 import { appBlockNoteConfig } from "@/components/editor/config";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -83,6 +85,7 @@ function EntryDetailPage() {
 
   const { entry, topic, blocks } = useEntryDetail(id);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const editorWide = useEditorWideMode();
 
   const handleAttributeToggle = async (
     attribute: "isFavorite" | "isPinned" | "isArchived",
@@ -161,7 +164,14 @@ function EntryDetailPage() {
   const hasContent = hasEditorContent(blocks);
 
   return (
-    <PageContainer id="lc-entry-detail-page">
+    <PageContainer
+      id="lc-entry-detail-page"
+      // Each section sets its own width so the content can go wider than the
+      // page's content column (see useEditorWideMode). Important because
+      // .lc-page-container-inner is unlayered CSS and would win over the
+      // layered utility otherwise.
+      classNameInner="max-w-none!"
+    >
       <PageHeader
         title="Entry"
         classNameHeaderElement="mb-3"
@@ -341,80 +351,88 @@ function EntryDetailPage() {
             />
           </Button>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                title="Copy and export"
-                className={cn(
-                  "ml-auto size-9 rounded-lg not-hover:text-muted-foreground",
-                  "hover:bg-blue-200/80 hover:text-blue-700 dark:hover:bg-blue-900/50 dark:hover:text-blue-400",
-                  "aria-expanded:bg-blue-200/80 aria-expanded:text-blue-700 dark:aria-expanded:bg-blue-900/50 dark:aria-expanded:text-blue-400",
-                )}
-              >
-                <EllipsisIcon className="size-4.5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="center" side="left" className="w-44">
-              <DropdownMenuLabel className="text-xs font-medium select-none text-muted-foreground py-1">
-                Copy
-              </DropdownMenuLabel>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                title="Title, source, tags and content. Keeps formatting where the target supports it, otherwise pastes Markdown."
-                onClick={() => handleCopy(false)}
-              >
-                <ClipboardIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
-                Entry
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                disabled={!hasContent}
-                onClick={() => handleCopy(true)}
-              >
-                <FileTextIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
-                Content only
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="cursor-pointer"
-                title="Save as a Markdown note, with metadata as front matter"
-                onClick={handleDownload}
-              >
-                <DownloadIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
-                Download .md
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Button
-            variant="ghost"
-            size="icon"
-            title="Edit entry"
-            onClick={() =>
-              navigate(`/library/entries/${entry.id}/edit`, {
-                viewTransition: true,
-              })
-            }
-            className="size-9 rounded-lg text-muted-foreground hover:bg-green-200/80 hover:text-green-700 dark:hover:bg-green-900/50 dark:hover:text-green-400"
-          >
-            <SquarePenIcon className="size-4.5" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            title="Delete entry"
-            onClick={() => setDeleteOpen(true)}
-            className="size-9 rounded-lg text-muted-foreground hover:bg-red-200/80 hover:text-red-700 dark:hover:bg-red-900/50 dark:hover:text-red-400"
-          >
-            <Trash2Icon className="size-4.5" />
-          </Button>
+          <div className="ml-auto flex items-center gap-1">
+            <EditorWidthToggle
+              isWide={editorWide.isWide}
+              onToggle={editorWide.toggle}
+              disabled={!hasContent}
+              className="size-9 rounded-lg"
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  title="Copy and export"
+                  className={cn(
+                    "size-9 rounded-lg not-hover:text-muted-foreground",
+                    "hover:bg-blue-200/80 hover:text-blue-700 dark:hover:bg-blue-900/50 dark:hover:text-blue-400",
+                    "aria-expanded:bg-blue-200/80 aria-expanded:text-blue-700 dark:aria-expanded:bg-blue-900/50 dark:aria-expanded:text-blue-400",
+                  )}
+                >
+                  <EllipsisIcon className="size-4.5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" side="left" className="w-44">
+                <DropdownMenuLabel className="text-xs font-medium select-none text-muted-foreground py-1">
+                  Copy
+                </DropdownMenuLabel>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  title="Title, source, tags and content. Keeps formatting where the target supports it, otherwise pastes Markdown."
+                  onClick={() => handleCopy(false)}
+                >
+                  <ClipboardIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
+                  Entry
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  disabled={!hasContent}
+                  onClick={() => handleCopy(true)}
+                >
+                  <FileTextIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
+                  Content only
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  title="Save as a Markdown note, with metadata as front matter"
+                  onClick={handleDownload}
+                >
+                  <DownloadIcon className="size-4 mr-2 text-blue-600 dark:text-blue-500" />
+                  Download .md
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button
+              variant="ghost"
+              size="icon"
+              title="Edit entry"
+              onClick={() =>
+                navigate(`/library/entries/${entry.id}/edit`, {
+                  viewTransition: true,
+                })
+              }
+              className="size-9 rounded-lg text-muted-foreground hover:bg-green-200/80 hover:text-green-700 dark:hover:bg-green-900/50 dark:hover:text-green-400"
+            >
+              <SquarePenIcon className="size-4.5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              title="Delete entry"
+              onClick={() => setDeleteOpen(true)}
+              className="size-9 rounded-lg text-muted-foreground hover:bg-red-200/80 hover:text-red-700 dark:hover:bg-red-900/50 dark:hover:text-red-400"
+            >
+              <Trash2Icon className="size-4.5" />
+            </Button>
+          </div>
         </div>
       </section>
 
       {/* Rich content */}
       {blocks !== null && (
-        <section className="mx-auto w-full /*max-w-[calc(var(--lc-content-max-width)+0.25rem)]*/ mt-2 mb-2">
+        <section className={cn(editorWide.wrapperClassName, "mt-2 mb-2")}>
           {/* <Separator className="mx-auto max-w-[calc(100%-8px)] mb-5 opacity-60" /> */}
           {hasContent ? (
             <EntryContentViewer initialBlocks={blocks!} />
