@@ -113,6 +113,17 @@ describe("alert block parsing", () => {
     expect(textOf(blocks[0]!)).toBe("Danger ahead");
   });
 
+  it("keeps line breaks in an alert typed by its attribute alone", async () => {
+    // How the capture parser writes a callout: no marker line to strip.
+    const editor = createEditor();
+    const blocks = await editor.tryParseHTMLToBlocks(
+      '<blockquote data-alert-type="tip"><p>One<br>Two</p></blockquote>',
+    );
+    expect(blocks[0]!.type).toBe("alert");
+    expect(blocks[0]!.props.type).toBe("tip");
+    expect(textOf(blocks[0]!)).toBe("One\nTwo");
+  });
+
   it("leaves an ordinary quote alone", async () => {
     const editor = createEditor();
     const blocks = await editor.tryParseMarkdownToBlocks("> Just a quote\n");

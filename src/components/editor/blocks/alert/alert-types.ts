@@ -126,7 +126,12 @@ export function stripAlertMarker(element: HTMLElement): void {
   const textNode = firstNonBlankTextNode(element);
   if (!textNode) return;
 
-  textNode.data = textNode.data.replace(alertMarkerPattern, "");
+  const message = textNode.data.replace(alertMarkerPattern, "");
+  // No marker: the alert is typed by `data-alert-type` alone, as the capture
+  // parser writes it. Nothing to strip, and a <br> ahead is the message's own.
+  if (message === textNode.data) return;
+
+  textNode.data = message;
   let next = textNode.nextSibling;
   if (textNode.data.trim() === "") textNode.remove();
 
