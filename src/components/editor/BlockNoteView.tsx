@@ -24,6 +24,7 @@ import {
   NestBlockButton,
   TextAlignButton,
   UnnestBlockButton,
+  SideMenuController,
   SuggestionMenuController,
   GridSuggestionMenuController,
 } from "@blocknote/react";
@@ -40,6 +41,7 @@ import {
   getCustomSlashMenuItems,
   type AppBlockNoteEditor,
 } from "./config";
+import { SideMenu } from "./side-menu";
 import { cn } from "@/lib/utils";
 
 export function BlockNoteView({
@@ -95,6 +97,7 @@ export function BlockNoteView({
         Tooltip,
       }}
       formattingToolbar={false}
+      sideMenu={false}
       slashMenu={false}
       emojiPicker={false}
       //onSelectionChange={onSelectionChange}
@@ -104,6 +107,7 @@ export function BlockNoteView({
       //lc-data-theming
       // ...props
     >
+      <SideMenuController sideMenu={SideMenu} />
       <FormattingToolbarController
         formattingToolbar={() => (
           <FormattingToolbar>
