@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   parseSearchQuery,
+  searchTextPattern,
   siteHostnames,
   siteSearchQuery,
 } from "../search-query";
@@ -73,5 +74,20 @@ describe("siteSearchQuery", () => {
   it("builds what the home page's link puts in the box", () => {
     expect(siteSearchQuery("react.dev")).toBe("site:react.dev");
     expect(siteSearchQuery("www.react.dev")).toBe("site:react.dev");
+  });
+});
+
+describe("searchTextPattern", () => {
+  it("matches the text literally, lowercased", () => {
+    for (const text of ["C++", "(Draft)", "a.b*c?", "[x] {y} ^$|\\"]) {
+      const pattern = new RegExp(searchTextPattern(text)!);
+      expect(pattern.test(text.toLowerCase())).toBe(true);
+    }
+    expect(new RegExp(searchTextPattern("a.b")!).test("axb")).toBe(false);
+  });
+
+  it("is null for empty or blank text", () => {
+    expect(searchTextPattern("")).toBeNull();
+    expect(searchTextPattern("   ")).toBeNull();
   });
 });

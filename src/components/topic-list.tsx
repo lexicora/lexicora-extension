@@ -5,11 +5,15 @@ import { TopicItem } from "@/components/topic-item";
 import type { TopicDocType } from "@/db/schemas/topic";
 import { FoldersIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useNavigationType } from "react-router-dom";
+import {
+  NavigationType,
+  useNavigate,
+  useNavigationType,
+} from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
 import { useRxCollection } from "rxdb/plugins/react";
 import type { MangoQuerySelector } from "rxdb";
-import { parseSearchQuery } from "@/lib/search-query";
+import { parseSearchQuery, searchTextPattern } from "@/lib/search-query";
 
 // TODO: Maybe put the logic of setting the stuff for session storage in the return of component useEffect return statement for unmount.
 
@@ -37,15 +41,20 @@ export function TopicList({
   const onlyFavorites = filter?.onlyFavorites ?? false;
   const onlyArchived = filter?.onlyArchived ?? false;
 
+  // A site filter is about where an entry was captured from, and a topic
+  // has no site — so it matches no topics, rather than being ignored and
+  // quietly listing every one of them.
+  const matchesNoTopics = parseSearchQuery(search).site !== null;
+
   // On POP, restore the scroll position (plain number, no JSON overhead)
   const savedScrollTop = useMemo(() => {
-    if (navigationType !== "POP") return 0;
+    if (navigationType !== NavigationType.Pop) return 0;
     return parseInt(sessionStorage.getItem("topicListScrollTop") || "0", 10);
   }, [navigationType]);
 
   // If we arrived here via standard navigation (not back/POP), clear saved scroll
   useEffect(() => {
-    if (navigationType !== "POP") {
+    if (navigationType !== NavigationType.Pop) {
       sessionStorage.removeItem("topicListScrollTop");
     }
   }, [navigationType]);
@@ -60,16 +69,9 @@ export function TopicList({
   }, [search, onlyFavorites, onlyArchived]);
 
   useEffect(() => {
-    if (!collection) return;
+    if (!collection || matchesNoTopics) return;
 
-    // A site filter is about where an entry was captured from, and a topic
-    // has no site — so it matches no topics, rather than being ignored and
-    // quietly listing every one of them.
-    const { site, text } = parseSearchQuery(search);
-    if (site) {
-      setTopics([]);
-      return;
-    }
+    const { text } = parseSearchQuery(search);
 
     const selector: MangoQuerySelector<TopicDocType> = {};
     if (onlyArchived) {
@@ -82,20 +84,9 @@ export function TopicList({
       selector.isFavorite = true;
     }
 
-    if (text.trim()) {
-      try {
-        // Escape special characters so they are treated as literals
-        const escapedSearch = text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-        // Test the regex string before using it
-        new RegExp(escapedSearch, "i");
-
-        // Query against the pre-lowercased searchBlob (name + tags + description snippet)
-        selector.searchBlob = { $regex: escapedSearch.toLowerCase() };
-      } catch (error) {
-        console.error("Failed to compile search regex:", error);
-      }
-    }
+    // Matched against the pre-lowercased searchBlob (name + tags + description snippet)
+    const pattern = searchTextPattern(text);
+    if (pattern) selector.searchBlob = { $regex: pattern };
 
     const sub = collection
       .find({
@@ -117,19 +108,22 @@ export function TopicList({
       });
 
     return () => sub.unsubscribe();
-  }, [collection, search, onlyFavorites, onlyArchived]);
+  }, [collection, search, onlyFavorites, onlyArchived, matchesNoTopics]);
+
+  const visibleTopics = matchesNoTopics ? [] : topics;
+  const isLoaded = matchesNoTopics || isDataLoaded;
 
   return (
     <>
       <div className="flex items-center gap-2.5 w-full px-1.5 pb-0.75">
         <Separator className="flex-1" />
         <span className="text-xs text-muted-foreground font-medium tracking-widest">
-          <FoldersIcon className="size-3.5 inline -mt-0.5" /> {topics.length}
+          <FoldersIcon className="size-3.5 inline -mt-0.5" /> {visibleTopics.length}
           {/* {topics.length === 1 ? " item" : " items"} */}
         </span>
         <Separator className="flex-1" />
       </div>
-      {isDataLoaded && topics.length === 0 && (
+      {isLoaded && visibleTopics.length === 0 && (
         <div className="flex flex-col items-center justify-center py-10 px-3 text-center">
           {/*TODO: Potentially reset search params, except for topic or entry tab, when navigating to create a new topic or entry */}
           {search.trim() ? (
@@ -178,12 +172,14 @@ export function TopicList({
         </div>
       )}
 
-      {isDataLoaded && topics.length > 0 && (
+      {isLoaded && visibleTopics.length > 0 && (
         <Virtuoso
           useWindowScroll
           initialScrollTop={savedScrollTop}
-          data={topics}
+          data={visibleTopics}
           overscan={220} // TODO: potentially increase/decrease (was initially 200)
+          // A render function Virtuoso calls, not a component, so nothing remounts.
+          // oxlint-disable-next-line react/no-unstable-nested-components
           itemContent={(_, topic) => (
             <div className="px-0.75 py-1.25">
               <TopicItem topic={topic} topUIScrollOffset={topUIScrollOffset} />

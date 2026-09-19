@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useDeferredValue, useEffect, useState } from "react";
 import {
+  NavigationType,
   useNavigate,
   useNavigationType,
   useParams,
@@ -48,7 +49,7 @@ function TopicEntriesPage() {
   // By the time EntryList mounts (after the async filterReady gate), navigationType would
   // already be "REPLACE", causing EntryList's internal check to miss the saved position.
   const [restoredScrollTop] = useState<number | undefined>(() => {
-    if (navigationType !== "POP") return undefined;
+    if (navigationType !== NavigationType.Pop) return undefined;
     return parseInt(sessionStorage.getItem(`entryList:${id ?? ""}`) || "0", 10);
   });
 

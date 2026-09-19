@@ -47,3 +47,15 @@ export function siteHostnames(site: string): string[] {
 export function siteSearchQuery(hostname: string): string {
   return `site:${hostname.replace(/^www\./, "")}`;
 }
+
+/**
+ * The `$regex` to match search text against a lowercased `searchBlob`: the
+ * text as a literal, so `c++` or `(draft)` match themselves. Escaping every
+ * special character means the pattern always compiles.
+ * @returns null when there is no text to search for.
+ */
+export function searchTextPattern(text: string): string | null {
+  const trimmed = text.trim();
+  if (!trimmed) return null;
+  return trimmed.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").toLowerCase();
+}

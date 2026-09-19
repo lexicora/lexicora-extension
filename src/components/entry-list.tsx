@@ -5,11 +5,19 @@ import { EntryItem } from "@/components/entry-item";
 import type { EntryDocType } from "@/db/schemas/entry";
 import { FilesIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useNavigationType } from "react-router-dom";
+import {
+  NavigationType,
+  useNavigate,
+  useNavigationType,
+} from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
 import { useRxCollection } from "rxdb/plugins/react";
 import type { MangoQuerySelector } from "rxdb";
-import { parseSearchQuery, siteHostnames } from "@/lib/search-query";
+import {
+  parseSearchQuery,
+  searchTextPattern,
+  siteHostnames,
+} from "@/lib/search-query";
 
 // TODO: Maybe put the logic of setting the stuff for session storage in the return of component useEffect return statement for unmount.
 
@@ -56,13 +64,13 @@ export function EntryList({
   // the parent captures it before any useEffect can change navigationType.
   const savedScrollTop = useMemo(() => {
     if (restoredScrollTopProp !== undefined) return restoredScrollTopProp;
-    if (navigationType !== "POP") return 0;
+    if (navigationType !== NavigationType.Pop) return 0;
     return parseInt(sessionStorage.getItem(scrollStorageKey) || "0", 10);
   }, [navigationType, scrollStorageKey, restoredScrollTopProp]);
 
   // If we arrived here via standard navigation (not back/POP), reset the Virtuoso state
   useEffect(() => {
-    if (navigationType !== "POP") {
+    if (navigationType !== NavigationType.Pop) {
       sessionStorage.removeItem(scrollStorageKey);
     }
   }, [navigationType, scrollStorageKey]);
@@ -103,20 +111,9 @@ export function EntryList({
       selector.hostnameUrl = { $in: siteHostnames(site) };
     }
 
-    if (text.trim()) {
-      try {
-        // Escape special characters so they are treated as literals
-        const escapedSearch = text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-        // Test the regex string before using it
-        new RegExp(escapedSearch, "i");
-
-        // Query against the pre-lowercased searchBlob (title + tags + description snippet + siteName)
-        selector.searchBlob = { $regex: escapedSearch.toLowerCase() };
-      } catch (error) {
-        console.error("Failed to compile search regex:", error);
-      }
-    }
+    // Matched against the pre-lowercased searchBlob (title + tags + description snippet + siteName)
+    const pattern = searchTextPattern(text);
+    if (pattern) selector.searchBlob = { $regex: pattern };
 
     const sub = collection
       .find({
@@ -216,6 +213,8 @@ export function EntryList({
           initialScrollTop={savedScrollTop}
           data={entries}
           overscan={220} // TODO: potentially increase/decrease (was initially 200)
+          // A render function Virtuoso calls, not a component, so nothing remounts.
+          // oxlint-disable-next-line react/no-unstable-nested-components
           itemContent={(_, entry) => (
             <div className="px-0.75 py-1.25">
               <EntryItem
