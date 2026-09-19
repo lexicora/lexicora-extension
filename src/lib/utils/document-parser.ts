@@ -1,7 +1,9 @@
-// document-parser.ts v0.2.0
+// document-parser.ts v0.3.0
 // TODO: Potentially collect an array of relevant tags.
 
 import DomPurify from "dompurify";
+
+import { normalizeCallouts } from "./document-callouts";
 
 export interface ParseResult {
   content: string;
@@ -102,183 +104,491 @@ export function extractPageMetadata(doc: Document): PageMetadata {
 // }
 
 /**
+ * The tags the editor has a block or inline style for. The sanitizer unwraps
+ * everything else and keeps its text.
+ */
+const markdownEquivalentTags = [
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "p",
+  "ul",
+  "ol",
+  "li",
+  "blockquote",
+  "pre",
+  "code",
+  "em",
+  "strong",
+  "i",
+  "b",
+  "del",
+  "s",
+  "u",
+  "a",
+  "img",
+  "hr",
+  "br",
+  "table",
+  "thead",
+  "tbody",
+  "tr",
+  "th",
+  "td",
+  "details",
+  "summary",
+];
+
+/** A selection keeps its generic wrappers too, so it stays as it was laid out. */
+const snippetTags = [...markdownEquivalentTags, "div", "span"];
+
+const allowedAttributes = [
+  "href",
+  "src",
+  "alt",
+  "title",
+  "open",
+  "data-language", // A code block's language, read by the editor
+  "data-alert-type", // An alert's type, see `document-callouts.ts`
+];
+
+/**
+ * What a reader never sees as text: hidden elements, and controls whose
+ * labels the sanitizer would otherwise unwrap into the content ("Copy",
+ * "Share", a select's options). Dropped from pages and selections alike.
+ */
+const invisibleSelectors = [
+  "script",
+  "style",
+  "template",
+  "button",
+  "input",
+  "select",
+  "textarea",
+  "[hidden]",
+  '[style*="display: none"]',
+  '[style*="display:none"]',
+  '[style*="visibility: hidden"]',
+  ".visually-hidden",
+  ".sr-only", // Screen-reader only text (often duplicates visual content)
+  // No aria-hidden, because content might not be hidden visually.
+];
+
+/**
+ * Page furniture around the content, dropped from full pages only.
+ * TODO MAYBE: Make configurable for other pages, some of them might have useful stuff in the header/footer/aside for example.
+ */
+const junkSelectors = [
+  "nav",
+  "footer",
+  "header", // MAYBE: leave this one in.
+  "aside",
+  "noscript",
+  "iframe",
+  "svg",
+  "form",
+  "dialog",
+  '[role="navigation"]',
+  '[role="banner"]',
+  '[role="contentinfo"]',
+  '[role="dialog"]',
+  ".ad",
+  ".advertisement",
+  ".social-share",
+  ".comments",
+  "#comments",
+  ".sidebar",
+  ".newsletter",
+  ".subscribe",
+  ".related-posts",
+  ".author-bio",
+  ".tags",
+  ".share",
+  ".mw-editsection",
+  ".reference",
+  ".noprint",
+  ".infobox",
+  ".navbox",
+  // Tailwind. Not applied to selections: `hidden md:block` is visible on
+  // desktop, where the user selected it.
+  ".hidden",
+];
+
+const unlikelyRegex =
+  /share|social|promo|newsletter|subscribe|related|sponsor|tags|author|comments|disqus|cookie|popup|modal|outbrain|taboola|advert/i;
+const likelyRegex = /article|body|content|main|page|post|text|blog|wiki/i;
+
+const headingButtonSelector = ["h1", "h2", "h3", "h4", "h5", "h6"]
+  .map((heading) => `${heading} button`)
+  .join(", ");
+
+const semanticContainerSelector =
+  'article, main, [role="main"], .markdown-body, .post-content, #bodyContent';
+
+/**
+ * The widest srcset image to pick: sharp in the wide editor, without pulling
+ * a print-size original. Densities (`2x`) are capped the same way.
+ */
+const maxImageWidth = 1600;
+const maxImageDensity = 2;
+
+/**
+ * One srcset candidate. The URL runs to the next whitespace, so commas inside
+ * it (Cloudinary's `w_400,c_fill`) stay part of it; a comma right after it,
+ * or one after its descriptor, ends the candidate.
+ */
+const srcsetCandidatePattern = /[\s,]*(\S*[^\s,])(?:,+|\s+([^,]*)(?:,|$)|$)/g;
+
+/**
+ * A language class as highlighters write it: `language-js` (Prism,
+ * highlight.js), `lang-js`, `highlight-source-js` (GitHub).
+ */
+const codeLanguagePattern =
+  /\b(?:lang(?:uage)?|highlight(?:-source|-text)?)-([a-z0-9+#]+)/i;
+
+/** The document that owns `root`, for creating elements that go into it. */
+function documentOf(root: Document | Element): Document {
+  return root.ownerDocument ?? (root as Document);
+}
+
+function removeAll(root: Document | Element, selectors: string[]): void {
+  root.querySelectorAll(selectors.join(", ")).forEach((el) => el.remove());
+}
+
+function toAbsoluteUrl(url: string, baseUrl: string): string | null {
+  try {
+    return new URL(url, baseUrl).href;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Calculates the ratio of link text to total text within a DOM node.
+ * @param textLength The node's trimmed text length, when the caller has it already.
  * @returns a number between 0.0 (no links) and 1.0 (entirely links).
  */
-function getLinkDensity(element: Element): number {
-  const textLength = element.textContent?.trim().length || 0;
+function getLinkDensity(
+  element: Element,
+  textLength = element.textContent?.trim().length ?? 0,
+): number {
   if (textLength === 0) return 0;
 
   let linkLength = 0;
   element.querySelectorAll("a").forEach((link) => {
-    linkLength += link.textContent?.trim().length || 0;
+    linkLength += link.textContent?.trim().length ?? 0;
   });
 
   return linkLength / textLength;
 }
 
 /**
- * Helper function to normalize media and links in the document before pruning.
- * This ensures that we have absolute URLs for images and links, and that code blocks have consistent language annotations.
- * @param root The root element (Document or a specific Element) to normalize. This allows us to reuse this logic for both the full document and user-selected snippets.
+ * The srcset candidate to keep: the largest within the cap, or the smallest
+ * when every one is larger. Placeholder `data:` candidates are skipped.
  */
-function normalizeMediaAndLinks(root: Document | Element) {
-  // 0. Rescue images from <noscript> tags (e.g., Medium, Substack)
+function pickFromSrcset(srcset: string | null | undefined): string | null {
+  if (!srcset) return null;
+
+  const candidates = Array.from(
+    srcset.matchAll(srcsetCandidatePattern),
+    ([, url = "", descriptor = ""]) => ({
+      url,
+      size: Number.parseFloat(descriptor) || 1,
+      isWidth: descriptor.trim().endsWith("w"),
+    }),
+  )
+    .filter(({ url }) => url && !url.startsWith("data:"))
+    .sort((a, b) => a.size - b.size);
+
+  const limit = candidates.some((c) => c.isWidth)
+    ? maxImageWidth
+    : maxImageDensity;
+  const fitting = candidates.filter((c) => c.size <= limit);
+  return (fitting.at(-1) ?? candidates[0])?.url ?? null;
+}
+
+/**
+ * Lazy-loading sites (e.g., Medium, Substack) put the real image in a
+ * <noscript>, next to a placeholder <img>. Brings it out so the image
+ * normalization below sees it.
+ */
+function rescueNoscriptImages(root: Document | Element): void {
+  const doc = documentOf(root);
+
   root.querySelectorAll("noscript").forEach((noscript) => {
-    const html = noscript.textContent || noscript.innerHTML;
-    if (html.includes("<img")) {
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = html;
-      const hiddenImage = tempDiv.querySelector("img");
-      if (hiddenImage) {
-        // Many lazy-loading sites have a placeholder <img data-src="..."> adjacent to
-        // the <noscript>. If we blindly insert the rescued img, Step 2 processes both
-        // and produces a duplicate. Instead, write the rescued src onto the existing
-        // placeholder's data-src and remove the noscript — Step 2 resolves it normally.
-        const prev = noscript.previousElementSibling;
-        const next = noscript.nextElementSibling;
-        const adjacentImg =
-          prev?.tagName === "IMG"
-            ? (prev as HTMLImageElement)
-            : next?.tagName === "IMG"
-              ? (next as HTMLImageElement)
-              : null;
+    // With scripting on, the browser keeps noscript content as raw markup.
+    const markup = noscript.textContent || noscript.innerHTML;
+    if (!markup.includes("<img")) return;
 
-        if (adjacentImg) {
-          const rescuedSrc =
-            hiddenImage.getAttribute("src") ||
-            hiddenImage.getAttribute("data-src");
-          if (rescuedSrc) {
-            adjacentImg.setAttribute("data-src", rescuedSrc);
-          }
-          noscript.remove();
-        } else {
-          noscript.replaceWith(hiddenImage);
-        }
-      }
+    // A template's content is inert, so parsing it does not load the image.
+    const template = doc.createElement("template");
+    template.innerHTML = markup;
+    const hiddenImage = template.content.querySelector("img");
+    if (!hiddenImage) return;
+
+    // Many lazy-loading sites have a placeholder <img data-src="..."> adjacent to
+    // the <noscript>. If we blindly insert the rescued img, the normalization
+    // processes both and produces a duplicate. Instead, write the rescued src onto
+    // the existing placeholder's data-src and remove the noscript.
+    const prev = noscript.previousElementSibling;
+    const next = noscript.nextElementSibling;
+    const adjacentImg =
+      prev?.tagName === "IMG" ? prev : next?.tagName === "IMG" ? next : null;
+
+    if (adjacentImg) {
+      const rescuedSrc =
+        hiddenImage.getAttribute("src") || hiddenImage.getAttribute("data-src");
+      if (rescuedSrc) adjacentImg.setAttribute("data-src", rescuedSrc);
+      noscript.remove();
+    } else {
+      noscript.replaceWith(hiddenImage);
     }
   });
+}
 
-  // 1. Picture / Source extraction
-  root.querySelectorAll("picture").forEach((picture) => {
-    const img = picture.querySelector("img");
-    const sources = Array.from(picture.querySelectorAll("source"));
-
-    if (img && sources.length > 0) {
-      const bestSource = sources.find((s) => s.getAttribute("srcset"));
-      if (bestSource) {
-        const srcset = bestSource.getAttribute("srcset") || "";
-        const firstUrl = srcset.split(",")[0]?.trim().split(/\s+/)[0];
-        if (firstUrl) {
-          img.setAttribute("data-extracted-source", firstUrl);
-        }
-      }
-    }
-  });
-
-  // 2. Image Normalization (NATIVE BROWSER RESOLUTION)
+/**
+ * Gives every image one absolute `src`, taken from the best source it has:
+ * its srcset, its <picture>'s sources, then the lazy-loading attributes.
+ * Images with no source at all are removed.
+ */
+function normalizeImages(root: Document | Element, baseUrl: string): void {
   root.querySelectorAll("img").forEach((img) => {
-    // Check for lazy-load or extracted strings first
-    let bestSrcStr =
-      img.getAttribute("data-extracted-source") ||
+    const picture =
+      img.parentElement?.tagName === "PICTURE" ? img.parentElement : null;
+    const source = picture?.querySelector(
+      "source[srcset], source[data-srcset]",
+    );
+
+    const candidate =
+      pickFromSrcset(img.getAttribute("srcset")) ||
+      pickFromSrcset(
+        source?.getAttribute("srcset") ?? source?.getAttribute("data-srcset"),
+      ) ||
+      pickFromSrcset(img.getAttribute("data-srcset")) ||
       img.getAttribute("data-src") ||
-      img.getAttribute("data-lazy-src");
+      img.getAttribute("data-lazy-src") ||
+      img.getAttribute("src");
 
-    const srcset = img.getAttribute("srcset");
-    if (srcset) {
-      const firstSrc = srcset.split(",")[0]?.trim().split(/\s+/)[0];
-      if (firstSrc) bestSrcStr = firstSrc;
-    }
-
-    // If we found a better source string, assign it to the DOM property.
-    // The browser will instantly and natively resolve this to an absolute URL!
-    if (bestSrcStr) {
-      img.src = bestSrcStr;
-    }
-
-    // Now, lock in the absolute URL as the explicit attribute for DOMPurify
-    if (img.src) {
-      img.setAttribute("src", img.src);
-
-      // Cleanup
-      img.removeAttribute("srcset");
-      img.removeAttribute("sizes");
-      img.removeAttribute("data-src");
-      img.removeAttribute("data-lazy-src");
-      img.removeAttribute("loading");
+    const url = candidate ? toAbsoluteUrl(candidate, baseUrl) : null;
+    if (url) {
+      img.setAttribute("src", url);
     } else {
       img.remove();
     }
   });
+}
 
-  // 3. Link Normalization (NATIVE BROWSER RESOLUTION)
-  root.querySelectorAll("a").forEach((link) => {
-    if (link.hasAttribute("href")) {
-      // link.href naturally returns the absolute, fully-resolved URL.
-      // We overwrite the attribute with this absolute value.
-      link.setAttribute("href", link.href);
+function normalizeLinks(root: Document | Element, baseUrl: string): void {
+  root.querySelectorAll("a[href]").forEach((link) => {
+    const url = toAbsoluteUrl(link.getAttribute("href") ?? "", baseUrl);
+    if (url) {
+      link.setAttribute("href", url);
+    } else {
+      link.removeAttribute("href");
+    }
+  });
+}
+
+function detectCodeLanguage(pre: Element): string | null {
+  // The block itself, its <code>, then the wrapper GitHub and Docusaurus put
+  // the language on.
+  for (const el of [pre, pre.querySelector("code"), pre.parentElement]) {
+    if (!el) continue;
+    const declared =
+      el.getAttribute("data-language") || el.getAttribute("data-lang");
+    if (declared) return declared;
+    const match = codeLanguagePattern.exec(el.getAttribute("class") ?? "");
+    if (match?.[1]) return match[1];
+  }
+
+  // Some sites only mark the language on an inner span.
+  const marked = pre.querySelectorAll('[class*="lang"], [class*="highlight-"]');
+  for (const el of Array.from(marked)) {
+    const match = codeLanguagePattern.exec(el.getAttribute("class") ?? "");
+    if (match?.[1]) return match[1];
+  }
+
+  return null;
+}
+
+/**
+ * Reduces a code block to the shape the editor reads, a <pre> holding one
+ * <code> with the language on it, and keeps only the text: the editor's code
+ * block is plain text, so the highlighter's markup would be dropped anyway.
+ */
+function normalizeCodeBlock(pre: Element, doc: Document): void {
+  const language = detectCodeLanguage(pre);
+
+  // Copy buttons
+  pre.querySelectorAll("button").forEach((button) => button.remove());
+  pre.querySelectorAll("br").forEach((br) => br.replaceWith("\n"));
+  // Some highlighters (Expressive Code) wrap each line in a block element
+  // with no newline between them, so the text would run the lines together.
+  pre.querySelectorAll("div, p").forEach((line) => {
+    const next = line.nextSibling;
+    if (
+      next &&
+      !next.textContent?.startsWith("\n") &&
+      !line.textContent?.endsWith("\n")
+    ) {
+      line.append("\n");
     }
   });
 
-  // 4. Code Block Normalization
-  root.querySelectorAll("pre, code").forEach((block) => {
-    let detectedLang =
-      block.getAttribute("data-language") ||
-      block.getAttribute("data-lang") ||
-      "";
+  const code = doc.createElement("code");
+  code.textContent = (pre.textContent ?? "").replace(/\n+$/, "");
+  if (language) code.setAttribute("data-language", language.toLowerCase());
+  pre.replaceChildren(code);
+}
 
-    if (!detectedLang) {
-      const className = block.getAttribute("class") || "";
-      const match = className.match(/(?:lang|language|highlight)-([a-z0-9]+)/i);
-      if (match?.[1]) detectedLang = match[1];
+/**
+ * Normalizes media, links, code and callouts before any pruning, so the
+ * content is in the shapes the pruning and the editor expect. Shared by the
+ * full-page and selection parsers.
+ * @param baseUrl The page's URL, which relative URLs are resolved against.
+ */
+function normalizeContent(root: Document | Element, baseUrl: string): void {
+  const doc = documentOf(root);
+  rescueNoscriptImages(root);
+  normalizeImages(root, baseUrl);
+  normalizeLinks(root, baseUrl);
+  root.querySelectorAll("pre").forEach((pre) => normalizeCodeBlock(pre, doc));
+  normalizeCallouts(root);
+
+  // Buttons are dropped as controls later, except an accordion's: its
+  // question is a button inside a heading, so keep the text.
+  root
+    .querySelectorAll(headingButtonSelector)
+    .forEach((button) => button.replaceWith(...Array.from(button.childNodes)));
+}
+
+/**
+ * Removes blocks whose class or id reads like page furniture, and link farms
+ * (navigation, "Related articles") that no class gives away.
+ */
+function pruneUnlikelyBlocks(doc: Document): void {
+  doc.querySelectorAll("div, section, ul, ol, li, p").forEach((el) => {
+    // Already gone with a removed ancestor.
+    if (!el.isConnected) return;
+
+    // 1. Regex Pruning
+    const className = el.getAttribute("class") ?? "";
+    const id = el.getAttribute("id") ?? "";
+    const matchString = `${className} ${id}`;
+    if (unlikelyRegex.test(matchString) && !likelyRegex.test(matchString)) {
+      el.remove();
+      return;
     }
 
-    if (block.tagName === "PRE") {
-      const childCode = block.querySelector("code");
+    // 2. STRUCTURAL HEURISTIC PRUNING (The "Link Farm" Killer)
+    // Only containers, which often hold lists of links.
+    if (el.tagName === "LI" || el.tagName === "P") return;
 
-      // Check the child <code> tag for classes
-      if (!detectedLang && childCode) {
-        const childClass = childCode.getAttribute("class") || "";
-        const childMatch = childClass.match(
-          /(?:lang|language|highlight)-([a-z0-9]+)/i,
-        );
-        if (childMatch?.[1]) detectedLang = childMatch[1];
-      }
+    // We don't want to accidentally delete short blocks (like a 2-word author byline
+    // that is fully hyperlinked), so we only apply this rule to blocks with some substance.
+    // 65 was 30 before, was too aggressive.
+    const textLength = el.textContent?.trim().length ?? 0;
 
-      // Check child <span> tags for classes (Crucial for sites that don't use <code>)
-      if (!detectedLang) {
-        const childSpans = block.querySelectorAll("span");
-        for (const span of Array.from(childSpans)) {
-          const spanClass = span.getAttribute("class") || "";
-          const spanMatch = spanClass.match(
-            /(?:lang|language|highlight)-([a-z0-9]+)/i,
-          );
-          if (spanMatch?.[1]) {
-            detectedLang = spanMatch[1];
-            break; // Stop looking once we find a valid language
-          }
-        }
-      }
-
-      // STRUCTURAL FIX: Ensure the <pre> has exactly one <code> wrapper
-      // If it doesn't have a <code> tag, we wrap all its contents in one.
-      if (!childCode) {
-        const codeWrapper = document.createElement("code");
-        // Move all existing children (spans, text nodes) inside the new <code> wrapper
-        while (block.firstChild) {
-          codeWrapper.appendChild(block.firstChild);
-        }
-        block.appendChild(codeWrapper);
-      }
-    }
-
-    // Lock in the data attribute and clean up
-    if (detectedLang) {
-      block.setAttribute("data-language", detectedLang.toLowerCase());
-      // Optional: clean up the class attribute so DOMPurify doesn't have to deal with it
-      block.removeAttribute("class");
+    // A density > 0.6 means 60% of the words are links.
+    if (textLength > 65 && getLinkDensity(el, textLength) > 0.6) {
+      el.remove();
     }
   });
+
+  doc.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li").forEach((el) => {
+    if (!el.textContent?.trim() && !el.querySelector("img")) {
+      el.remove();
+    }
+  });
+}
+
+/**
+ * The longest semantic container: a page's <main> usually holds its
+ * <article>, and a feed holds many. An empty one does not count.
+ */
+function findSemanticContainer(doc: Document): Element | null {
+  let best: Element | null = null;
+  let bestLength = 0;
+  const containers = doc.querySelectorAll(semanticContainerSelector);
+  for (const el of Array.from(containers)) {
+    const length = el.textContent?.length ?? 0;
+    if (length > bestLength) {
+      best = el;
+      bestLength = length;
+    }
+  }
+  return best;
+}
+
+/**
+ * The fallback for pages without a semantic container, after Readability:
+ * each paragraph adds to its parent's score and half as much to its
+ * grandparent's, so the element holding the prose outscores the layout
+ * wrappers around it. Link-heavy candidates are marked down.
+ */
+function findContentByScore(doc: Document): Element {
+  const scores = new Map<Element, number>();
+  const addScore = (el: Element | null | undefined, score: number) => {
+    if (el) scores.set(el, (scores.get(el) ?? 0) + score);
+  };
+
+  doc.body.querySelectorAll("p, pre, td").forEach((paragraph) => {
+    const text = paragraph.textContent?.trim() ?? "";
+    if (text.length < 25) return; // Captions, labels, stray fragments
+
+    // Longer, comma-rich text reads as prose rather than interface copy.
+    const commas = text.split(",").length - 1;
+    const score = 1 + commas + Math.min(Math.floor(text.length / 100), 3);
+    addScore(paragraph.parentElement, score);
+    addScore(paragraph.parentElement?.parentElement, score / 2);
+  });
+
+  let best: Element = doc.body;
+  let bestScore = 0;
+  for (const [candidate, score] of scores) {
+    const adjusted = score * (1 - getLinkDensity(candidate));
+    if (adjusted > bestScore) {
+      best = candidate;
+      bestScore = adjusted;
+    }
+  }
+
+  // An article split into sibling sections scores each section on its own.
+  // When their shared parent scores nearly as high, it is the article.
+  const threshold = (scores.get(best) ?? 0) * 0.75;
+  let parent = best.parentElement;
+  while (parent && (scores.get(parent) ?? 0) >= threshold && threshold > 0) {
+    best = parent;
+    parent = parent.parentElement;
+  }
+
+  return best;
+}
+
+/**
+ * Enforces the Markdown-equivalent schema, returning the content with its
+ * plain text.
+ */
+function sanitize(
+  html: string,
+  allowedTags: string[],
+): Pick<ParseResult, "content" | "textContent" | "length"> {
+  // RETURN_DOM hands back the sanitizer's own inert document. Reading the
+  // text there, rather than from a scratch element on the page, keeps the
+  // page from loading every image in the content. Typed as a Node, it is
+  // always that document's <body>.
+  const body = DomPurify.sanitize(html, {
+    ALLOWED_TAGS: allowedTags,
+    ALLOWED_ATTR: allowedAttributes,
+    ALLOW_DATA_ATTR: false,
+    RETURN_DOM: true,
+  }) as HTMLElement;
+  const textContent = body.textContent ?? "";
+
+  return { content: body.innerHTML, textContent, length: textContent.length };
 }
 
 /**
@@ -290,191 +600,28 @@ function normalizeMediaAndLinks(root: Document | Element) {
 export function parseDocument(doc: Document): ParseResult {
   // STEP 1: EXTRACT METADATA
   //* Must run before normalization and pruning below, which mutate `doc`.
-  const { title, excerpt, byline, siteName, publishedTime, faviconUrl } =
-    extractPageMetadata(doc);
+  const metadata = extractPageMetadata(doc);
 
-  // STEP 2: BULLETPROOF IMAGE NORMALIZATION
-  normalizeMediaAndLinks(doc);
+  // STEP 2: NORMALIZE MEDIA, LINKS, CODE AND CALLOUTS
+  normalizeContent(doc, doc.baseURI);
 
-  // STEP 3: AGGRESSIVE JUNK PRUNING / TODO MAYBE: Make configurable for other pages, some of them might have useful stuff in the header/footer/aside for example.
-  const junkSelectors = [
-    "nav",
-    "footer",
-    "header", // MAYBE: leave this one in.
-    "aside",
-    "script",
-    "style",
-    "noscript",
-    "iframe",
-    "svg",
-    "form",
-    '[role="navigation"]',
-    '[role="banner"]',
-    '[role="contentinfo"]',
-    '[role="dialog"]',
-    ".ad",
-    ".advertisement",
-    ".social-share",
-    ".comments",
-    "#comments",
-    ".sidebar",
-    ".newsletter",
-    ".subscribe",
-    ".related-posts",
-    ".author-bio",
-    ".tags",
-    ".share",
-    ".mw-editsection",
-    ".reference",
-    ".noprint",
-    ".infobox",
-    ".navbox",
-    ".hidden", //tailwind
-    "[hidden]",
-    '[style*="display: none"]',
-    '[style*="display:none"]',
-    '[style*="visibility: hidden"]',
-    ".visually-hidden",
-    ".sr-only", // Screen-reader only text (often duplicates visual content)
-    // No aria-hidden, because content might not be hidden visually.
-  ];
-  doc.querySelectorAll(junkSelectors.join(", ")).forEach((el) => el.remove());
-
-  const unlikelyRegex =
-    /share|social|promo|newsletter|subscribe|related|sponsor|tags|author|comments|disqus|cookie|popup|modal|outbrain|taboola|advert/i;
-  const likelyRegex = /article|body|content|main|page|post|text|blog|wiki/i;
-
-  doc.querySelectorAll("div, section, ul, li, p").forEach((el) => {
-    // 1. Regex Pruning
-    const className = el.getAttribute("class") || "";
-    const id = el.getAttribute("id") || "";
-    const matchString = `${className} ${id}`;
-
-    if (unlikelyRegex.test(matchString) && !likelyRegex.test(matchString)) {
-      el.remove();
-      return; // Stop processing this node since it's gone
-    }
-
-    // 2. STRUCTURAL HEURISTIC PRUNING (The "Link Farm" Killer)
-    // We target containers that often hold lists of links.
-    if (["UL", "OL", "DIV", "SECTION"].includes(el.tagName)) {
-      // If the container is heavily linked, it is almost certainly navigation
-      // or "Related Articles". A density > 0.6 means 60% of the words are links.
-      const density = getLinkDensity(el);
-
-      // We don't want to accidentally delete short blocks (like a 2-word author byline
-      // that is fully hyperlinked), so we only apply this rule to blocks with some substance.
-      const charCount = el.textContent?.trim().length || 0;
-
-      // 65 was 30 before, was too aggressive
-      if (density > 0.6 && charCount > 65) {
-        el.remove();
-      }
-    }
-  });
-
-  doc.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li").forEach((el) => {
-    if (!el.textContent?.trim() && !el.querySelector("img")) {
-      el.remove();
-    }
-  });
+  // STEP 3: AGGRESSIVE JUNK PRUNING
+  removeAll(doc, [...invisibleSelectors, ...junkSelectors]);
+  pruneUnlikelyBlocks(doc);
 
   // STEP 4: LOCATE MAIN CONTENT
-  let mainContentHtml = "";
-
-  const semanticContainers = Array.from(
-    doc.querySelectorAll(
-      'article, main, [role="main"], .markdown-body, .post-content, #bodyContent',
-    ),
-  ).sort((a, b) => (b.textContent?.length || 0) - (a.textContent?.length || 0));
-
-  if (semanticContainers.length > 0 && semanticContainers[0]) {
-    mainContentHtml = semanticContainers[0].innerHTML;
-  } else {
-    // Improved Heuristic Fallback
-    let bestNode = doc.body;
-    let maxScore = 0;
-
-    doc.querySelectorAll("div, section").forEach((candidate) => {
-      const paragraphs = candidate.querySelectorAll("p, pre, code, li").length;
-      const density = getLinkDensity(candidate);
-
-      // Penalize high link density
-      let score = paragraphs * (1 - density);
-
-      // PENALIZE WRAPPERS: If a div has very few direct paragraphs but tons of nested elements,
-      // it's likely a layout wrapper, not the content body.
-      const childElementCount = candidate.children.length || 1;
-      const wrapperPenalty = Math.max(1, childElementCount / 5); // Tweak the divisor as needed
-
-      score = score / wrapperPenalty;
-
-      if (score > maxScore) {
-        maxScore = score;
-        bestNode = candidate as HTMLElement;
-      }
-    });
-    mainContentHtml = bestNode.innerHTML;
-  }
+  const main = findSemanticContainer(doc) ?? findContentByScore(doc);
 
   // STEP 5: ENFORCE MARKDOWN EQUIVALENCY
-  const markdownEquivalentTags = [
-    "h1",
-    "h2",
-    "h3",
-    "h4",
-    "h5",
-    "h6",
-    "p",
-    "ul",
-    "ol",
-    "li",
-    "blockquote",
-    "pre",
-    "code",
-    "em",
-    "strong",
-    "i",
-    "b",
-    "del",
-    "a",
-    "img",
-    "hr",
-    "br",
-    "table",
-    "thead",
-    "tbody",
-    "tr",
-    "th",
-    "td",
-    "details",
-    "summary",
-  ];
-
-  const sanitizedContent = DomPurify.sanitize(mainContentHtml, {
-    ALLOWED_TAGS: markdownEquivalentTags,
-    ALLOWED_ATTR: ["href", "src", "alt", "title", "open", "data-language"],
-  });
-
-  const tempDiv = document.createElement("div");
-  tempDiv.innerHTML = sanitizedContent;
-  const textContent = tempDiv.textContent || "";
-
-  return {
-    content: sanitizedContent,
-    textContent: textContent,
-    length: textContent.length,
-    title,
-    excerpt,
-    byline,
-    siteName,
-    publishedTime,
-    faviconUrl,
-  };
+  return { ...sanitize(main.innerHTML, markdownEquivalentTags), ...metadata };
 }
 
 /**
  * Grabs the user's current text/HTML selection and wraps it in a DOM Element.
+ *
+ * The copy lives in an inert document rather than on the page: an image on
+ * the page starts loading as soon as the parser rewrites its `src`. Relative
+ * URLs are resolved against the page by `parseSnippet`.
  * @returns null if nothing is selected.
  */
 export function getSelectionAsElement(): HTMLElement | null {
@@ -484,9 +631,9 @@ export function getSelectionAsElement(): HTMLElement | null {
     return null;
   }
 
-  const range = selection.getRangeAt(0);
-  const container = document.createElement("div");
-  container.appendChild(range.cloneContents());
+  const inert = document.implementation.createHTMLDocument("");
+  const container = inert.createElement("div");
+  container.append(inert.adoptNode(selection.getRangeAt(0).cloneContents()));
 
   // If they just clicked and didn't highlight actual content (had .trim())
   if (!container.innerHTML) {
@@ -498,78 +645,22 @@ export function getSelectionAsElement(): HTMLElement | null {
 
 /**
  * Parses an arbitrary DOM snippet (like a user selection) without pruning structure.
- * It normalizes URLs/code and enforces the Markdown schema.
+ * It normalizes URLs/code/callouts, drops what the user could not see, and enforces the Markdown schema.
  * @param snippet The DOM element containing the highlighted content (e.g., a div wrapping the user's selection).
- * @param doc The full document, used for metadata extraction.
+ * @param doc The full document, used for metadata extraction and as the base for relative URLs.
  * @returns A ParseResult object containing the cleaned HTML content of the snippet and metadata from the main document.
  */
 export function parseSnippet(snippet: Element, doc: Document): ParseResult {
   // 1. NORMALIZE HIGHLIGHTED CONTENT
-  // We pass the snippet here so images and code blocks inside it get fixed
-  normalizeMediaAndLinks(snippet);
+  normalizeContent(snippet, doc.baseURI);
+  removeAll(snippet, invisibleSelectors);
 
   // 2. ENFORCE MARKDOWN EQUIVALENCY
-  const markdownEquivalentTags = [
-    "h1",
-    "h2",
-    "h3",
-    "h4",
-    "h5",
-    "h6",
-    "p",
-    "ul",
-    "ol",
-    "li",
-    "blockquote",
-    "pre",
-    "code",
-    "em",
-    "strong",
-    "i",
-    "b",
-    "del",
-    "a",
-    "img",
-    "hr",
-    "br",
-    "table",
-    "thead",
-    "tbody",
-    "tr",
-    "th",
-    "td",
-    "details",
-    "summary",
-    // Exceptions
-    "div",
-    "span",
-  ];
-
-  const sanitizedContent = DomPurify.sanitize(snippet.innerHTML, {
-    ALLOWED_TAGS: markdownEquivalentTags,
-    ALLOWED_ATTR: ["href", "src", "alt", "title", "open", "data-language"],
-  });
-
-  const tempDiv = document.createElement("div");
-  tempDiv.innerHTML = sanitizedContent;
-  const textContent = tempDiv.textContent || "";
+  const sanitized = sanitize(snippet.innerHTML, snippetTags);
 
   // 3. EXTRACT METADATA FROM THE MAIN DOCUMENT
   // Even though they only highlighted a snippet, we still want the context!
-  const { title, excerpt, byline, siteName, publishedTime, faviconUrl } =
-    extractPageMetadata(doc);
-
-  return {
-    content: sanitizedContent,
-    textContent: textContent,
-    length: textContent.length,
-    title,
-    excerpt,
-    byline,
-    siteName,
-    publishedTime,
-    faviconUrl,
-  };
+  return { ...sanitized, ...extractPageMetadata(doc) };
 }
 
 // TODO: Maybe implement later, when needed
