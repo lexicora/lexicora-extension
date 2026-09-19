@@ -1,0 +1,44 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "typescript", "unicorn", "oxc", "react"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "env": {
+    "browser": true,
+    "es2024": true
+  },
+  "settings": {
+    "react": {
+      "version": "19"
+    }
+  },
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "warn",
+    "react/react-in-jsx-scope": "off",
+
+    // React Compiler rules. The app does not use the compiler, so they are
+    // advice rather than bugs, and two duplicate the react-hooks rules above.
+    "react/set-state-in-effect": "warn",
+    "react/refs": "warn",
+    "react/incompatible-library": "off",
+    "react/exhaustive-effect-dependencies": "off",
+    "react/hooks": "off",
+
+    "typescript/no-explicit-any": "warn",
+    // Fire-and-forget calls (navigate, storage writes) are mostly deliberate;
+    // warn so each one gets a look, rather than failing the run.
+    "typescript/no-floating-promises": "warn",
+    // Casts are everywhere RxDB documents become plain types.
+    "typescript/no-unsafe-type-assertion": "off",
+    "typescript/consistent-return": "off",
+
+    // Style preferences, not problems.
+    "unicorn/consistent-function-scoping": "off",
+    "unicorn/no-array-sort": "off",
+    "unicorn/no-array-reverse": "off"
+  },
+  "ignorePatterns": [".output/**", ".wxt/**", "docs/**", "public/**"]
+}
