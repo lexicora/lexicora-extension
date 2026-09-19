@@ -16,9 +16,11 @@ import {
   FolderOpenIcon,
   HandGrabIcon,
   LightbulbIcon,
+  MousePointerClickIcon,
   PinIcon,
   SearchIcon,
   TagIcon,
+  WrapTextIcon,
 } from "lucide-react";
 
 const TIPS = [
@@ -35,6 +37,20 @@ const TIPS = [
     title: "Drag and drop from the page",
     description:
       "While editing an entry, drag selected text or images from the page straight into the editor. It works alongside Capture Selection and is cleaned up the same way.",
+  },
+  {
+    icon: MousePointerClickIcon,
+    iconColor: "text-pink-500",
+    title: "Right-click to select a block",
+    description:
+      "Right-click the drag handle next to a block to select all of its content and bring up the formatting toolbar. A regular click still opens the block menu.",
+  },
+  {
+    icon: WrapTextIcon,
+    iconColor: "text-indigo-500",
+    title: "New line in the same block",
+    description:
+      "Press Shift+Enter in the editor to start a new line without creating a new block, so the lines stay part of the same paragraph, list item or heading.",
   },
   {
     icon: FolderOpenIcon,
