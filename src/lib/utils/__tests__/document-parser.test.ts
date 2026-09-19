@@ -8,6 +8,7 @@ import { BlockNoteEditor } from "@blocknote/core";
 
 import { appBlockNoteConfig } from "@/components/editor/config";
 import {
+  cleanSnippetHTML,
   extractPageMetadata,
   getSelectionAsElement,
   parseDocument,
@@ -500,6 +501,38 @@ describe("parseSnippet", () => {
 
     expect(parseSnippet(makeSnippet("<p>Bit</p>"), doc).title).toBe(
       "The page",
+    );
+  });
+});
+
+describe("cleanSnippetHTML", () => {
+  it("cleans a dragged fragment like a selection", () => {
+    // As Chrome serializes a drag: a charset tag, inline styles, absolute URLs.
+    const { content } = cleanSnippetHTML(
+      "<meta charset='utf-8'><p style=\"margin: 0\">Read " +
+        '<a href="https://example.com/docs">the docs</a>' +
+        '<span class="sr-only"> (opens in a new tab)</span></p>' +
+        '<pre class="language-js"><code><span class="k">const</span> a = 1;</code></pre>',
+    );
+
+    expect(content).toBe(
+      '<p>Read <a href="https://example.com/docs">the docs</a></p>' +
+        '<pre><code data-language="js">const a = 1;</code></pre>',
+    );
+  });
+
+  it("resolves relative URLs against the page when given one", () => {
+    const { content } = cleanSnippetHTML(
+      '<img src="cat.png">',
+      "https://example.com/articles/one",
+    );
+
+    expect(content).toBe('<img src="https://example.com/articles/cat.png">');
+  });
+
+  it("drops a relative image it cannot resolve without a page", () => {
+    expect(cleanSnippetHTML('<p>Hi</p><img src="cat.png">').content).toBe(
+      "<p>Hi</p>",
     );
   });
 });

@@ -791,17 +791,51 @@ export function getSelectionAsElement(): HTMLElement | null {
  * @returns A ParseResult object containing the cleaned HTML content of the snippet and metadata from the main document.
  */
 export function parseSnippet(snippet: Element, doc: Document): ParseResult {
-  // 1. NORMALIZE HIGHLIGHTED CONTENT
-  normalizeContent(snippet, doc.baseURI);
+  // 1. NORMALIZE AND SANITIZE HIGHLIGHTED CONTENT
+  const cleaned = cleanSnippet(snippet, doc.baseURI);
+
+  // 2. EXTRACT METADATA FROM THE MAIN DOCUMENT
+  // Even though they only highlighted a snippet, we still want the context!
+  return { ...cleaned, ...extractPageMetadata(doc) };
+}
+
+/**
+ * The content half of `parseSnippet`: normalizes URLs/code/callouts, drops
+ * what the user could not see, and enforces the Markdown schema.
+ */
+function cleanSnippet(
+  snippet: Element,
+  baseUrl: string,
+): Pick<ParseResult, "content" | "textContent" | "length"> {
+  normalizeContent(snippet, baseUrl);
   removeAll(snippet, invisibleSelectors);
   revealControlText(snippet);
+  return sanitize(snippet.innerHTML, snippetTags);
+}
 
-  // 2. ENFORCE MARKDOWN EQUIVALENCY
-  const sanitized = sanitize(snippet.innerHTML, snippetTags);
-
-  // 3. EXTRACT METADATA FROM THE MAIN DOCUMENT
-  // Even though they only highlighted a snippet, we still want the context!
-  return { ...sanitized, ...extractPageMetadata(doc) };
+/**
+ * Cleans a fragment of a page that arrives as an HTML string rather than as
+ * a live selection, like content dragged from the page into the editor, the
+ * same way `parseSnippet` cleans a captured selection.
+ *
+ * The browser serializes the fragment itself, so some of what the live
+ * selection offers is gone: a text field's typed value, a lazy image's
+ * `<noscript>` fallback. It also carries no page, so there is no metadata.
+ * @param html The fragment, as the browser serialized it.
+ * @param baseUrl The page's URL, which relative URLs are resolved against.
+ * Browsers already make a dragged fragment's URLs absolute; without a base,
+ * any relative link loses its target and any relative image is dropped.
+ * @returns The cleaned HTML, ready for the editor, with its plain text.
+ */
+export function cleanSnippetHTML(
+  html: string,
+  baseUrl = "about:blank",
+): Pick<ParseResult, "content" | "textContent" | "length"> {
+  // Parsed in an inert document, so the page does not load its images.
+  const inert = document.implementation.createHTMLDocument("");
+  const container = inert.createElement("div");
+  container.innerHTML = html;
+  return cleanSnippet(container, baseUrl);
 }
 
 // TODO: Maybe implement later, when needed

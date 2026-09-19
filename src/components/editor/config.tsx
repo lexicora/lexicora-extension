@@ -14,6 +14,7 @@ import {
 import { TriangleAlert } from "lucide-react";
 
 import { createAlertBlockSpec } from "./blocks/alert/alert-block";
+import { WebContentDropExtension } from "./extensions/web-content-drop";
 
 codeBlockOptions.defaultLanguage = "text";
 // MAYBE: Order languages, by letters.
@@ -31,6 +32,7 @@ export const appBlockNoteConfig = {
       alert: createAlertBlockSpec(),
     },
   }),
+  extensions: [WebContentDropExtension()],
   tables: {
     headers: true, // MAYBE TODO: Add more customization options for tables later
     cellBackgroundColor: true,

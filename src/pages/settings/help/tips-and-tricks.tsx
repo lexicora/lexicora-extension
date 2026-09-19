@@ -14,6 +14,7 @@ import {
   BookmarkIcon,
   CameraIcon,
   FolderOpenIcon,
+  HandGrabIcon,
   LightbulbIcon,
   PinIcon,
   SearchIcon,
@@ -27,6 +28,13 @@ const TIPS = [
     title: "Tune capture suggestions",
     description:
       "Adjust the capture prompt delay in Settings → Capture Suggestions so it appears after the right amount of time for your browsing habits.",
+  },
+  {
+    icon: HandGrabIcon,
+    iconColor: "text-orange-500",
+    title: "Drag and drop from the page",
+    description:
+      "While editing an entry, drag selected text or images from the page straight into the editor. It works alongside Capture Selection and is cleaned up the same way.",
   },
   {
     icon: FolderOpenIcon,
