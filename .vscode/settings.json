@@ -24,6 +24,8 @@
     "tipsntricks",
     "dexie",
     "lexicoradb",
-    "supabase"
+    "supabase",
+    "wordmark",
+    "shadcn"
   ]
 }
