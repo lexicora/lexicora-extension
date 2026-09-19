@@ -156,18 +156,13 @@ const allowedAttributes = [
 ];
 
 /**
- * What a reader never sees as text: hidden elements, and controls whose
- * labels the sanitizer would otherwise unwrap into the content ("Copy",
- * "Share", a select's options). Dropped from pages and selections alike.
+ * What a reader never sees as text: code, and hidden elements. Dropped from
+ * pages and selections alike.
  */
 const invisibleSelectors = [
   "script",
   "style",
   "template",
-  "button",
-  "input",
-  "select",
-  "textarea",
   "[hidden]",
   '[style*="display: none"]',
   '[style*="display:none"]',
@@ -176,6 +171,19 @@ const invisibleSelectors = [
   ".sr-only", // Screen-reader only text (often duplicates visual content)
   // No aria-hidden, because content might not be hidden visually.
 ];
+
+/**
+ * Form controls. On a page, their labels are interface ("Copy", "Share", a
+ * select's every option), which the sanitizer would unwrap into the content.
+ * A selection keeps what they visibly show instead: see `revealControlText`.
+ */
+const controlSelectors = ["button", "input", "select", "textarea"];
+
+/** Inputs that show their value as text. */
+const textInputSelector = ["text", "search", "email", "url", "tel", "number"]
+  .map((type) => `input[type="${type}"]`)
+  .concat("input:not([type])")
+  .join(", ");
 
 /**
  * Page furniture around the content, dropped from full pages only.
@@ -234,6 +242,22 @@ const semanticContainerSelector =
  */
 const maxImageWidth = 1600;
 const maxImageDensity = 2;
+
+/**
+ * Images that sit in a line of text as a glyph, not as a picture: emoji,
+ * rendered formulas, icons. Declared at most this many pixels on each side.
+ */
+const maxGlyphSize = 32;
+
+/** Emoji characters only, as emoji images carry them in their alt text. */
+const emojiOnlyPattern =
+  /^(?:\p{Extended_Pictographic}|\p{Regional_Indicator}|\p{Emoji_Modifier}|[\u200d\ufe0f\u20e3\s])+$/u;
+
+/** A width or height in em or ex: the image is sized to scale with the text. */
+const textScaledPattern = /(?:^|;)\s*(?:width|height)\s*:\s*[\d.]+\s*e[mx]\b/i;
+
+/** Paragraphs and headings, whose content in the editor is text only. */
+const textBlockSelector = "p, h1, h2, h3, h4, h5, h6";
 
 /**
  * One srcset candidate. The URL runs to the next whitespace, so commas inside
@@ -445,6 +469,84 @@ function normalizeCodeBlock(pre: Element, doc: Document): void {
 }
 
 /**
+ * What an image becomes when it is a glyph in a line of text rather than a
+ * picture: an emoji, or a formula sized in em or ex to scale with the text,
+ * reads as its alt text; an icon declared a few pixels big, as nothing.
+ * @returns `null` for a picture.
+ */
+function glyphText(img: Element): string | null {
+  const alt = img.getAttribute("alt")?.trim() ?? "";
+  const style = img.getAttribute("style") ?? "";
+  if (
+    /(?:^|\s)emoji(?:\s|$)/i.test(img.getAttribute("class") ?? "") ||
+    (alt !== "" && emojiOnlyPattern.test(alt)) ||
+    textScaledPattern.test(style)
+  ) {
+    return alt;
+  }
+
+  const sizes = [
+    img.getAttribute("width"),
+    img.getAttribute("height"),
+    /(?:^|;)\s*width\s*:\s*([\d.]+)px/i.exec(style)?.[1],
+    /(?:^|;)\s*height\s*:\s*([\d.]+)px/i.exec(style)?.[1],
+  ]
+    .map((size) => Number.parseFloat(size ?? ""))
+    .filter(Number.isFinite);
+  return sizes.length > 0 && Math.max(...sizes) <= maxGlyphSize ? "" : null;
+}
+
+/**
+ * The editor keeps text only inside a paragraph or heading, so it drops any
+ * image there. Pictures are moved out between the text around them, which
+ * splits the block; a link around just the image moves with it. Glyphs stay
+ * in the line: emoji and formulas as their alt text, icons not at all.
+ */
+function liftImagesOutOfText(root: Document | Element): void {
+  const doc = documentOf(root);
+  const picturesByBlock = new Map<Element, Element[]>();
+
+  root.querySelectorAll("img").forEach((img) => {
+    const text = glyphText(img);
+    if (text !== null) {
+      img.replaceWith(text);
+      return;
+    }
+
+    const block = img.closest(textBlockSelector);
+    if (!block) return;
+    const link = img.parentElement;
+    const picture =
+      link !== block &&
+      link?.tagName === "A" &&
+      !link.textContent?.trim() &&
+      link.querySelectorAll("img").length === 1
+        ? link
+        : img;
+    picturesByBlock.set(block, [
+      ...(picturesByBlock.get(block) ?? []),
+      picture,
+    ]);
+  });
+
+  const hasContent = (el: Element) =>
+    Boolean(el.textContent?.trim()) || el.querySelector("img") !== null;
+
+  for (const [block, pictures] of picturesByBlock) {
+    // Last first: each split then leaves the earlier pictures in the block.
+    for (const picture of pictures.reverse()) {
+      const range = doc.createRange();
+      range.setStartAfter(picture);
+      range.setEnd(block, block.childNodes.length);
+      const rest = block.cloneNode(false) as Element;
+      rest.append(range.extractContents());
+      block.after(picture, ...(hasContent(rest) ? [rest] : []));
+    }
+    if (!hasContent(block)) block.remove();
+  }
+}
+
+/**
  * Normalizes media, links, code and callouts before any pruning, so the
  * content is in the shapes the pruning and the editor expect. Shared by the
  * full-page and selection parsers.
@@ -454,6 +556,7 @@ function normalizeContent(root: Document | Element, baseUrl: string): void {
   const doc = documentOf(root);
   rescueNoscriptImages(root);
   normalizeImages(root, baseUrl);
+  liftImagesOutOfText(root);
   normalizeLinks(root, baseUrl);
   root.querySelectorAll("pre").forEach((pre) => normalizeCodeBlock(pre, doc));
   normalizeCallouts(root);
@@ -492,8 +595,15 @@ function pruneUnlikelyBlocks(doc: Document): void {
     // 65 was 30 before, was too aggressive.
     const textLength = el.textContent?.trim().length ?? 0;
 
-    // A density > 0.6 means 60% of the words are links.
-    if (textLength > 65 && getLinkDensity(el, textLength) > 0.6) {
+    // A density > 0.6 means 60% of the words are links. A block holding code
+    // is not a link farm, even when links crowd it (react.dev puts a demo of
+    // linked video cards beside its code); its link-heavy parts are still
+    // judged on their own.
+    if (
+      textLength > 65 &&
+      !el.querySelector("pre") &&
+      getLinkDensity(el, textLength) > 0.6
+    ) {
       el.remove();
     }
   });
@@ -606,7 +716,11 @@ export function parseDocument(doc: Document): ParseResult {
   normalizeContent(doc, doc.baseURI);
 
   // STEP 3: AGGRESSIVE JUNK PRUNING
-  removeAll(doc, [...invisibleSelectors, ...junkSelectors]);
+  removeAll(doc, [
+    ...invisibleSelectors,
+    ...controlSelectors,
+    ...junkSelectors,
+  ]);
   pruneUnlikelyBlocks(doc);
 
   // STEP 4: LOCATE MAIN CONTENT
@@ -614,6 +728,32 @@ export function parseDocument(doc: Document): ParseResult {
 
   // STEP 5: ENFORCE MARKDOWN EQUIVALENCY
   return { ...sanitize(main.innerHTML, markdownEquivalentTags), ...metadata };
+}
+
+/**
+ * Replaces each form control in a selection with the text it shows on the
+ * page: a button its label, a select its chosen option, a text field its
+ * value. The user saw that text when selecting, so it is theirs to keep.
+ * Controls that show no text, like checkboxes, go.
+ */
+function revealControlText(snippet: Element): void {
+  snippet.querySelectorAll(controlSelectors.join(", ")).forEach((control) => {
+    if (control.tagName === "BUTTON") {
+      control.replaceWith(...Array.from(control.childNodes));
+    } else if (control.tagName === "SELECT") {
+      const select = control as HTMLSelectElement;
+      const chosen =
+        select.selectedOptions[0] ?? select.querySelector("option");
+      control.replaceWith(chosen?.textContent?.trim() ?? "");
+    } else if (
+      control.tagName === "TEXTAREA" ||
+      control.matches(textInputSelector)
+    ) {
+      control.replaceWith((control as HTMLInputElement).value);
+    } else {
+      control.remove();
+    }
+  });
 }
 
 /**
@@ -654,6 +794,7 @@ export function parseSnippet(snippet: Element, doc: Document): ParseResult {
   // 1. NORMALIZE HIGHLIGHTED CONTENT
   normalizeContent(snippet, doc.baseURI);
   removeAll(snippet, invisibleSelectors);
+  revealControlText(snippet);
 
   // 2. ENFORCE MARKDOWN EQUIVALENCY
   const sanitized = sanitize(snippet.innerHTML, snippetTags);

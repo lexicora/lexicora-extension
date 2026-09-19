@@ -321,6 +321,101 @@ describe("parseDocument images and links", () => {
   });
 });
 
+describe("parseDocument images in text", () => {
+  it("moves pictures out of a paragraph, which the editor cannot hold", async () => {
+    // A GitHub README: a bold label, then linked screenshots, in one <p>.
+    const { content } = parseBody(
+      '<article><p dir="auto"><strong>Home</strong>\n' +
+        '<a target="_blank" href="/demo/blob/main/home.png"><img alt="Home" src="/demo/raw/main/home.png" style="max-width: 100%;"></a>\n' +
+        '<a target="_blank" href="/demo/blob/main/filter.png"><img alt="Filter" src="/demo/raw/main/filter.png" style="max-width: 100%;"></a></p></article>',
+    );
+
+    const blocks = await toBlocks(content);
+
+    expect(blocks.map((block) => block.type)).toEqual([
+      "paragraph",
+      "image",
+      "image",
+    ]);
+    expect(textOf(blocks[0]!).trim()).toBe("Home");
+    expect(blocks[2]!.props.url).toBe("https://example.com/demo/raw/main/filter.png");
+  });
+
+  it("keeps the text on both sides of a picture, in order", async () => {
+    const { content } = parseBody(
+      '<article><p>Before <img src="/photo.jpg" alt="Photo"> after.</p></article>',
+    );
+
+    const blocks = await toBlocks(content);
+
+    expect(blocks.map((block) => block.type)).toEqual([
+      "paragraph",
+      "image",
+      "paragraph",
+    ]);
+    expect(textOf(blocks[0]!)).toBe("Before ");
+    expect(textOf(blocks[2]!)).toBe(" after.");
+  });
+
+  it("keeps emoji and formulas in the line as text, and drops tiny icons", () => {
+    const { content } = parseBody(
+      '<article><p>Great <img class="emoji" alt="🎉" src="/party.png"> work: ' +
+        '<img alt="x^2" src="/math.svg" style="vertical-align: -0.3ex; width: 2.3ex; height: 2.6ex"> holds' +
+        '<img src="/icon.png" width="16" height="16" alt="external link">.</p></article>',
+    );
+
+    expect(content).toBe("<p>Great 🎉 work: x^2 holds.</p>");
+  });
+});
+
+describe("parseDocument link lists", () => {
+  it("drops a list of link cards, wherever the links point", () => {
+    // react.dev's demo: video cards linking out to YouTube. Where a link
+    // points says nothing about whether the list is content.
+    const card = (title: string, author: string) =>
+      `<li><a href="https://www.youtube.com/watch?v=${title.length}">` +
+      `<h3>${title}</h3><p>${author}</p></a></li>`;
+    const { content } = parseBody(
+      "<article><p>The article.</p><ul>" +
+        card("React: The Documentary", "The origin story of React") +
+        card("Rethinking Best Practices", "Pete Hunt (2013)") +
+        card("Introducing React Native", "Tom Occhino (2015)") +
+        "</ul></article>",
+    );
+
+    expect(content).toBe("<p>The article.</p>");
+  });
+
+  it("keeps code that shares its block with a list of links", () => {
+    // react.dev: a code sample beside a live demo of its linked video cards.
+    const card = (title: string) =>
+      `<li><a href="https://www.youtube.com/watch?v=${title.length}">` +
+      `<h3>${title}</h3><p>A talk about React</p></a></li>`;
+    const { content } = parseBody(
+      "<article><p>The article.</p><div>" +
+        '<div><pre class="language-js"><code>const talks = await db.Talks.findAll();</code></pre></div>' +
+        `<div><ul>${card("React 18 Keynote")}${card("React without memo")}${card("React Docs Keynote")}</ul></div>` +
+        "</div></article>",
+    );
+
+    expect(content).toBe(
+      '<p>The article.</p><pre><code data-language="js">const talks = await db.Talks.findAll();</code></pre>',
+    );
+  });
+
+  it("drops a list of links within the site", () => {
+    const { content } = parseBody(
+      "<article><p>The article.</p><ul>" +
+        '<li><a href="/posts/first-related-post">The first related post</a></li>' +
+        '<li><a href="/posts/second-related-post">The second related post</a></li>' +
+        '<li><a href="/posts/third-related-post">The third related post</a></li>' +
+        "</ul></article>",
+    );
+
+    expect(content).toBe("<p>The article.</p>");
+  });
+});
+
 describe("parseDocument without a semantic container", () => {
   it("takes the element holding the prose, not the layout around it", () => {
     const { textContent } = parseBody(
@@ -370,6 +465,18 @@ describe("parseSnippet", () => {
     expect(content).toBe(
       '<p>Read <a href="https://example.com/docs">the docs</a></p>' +
         '<img src="https://example.com/articles/cat.png">',
+    );
+  });
+
+  it("keeps the text controls show, since the user selected it", () => {
+    const snippet = makeSnippet(
+      "<p>Press <button>Save</button> to keep " +
+        '<select><option>all</option><option selected>some</option></select> ' +
+        'rows named <input type="text" value="draft"><input type="checkbox">.</p>',
+    );
+
+    expect(parseSnippet(snippet, makeDoc("")).content).toBe(
+      "<p>Press Save to keep some rows named draft.</p>",
     );
   });
 
