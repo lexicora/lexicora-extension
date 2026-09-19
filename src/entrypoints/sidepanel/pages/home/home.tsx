@@ -9,7 +9,7 @@ import { ChevronRightIcon, HistoryIcon, PinIcon, StarIcon } from "lucide-react";
 import { useCaptureActiveTab } from "@/hooks/sidepanel/use-capture-active-tab";
 import { FEATURES } from "@/constants/features";
 import { useNavigate } from "react-router-dom";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { useHomeData } from "./__hooks__/use-home-data";
 import { AiPromptSection } from "@/components/home/ai-prompt-section";
 import { LibraryEmptyState } from "@/components/home/library-empty-state";

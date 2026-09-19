@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { editorWideModeStorage } from "@/lib/storage/settings";
 import { useAppStorage } from "@/hooks/use-app-storage";
 import { useMediaQuery } from "@/hooks/use-media-query";

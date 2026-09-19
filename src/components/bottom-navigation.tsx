@@ -1,5 +1,5 @@
 import style from "./bottom-navigation.module.css";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 import { NAV_ITEMS } from "@/lib/nav-items";
 import { NavLink, useLocation, matchPath } from "react-router-dom";

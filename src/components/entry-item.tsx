@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import type { EntryDocType } from "@/db/schemas/entry";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { formatDate } from "@/lib/utils/date-formatter";
 import {
   ArchiveIcon,

@@ -33,7 +33,7 @@ import { findOrphanedBlocks, pickChangedBlocks } from "@/db/block-sync";
 import { hasChanges } from "@/db/doc-changes";
 import type { EntryDocType } from "@/db/schemas/entry";
 import type { TopicDocType } from "@/db/schemas/topic";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { useAppHost } from "@/providers/app-host";
 import {
   convertBlockNoteBlocks,

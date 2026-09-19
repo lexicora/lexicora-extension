@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import type { EntryDocType } from "@/db/schemas/entry";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 interface RecentEntriesProps {
   entries: EntryDocType[];

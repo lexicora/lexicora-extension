@@ -10,7 +10,7 @@ import {
   ChevronRightIcon,
   SquareDashedIcon as PlaceHolderIcon,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 /**
  * Use this in the settings index page to render each settings item

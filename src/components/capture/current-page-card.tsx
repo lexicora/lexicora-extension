@@ -1,5 +1,5 @@
 import { GlobeIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 interface CurrentPageCardProps {
   /** The tab that a capture would act on. */

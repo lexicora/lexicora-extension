@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { AccountMenu } from "@/components/account-menu";
 import { Button } from "@/components/ui/button";
 import { SquareArrowOutUpRightIcon } from "lucide-react";

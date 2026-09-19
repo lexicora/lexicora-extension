@@ -9,7 +9,7 @@ import {
 import { UserIcon } from "lucide-react";
 
 import { FEATURES } from "@/constants/features";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 interface AccountMenuProps {
   /** Extra classes for the avatar trigger, for host-specific tinting. */

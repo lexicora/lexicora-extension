@@ -9,7 +9,7 @@ import "../../assets/styles/globals.css";
 import { installInputModality } from "@/lib/input-modality";
 
 // Focus rings for keyboard navigation only, not for shortcut keys.
-installInputModality();
+installInputModality(); //* Maybe not necessary for the popup.
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

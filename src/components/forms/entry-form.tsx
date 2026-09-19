@@ -26,7 +26,7 @@ import { Separator } from "@/components/ui/separator";
 import { Toggle } from "@/components/ui/toggle";
 import type { TopicDocType } from "@/db/schemas/topic";
 import { useTabSupport } from "@/hooks/use-tab-support";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { isSameTopicName } from "@/lib/utils/topic-name";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDownIcon, RefreshCw, StarIcon } from "lucide-react";

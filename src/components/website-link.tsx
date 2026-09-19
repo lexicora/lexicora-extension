@@ -2,7 +2,7 @@ import { ArrowUpRightIcon } from "lucide-react";
 
 import { FEATURES } from "@/constants/features";
 import { WEBSITE_URL } from "@/constants/site";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 interface WebsiteLinkProps {
   /** Applied to the wrapper, which is what carries the surrounding spacing. */

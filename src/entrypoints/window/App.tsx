@@ -59,7 +59,7 @@ import FaqPage from "@/pages/settings/help/faq";
 import TipsAndTricksPage from "@/pages/settings/help/tips-and-tricks";
 import AboutPage from "@/pages/settings/about/about";
 import LicensesPage from "@/pages/settings/about/licenses";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 function SidebarTransitionGuard() {
   const { open } = useSidebar();

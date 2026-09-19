@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import type { EntryDocType } from "@/db/schemas/entry";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import {
   hasEditorContent,
   type BlockNoteBlock,

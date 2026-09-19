@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowUpRightIcon, PanelRightIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { useScrollPos } from "@/providers/scroll-observer";
 
 interface PopupAiLayoutProps {

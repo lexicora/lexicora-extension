@@ -42,7 +42,7 @@ import {
   type AppBlockNoteEditor,
 } from "./config";
 import { formattingToolbarOptions, SideMenu } from "./side-menu";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 export function BlockNoteView({
   editor,

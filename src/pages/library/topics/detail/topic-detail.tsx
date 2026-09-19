@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import type { TopicDocType } from "@/db/schemas/topic";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { formatDate } from "@/lib/utils/date-formatter";
 import { useAppHost } from "@/providers/app-host";
 import {

@@ -21,7 +21,7 @@ import {
   type Shortcut,
 } from "@/constants/shortcuts";
 import { IS_MAC } from "@/hooks/sidepanel/panel-shortcuts";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { GlobeIcon, KeyboardIcon, PanelRightIcon } from "lucide-react";
 
 function Kbd({

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useScrollPos } from "@/providers/scroll-observer";
 import { useAppHost } from "@/providers/app-host";
 import { useSidebar } from "@/components/ui/sidebar";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { navLock } from "@/lib/navigation-lock";
 
 interface ActionButtonConfig {

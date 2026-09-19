@@ -1,6 +1,6 @@
 import { ChevronsLeftRightIcon, ChevronsRightLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { useEditorWideAvailable } from "@/hooks/use-editor-wide-mode";
 
 /**
