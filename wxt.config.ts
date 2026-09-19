@@ -8,6 +8,7 @@ export default defineConfig({
   srcDir: "src",
   vite: () => ({
     plugins: [tailwindcss()],
+    resolve: { alias: { "tailwind-merge": "cn", clsx: "cn" } }, //* cn is faster, but if this causes issues, then remove.
   }),
   // vite: () => ({
   //   plugins: [
