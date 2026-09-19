@@ -5,10 +5,28 @@ import {
   SideMenu as BaseSideMenu,
   useBlockNoteEditor,
   useExtensionState,
+  type FloatingUIOptions,
   type SideMenuProps,
 } from "@blocknote/react";
 
 import { selectBlock } from "./select-block";
+
+/**
+ * Keeps the formatting toolbar open on a right click in the side menu. That
+ * right click selects a block, and when the block is already selected the
+ * selection does not change, so a toolbar closed by the click would not come
+ * back. Any other press outside the toolbar still closes it.
+ */
+export const formattingToolbarOptions: FloatingUIOptions = {
+  useDismissProps: {
+    outsidePress: (event) =>
+      !(
+        event.button === 2 &&
+        event.target instanceof Element &&
+        event.target.closest(".bn-side-menu")
+      ),
+  },
+};
 
 /**
  * BlockNote's default side menu, where a right click on the drag handle

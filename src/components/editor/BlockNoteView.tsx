@@ -41,7 +41,7 @@ import {
   getCustomSlashMenuItems,
   type AppBlockNoteEditor,
 } from "./config";
-import { SideMenu } from "./side-menu";
+import { formattingToolbarOptions, SideMenu } from "./side-menu";
 import { cn } from "@/lib/utils";
 
 export function BlockNoteView({
@@ -109,6 +109,7 @@ export function BlockNoteView({
     >
       <SideMenuController sideMenu={SideMenu} />
       <FormattingToolbarController
+        floatingUIOptions={formattingToolbarOptions}
         formattingToolbar={() => (
           <FormattingToolbar>
             <BlockTypeSelect
