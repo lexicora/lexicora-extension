@@ -123,6 +123,13 @@ function ExportSettingsPage() {
                 A large library takes a moment, and navigation is paused while
                 it runs.
               </ItemDescription>
+              <ItemDescription className="text-pretty line-clamp-none">
+                The JSON backup can be imported back from the Import page.
+              </ItemDescription>
+              {/* <ItemDescription className="text-pretty line-clamp-none">
+                The JSON backup can be imported back into Lexicora, while the
+                Markdown notes are ready for Obsidian / Tolaria or any editor.
+              </ItemDescription> */}
             </ItemContent>
           </Item>
         </section>

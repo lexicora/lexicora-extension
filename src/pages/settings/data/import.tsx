@@ -186,6 +186,9 @@ function ImportSettingsPage() {
                 items that are already here, then pick the file. Navigation is
                 paused while it runs.
               </ItemDescription>
+              <ItemDescription className="text-pretty line-clamp-none">
+                The JSON backup can be exported from the Export page.
+              </ItemDescription>
             </ItemContent>
           </Item>
         </section>
