@@ -1,5 +1,29 @@
 {
   "files.associations": {
     "*.css": "tailwindcss"
-  }
+  },
+  "cSpell.words": [
+    "blocknote",
+    "contentinfo",
+    "itemprop",
+    "stackoverflow",
+    "editsection",
+    "noprint",
+    "infobox",
+    "navbox",
+    "disqus",
+    "outbrain",
+    "taboola",
+    "uage",
+    "substack",
+    "sidepanel",
+    "rxdb",
+    "uuidv",
+    "lexicora",
+    "tgmaurer",
+    "tipsntricks",
+    "dexie",
+    "lexicoradb",
+    "supabase"
+  ]
 }
