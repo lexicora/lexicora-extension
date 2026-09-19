@@ -98,7 +98,7 @@ export const FEATURES = {
    * The general settings section, which will contain various settings for the
    * application. Off until the settings are fully implemented and tested.
    */
-  GENERAL_SETTINGS_SECTION: false,
+  GENERAL_SETTINGS_SECTION: true,
 
   /**
    * The standalone windowed app (`window.html`). The entrypoint is functional
