@@ -1,7 +1,7 @@
 import type { PageData } from "@/types/page-data.types";
 import { parseDocument } from "@/lib/utils/document-parser";
 
-// TODO: Maybe make this function not return a nullable type, so Promise<PageData>.
+// MAYBE: Make this function not return a nullable type, so Promise<PageData>.
 /**
  * Captures the entire page content and metadata, and returns it as a structured object.
  * @returns A Promise that resolves to a PageData object containing the page's content, metadata, and other relevant information, or null if the page cannot be parsed.
@@ -33,9 +33,8 @@ export async function getPageData(): Promise<PageData | null> {
       dir: documentClone.documentElement.dir || null,
     },
     misc: {
-      // TODO: Implement a setting, where the user can decide whether to replace the editor content with the parsed content, or to append it.
+      // TODO: Implement a setting, where the user can decide whether to replace the editor content with the parsed content, or to append it. Applies to a captured selection too.
       overrideExisting: true, // true, because page is being captured, though maybe change this later to false, to be consistent with capturing selections
     },
-    //TODO: Add more fields if needed
   };
 }

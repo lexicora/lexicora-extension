@@ -38,7 +38,7 @@ export function AccountMenu({ className }: AccountMenuProps) {
             )}
           >
             <UserIcon className="size-4.5" />
-            {/* TODO: If logged in, show user's avatar or initials and also change the hue of the background to a color (user varying and users can choose)*/}
+            {/* TODO (FEATURES.ACCOUNTS): If logged in, show user's avatar or initials and also change the hue of the background to a color (user varying and users can choose)*/}
             {/* Maybe also just generate an image with an image generator */}
           </div>
         </div>
@@ -47,12 +47,12 @@ export function AccountMenu({ className }: AccountMenuProps) {
         <DropdownMenuLabel className="py-1">My Account</DropdownMenuLabel>
         <DropdownMenuItem className="py-1">Profile</DropdownMenuItem>
         <DropdownMenuItem className="py-1">Settings</DropdownMenuItem>
-        {/*TODO: Maybe add "My Plan", "Subscription" or something like that, if we have a paid offering in the future */}
+        {/*MAYBE (FEATURES.ACCOUNTS): Add "My Plan", "Subscription" or something like that, if we have a paid offering in the future */}
         <DropdownMenuSeparator />
         <DropdownMenuItem className="py-1">Support</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="py-1">Sign out</DropdownMenuItem>
-        {/*TODO: Make dynamic based on login status */}
+        {/*TODO (FEATURES.ACCOUNTS): Make dynamic based on login status */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

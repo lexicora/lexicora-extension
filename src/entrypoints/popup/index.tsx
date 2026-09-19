@@ -22,7 +22,7 @@ function Popup() {
   const { isSupported, activeTab, isResolved } = useTabSupport();
   const [promptText, setPromptText] = useState("");
 
-  // MAYBE: Force side panel to open to home page with messaging navigation implementation.
+  // MAYBE (FEATURES.AI): Force side panel to open to home page with messaging navigation implementation.
   const openSidePanel = async (closeWindow: boolean) => {
     if (import.meta.env.FIREFOX) {
       // @ts-ignore: sidebarAction is a Firefox-specific API

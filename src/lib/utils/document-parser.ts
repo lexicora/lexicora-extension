@@ -1,5 +1,5 @@
 // document-parser.ts v0.3.0
-// TODO: Potentially collect an array of relevant tags.
+// MAYBE: Collect an array of relevant tags.
 
 import DomPurify from "dompurify";
 
@@ -187,7 +187,7 @@ const textInputSelector = ["text", "search", "email", "url", "tel", "number"]
 
 /**
  * Page furniture around the content, dropped from full pages only.
- * TODO MAYBE: Make configurable for other pages, some of them might have useful stuff in the header/footer/aside for example.
+ * MAYBE: Make configurable for other pages, some of them might have useful stuff in the header/footer/aside for example.
  */
 const junkSelectors = [
   "nav",
@@ -842,5 +842,5 @@ export function cleanSnippetHTML(
   return cleanSnippet(container, baseUrl);
 }
 
-// TODO: Maybe implement later, when needed
+// MAYBE: Implement later, when needed
 //export function parseDocumentToMarkdown(doc: Document): string {}

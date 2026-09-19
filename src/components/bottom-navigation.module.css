@@ -26,7 +26,7 @@
     -webkit-mask: linear-gradient(transparent, black, black);
     mask: linear-gradient(transparent, black, black);
     -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px); /*TODO: Adjust blur intensity as needed */
+    backdrop-filter: blur(4px); /*MAYBE: Adjust blur intensity as needed */
     opacity: 1;
     /*will-change: opacity;
     transition: opacity 0.3s ease;*/

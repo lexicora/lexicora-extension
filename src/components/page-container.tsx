@@ -15,7 +15,7 @@ interface PageContainerProps {
    * passing `isWindowed`. Exposed as a `data-windowed` attribute so host-specific
    * styling can target `[data-windowed]` without forking the component.
    *
-   * TODO: Migrate host detection to a context provider (e.g. AppMessagingProvider)
+   * TODO: Use the existing provider for host detection instead of drilling this prop through every page
    * once more components need it — for now it is drilled as a prop.
    */
   isWindowed?: boolean;

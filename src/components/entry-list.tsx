@@ -19,7 +19,8 @@ import {
   siteHostnames,
 } from "@/lib/search-query";
 
-// TODO: Maybe put the logic of setting the stuff for session storage in the return of component useEffect return statement for unmount.
+// MAYBE: Move the session-storage writes into the effect's cleanup, on unmount.
+// Applies to topic-list.tsx too, which handles its scroll position the same way.
 
 interface EntryListProps {
   search: string;
@@ -137,7 +138,7 @@ export function EntryList({
     return () => sub.unsubscribe();
   }, [collection, search, onlyFavorites, onlyArchived, topicId]);
 
-  // TODO: For wider screens or the windowed app, maybe add a two column layout.
+  // MAYBE (FEATURES.WINDOWED_APP): For wider screens, a two column layout.
   return (
     <>
       <div className="flex items-center gap-2.5 w-full px-1.5 pb-0.75">
@@ -212,7 +213,7 @@ export function EntryList({
           useWindowScroll
           initialScrollTop={savedScrollTop}
           data={entries}
-          overscan={220} // TODO: potentially increase/decrease (was initially 200)
+          overscan={220} // MAYBE: increase/decrease (was initially 200)
           // A render function Virtuoso calls, not a component, so nothing remounts.
           // oxlint-disable-next-line react/no-unstable-nested-components
           itemContent={(_, entry) => (

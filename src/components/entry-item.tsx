@@ -44,7 +44,7 @@ type InteractionEvent =
   | React.MouseEvent<HTMLDivElement>
   | React.KeyboardEvent<HTMLDivElement>;
 
-// TODO: Potentially show more properties for each Entry.
+// MAYBE: Show more properties for each Entry.
 export function EntryItem({
   entry,
   topUIScrollOffset,

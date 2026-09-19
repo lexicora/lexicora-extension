@@ -51,5 +51,5 @@ export async function handleCaptureRequest(
   if (clearPendingCaptureData === true) {
     setPendingCapture(null);
   }
-  //TODO: Handle capture request from content script or other contexts if needed in the future.
+  //MAYBE: Handle capture request from content script or other contexts if needed in the future.
 }

@@ -28,7 +28,6 @@ const isDev = import.meta.env.DEV;
 addRxPlugin(RxDBCleanupPlugin);
 addRxPlugin(RxDBLeaderElectionPlugin);
 
-// TODO: For testing always add same test data on db init.
 // Add plugins
 // if (import.meta.env.DEV) {
 //   disableWarnings();
@@ -41,10 +40,10 @@ export async function initializeDb() {
 
   const db = await createRxDatabase({
     name: "lexicoradb", // name of the database
-    storage: getRxStorageDexie(), // TODO: Potentially include dexie.js plugins like dexie-worker or similar in the future. Data compression could be interesting. (encryption is built in to RxDB)
+    storage: getRxStorageDexie(), // MAYBE: Include dexie.js plugins like dexie-worker or similar in the future. Data compression could be interesting. (encryption is built in to RxDB)
     multiInstance: true, // true by default - highly important for extensions crossing contexts
     ignoreDuplicate: false, // true is only allowed in development.
-    closeDuplicates: isDev, // TODO: Maybe set to true always. automatically close duplicate instances (e.g. from hot reload) - only relevant if ignoreDuplicate is true (enable if needed)
+    closeDuplicates: isDev, // MAYBE: Set to true always. automatically close duplicate instances (e.g. from hot reload) - only relevant if ignoreDuplicate is true (enable if needed)
     eventReduce: true,
     //* The periodic half of the purge; the other two are in db/cleanup. RxDB's
     //* defaults assume a long-lived app: it waits a minute after the collection
@@ -100,4 +99,4 @@ export const getDb = () => {
   return dbPromise;
 };
 
-// TODO: Later implement Supabase sync plugin here.
+// TODO (sync, #68): Later implement Supabase sync plugin here.

@@ -44,7 +44,7 @@ import { SettingsItem } from "@/components/settings";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 
-// TODO: Maybe convert this whole page full of options to a data list, that gets iterated over.
+// MAYBE: Convert this whole page full of options to a data list, that gets iterated over.
 
 function SettingsPage() {
   return (
@@ -77,7 +77,7 @@ function SettingsPage() {
                   <div className="size-8 rounded-md flex items-center">
                     <div className="flex items-center justify-center size-full rounded-full bg-secondary/25 dark:bg-secondary/50 ring ring-inset ring-black/20 dark:ring-white/20">
                       <UserIcon className="size-4.5" />
-                      {/* TODO: If logged in, show user's avatar or initials */}
+                      {/* TODO (FEATURES.ACCOUNTS): If logged in, show user's avatar or initials */}
                     </div>
                   </div>
                 </ItemMedia>
@@ -95,7 +95,7 @@ function SettingsPage() {
                 </ItemActions>
               </Link>
             </Item>
-            {/*TODO MAYBE: Add subscription settings right below above or put it in the account settings */}
+            {/*MAYBE (FEATURES.ACCOUNTS): Add subscription settings right below above or put it in the account settings */}
           </section>
         )}
         <section id="features-settings">
@@ -265,7 +265,7 @@ function SettingsPage() {
               roundingClass="rounded-t-none"
             />
           </div>
-          {/*TODO: Terms of service Item */}
+          {/*TODO (release prep): Terms of service Item */}
         </section>
         <section id="about-license-section">
           <Label htmlFor="" className="text-sm ml-2 mb-0.5">

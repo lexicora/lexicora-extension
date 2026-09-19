@@ -91,4 +91,3 @@ body[data-scroll-locked] {
   margin-inline: auto;
   /*inset-inline: 0;*/
 }
-/* TODO: page-header.tsx compact scroll strip also uses max-w-317.25 — update manually to var(--lc-content-max-width) */

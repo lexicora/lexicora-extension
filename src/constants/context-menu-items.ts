@@ -16,7 +16,7 @@ export const CMI_ID = {
   //CAPTURE_FROM_CLIPBOARD: "save-from-clipboard",
 } as const;
 
-// TODO: localize titles later and change order for better UX
+// MAYBE: localize titles later and change order for better UX
 /**
  * Context Menu Items Definitions
  */
@@ -66,7 +66,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
       "audio",
       "frame",
       "editable",
-    ], // TODO: Potentially change to just "all". (Check Firefox)
+    ], // TODO (Firefox pass): Potentially change to just "all".
   },
   {
     id: CMI_ID.CAPTURE_PAGE_AI_ASSISTED,
@@ -95,7 +95,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
       "audio",
       "frame",
       "editable",
-    ], // TODO: Potentially change to just "all". (Check Firefox)
+    ], // TODO (Firefox pass): Potentially change to just "all".
     documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   },
   {
@@ -110,7 +110,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
       "audio",
       "frame",
       "editable",
-    ], // TODO: Potentially change to just "all". (Check Firefox)
+    ], // TODO (Firefox pass): Potentially change to just "all".
     documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
   },
   // {
@@ -118,7 +118,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   //   title: "Capture from Clipboard",
   //   contexts: ["all"],
   // },
-  //TODO MAYBE: Add option to save without opening side panel and only show notification of success/failure
+  //MAYBE: Add option to save without opening side panel and only show notification of success/failure
 
   //type: "normal" is the default.
   // Add more browser-specific excluded URLs if needed (like extensions own pages)

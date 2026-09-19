@@ -32,7 +32,7 @@ export function setupContextMenuActions() {
         break;
       }
       case CMI_ID.CAPTURE_SELECTION_AI_ASSISTED: {
-        // TODO: Content script handler for GET_PAGE_SELECTION_ARTICLE needs implementing when this feature is built
+        // TODO (FEATURES.AI): Content script handler for GET_PAGE_SELECTION_ARTICLE needs implementing when this feature is built
         if (!tab?.id) break;
         const pageCaptureData = await sendMessage(
           MSG.GET_PAGE_SELECTION_ARTICLE,
@@ -134,7 +134,7 @@ export function setupContextMenuStateSync(/*menuId: string*/) {
         await browser.contextMenus.update(
           CMI_ID.CAPTURE_SELECTION_AI_ASSISTED,
           {
-            //enabled: !isDisabled, //MAYBE: Use for stuff like, if it is locked, behind a subscription (plus, pro...)
+            //enabled: !isDisabled, //MAYBE (FEATURES.ACCOUNTS): Use for stuff like, if it is locked, behind a subscription (plus, pro...)
             visible: !isDisabled,
           },
         );
@@ -156,7 +156,7 @@ export function setupContextMenuStateSync(/*menuId: string*/) {
         //enabled: !isDisabled,
         visible: !isDisabled,
       });
-      // TODO: Possibly add "separator2" item in enable/disable logic if needed. (Check firefox behavior)
+      // TODO (Firefox pass): Possibly add "separator2" item in enable/disable logic if needed.
     } catch {
       // Silently catch errors if the menu item hasn't been created yet
     }

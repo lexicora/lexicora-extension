@@ -13,10 +13,10 @@ export function TopBar() {
   const { isAtTop } = useScrollPos();
 
   const openExtensionWindow = () => {
-    // TODO: Make sure only one windowed instance is open at a time.
+    // TODO (FEATURES.WINDOWED_APP): Make sure only one windowed instance is open at a time.
     //* NOTE: For messaging, use webext-bridge/sidepanel, because the window is similar in behavior and the windowId is different so no conflicts with the real side-panel.
     browser.windows.create({
-      url: browser.runtime.getURL("/window.html"), // TODO: Implement unlisted side-panel similar app (see: https://wxt.dev/guide/essentials/entrypoints.html#unlisted-pages)
+      url: browser.runtime.getURL("/window.html"), // TODO (FEATURES.WINDOWED_APP): Implement unlisted side-panel similar app (see: https://wxt.dev/guide/essentials/entrypoints.html#unlisted-pages)
       type: "popup",
       width: 1000,
       height: 800, // plus 40, because of window bar

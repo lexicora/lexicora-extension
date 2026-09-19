@@ -4,7 +4,7 @@ import {
   parseSnippet,
 } from "@/lib/utils/document-parser";
 
-// TODO: Maybe make this function not return a nullable type, so Promise<PageData>.
+// MAYBE: Make this function not return a nullable type, so Promise<PageData>.
 /**
  * This function captures the selected content and metadata, and returns it as a structured object.
  * It uses a custom parsing approach that preserves more of the original HTML structure, which is ideal for "as-is" saving.
@@ -39,10 +39,8 @@ export async function getSelectionPageData(): Promise<PageData | null> {
       dir: document.documentElement.dir || null,
     },
     misc: {
-      // TODO: Implement a setting, where the user can decide whether to replace the editor content with the parsed content, or to append it.
       // For selections, it might make more sense to append the content to the editor, rather than replacing it, since users might want to capture multiple selections from the same page.
       overrideExisting: false,
     },
-    //TODO: Add more fields if needed
   };
 }

@@ -37,11 +37,10 @@ import { FEATURES } from "@/constants/features";
 import { LIBRARY_SHORTCUTS } from "@/constants/shortcuts";
 import { usePageShortcuts } from "@/hooks/sidepanel/use-page-shortcuts";
 
-// TODO: Potentially make searching faster, when entering a search query, because on every character, a navigation takes place.
-// TODO: Also ensure, that when on a tab, the other tabs should not be rendered and in a way put to sleep, so they don't do unnecessary processing.
+// MAYBE: Make searching faster, when entering a search query, because on every character, a navigation takes place.
+// MAYBE: Ensure that when on a tab, the other tabs should not be rendered and in a way put to sleep, so they don't do unnecessary processing.
 
 // NOTE: Pages are side-panel-first, so `isWindowed` defaults to false. The windowed
-// entrypoint opts in via App.tsx. TODO: migrate host detection to a provider later.
 /** Defined once, outside the component, so the listener is not re-attached. */
 const LIBRARY_PAGE_SHORTCUTS = LIBRARY_SHORTCUTS.filter((shortcut) =>
   shortcut.pages.includes("library"),
@@ -80,7 +79,7 @@ function LibraryPage() {
     }
   };
 
-  // TODO: Potentially reset search params, except for topic or entry tab, when navigating to create a new topic or entry.
+  // MAYBE: Reset search params, except for topic or entry tab, when navigating to create a new topic or entry.
 
   const activeTab = searchParams.get("tab") || "entries";
   const targetTabRef = useRef(activeTab);
@@ -235,7 +234,7 @@ function LibraryPage() {
               >
                 <ArchiveIcon className="group-data-[state=on]/toggle:text-green-600 dark:group-data-[state=on]/toggle:text-green-500" />
               </Toggle>
-              {/* TODO: Implement a filter menu here, to filter by different stuff and also implement toggle to sort by updated or created, 
+              {/* TODO (#144, out of scope for v1.0): Implement a filter menu here, to filter by different stuff and also implement toggle to sort by updated or created, 
               also potentially save the current filter to browser local storage */}
               {/* Potentially use later for if more options come up and advanced filters become relevant.
                <DropdownMenu>

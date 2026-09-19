@@ -114,7 +114,7 @@ export function PopupAiLayout({
               <ArrowUpRightIcon className="inline" size={16} />
             </a>
           </div>
-          {/*TODO: Maybe show indication (like in browsers bottom left of window), where this link leads */}
+          {/*MAYBE (FEATURES.AI): Show an indication of where this link leads, like a browser's status bar */}
         </section>
       </header>
       <main>

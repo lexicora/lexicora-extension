@@ -164,7 +164,7 @@ export function BlockNoteView({
       //onSelectionChange={onSelectionChange}
       //ref={ref}
       //spellCheck={false}
-      // MAYBE TODO: Add custom selector property
+      // MAYBE: Add custom selector property
       //lc-data-theming
       // ...props
     >

@@ -196,7 +196,7 @@ function NavRecent({ topics }: { topics: TopicDocType[] }) {
               <SidebarMenuAction
                 showOnHover
                 asChild
-                title={`New entry in "${topic.name}"`} // TODO: truncate
+                title={`New entry in "${topic.name}"`} // TODO (FEATURES.WINDOWED_APP): truncate
               >
                 <NavLink
                   to={`/library/entries/new?topicId=${encodeURIComponent(topic.id)}`}

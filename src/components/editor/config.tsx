@@ -33,7 +33,7 @@ export const appBlockNoteConfig = {
   }),
   extensions: [WebContentDropExtension()],
   tables: {
-    headers: true, // MAYBE TODO: Add more customization options for tables later
+    headers: true, // MAYBE: Add more customization options for tables later
     cellBackgroundColor: true,
     //cellTextColor: true,
   },
@@ -44,7 +44,7 @@ export const appBlockNoteConfig = {
     // },
     block: {
       class: "bn-table-content bn-code-content", //TODO: Change later: bn-table-border
-      // TODO MAYBE: Use only one (or none at all) class for all custom styling with tailored CSS selectors
+      // MAYBE: Use only one (or none at all) class for all custom styling with tailored CSS selectors
     },
   },
 };

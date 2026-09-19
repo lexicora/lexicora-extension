@@ -48,7 +48,6 @@ import { uuidv7 } from "uuidv7";
 
 import { ArrowUpIcon, SaveIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-// TODO: Add useBlocker from react-router or similar to prevent navigation with unsaved changes
 
 function EntryCreatePage() {
   const location = useLocation(); // This is used in order to trigger useEffect on location change
@@ -319,7 +318,7 @@ function EntryCreatePage() {
         <div className="lc-page-gutter">
           <div className="max-w-(--lc-content-max-width) mx-auto w-full px-0.5">
             <section className="mx-px">
-              {/*TODO: Maybe add relative and overflow-x-hidden later, when it is guaranteed to fill the entire page (height wise) */}
+              {/*MAYBE: Add relative and overflow-x-hidden later, when it is guaranteed to fill the entire page (height wise) */}
               <div className="text-start">
                 <EntryForm
                   id="entry-create-form"
@@ -405,7 +404,7 @@ function EntryCreatePage() {
                   editor={editor}
                   lang={language}
                   id="lc-blocknote-view-new-entry"
-                  // TODO: Make prop to control min height of editor.
+                  // MAYBE: Make a prop to control the min height of the editor.
                 />
               </div>
             </div>
@@ -414,7 +413,7 @@ function EntryCreatePage() {
       </main>
       {FEATURES.AI ? (
         <footer
-          // TODO: Potentially disable the ai prompt when the host is the window, because no content can be captured to the window currently
+          // TODO (FEATURES.AI): Potentially disable the ai prompt when the host is the window, because no content can be captured to the window currently
           //id="lc-new-entry-bottom-footer"
           //className="mt-10.5"
           className={cn(styles.bottomFooter, "mt-10.5")}

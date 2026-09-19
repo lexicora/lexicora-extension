@@ -46,7 +46,7 @@ function CaptureSuggestionsSettingsPage() {
               <ItemDescription className="text-pretty line-clamp-none /*leading-relaxed*/">
                 Webpage prompts that suggest capturing content after you've
                 spent some time on a site.
-                {/*TODO: Later change when this feature becomes smart with analysis*/}
+                {/*MAYBE: Change when this feature becomes smart with analysis*/}
               </ItemDescription>
             </ItemContent>
           </Item>
@@ -129,7 +129,7 @@ function CaptureSuggestionsSettingsPage() {
             </p>
           )}
         </section>
-        {/*TODO: Potential features to add later:
+        {/*MAYBE: Potential features to add later:
           - Option to only show suggestions on certain sites or block suggestions on certain sites (with a toggle and input for sites)
           - Option to customize the suggestions with instructions for the AI (like "suggest capturing if you are reading an article for more than 5 minutes" or "suggest capturing if you are on a shopping site for more than 10 minutes" etc.)
           - max prompts per day/week/month with option to reset the count (with a toggle and input for number of prompts)

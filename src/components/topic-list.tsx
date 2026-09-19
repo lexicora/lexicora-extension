@@ -15,8 +15,6 @@ import { useRxCollection } from "rxdb/plugins/react";
 import type { MangoQuerySelector } from "rxdb";
 import { parseSearchQuery, searchTextPattern } from "@/lib/search-query";
 
-// TODO: Maybe put the logic of setting the stuff for session storage in the return of component useEffect return statement for unmount.
-
 interface TopicListProps {
   search: string;
   filter?: {
@@ -125,8 +123,7 @@ export function TopicList({
       </div>
       {isLoaded && visibleTopics.length === 0 && (
         <div className="flex flex-col items-center justify-center py-10 px-3 text-center">
-          {/*TODO: Potentially reset search params, except for topic or entry tab, when navigating to create a new topic or entry */}
-          {search.trim() ? (
+            {search.trim() ? (
             <>
               <p className="text-muted-foreground mb-3">
                 No topics found matching{" "}
@@ -177,7 +174,7 @@ export function TopicList({
           useWindowScroll
           initialScrollTop={savedScrollTop}
           data={visibleTopics}
-          overscan={220} // TODO: potentially increase/decrease (was initially 200)
+          overscan={220} // MAYBE: increase/decrease (was initially 200)
           // A render function Virtuoso calls, not a component, so nothing remounts.
           // oxlint-disable-next-line react/no-unstable-nested-components
           itemContent={(_, topic) => (
