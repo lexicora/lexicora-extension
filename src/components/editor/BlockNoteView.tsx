@@ -27,6 +27,7 @@ import {
   SideMenuController,
   SuggestionMenuController,
   GridSuggestionMenuController,
+  useBlockNoteEditor,
 } from "@blocknote/react";
 import { filterSuggestionItems } from "@blocknote/core/extensions";
 import { BlockNoteView as BaseBlockNoteView } from "@blocknote/shadcn";
@@ -37,12 +38,72 @@ import "./styles.css";
 
 import { useTheme } from "@/providers/theme-provider";
 import {
+  appBlockNoteConfig,
   getBlockTypeSelectItems,
   getCustomSlashMenuItems,
   type AppBlockNoteEditor,
 } from "./config";
 import { formattingToolbarOptions, SideMenu } from "./side-menu";
 import { cn } from "cn";
+
+/**
+ * The formatting toolbar. Defined once, outside `BlockNoteView`: BlockNote
+ * renders it as a component, so an inline arrow would be a new component type
+ * on every render and remount the toolbar, closing any open dropdown.
+ */
+function AppFormattingToolbar() {
+  const editor = useBlockNoteEditor(appBlockNoteConfig.schema);
+
+  return (
+    <FormattingToolbar>
+      <BlockTypeSelect
+        key={"blockTypeSelect"}
+        items={getBlockTypeSelectItems(editor)}
+      />
+      {/* Extra button to toggle blue text & background */}
+      {/*<BlueButton key={"customButton"} />*/}
+      <FileCaptionButton key={"fileCaptionButton"} />
+      <FileReplaceButton key={"replaceFileButton"} />
+      <BasicTextStyleButton
+        basicTextStyle={"bold"}
+        key={"boldStyleButton"}
+      />
+      <BasicTextStyleButton
+        basicTextStyle={"italic"}
+        key={"italicStyleButton"}
+      />
+      <BasicTextStyleButton
+        basicTextStyle={"underline"}
+        key={"underlineStyleButton"}
+      />
+      <BasicTextStyleButton
+        basicTextStyle={"strike"}
+        key={"strikeStyleButton"}
+      />
+      {/* Extra button to toggle code styles */}
+      <BasicTextStyleButton
+        key={"codeStyleButton"}
+        basicTextStyle={"code"}
+      />
+      <TextAlignButton
+        textAlignment={"left"}
+        key={"textAlignLeftButton"}
+      />
+      <TextAlignButton
+        textAlignment={"center"}
+        key={"textAlignCenterButton"}
+      />
+      <TextAlignButton
+        textAlignment={"right"}
+        key={"textAlignRightButton"}
+      />
+      <ColorStyleButton key={"colorStyleButton"} />
+      <NestBlockButton key={"nestBlockButton"} />
+      <UnnestBlockButton key={"unnestBlockButton"} />
+      <CreateLinkButton key={"createLinkButton"} />
+    </FormattingToolbar>
+  );
+}
 
 export function BlockNoteView({
   editor,
@@ -110,56 +171,7 @@ export function BlockNoteView({
       <SideMenuController sideMenu={SideMenu} />
       <FormattingToolbarController
         floatingUIOptions={formattingToolbarOptions}
-        // oxlint-disable-next-line react/no-unstable-nested-components
-        formattingToolbar={() => (
-          <FormattingToolbar>
-            <BlockTypeSelect
-              key={"blockTypeSelect"}
-              items={getBlockTypeSelectItems(editor)}
-            />
-            {/* Extra button to toggle blue text & background */}
-            {/*<BlueButton key={"customButton"} />*/}
-            <FileCaptionButton key={"fileCaptionButton"} />
-            <FileReplaceButton key={"replaceFileButton"} />
-            <BasicTextStyleButton
-              basicTextStyle={"bold"}
-              key={"boldStyleButton"}
-            />
-            <BasicTextStyleButton
-              basicTextStyle={"italic"}
-              key={"italicStyleButton"}
-            />
-            <BasicTextStyleButton
-              basicTextStyle={"underline"}
-              key={"underlineStyleButton"}
-            />
-            <BasicTextStyleButton
-              basicTextStyle={"strike"}
-              key={"strikeStyleButton"}
-            />
-            {/* Extra button to toggle code styles */}
-            <BasicTextStyleButton
-              key={"codeStyleButton"}
-              basicTextStyle={"code"}
-            />
-            <TextAlignButton
-              textAlignment={"left"}
-              key={"textAlignLeftButton"}
-            />
-            <TextAlignButton
-              textAlignment={"center"}
-              key={"textAlignCenterButton"}
-            />
-            <TextAlignButton
-              textAlignment={"right"}
-              key={"textAlignRightButton"}
-            />
-            <ColorStyleButton key={"colorStyleButton"} />
-            <NestBlockButton key={"nestBlockButton"} />
-            <UnnestBlockButton key={"unnestBlockButton"} />
-            <CreateLinkButton key={"createLinkButton"} />
-          </FormattingToolbar>
-        )}
+        formattingToolbar={AppFormattingToolbar}
       />
       <GridSuggestionMenuController
         triggerCharacter={":"}
