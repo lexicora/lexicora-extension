@@ -65,7 +65,10 @@ function RootLayout() {
   const location = useLocation();
   //* NOTE: Feature parity discrepancy: Firefox does not support stuff related to the unsupported capture suggestions feature.
   // Also Firefox natively handles state of the side-panel already being open or closed.
+  // The condition is a build-time constant, so the hook order never changes
+  // within one build.
   if (!import.meta.env.FIREFOX) {
+    // oxlint-disable-next-line react-hooks/rules-of-hooks
     useSidePanelConnection();
   }
 

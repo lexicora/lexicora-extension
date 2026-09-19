@@ -66,10 +66,6 @@ function NavMain() {
     ? `/library/entries/new?topicId=${encodeURIComponent(currentTopicId)}`
     : "/library/entries/new";
 
-  const navToNewEntry = () => {
-    navigate(newEntryTo, { viewTransition: true });
-  };
-
   return (
     <div>
       <SidebarMenu>

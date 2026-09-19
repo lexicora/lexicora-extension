@@ -131,6 +131,21 @@ describe("downloadLibrary", () => {
     for (const target of targets) expect(files[target]).toBeDefined();
   });
 
+  it("escapes brackets and backslashes in the index's link text", async () => {
+    await db.collections.topics.bulkInsert([topic("t1", "Notes [draft] C:\\")]);
+
+    await downloadLibrary({
+      topics: db.collections.topics,
+      entries: db.collections.entries,
+      blocks: db.collections.blocks,
+    });
+
+    const files = await filesInDownload();
+    expect(files["Lexicora library.md"]).toContain(
+      "- [Notes \\[draft\\] C:\\\\](",
+    );
+  });
+
   it("reports progress per topic, for the toast", async () => {
     await db.collections.topics.bulkInsert([
       topic("t1", "One"),

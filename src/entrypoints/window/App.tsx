@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 
 // Hooks, Providers and Components
-import { RouterListener } from "@/hooks/sidepanel/router-listener";
+//import { RouterListener } from "@/hooks/sidepanel/router-listener";
 import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
 import { AppHostProvider } from "@/providers/app-host";
 import { AppMessagingProvider } from "@/providers/app-messaging";

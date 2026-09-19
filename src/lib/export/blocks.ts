@@ -1,5 +1,8 @@
 import { BlockNoteEditor } from "@blocknote/core";
-import { appBlockNoteConfig } from "@/components/editor/config";
+import {
+  appBlockNoteConfig,
+  type AppBlockNoteEditor,
+} from "@/components/editor/config";
 import type { BlockNoteBlock } from "@/lib/utils/block-converter";
 
 /**
@@ -11,7 +14,7 @@ import type { BlockNoteBlock } from "@/lib/utils/block-converter";
  * blocks such as code blocks come out the same as they look in the editor.
  */
 
-type Converter = ReturnType<typeof BlockNoteEditor.create>;
+type Converter = AppBlockNoteEditor;
 type ConvertibleBlocks = Parameters<Converter["blocksToMarkdownLossy"]>[0];
 
 let converter: Converter | null = null;

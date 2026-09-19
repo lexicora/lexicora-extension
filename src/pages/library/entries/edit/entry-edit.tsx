@@ -71,8 +71,8 @@ function EntryEditContent({
 }: EntryEditContentProps) {
   const editor = useCreateBlockNote({
     ...appBlockNoteConfig,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     initialContent:
+      // oxlint-disable-next-line typescript/no-explicit-any
       initialBlocks.length > 0 ? (initialBlocks as any[]) : undefined,
   });
 
@@ -489,7 +489,7 @@ function EntryEditPage() {
       // The editor block can run edge to edge (see useEditorWideMode), so the
       // container drops its gutter and every other block applies it with
       // .lc-page-gutter. The inner width cap is lifted with the important
-      // variant because .lc-page-container-inner is unlayered CSS and would
+      // variant because .lc-page-container-inner is un-layered CSS and would
       // win over the layered utility otherwise (same reason as mb-0! above).
       classNameInner="max-w-none!"
       gutter={false}

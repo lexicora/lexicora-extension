@@ -28,7 +28,7 @@ export default defineConfig({
   //     dedupe: ["react", "react-dom"],
   //   },
   // }),
-  manifest: ({ browser, manifestVersion, mode, command }) => {
+  manifest: ({ browser }) => {
     const manifestBase: UserManifest = {
       name: "Lexicora",
       description:

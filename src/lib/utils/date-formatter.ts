@@ -15,7 +15,7 @@ export function formatDate(date: string, options?: FormatDateOptions): string {
       timeStyle: options?.timeStyle || "short",
       // Potentially make configurable via options parameter in the future, if needed.
     });
-  } catch (e) {
+  } catch {
     // Safe fallback if Temporal throws/isn't supported
     return new Date(date).toLocaleString(navigator.language, {
       dateStyle: options?.dateStyle || "short",

@@ -24,7 +24,6 @@ import {
   HardDriveIcon,
   LocateIcon,
   Trash2Icon,
-  WandIcon,
 } from "lucide-react";
 import { useRxCollection } from "rxdb/plugins/react";
 import { toast } from "sonner";

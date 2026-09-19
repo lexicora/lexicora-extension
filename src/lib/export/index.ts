@@ -16,6 +16,7 @@ import {
   entryToClipboardHtml,
   entryToClipboardMarkdown,
   entryToMarkdownFile,
+  escapeLinkText,
   reserveFilename,
   toSafeFilename,
   topicToClipboardHtml,
@@ -244,7 +245,7 @@ function libraryIndexMarkdown(
     const target = `${encodeURIComponent(folder)}/${encodeURIComponent(filename)}`
       .replace(/\(/g, "%28")
       .replace(/\)/g, "%29");
-    lines.push(`- [${topic.name.replace(/([\[\]])/g, "\\$1")}](${target})`);
+    lines.push(`- [${escapeLinkText(topic.name)}](${target})`);
   }
   return `${lines.join("\n")}\n`;
 }

@@ -10,6 +10,8 @@ function DropdownMenu({
   return <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
 }
 
+// Kept from shadcn, but not exported: BlockNote needs its menus unportaled.
+// oxlint-disable-next-line no-unused-vars
 function DropdownMenuPortal({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Portal>) {

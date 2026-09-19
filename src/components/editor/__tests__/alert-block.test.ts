@@ -82,7 +82,7 @@ describe("alert block export", () => {
 describe("alert block parsing", () => {
   it("turns GitHub alert Markdown into an alert block", async () => {
     const editor = createEditor();
-    const blocks = await editor.tryParseMarkdownToBlocks(
+    const blocks = editor.tryParseMarkdownToBlocks(
       "> [!IMPORTANT]\n> Read this first\n",
     );
     expect(blocks).toHaveLength(1);
@@ -93,7 +93,7 @@ describe("alert block parsing", () => {
 
   it("reads Obsidian's lowercase callout marker", async () => {
     const editor = createEditor();
-    const blocks = await editor.tryParseMarkdownToBlocks(
+    const blocks = editor.tryParseMarkdownToBlocks(
       "> [!warning]\n> Mind the gap\n",
     );
     expect(blocks[0]!.type).toBe("alert");
@@ -103,7 +103,7 @@ describe("alert block parsing", () => {
 
   it("turns GitHub's rendered alert HTML into an alert block", async () => {
     const editor = createEditor();
-    const blocks = await editor.tryParseHTMLToBlocks(
+    const blocks = editor.tryParseHTMLToBlocks(
       '<div class="markdown-alert markdown-alert-caution">' +
         '<p class="markdown-alert-title">Caution</p>' +
         "<p>Danger ahead</p></div>",
@@ -116,7 +116,7 @@ describe("alert block parsing", () => {
   it("keeps line breaks in an alert typed by its attribute alone", async () => {
     // How the capture parser writes a callout: no marker line to strip.
     const editor = createEditor();
-    const blocks = await editor.tryParseHTMLToBlocks(
+    const blocks = editor.tryParseHTMLToBlocks(
       '<blockquote data-alert-type="tip"><p>One<br>Two</p></blockquote>',
     );
     expect(blocks[0]!.type).toBe("alert");
@@ -126,7 +126,7 @@ describe("alert block parsing", () => {
 
   it("leaves an ordinary quote alone", async () => {
     const editor = createEditor();
-    const blocks = await editor.tryParseMarkdownToBlocks("> Just a quote\n");
+    const blocks = editor.tryParseMarkdownToBlocks("> Just a quote\n");
     expect(blocks[0]!.type).toBe("quote");
     expect(textOf(blocks[0]!)).toBe("Just a quote");
   });
@@ -136,7 +136,7 @@ describe("alert block parsing", () => {
     const markdown = editor.blocksToMarkdownLossy([
       { type: "alert", props: { type: "tip" }, content: "Try the slash menu" },
     ]);
-    const blocks = await editor.tryParseMarkdownToBlocks(markdown);
+    const blocks = editor.tryParseMarkdownToBlocks(markdown);
     expect(blocks[0]!.type).toBe("alert");
     expect(blocks[0]!.props.type).toBe("tip");
     expect(textOf(blocks[0]!)).toBe("Try the slash menu");
@@ -147,7 +147,7 @@ describe("alert block parsing", () => {
     const html = editor.blocksToHTMLLossy([
       { type: "alert", props: { type: "note" }, content: "Hello" },
     ]);
-    const blocks = await editor.tryParseHTMLToBlocks(html);
+    const blocks = editor.tryParseHTMLToBlocks(html);
     expect(blocks[0]!.type).toBe("alert");
     expect(blocks[0]!.props.type).toBe("note");
     expect(textOf(blocks[0]!)).toBe("Hello");

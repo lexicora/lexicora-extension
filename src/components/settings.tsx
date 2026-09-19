@@ -28,7 +28,7 @@ export function SettingsItem({
   disabledReason = "",
 }: {
   to: string;
-  size: "default" | "sm" | "xs";
+  size?: "default" | "sm" | "xs";
   MediaIcon?: typeof PlaceHolderIcon;
   mediaIconColor?: string;
   itemTitle?: string;

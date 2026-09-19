@@ -39,7 +39,7 @@ export function escapeHtml(value: string): string {
 }
 
 /** Keeps brackets in a title from closing a Markdown link early. */
-function escapeLinkText(value: string): string {
+export function escapeLinkText(value: string): string {
   return value.replace(/([\\[\]])/g, "\\$1");
 }
 

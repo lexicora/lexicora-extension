@@ -1,7 +1,7 @@
 import { sendMessage } from "@/lib/messaging";
 import { MSG } from "@/constants/messaging";
 import { FEATURES } from "@/constants/features";
-import { CONTEXT_MENU_ITEMS, CMI_ID } from "@/constants/context-menu-items";
+import { CMI_ID } from "@/constants/context-menu-items";
 import {
   captureMessagesFor,
   openSidePanel,
@@ -157,7 +157,7 @@ export function setupContextMenuStateSync(/*menuId: string*/) {
         visible: !isDisabled,
       });
       // TODO: Possibly add "separator2" item in enable/disable logic if needed. (Check firefox behavior)
-    } catch (e) {
+    } catch {
       // Silently catch errors if the menu item hasn't been created yet
     }
   };
@@ -174,7 +174,7 @@ export function setupContextMenuStateSync(/*menuId: string*/) {
     try {
       const tab = await browser.tabs.get(activeInfo.tabId);
       updateUi(tab.url);
-    } catch (e) {
+    } catch {
       // Tab might be gone or restricted
     }
   });

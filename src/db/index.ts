@@ -4,12 +4,8 @@ import { RxDBCleanupPlugin } from "rxdb/plugins/cleanup";
 import { RxDBLeaderElectionPlugin } from "rxdb/plugins/leader-election";
 import { COLLECTION_SETTINGS } from "./collections";
 //import { RxDBQueryBuilderPlugin } from "rxdb/plugins/query-builder";
-import { disableWarnings, RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
+//import { disableWarnings, RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
 
-// Schemas
-import { topicSchema } from "./schemas/topic";
-import { entrySchema } from "./schemas/entry";
-import { blockSchema } from "./schemas/block";
 import { filterConsole } from "@/lib/utils/filter-console";
 import { buildEntrySearchBlob, buildTopicSearchBlob } from "./search-blob";
 

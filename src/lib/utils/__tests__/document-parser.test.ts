@@ -153,7 +153,7 @@ describe("parseDocument alerts", () => {
         '<p dir="auto">Line one<br>Line two</p></div></article>',
     );
 
-    const blocks = await toBlocks(content);
+    const blocks = toBlocks(content);
 
     expect(blocks.map((block) => block.type)).toEqual(["paragraph", "alert"]);
     expect(blocks[1]!.props.type).toBe("warning");
@@ -170,7 +170,7 @@ describe("parseDocument alerts", () => {
         "</aside></article>",
     );
 
-    const blocks = await toBlocks(content);
+    const blocks = toBlocks(content);
 
     expect(blocks[1]!.type).toBe("alert");
     // Starlight's caution is the yellow one: GitHub calls that a warning.
@@ -185,7 +185,7 @@ describe("parseDocument alerts", () => {
         "</div></article>",
     );
 
-    const [alert] = await toBlocks(content);
+    const [alert] = toBlocks(content);
 
     expect(alert!.props.type).toBe("tip");
     expect(textOf(alert!)).toBe("Shortcut\nPress Tab.");
@@ -202,7 +202,7 @@ describe("parseDocument code blocks", () => {
         '<span class="pl-k">def</span> f():\n    pass\n</pre></div></article>',
     );
 
-    const [block] = await toBlocks(content);
+    const [block] = toBlocks(content);
 
     expect(block!.type).toBe("codeBlock");
     expect(block!.props.language).toBe("python");
@@ -218,7 +218,7 @@ describe("parseDocument code blocks", () => {
         "</code></pre></article>",
     );
 
-    const [block] = await toBlocks(content);
+    const [block] = toBlocks(content);
 
     expect(block!.props.language).toBe("js");
     expect(textOf(block!)).toBe("const a = 1;\nconst b = 2;");
@@ -233,7 +233,7 @@ describe("parseDocument code blocks", () => {
         '</code></pre><button aria-label="Copy code">Copy</button></div></article>',
     );
 
-    const blocks = await toBlocks(content);
+    const blocks = toBlocks(content);
 
     expect(blocks).toHaveLength(1);
     expect(blocks[0]!.props.language).toBe("ts");
@@ -331,7 +331,7 @@ describe("parseDocument images in text", () => {
         '<a target="_blank" href="/demo/blob/main/filter.png"><img alt="Filter" src="/demo/raw/main/filter.png" style="max-width: 100%;"></a></p></article>',
     );
 
-    const blocks = await toBlocks(content);
+    const blocks = toBlocks(content);
 
     expect(blocks.map((block) => block.type)).toEqual([
       "paragraph",
@@ -347,7 +347,7 @@ describe("parseDocument images in text", () => {
       '<article><p>Before <img src="/photo.jpg" alt="Photo"> after.</p></article>',
     );
 
-    const blocks = await toBlocks(content);
+    const blocks = toBlocks(content);
 
     expect(blocks.map((block) => block.type)).toEqual([
       "paragraph",
@@ -489,7 +489,7 @@ describe("parseSnippet", () => {
       makeDoc(""),
     );
 
-    const [alert] = await toBlocks(content);
+    const [alert] = toBlocks(content);
 
     expect(alert!.type).toBe("alert");
     expect(alert!.props.type).toBe("note");

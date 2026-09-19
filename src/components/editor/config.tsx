@@ -1,7 +1,6 @@
 import {
   BlockNoteSchema,
   createCodeBlockSpec,
-  defaultBlockSpecs,
 } from "@blocknote/core";
 import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
 import { codeBlockOptions } from "@blocknote/code-block";

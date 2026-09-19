@@ -67,7 +67,7 @@ function EntryCreatePage() {
 
   const [editorIsDirty, setEditorIsDirty] = useState(false);
   const initialDocJsonRef = useRef(JSON.stringify(editor.document));
-  // Exclude same-pathname navigations (e.g. the router-state cleanup after capture) from the blocker
+  // Exclude same-pathname navigation's (e.g. the router-state cleanup after capture) from the blocker
   const blocker = useBlocker(({ currentLocation, nextLocation }) => {
     return (
       (formIsDirty || editorIsDirty) &&
@@ -149,7 +149,7 @@ function EntryCreatePage() {
       if (data.url.trim() !== "") {
         try {
           urlObj = new URL(data.url);
-        } catch (e) {
+        } catch {
           console.warn("Invalid URL for database parts:", data.url);
         }
       }
@@ -228,6 +228,7 @@ function EntryCreatePage() {
       );
     };
 
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
     //* A bookmark has no content by design. Clear anything an earlier capture
     //* left in the editor, so this page's metadata is never saved alongside
     //* another page's content. An already-empty editor is left alone to avoid
@@ -299,7 +300,7 @@ function EntryCreatePage() {
       // The editor block can run edge to edge (see useEditorWideMode), so the
       // container drops its gutter and every other block applies it with
       // .lc-page-gutter. The inner width cap is lifted with the important
-      // variant because .lc-page-container-inner is unlayered CSS and would
+      // variant because .lc-page-container-inner is un-layered CSS and would
       // win over the layered utility otherwise (same reason as mb-0! above).
       classNameInner="max-w-none!"
       gutter={false}
@@ -394,7 +395,7 @@ function EntryCreatePage() {
               {/* It is ALWAYS mounted to prevent the Floating UI crash. We just hide it visually until ready. */}
               <div
                 className={cn(
-                  "transition-opacity duration-150", //MAYBE: Reduce duration a bit more, dont use will-change-opacity, because editor ui elements are covered by top and bottom ui.
+                  "transition-opacity duration-150", //MAYBE: Reduce duration a bit more, don't use will-change-opacity, because editor ui elements are covered by top and bottom ui.
                   showSkeleton
                     ? "opacity-0 pointer-events-none"
                     : "opacity-100",

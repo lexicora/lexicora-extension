@@ -110,6 +110,7 @@ export function BlockNoteView({
       <SideMenuController sideMenu={SideMenu} />
       <FormattingToolbarController
         floatingUIOptions={formattingToolbarOptions}
+        // oxlint-disable-next-line react/no-unstable-nested-components
         formattingToolbar={() => (
           <FormattingToolbar>
             <BlockTypeSelect

@@ -392,7 +392,7 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
       },
 
       // Cleanup
-      onRemove: (uiContainer) => {
+      onRemove: () => {
         clearTimeout(autoHideTimeout);
 
         if (onDragMove) window.removeEventListener("mousemove", onDragMove);

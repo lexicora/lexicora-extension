@@ -71,13 +71,13 @@ export function extractPageMetadata(doc: Document): PageMetadata {
   if (faviconUrl) {
     try {
       faviconUrl = new URL(faviconUrl, doc.baseURI).href;
-    } catch (e) {
+    } catch {
       faviconUrl = null;
     }
   } else {
     try {
       faviconUrl = new URL("/favicon.ico", doc.baseURI).href;
-    } catch (e) {
+    } catch {
       faviconUrl = null;
     }
   }
@@ -250,7 +250,9 @@ const maxImageDensity = 2;
 const maxGlyphSize = 32;
 
 /** Emoji characters only, as emoji images carry them in their alt text. */
+// The class lists joiners and modifiers as single code points on purpose.
 const emojiOnlyPattern =
+  // oxlint-disable-next-line no-misleading-character-class
   /^(?:\p{Extended_Pictographic}|\p{Regional_Indicator}|\p{Emoji_Modifier}|[\u200d\ufe0f\u20e3\s])+$/u;
 
 /** A width or height in em or ex: the image is sized to scale with the text. */
@@ -669,10 +671,12 @@ function findContentByScore(doc: Document): Element {
   // An article split into sibling sections scores each section on its own.
   // When their shared parent scores nearly as high, it is the article.
   const threshold = (scores.get(best) ?? 0) * 0.75;
-  let parent = best.parentElement;
-  while (parent && (scores.get(parent) ?? 0) >= threshold && threshold > 0) {
-    best = parent;
-    parent = parent.parentElement;
+  if (threshold > 0) {
+    let parent = best.parentElement;
+    while (parent && (scores.get(parent) ?? 0) >= threshold) {
+      best = parent;
+      parent = parent.parentElement;
+    }
   }
 
   return best;

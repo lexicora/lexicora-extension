@@ -132,7 +132,6 @@ export function EntryForm({
   isCapturePending = false,
   topics,
   onSubmit,
-  isLoading,
   onFormReady,
   onDirtyChange,
 }: EntryFormProps) {
@@ -276,13 +275,13 @@ export function EntryForm({
           if (faviconUrl) {
             try {
               faviconUrl = new URL(faviconUrl, document.baseURI).href;
-            } catch (e) {
+            } catch {
               faviconUrl = null;
             }
           } else {
             try {
               faviconUrl = new URL("/favicon.ico", document.baseURI).href;
-            } catch (e) {
+            } catch {
               faviconUrl = null;
             }
           }
@@ -437,7 +436,7 @@ export function EntryForm({
                       placeholder="Search or select a topic..."
                       className="w-full"
                       aria-invalid={!!errors.topicId}
-                      onBlur={(e) => {
+                      onBlur={() => {
                         if (typed && !field.value && !hasExactTopicMatch) {
                           field.onChange(typed);
                         }

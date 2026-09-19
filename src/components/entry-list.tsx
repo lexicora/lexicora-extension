@@ -3,7 +3,6 @@ import { Separator } from "@/components/ui/separator";
 
 import { EntryItem } from "@/components/entry-item";
 import type { EntryDocType } from "@/db/schemas/entry";
-import { cn } from "cn";
 import { FilesIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useNavigationType } from "react-router-dom";
