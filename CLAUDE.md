@@ -96,7 +96,6 @@ Entry content is edited with **BlockNote** (`@blocknote/react`). The editor comp
 
 See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the phased implementation plan and open issue backlog.
 
-**Current phase**: Phase 2 — Windowed extension entrypoint.
-**Current goal**: fully functional offline app before integrating Supabase sync or AI features.
+**Current goal**: the v1.0 milestone — a polished, offline-only release. AI, accounts, the website link and the windowed app are hidden behind `FEATURES` (`src/constants/features.ts`), not removed. What is left is listed under "Remaining work for v1.0" in the roadmap.
 
-Phase 2 builds a new `window/` entrypoint — a standalone browser window with a wider sidebar-based layout. Spec in [`docs/windowed_extension/README.md`](docs/windowed_extension/README.md).
+The windowed app (`src/entrypoints/window/`) is built but parked; its status and open work are in [`docs/windowed_extension/README.md`](docs/windowed_extension/README.md).

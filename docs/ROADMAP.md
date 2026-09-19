@@ -147,23 +147,17 @@ Bug fixes, light-mode follow-ons, and a focused refactor before Phase 2.
 
 A new WXT entrypoint that opens the extension as a full browser window — same data, same components, but a wider layout optimized for more screen real estate.
 
-See [`docs/windowed_extension/README.md`](windowed_extension/README.md) for full spec.
+**Status: parked.** The entrypoint, the sidebar and the shared pages in
+`src/pages/` are built, hidden behind `FEATURES.WINDOWED_APP`; the window home
+page, breadcrumb bar and window messaging are not. What exists, the design
+decisions and what is open are in
+[`docs/windowed_extension/README.md`](windowed_extension/README.md).
 
 Key issues: [#47](https://github.com/lexicora/lexicora-extension/issues/47), [#115](https://github.com/lexicora/lexicora-extension/issues/115), [#112](https://github.com/lexicora/lexicora-extension/issues/112), [#103](https://github.com/lexicora/lexicora-extension/issues/103), [#98](https://github.com/lexicora/lexicora-extension/issues/98)
 
-Build order:
-1. New `window/` entrypoint (WXT `tabs` entrypoint opened as a standalone window)
-2. Wide layout shell — persistent left sidebar for navigation, right content area
-3. Adapted pages — reuse side-panel route components where possible, swap in larger variants where the layout differs
-4. Background messaging for the window instance — unique window ID handling ([#103](https://github.com/lexicora/lexicora-extension/issues/103))
-
-### Phase 2 cleanup pass
-
-Before starting Phase 3, do a short focused refactor:
-
-- Consolidate anything duplicated between the side-panel and windowed entrypoints into shared components/hooks
-- Clean up routing and messaging patterns that became awkward when the second entrypoint was added
-- Audit `src/entrypoints/` for any copy-pasted structure that should be extracted to `src/components/` or `src/hooks/`
+When it is picked up again, finish with a cleanup pass: consolidate anything
+duplicated between the two entrypoints into shared components and hooks, and
+tidy routing and messaging patterns that became awkward with a second host.
 
 ---
 
