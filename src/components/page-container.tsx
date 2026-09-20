@@ -1,5 +1,7 @@
 import { cn } from "cn";
 
+import { useAppHost } from "@/providers/app-host";
+
 interface PageContainerProps {
   /** The ID of the main container */
   id?: string;
@@ -9,16 +11,6 @@ interface PageContainerProps {
   className?: string;
   /** The CSS classes for the inner container */
   classNameInner?: string;
-  /**
-   * Which host the page is rendered in. Pages are side-panel-first, so this
-   * defaults to `false` (side-panel) and the windowed entrypoint opts in by
-   * passing `isWindowed`. Exposed as a `data-windowed` attribute so host-specific
-   * styling can target `[data-windowed]` without forking the component.
-   *
-   * TODO: Use the existing provider for host detection instead of drilling this prop through every page
-   * once more components need it — for now it is drilled as a prop.
-   */
-  isWindowed?: boolean;
   /**
    * Whether the container applies the page's horizontal gutter (12px on the
    * left, scrollbar-aware on the right). Pages with a block that must run edge
@@ -34,9 +26,17 @@ export function PageContainer({
   idInner,
   className,
   classNameInner,
-  isWindowed = false,
   gutter = true,
 }: React.PropsWithChildren<PageContainerProps>) {
+  /**
+   * Which host the page is rendered in, taken from the provider the windowed
+   * entrypoint sets, as `PageHeader` does. Pages are side-panel-first, so
+   * without a provider this is false. Exposed as a `data-windowed` attribute
+   * so host-specific styling can target `[data-windowed]` without forking the
+   * component.
+   */
+  const { isWindowed } = useAppHost();
+
   return (
     <div
       id={id}

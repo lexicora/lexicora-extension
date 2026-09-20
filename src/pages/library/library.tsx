@@ -40,7 +40,8 @@ import { usePageShortcuts } from "@/hooks/sidepanel/use-page-shortcuts";
 // MAYBE: Make searching faster, when entering a search query, because on every character, a navigation takes place.
 // MAYBE: Ensure that when on a tab, the other tabs should not be rendered and in a way put to sleep, so they don't do unnecessary processing.
 
-// NOTE: Pages are side-panel-first, so `isWindowed` defaults to false. The windowed
+// NOTE: Pages are side-panel-first, so `isWindowed` defaults to false. The
+// windowed entrypoint opts in with AppHostProvider, in its own App.tsx.
 /** Defined once, outside the component, so the listener is not re-attached. */
 const LIBRARY_PAGE_SHORTCUTS = LIBRARY_SHORTCUTS.filter((shortcut) =>
   shortcut.pages.includes("library"),
@@ -160,7 +161,7 @@ function LibraryPage() {
   // 176 = 234 - 58 (top bar height) = 176, because the top bar is not present in the new side panel design.
 
   return (
-    <PageContainer className="pb-1.75!" isWindowed={isWindowed}>
+    <PageContainer className="pb-1.75!">
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <PageHeader title="Library" classNameHeaderElement="mb-0">
           <div className="mt-4 mx-1">
