@@ -2,7 +2,8 @@
 import * as Button from "@/components/ui/button";
 //import * as Card from "@/components/ui/card";
 import * as DropdownMenu from "./components/ui/dropdown-menu";
-//* NOTE: DropDownMenu currently used above is the same as the legacy component, due to compatibility (do not replace yet)
+//* NOTE: The editor keeps its own DropdownMenu, an older shadcn one that
+//* BlockNote's markup expects. Do not point this at @/components/ui.
 // import * as Form from "@/components/ui/form";
 // import * as Input from "@/components/ui/input";
 import * as Label from "@/components/ui/label";
