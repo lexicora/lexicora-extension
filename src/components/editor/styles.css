@@ -1,3 +1,17 @@
+/* ====================================================================
+   BlockNote editor styles
+
+   Grouped by what they style, in cascade order — rules are not sorted,
+   because several pairs rely on which one comes last. Two conventions
+   are worth knowing: `.bn-root[data-color-scheme]` scopes a rule to a
+   mounted editor, and `.bn-lc-adjustments` (set in config.tsx) marks
+   our own blocks.
+
+   TODO: the prefixes are not applied consistently — some rules carry
+   the root scope, some do not. Normalising them changes specificity
+   throughout, so it wants doing deliberately, not in passing.
+   ==================================================================== */
+
 /* Base theme */
 .bn-root[data-color-scheme] {
   --bn-font-family: var(--lc-font-sans);
@@ -61,10 +75,14 @@
   /* Potentially change transparency to 30% */
   --accent: color-mix(in oklab, var(--color-accent) 35%, transparent);
   --muted: color-mix(in oklab, var(--color-muted) 35%, transparent);
-  /*MAYBE: Add a subtile blue hue to it.*/
+  /*MAYBE: Add a subtle blue hue to it.*/
   /*Editor text color*/
   --bn-colors-editor-text: #292929; /*was #3f3f3f then 3e3e3e*/
 }
+
+/* ====================================================================
+   Scroll locking while a menu is open
+   ==================================================================== */
 
 /*Prevent scrolling, when certain stuff is present (also use layout shift mitigator technique to avoid disappearing scrollbar)*/
 html:has(
@@ -103,12 +121,14 @@ html:has(
   display: none;
 }
 
-/*TODO: Clean file up and make selectors more consistent*/
-
 /* Changes for light mode */
 /*.bn-root[data-color-scheme="light"] {
     --bn-colors-editor-background: #fefefe;
 }*/
+
+/* ====================================================================
+   The editor surface
+   ==================================================================== */
 
 .bn-default-styles {
   /*--bn-font-family: var(--lc-font-sans);*/
@@ -165,6 +185,10 @@ html:has(
     background-color: #2383e247;
   }
 }
+
+/* ====================================================================
+   Side menu: the drag-handle menu
+   ==================================================================== */
 
 .bn-root[data-color-scheme].bn-shadcn
   .bn-side-menu
@@ -224,7 +248,7 @@ html:has(
     padding-left: 2px;
 }*/
 
-/* Hide toolbars anywhere when a disabled bm-content exists */
+/* Hide toolbars anywhere when a read-only editor exists */
 /*.bn-editor[contenteditable="false"] [data-floating-ui-focusable],
 .bn-editor[contenteditable="false"] .bn-toolbar {
     display: none !important;
@@ -256,6 +280,10 @@ html:has(
     ) {
     --radix-popper-available-height: calc(40dvh - 184px) !important;
 }*/
+
+/* ====================================================================
+   Dropdown menus (colour picker, table handle menu)
+   ==================================================================== */
 
 /*TODO: Fix the toolbar Text formatter dropdown like this below.*/
 .bn-root[data-color-scheme]
@@ -294,23 +322,33 @@ html:has(
   margin-bottom: 6px;
 }
 
-/*Moved to a different and moe optimal selector above (see line: 85)*/
-/*.bn-root[data-color-scheme]
-    .bn-side-menu
-    [data-radix-popper-content-wrapper]
-    [data-radix-menu-content]:not(.bn-color-picker-dropdown) {
-    /*max-height: calc(100vh - 124px);
-    /*margin-bottom: 100px;
-}*/
-
-.bn-root[data-color-scheme] .bn-toolbar {
-  /*Make space for scrollbar maybe change to calc(100vw - 10px) (or width of scrollbar)*/
-  max-width: 97vw;
-}
+/* ====================================================================
+   Toolbars
+   ==================================================================== */
 
 .bn-root[data-color-scheme]:has(.bn-editor[contenteditable="false"])
   .bn-toolbar {
   display: none !important;
+}
+
+.bn-root[data-color-scheme] .bn-toolbar {
+  /*Make space for scrollbar maybe change to calc(100vw - 10px) (or width of scrollbar)*/
+  max-width: 97vw;
+  & .bn-text-input:has(input[data-slot="input"]:not([data-test="embed-input"])),
+  & .border-input:has(input[data-slot="input"]:not([data-test="embed-input"])) {
+    border-radius: 10px;
+    padding-right: 7px;
+  }
+}
+
+.bn-root[data-color-scheme]
+  .bn-toolbar
+  .bn-popover-content.bn-form-popover[data-slot="popover-content"] {
+  &:has(.bn-text-input input[data-slot="input"]),
+  &:has(.border-input input[data-slot="input"]) {
+    border-radius: 16px;
+    padding: 8px;
+  }
 }
 
 /*Should affect link and image related input fields*/
@@ -319,14 +357,64 @@ html:has(
 .bn-root[data-color-scheme]
   .bn-toolbar.bn-formatting-toolbar
   input[data-slot="input"]:not([data-test="embed-input"]) {
-  border-radius: calc(0.25em + 1px);
+  /* border-radius: calc(0.25em + 1px); */
+  border-radius: 4px;
   padding-inline: calc(0.25em + 1px);
 }
+
+.bn-root[data-color-scheme]
+  [data-floating-ui-focusable]
+  .bn-panel[data-slot="tabs"]:has(
+    [role="tabpanel"][data-slot="tabs-content"] [data-slot="card"]
+  ),
+.bn-root[data-color-scheme]
+  [data-floating-ui-focusable]
+  [role="dialog"]:has(.bn-panel[data-slot="tabs"]) {
+  border-radius: 18px;
+}
+
+.bn-root[data-color-scheme]
+  [data-floating-ui-focusable]
+  .bn-panel[data-slot="tabs"] {
+  & [role="tablist"][data-slot="tabs-list"] {
+    pointer-events: none;
+  }
+  & [role="tabpanel"][data-slot="tabs-content"] [data-slot="card"] {
+    padding-block: 0;
+  }
+}
+
+/* Selectors above already do the job, keep as backup if something should not work as expected. */
+/* .bn-root[data-color-scheme]
+  .bn-toolbar.bn-formatting-toolbar
+  .bn-panel[data-slot="tabs"]:has(
+    [role="tabpanel"][data-slot="tabs-content"] [data-slot="card"]
+  ),
+.bn-root[data-color-scheme]
+  .bn-toolbar.bn-formatting-toolbar
+  [role="dialog"]:has(.bn-panel[data-slot="tabs"]) {
+  border-radius: 18px;
+}
+
+.bn-root[data-color-scheme]
+  .bn-toolbar.bn-formatting-toolbar
+  .bn-panel[data-slot="tabs"] {
+  & [role="tablist"][data-slot="tabs-list"] {
+    pointer-events: none;
+  }
+  & [role="tabpanel"][data-slot="tabs-content"] [data-slot="card"] {
+    padding-block: 0;
+  }
+} */
 
 /*Place lower for accessibility*/
 .bn-root[data-color-scheme] .bn-toolbar.bn-link-toolbar {
   margin-bottom: -10px;
 }
+
+/* ====================================================================
+   Table handles and the side menu's buttons
+   ==================================================================== */
 
 .bn-root[data-color-scheme] .bn-table-handle:is(button) {
   padding-inline: 0;
@@ -338,12 +426,6 @@ html:has(
   background-color: light-dark(#bfbfbf, #333a47);
 }
 
-.bn-root[data-color-scheme].bn-shadcn .bn-side-menu .bn-button:is(button) {
-  height: 24px;
-  width: 24px;
-  border-radius: 6px;
-}
-
 /*Same as: .bn-root button.bn-button:hover */
 .bn-root[data-color-scheme].bn-shadcn
   .bn-side-menu
@@ -351,7 +433,13 @@ html:has(
   background-color: light-dark(#ededed, #262b36);
 }
 
+/* Below the :hover rule on purpose: both are equally specific, so the open
+   state has to come last to win while an open button is hovered. */
 .bn-root[data-color-scheme].bn-shadcn .bn-side-menu .bn-button:is(button) {
+  height: 24px;
+  width: 24px;
+  border-radius: 6px;
+
   &[aria-expanded="true"] {
     background-color: light-dark(#d4d4d4, #2e3442);
   }
@@ -413,7 +501,7 @@ html:has(
 }*/
 
 .bn-root[data-color-scheme].bn-shadcn .bn-side-menu {
-  margin-right: 2px; /*Incrased distance to block content slightly*/
+  margin-right: 2px; /*Increased distance to block content slightly*/
 }
 
 /*.bn-root .bn-button:is(button)[aria-label="Open block menu"]:active {
@@ -422,6 +510,10 @@ html:has(
 .bn-root .bn-button:is(button)[aria-label="Open block menu"]:active:hover {
     cursor: grabbing;
 }*/
+
+/* ====================================================================
+   Panels and the table's extend buttons
+   ==================================================================== */
 
 .bn-root[data-color-scheme] .bn-panel {
   border: 1px solid var(--color-border);
@@ -451,6 +543,10 @@ html:has(
   border-color: #282e3b;
 }
 /*MAYBE: add hover states to above*/
+
+/* ====================================================================
+   Code: spelling, the language select and the toggle button
+   ==================================================================== */
 
 .bn-root[data-color-scheme] .bn-editor code::spelling-error,
 .bn-root[data-color-scheme] .bn-editor pre::spelling-error,
@@ -494,7 +590,8 @@ html:has(
  * these rules only apply inside an editor of ours. It carries no styles of its
  * own; it is the hook the rules below hang on.
  */
-.bn-lc-adjustments
+.bn-root[data-color-scheme]
+  .bn-lc-adjustments
   .bn-block-content:not([data-content-type="codeBlock"])
   :not(pre)
   code {
@@ -506,17 +603,22 @@ html:has(
   padding: 0.1rem 0.28em 0.1rem; /*Shorthand definition*/
   font-family: var(--lc-font-monospace);
   font-size: calc(1em - 2px); /*MAYBE: Adjust later*/
-  font-weight: 400; /*Hevier font for better readability, due to different display in light mode*/
+  font-weight: 400; /*Heavier font for better readability, due to different display in light mode*/
 }
 
 .bn-root[data-color-scheme="dark"]
+  .bn-lc-adjustments
   .bn-block-content:not([data-content-type="codeBlock"])
   :not(pre)
   code {
-  font-weight: 300 !important;
+  font-weight: 300 !important; /* Must be important to override default styles*/
 }
 
-.bn-lc-adjustments .bn-block-content[data-content-type="codeBlock"] pre code {
+.bn-root[data-color-scheme]
+  .bn-lc-adjustments
+  .bn-block-content[data-content-type="codeBlock"]
+  pre
+  code {
   font-family: var(--lc-font-monospace);
   font-variant-ligatures: none; /*Maybe add ligatures later*/
   font-size: 14px; /*MAYBE: Adjust later*/
@@ -546,7 +648,13 @@ html:has(
     background-color: light-dark(#202020, #111116);
 }*/
 
-.bn-lc-adjustments .bn-block-content[data-content-type="table"] th {
+/* ====================================================================
+   Tables
+   ==================================================================== */
+.bn-root[data-color-scheme]
+  .bn-lc-adjustments
+  .bn-block-content[data-content-type="table"]
+  th {
   background-color: light-dark(#00000009, #dddddf09);
 }
 
@@ -584,9 +692,9 @@ html:has(
     max-width: 85vw;
 }*/
 
-/*.bn-table-border table th td {
-    border-color: var(--color-border);
-}*/
+/* ====================================================================
+   Quotes, dividers and links
+   ==================================================================== */
 
 .bn-root[data-color-scheme="dark"]
   .bn-block-content[data-content-type="quote"]
@@ -625,7 +733,6 @@ html:has(
     );
   }
 }
-/*TODO: overhaul and make all selectors more consistent, to avoid inconsistent behavior*/
 
 /* * NOTE: Alert block (src/components/editor/blocks/alert) */
 /* One colour per type, as GitHub draws them. Set on both the block and the
