@@ -154,7 +154,7 @@ html:has(
       background-color: transparent; /*Maybe change later*/
     }
   }
-  & .bn-code-content .bn-block-content[data-content-type="codeBlock"] select {
+  & .bn-lc-adjustments .bn-block-content[data-content-type="codeBlock"] select {
     cursor: default;
   }
 }
@@ -461,7 +461,7 @@ html:has(
 }
 
 .bn-root[data-color-scheme]
-  .bn-code-content
+  .bn-lc-adjustments
   .bn-block-content[data-content-type="codeBlock"]
   select {
   left: 14px;
@@ -470,7 +470,7 @@ html:has(
 }
 
 .bn-root[data-color-scheme="dark"]
-  .bn-code-content
+  .bn-lc-adjustments
   .bn-block-content[data-content-type="codeBlock"]
   select
   option {
@@ -487,9 +487,14 @@ html:has(
   background-color: #202530;
 }
 
-/*.bn-code-content and .bn-table-content can be replaced by bn-block or unified in to .bn-block-custom*/
-/* * NOTE: Custom Styles for BlockNote*/
-.bn-code-content
+/*
+ * NOTE: Custom styles for BlockNote.
+ *
+ * `.bn-lc-adjustments` is the class the editor config puts on every block, so
+ * these rules only apply inside an editor of ours. It carries no styles of its
+ * own; it is the hook the rules below hang on.
+ */
+.bn-lc-adjustments
   .bn-block-content:not([data-content-type="codeBlock"])
   :not(pre)
   code {
@@ -511,7 +516,7 @@ html:has(
   font-weight: 300 !important;
 }
 
-.bn-code-content .bn-block-content[data-content-type="codeBlock"] pre code {
+.bn-lc-adjustments .bn-block-content[data-content-type="codeBlock"] pre code {
   font-family: var(--lc-font-monospace);
   font-variant-ligatures: none; /*Maybe add ligatures later*/
   font-size: 14px; /*MAYBE: Adjust later*/
@@ -541,7 +546,7 @@ html:has(
     background-color: light-dark(#202020, #111116);
 }*/
 
-.bn-table-content .bn-block-content[data-content-type="table"] th {
+.bn-lc-adjustments .bn-block-content[data-content-type="table"] th {
   background-color: light-dark(#00000009, #dddddf09);
 }
 
@@ -558,14 +563,14 @@ html:has(
 }
 
 .bn-root[data-color-scheme]
-  .bn-table-content
+  .bn-lc-adjustments
   .bn-block-content[data-content-type="table"]
   .tableWrapper {
   margin-right: 5px;
 }
 
 /*.bn-root[data-color-scheme]
-    .bn-table-content
+    .bn-lc-adjustments
     .bn-block-content[data-content-type="table"]
     .tableWrapper
     .tableWrapper-inner

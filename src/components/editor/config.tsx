@@ -43,8 +43,11 @@ export const appBlockNoteConfig = {
     //   class: "bn-code-bg",
     // },
     block: {
-      class: "bn-table-content bn-code-content", //TODO: Change later: bn-table-border
-      // MAYBE: Use only one (or none at all) class for all custom styling with tailored CSS selectors
+      // One marker on every block, which the custom rules in styles.css hang
+      // on, so they only reach an editor of ours. It was two classes,
+      // bn-table-content and bn-code-content, that always appeared together
+      // and were therefore interchangeable.
+      class: "bn-lc-adjustments",
     },
   },
 };
