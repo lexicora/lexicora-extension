@@ -28,7 +28,7 @@ All without changing how they already browse or use AI tools.
 1. Browse the web — AI chats, docs, articles, wikis, anywhere
 2. The extension detects relevant content or allows manual selection
 3. Save with a single action from the browser side panel
-4. Lexicora cleans the content, preserves structure (headings, paragraphs, blocks), and optionally summarizes it
+4. Lexicora cleans the content and preserves its structure (headings, paragraphs, lists, code, tables, callouts)
 5. Saved knowledge becomes instantly searchable
 6. When revisiting a related page, Lexicora can surface existing saved knowledge
 
@@ -52,21 +52,31 @@ Most interactions happen inside the **browser side panel**, keeping context and 
 ## Key Features
 
 - Browser extension with side panel UI (Chrome, Edge, Firefox)
-- Web content scraping and cleaning via Mozilla Readability
-- Block-based structured storage with BlockNote editor
-- Manual and automatic capture workflows
-- Fast full-text search across all saved knowledge
+- Capture a page's content, or bookmark it for the link alone
+- Web content cleaned by its own parser, into the blocks the editor uses
+- Block-based structured storage with the BlockNote editor
+- Capture from the panel, the toolbar popup, the right-click menu or a keyboard shortcut
+- Fast full-text search across all saved knowledge, with a `site:` filter
 - Automatic capture suggestion toast on relevant pages
+- Export as Markdown (one note, a topic, or the whole library as a zip) and a JSON backup that can be imported again
 - Offline-first local database (RxDB)
 - Theme support (light / dark)
-- Keyboard-driven navigation
+- Keyboard-driven navigation, browser-wide and in the panel
 
-### Planned / In Progress
+### v1.0 scope
+
+v1.0 ships as a polished, **offline-only** extension: everything stays on the
+device and the extension makes no network requests of its own. AI, accounts
+and the standalone window are built but hidden behind feature flags
+(`src/constants/features.ts`), so nothing promises an unbuilt feature. See
+[`docs/ROADMAP.md`](docs/ROADMAP.md).
+
+### Planned / Beyond v1.0
 
 - AI-assisted summarization and refinement
-- Export to Markdown and other formats
-- Web app for expanded views and management
+- Sync across devices, and a web app for expanded views and management
 - Light sharing and collaboration
+- The standalone windowed app, which is built but parked
 
 ---
 
@@ -80,7 +90,8 @@ Most interactions happen inside the **browser side panel**, keeping context and 
 | Editor | [BlockNote](https://www.blocknotejs.org//) |
 | Local database | [RxDB](https://rxdb.info/) + [Dexie](https://dexie.org/) |
 | Messaging | [@webext-core/messaging](https://github.com/aklinker1/webext-core) |
-| Content parsing | [Turndown](https://github.com/mixmark-io/turndown) |
+| Content parsing | Its own DOM parser (`src/lib/utils/document-parser.ts`) + [DOMPurify](https://github.com/cure53/DOMPurify) |
+| Export | [fflate](https://github.com/101arrowz/fflate) for zip archives |
 | Forms | [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) |
 | Testing | [Vitest](https://vitest.dev/) + WXT's `fakeBrowser` |
 | Language | [TypeScript](https://www.typescriptlang.org/) |
@@ -124,11 +135,15 @@ bun run zip              # Package for Chrome Web Store
 bun run zip:firefox      # Package for AMO (Firefox Add-ons)
 ```
 
-### Type-Check
+### Type-Check and Lint
 
 ```bash
 bun run compile          # TypeScript type-check only (no emit)
+bun run lint             # oxlint, including type-aware rules
 ```
+
+ESLint is not used: `typescript-eslint` does not support TypeScript 7, while
+oxlint's type-aware rules run on it. The config is `.oxlintrc.json`.
 
 ### Tests
 
@@ -176,7 +191,9 @@ Use the `useAppStorage` hook for reactive access in React components.
 
 ## Status
 
-Lexicora is under active development and evolving rapidly. The browser extension is the primary focus and entry point. Backend, web app, and advanced features are developed incrementally as the core experience stabilizes.
+Lexicora is under active development. The current milestone is v1.0, the
+offline-only extension described above; the backend, web app and AI features
+come after it, as the core experience settles.
 
 The core vision remains intentionally narrow: **turning ephemeral web knowledge into permanent, accessible understanding**.
 
