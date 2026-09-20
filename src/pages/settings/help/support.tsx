@@ -14,7 +14,7 @@ import {
   BugIcon,
   ChevronRightIcon,
   CodeXmlIcon,
-  LifeBuoyIcon,
+  HeartPlusIcon,
 } from "lucide-react";
 
 /**
@@ -56,7 +56,7 @@ function SupportPage() {
           >
             <ItemHeader>
               <ItemMedia variant="icon">
-                <LifeBuoyIcon className="size-8 text-pink-400" />
+                <HeartPlusIcon className="size-8 text-rose-500" />
               </ItemMedia>
             </ItemHeader>
             <ItemContent>

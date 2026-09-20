@@ -132,7 +132,7 @@ function TipsAndTricksPage() {
             className="group py-2.5 gap-2 transition-none bg-card rounded-2xl"
           >
             <ItemHeader>
-              <ItemMedia variant="icon">
+              <ItemMedia variant="icon" className="-ml-1">
                 <LightbulbIcon className="size-8 text-yellow-500" />
               </ItemMedia>
             </ItemHeader>
