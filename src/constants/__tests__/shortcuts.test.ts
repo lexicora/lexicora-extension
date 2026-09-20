@@ -7,6 +7,7 @@ import {
   bindingApplies,
   formatBinding,
   manifestCommands,
+  BOTTOM_NAV_ACTIONS,
 } from "../shortcuts";
 import { isCapturableUrl } from "../support-capture-sites";
 
@@ -151,5 +152,17 @@ describe("isCapturableUrl", () => {
     [undefined, false],
   ])("%s → %s", (url, expected) => {
     expect(isCapturableUrl(url)).toBe(expected);
+  });
+});
+
+describe("BOTTOM_NAV_ACTIONS", () => {
+  it("is exactly what the bottom navigation offers", () => {
+    // These are switched off on the create and edit pages, where that bar is
+    // hidden. Back and forward are not in it: the header's back button is.
+    expect([...BOTTOM_NAV_ACTIONS].sort()).toEqual([
+      "home",
+      "library",
+      "settings",
+    ]);
   });
 });

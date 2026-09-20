@@ -264,6 +264,10 @@ function KeyboardShortcutsSettingsPage() {
               Single keys are ignored while you type in a field or the editor.{" "}
               {IS_MAC ? "⌘S" : "Ctrl+S"} works everywhere.
             </p>
+            <p>
+              Home, Library and Settings are off while you create or edit, where
+              the bottom bar is hidden too. Back and forward still work.
+            </p>
             {!import.meta.env.FIREFOX && (
               <p>
                 The mouse side buttons go back and forward here too. Hovering

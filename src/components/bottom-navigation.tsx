@@ -2,7 +2,9 @@ import style from "./bottom-navigation.module.css";
 import { cn } from "cn";
 
 import { NAV_ITEMS } from "@/lib/nav-items";
-import { NavLink, useLocation, matchPath } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
+
+import { isEditingPath } from "@/lib/routes";
 
 import { useScrollPos } from "@/providers/scroll-observer";
 import { FEATURES } from "@/constants/features";
@@ -13,18 +15,10 @@ export function BottomNavigation() {
   const { pathname, search } = useLocation();
   const { isAtBottom } = useScrollPos();
 
-  const hiddenPatterns = [
-    "/library/entries/new",
-    "/library/entries/:id/edit", // Matches /library/entries/123/edit
-    "/library/topics/new",
-    "/library/topics/:id/edit",
-    // Potentially add detail pages
-  ];
-
-  // Check if current path matches any of our hidden patterns
-  const isHidden = hiddenPatterns.some((pattern) =>
-    matchPath({ path: pattern, end: true }, pathname),
-  );
+  // The create and edit pages, where the page itself offers saving or leaving.
+  // The same helper turns off the navigation shortcuts there, so the keys match
+  // what is on screen.
+  const isHidden = isEditingPath(pathname);
 
   const noShadowPaths = ["/"];
 

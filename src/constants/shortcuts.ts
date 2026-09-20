@@ -136,6 +136,13 @@ export interface Shortcut<A extends string = string> {
 export interface PanelShortcut extends Shortcut<PanelShortcutAction> {
   /** Grouping for the settings page. */
   group: "navigate" | "act";
+  /**
+   * Goes where the bottom navigation goes, so it is off wherever that bar is
+   * hidden: the create and edit pages, where the page offers saving or leaving
+   * and going elsewhere is noise. Back and forward stay, since the header's
+   * back button is on screen there.
+   */
+  followsBottomNav?: boolean;
 }
 
 /**
@@ -158,18 +165,21 @@ export interface PanelShortcut extends Shortcut<PanelShortcutAction> {
 export const PANEL_SHORTCUTS: PanelShortcut[] = [
   {
     action: "home",
+    followsBottomNav: true,
     bindings: [{ key: "h" }],
     description: "Go to Home",
     group: "navigate",
   },
   {
     action: "library",
+    followsBottomNav: true,
     bindings: [{ key: "l" }],
     description: "Go to Library",
     group: "navigate",
   },
   {
     action: "settings",
+    followsBottomNav: true,
     bindings: [{ key: "s" }],
     description: "Go to Settings",
     group: "navigate",
@@ -251,6 +261,14 @@ export const PANEL_SHORTCUTS: PanelShortcut[] = [
     group: "act",
   },
 ];
+
+/** The actions that follow the bottom navigation; see `followsBottomNav`. */
+export const BOTTOM_NAV_ACTIONS: ReadonlySet<PanelShortcutAction> = new Set(
+  PANEL_SHORTCUTS.filter((shortcut) => shortcut.followsBottomNav).map(
+    (shortcut) => shortcut.action,
+  ),
+);
+
 
 /** Whether a binding applies on the current platform. */
 export function bindingApplies(binding: KeyBinding, isMac: boolean): boolean {

@@ -2,9 +2,12 @@ import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import type { PanelShortcutAction } from "@/constants/shortcuts";
+import {
+  BOTTOM_NAV_ACTIONS,
+  type PanelShortcutAction,
+} from "@/constants/shortcuts";
 import { navLock } from "@/lib/navigation-lock";
-import { NEW_ENTRY_PATH } from "@/lib/routes";
+import { NEW_ENTRY_PATH, isEditingPath } from "@/lib/routes";
 import { resolvePanelShortcut } from "./panel-shortcuts";
 import { useCaptureActiveTab } from "./use-capture-active-tab";
 
@@ -142,6 +145,16 @@ export function usePanelShortcuts() {
     const onKeyDown = (event: KeyboardEvent) => {
       const action = resolvePanelShortcut(event);
       if (!action) return;
+
+      // Left unhandled rather than swallowed on the create and edit pages:
+      // these keys go where the bottom navigation goes, and that bar is hidden
+      // there, so the page offers saving or leaving instead.
+      if (
+        BOTTOM_NAV_ACTIONS.has(action) &&
+        isEditingPath(latest.current.location.pathname)
+      ) {
+        return;
+      }
 
       // Swallowed even when the action turns out to have nothing to do: ⌘/Ctrl+S
       // would otherwise open "Save page as" for the panel itself, and the
