@@ -60,7 +60,7 @@ export function CaptureActions({
           "flex-1 min-w-0 hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:pointer-events-auto disabled:cursor-not-allowed disabled:hover:bg-primary",
           extraRounding && "rounded-lg",
           solidWhenDisabled &&
-            "disabled:opacity-100 disabled:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))] disabled:hover:bg-[color-mix(in_oklab,var(--primary)80%,var(--background))]",
+            "disabled:opacity-100 disabled:bg-[color-mix(in_oklab,var(--primary)70%,var(--background))] disabled:hover:bg-[color-mix(in_oklab,var(--primary)70%,var(--background))]",
         )}
         disabled={!isSupported}
         onClick={onCapturePage}
