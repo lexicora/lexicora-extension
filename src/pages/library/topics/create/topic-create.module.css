@@ -1,5 +1,0 @@
-:global(html:has(#lc-new-topic-page)) {
-  /*For BlockNoteView (better accessibility)*/
-  scroll-padding-top: 102px; /*was: 72px, added 30px for floating page header*/
-  /*scroll-padding-bottom: 132px;*/
-}

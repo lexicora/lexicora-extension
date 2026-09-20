@@ -1,6 +1,9 @@
 :global(html:has(#lc-home-page)) {
-  scroll-padding-top: 72px;
-  scroll-padding-bottom: 132px;
+  /** Disabled due to FEATURES.* */
+  /* scroll-padding-top: 72px;
+  scroll-padding-bottom: 132px; */
+  scroll-padding-top: 52px;
+  scroll-padding-bottom: 62px;
 }
 
 /* Give the home page inner container a floor height equal to the visible viewport

@@ -26,6 +26,12 @@
     "lexicoradb",
     "supabase",
     "wordmark",
-    "shadcn"
+    "shadcn",
+    "sonner",
+    "unlayered",
+    "stylesheet",
+    "srgb",
+    "flexbox",
+    "viewports",
   ]
 }

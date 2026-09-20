@@ -22,8 +22,6 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { toast } from "sonner";
-
-// INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { EditorWidthToggle } from "@/components/editor/editor-width-toggle";
 import {

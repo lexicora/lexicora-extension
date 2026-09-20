@@ -1,8 +1,7 @@
 import { useState } from "react";
 //import styles from "./topic-create.module.css";
-import "./topic-create.module.css";
+//import "./topic-create.module.css";
 
-// INFO: Make sure to only import the BlockNoteView from our wrapper, not directly from @blocknote/shadcn
 import { TopicForm, type TopicFormData } from "@/components/forms/topic-form";
 import {
   AlertDialog,

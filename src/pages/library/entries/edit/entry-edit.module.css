@@ -1,8 +1,11 @@
 :global(html:has(#lc-entry-edit-page)) {
   /*For BlockNoteView (better accessibility)*/
   /*MAYBE: Put those values as tailwind classes in the className prop of the PageContainer component instead*/
-  scroll-padding-top: 102px; /*MAYBE: Increase slightly*/
-  scroll-padding-bottom: 74px; /*MAYBE: Increase slightly*/
+  /** Disabled due to FEATURES.* */
+  /*scroll-padding-top: 102px;*/ /*MAYBE: Increase slightly*/
+  /*scroll-padding-bottom: 74px;*/ /*MAYBE: Increase slightly*/
+  scroll-padding-top: 56px;
+  scroll-padding-bottom: 12px;
 }
 
 .bottomFooter :global(.lc-bottom-bar-styled-bg) {

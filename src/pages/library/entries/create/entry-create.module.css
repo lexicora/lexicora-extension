@@ -1,7 +1,10 @@
 :global(html:has(#lc-new-entry-page)) {
   /*For BlockNoteView (better accessibility)*/
-  scroll-padding-top: 102px; /*was: 72px, added 30px for floating page header*/
-  scroll-padding-bottom: 74px;
+  /** Disabled due to FEATURES.* */
+  /*scroll-padding-top: 102px;*/ /*was: 72px, added 30px for floating page header*/
+  /*scroll-padding-bottom: 74px;*/
+  scroll-padding-top: 56px;
+  scroll-padding-bottom: 12px;
 }
 
 .bottomFooter :global(.lc-bottom-bar-styled-bg) {
