@@ -12,12 +12,12 @@ const FAQ_ITEMS = [
   {
     question: "What is Lexicora?",
     answer:
-      "Lexicora is a browser extension that lets you capture and organize web content. Save pages, highlight text, and write notes — all stored locally in your browser.",
+      "Lexicora is a browser extension for keeping what you read. Capture a page's content or bookmark it, sort it into topics, add your own notes, and search all of it later. Everything stays in your browser, on this device.",
   },
   {
     question: "How do I capture a webpage?",
     answer:
-      "Navigate to any webpage and click the Lexicora icon in your browser toolbar to open the side panel. From there you can create a new entry and the page URL and metadata will be pre-filled. You can also use the capture suggestion prompt that appears after spending time on a page.",
+      "Open the side panel on the page you want to keep and press \"Capture page\", or \"Bookmark\" for the link alone. The same two are in the right-click menu, along with capturing just the text you have selected, and both have a keyboard shortcut — see Settings → Keyboard Shortcuts. However you start it, the entry opens with the page's title, link and details already filled in, ready for you to pick a topic and save. The prompt that appears after a while on a page does the same thing.",
   },
   {
     question: "What is the difference between Capture page and Bookmark?",
@@ -42,7 +42,7 @@ const FAQ_ITEMS = [
   {
     question: "How do I search my captures?",
     answer:
-      "Use the search bar at the top of the Library tab to search across all your entries and topics. Search works on titles, tags, descriptions, and site names.",
+      "The search bar at the top of the Library searches titles, tags, descriptions and site names, for entries and topics alike. To narrow it to one website, put site: in front of a domain — site:react.dev — on its own or together with words, as in site:react.dev hooks. The \"Total\" link on the home page opens exactly that search for the site you are on.",
   },
   {
     question: "Can I add images or files to an entry?",
@@ -53,6 +53,21 @@ const FAQ_ITEMS = [
     question: "How do I export my data?",
     answer:
       "Go to Settings → Export. \"Export All Data\" downloads a JSON file with all your topics, entries, and notes, for backup or moving to another browser. \"Export as Markdown\" downloads them as Markdown notes instead, a folder per topic, for apps like Obsidian.",
+  },
+  {
+    question: "How do I bring a backup back in?",
+    answer:
+      "Settings → Import takes a JSON file that Export wrote. It shows what the file holds before anything changes, and asks how to treat things you already have: keep yours, take the file's, or add only what is missing. Whichever you pick, nothing already in your library is deleted. Markdown cannot be imported — it is for reading elsewhere, not for coming back.",
+  },
+  {
+    question: "Are there keyboard shortcuts?",
+    answer:
+      "Yes, and Settings → Keyboard Shortcuts lists all of them with the keys for your platform. Some work anywhere in the browser — opening the panel, capturing, bookmarking — and you can change those in the browser's own settings. The rest work while the side panel is focused: single keys for moving around, searching, creating and editing. They are ignored while you type.",
+  },
+  {
+    question: "What does cleaning up the database do?",
+    answer:
+      "Deleting something hides it immediately, but the browser only reclaims the space once the old rows are purged. That happens on its own, after deletions and periodically, so you should not have to think about it. Settings → Storage → \"Clean Up Database\" does it on the spot if you want the space back now. It never touches anything you can still see in your library.",
   },
 ] as const;
 

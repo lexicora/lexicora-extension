@@ -12,6 +12,8 @@ import { SettingsItemSeparator } from "@/components/settings";
 import {
   ArchiveIcon,
   BookmarkIcon,
+  GlobeIcon,
+  KeyboardIcon,
   CameraIcon,
   FolderOpenIcon,
   HandGrabIcon,
@@ -20,6 +22,7 @@ import {
   PinIcon,
   SearchIcon,
   TagIcon,
+  TriangleAlertIcon,
   WrapTextIcon,
 } from "lucide-react";
 
@@ -85,7 +88,7 @@ const TIPS = [
     iconColor: "text-cyan-500",
     title: "Search is powerful",
     description:
-      "The search bar scans titles, tags, descriptions, and site names. Try searching by domain name to find all captures from a site.",
+      "The search bar scans titles, tags, descriptions and site names. For one website exactly, type site:react.dev — alone, or with words after it to search within that site.",
   },
   {
     icon: BookmarkIcon,
@@ -93,6 +96,27 @@ const TIPS = [
     title: "Add your own notes",
     description:
       "Every entry has a rich text editor for your own notes, highlights, and thoughts. Use it to annotate what you captured and why.",
+  },
+  {
+    icon: TriangleAlertIcon,
+    iconColor: "text-amber-500",
+    title: "Call out what matters",
+    description:
+      "Type /alert in the editor for a coloured callout — note, tip, important, warning or caution. Exported Markdown writes them the way GitHub does, so they still read as callouts in GitHub, Obsidian and anywhere else that understands them.",
+  },
+  {
+    icon: KeyboardIcon,
+    iconColor: "text-slate-500",
+    title: "Keys for the things you do often",
+    description:
+      "With the side panel focused: n for a new entry, Shift+N for a new topic, e to edit what is open, / to search, and ? for the full list.",
+  },
+  {
+    icon: GlobeIcon,
+    iconColor: "text-blue-500",
+    title: "Everything from this site",
+    description:
+      "The home page shows what you already have from the site you are on. The link beside that group opens the Library filtered to it, however many there are.",
   },
 ] as const;
 
