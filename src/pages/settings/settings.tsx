@@ -18,17 +18,17 @@ import {
   DatabaseIcon,
   DownloadIcon,
   HardDriveIcon,
-  EllipsisIcon,
+  //EllipsisIcon, // used by the commented-out General items below
   FileTextIcon,
   HeartPlusIcon,
   InfoIcon,
   KeyboardIcon,
-  LanguagesIcon,
+  //LanguagesIcon, // used by the commented-out General items below
   LifeBuoyIcon,
   LightbulbIcon,
   MessageCircleQuestionMarkIcon,
   PaletteIcon,
-  PersonStandingIcon,
+  //PersonStandingIcon, // used by the commented-out General items below
   Settings2Icon,
   ShieldCheckIcon,
   SunMoonIcon,
@@ -198,6 +198,9 @@ function SettingsPage() {
             </Label>
             <div className="rounded-2xl not-dark:shadow-xs">
               {/*MAYBE: Add General page in of itself  */}
+              {/* Accessibility, Language and Miscellaneous are not built: each
+                  linked to a route that does not exist and opened the
+                  not-found page. Bring one back with its page.
               <SettingsItem
                 to="/settings/general/accessibility"
                 size="sm"
@@ -215,21 +218,20 @@ function SettingsPage() {
                 roundingClass="rounded-none!"
               />
               <SettingsItem
-                //Maybe make this an external link
-                to="/settings/general/privacy-policy"
-                size="sm"
-                MediaIcon={ShieldCheckIcon}
-                mediaIconColor="text-indigo-500"
-                itemTitle="Privacy policy"
-                roundingClass="rounded-none!"
-              />
-              <SettingsItem
                 to="/settings/general/miscellaneous"
                 size="sm"
                 MediaIcon={EllipsisIcon}
                 mediaIconColor="text-slate-500"
                 itemTitle="Miscellaneous"
                 roundingClass="rounded-t-none"
+              /> */}
+              <SettingsItem
+                //Maybe make this an external link
+                to="/settings/general/privacy-policy"
+                size="sm"
+                MediaIcon={ShieldCheckIcon}
+                mediaIconColor="text-indigo-500"
+                itemTitle="Privacy policy"
               />
             </div>
           </section>
