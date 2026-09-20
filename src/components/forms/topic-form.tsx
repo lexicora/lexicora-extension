@@ -13,6 +13,11 @@ import { Label } from "@/components/ui/label";
 import { Toggle } from "@/components/ui/toggle";
 import { getDb } from "@/db";
 import { cn } from "cn";
+import {
+  formatTagsInput,
+  parseTagsInput,
+  tagsInputSchema,
+} from "@/lib/utils/tags";
 import { findTopicNameConflict } from "@/lib/utils/topic-name";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StarIcon } from "lucide-react";
@@ -35,7 +40,7 @@ const createFormSchema = (currentTopicId?: string) =>
         const topics = await db.topics.find().exec();
         return !findTopicNameConflict(name, topics, currentTopicId);
       }, "A topic with this name already exists."),
-    tags: z.string().max(550, "Tags input is too long."), // TODO: Improve validation, we will split and validate individual tags later also filter out duplicates
+    tags: tagsInputSchema,
     description: z
       .string()
       .trim()
@@ -84,7 +89,7 @@ export function TopicForm({
     defaultValues: {
       name: initialData?.name || "",
       description: initialData?.description || "",
-      tags: initialData?.tags?.join(", ") || "",
+      tags: formatTagsInput(initialData?.tags),
       isFavorite: initialData?.isFavorite || false,
     },
   });
@@ -96,11 +101,7 @@ export function TopicForm({
   const currentDescription = watch("description") || "";
 
   const onValidSubmit = (data: FormValues) => {
-    const tagsArray = data.tags
-      .split(",")
-      .map((t) => t.trim())
-      .filter((t) => t.length > 0)
-      .slice(0, 10);
+    const tagsArray = parseTagsInput(data.tags);
 
     onSubmit({
       name: data.name,

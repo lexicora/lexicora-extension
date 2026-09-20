@@ -156,6 +156,24 @@ describe("parseBackup", () => {
     expect(parsed.topics).toHaveLength(1);
   });
 
+  it("brings a file's tags within the schema's limits", () => {
+    const file = {
+      formatVersion: 1,
+      topics: [
+        {
+          ...topic(),
+          tags: ["react", "React", "", "x".repeat(80), 42, null],
+        },
+      ],
+      entries: [],
+      blocks: [],
+    };
+
+    const [parsed] = parseBackup(JSON.stringify(file)).topics;
+
+    expect(parsed!.tags).toEqual(["react", "x".repeat(50)]);
+  });
+
   it("strips RxDB bookkeeping and the searchBlob from records", () => {
     const file = {
       formatVersion: 1,

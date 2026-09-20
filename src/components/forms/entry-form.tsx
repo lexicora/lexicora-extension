@@ -27,6 +27,11 @@ import { Toggle } from "@/components/ui/toggle";
 import type { TopicDocType } from "@/db/schemas/topic";
 import { useTabSupport } from "@/hooks/use-tab-support";
 import { cn } from "cn";
+import {
+  formatTagsInput,
+  parseTagsInput,
+  tagsInputSchema,
+} from "@/lib/utils/tags";
 import { isSameTopicName } from "@/lib/utils/topic-name";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDownIcon, RefreshCw, StarIcon } from "lucide-react";
@@ -48,7 +53,7 @@ const formSchema = z.object({
     .max(1000, "Description is too long.")
     .optional()
     .or(z.literal("")),
-  tags: z.string().max(550, "Tags input is too long."), // TODO: Improve validation, we will split and validate individual tags later also filter out duplicates
+  tags: tagsInputSchema,
   faviconUrl: z
     .url("Must be a valid URL")
     .max(1000, "Favicon URL is too long.")
@@ -150,7 +155,7 @@ export function EntryForm({
       title: initialData?.title || "",
       topicId: initialData?.topicId || "",
       description: initialData?.description || "",
-      tags: initialData?.tags?.join(", ") || "",
+      tags: formatTagsInput(initialData?.tags),
       faviconUrl: initialData?.faviconUrl || "",
       url: initialData?.url || "",
       siteName: initialData?.siteName || "",
@@ -219,10 +224,8 @@ export function EntryForm({
     updateField("title", initialData.title);
     updateField("topicId", initialData.topicId);
     updateField("description", initialData.description);
-    if (initialData.tags && initialData.tags.length > 0) {
-      updateField("tags", initialData.tags.join(", "));
-    } else if (initialData.tags !== undefined) {
-      updateField("tags", ""); // fallback for empty array
+    if (initialData.tags !== undefined) {
+      updateField("tags", formatTagsInput(initialData.tags));
     }
     updateField("faviconUrl", initialData.faviconUrl);
     updateField("url", initialData.url);
@@ -232,11 +235,7 @@ export function EntryForm({
   }, [initialData, overrideExisting, expandMetadata, setValue, getValues]);
 
   const onValidSubmit = (data: FormValues) => {
-    const tagsArray = data.tags
-      .split(",")
-      .map((t) => t.trim())
-      .filter((t) => t.length > 0)
-      .slice(0, 10);
+    const tagsArray = parseTagsInput(data.tags);
 
     onSubmit({
       title: data.title,

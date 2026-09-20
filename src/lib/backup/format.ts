@@ -4,6 +4,7 @@ import { blockSchema, type BlockDocType } from "@/db/schemas/block";
 import { blockTypes, uuidSchema } from "@/db/schemas/common";
 import { entrySchema, type EntryDocType } from "@/db/schemas/entry";
 import { topicSchema, type TopicDocType } from "@/db/schemas/topic";
+import { normalizeTags } from "@/lib/utils/tags";
 
 /**
  * The JSON backup: what the Export page writes and the Import page reads.
@@ -37,7 +38,9 @@ const NIL_UUID = "00000000-0000-0000-0000-000000000000";
 const uuid = z.string().regex(new RegExp(uuidSchema.pattern), "not a UUID");
 // Written by `toISOString()`, but any offset form parses to a comparable date.
 const timestamp = z.iso.datetime({ offset: true });
-const tags = z.array(z.string());
+// Brought within the schema's limits rather than rejected: a stray tag is
+// not worth failing someone's whole backup over.
+const tags = z.array(z.unknown()).transform(normalizeTags);
 
 /**
  * Records are checked against what the app itself would have written, with
