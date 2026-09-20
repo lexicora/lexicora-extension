@@ -430,9 +430,17 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
       ? multiplier * 1000
       : multiplier * BASE_DELAY_MS;
 
-    timer = setTimeout(() => {
-      // TODO: Double-check side panel state before showing prompt to avoid race where user opens side panel while timer is counting down
-      if (!document.hidden && !isUnsupportedUrl()) mountUi();
+    timer = setTimeout(async () => {
+      if (document.hidden || isUnsupportedUrl()) return;
+
+      // Checked again here, not only when the timer started: the panel may
+      // have been opened during the delay, and suggesting it then is noise.
+      // Unconditional, unlike the check that starts the timer — a prompt is
+      // never worth showing next to an open panel, whatever started it.
+      if (await sidePanelStateStorage.getValue()) return;
+      if (currentGen !== timerGeneration) return;
+
+      mountUi();
     }, dynamicDelay);
   };
 
@@ -447,6 +455,28 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
     } else {
       startTimer(false);
       //* NOTE: Since you must be in side-panel it is disabled, so here specifically dont check if side-panel is open
+    }
+  });
+
+  /**
+   * Opening the side panel answers the suggestion, so a prompt counting down
+   * or already on screen is no longer worth showing. Closing it again starts
+   * the countdown afresh.
+   *
+   * The state is written by the background's port handler, which is why this
+   * is Chromium-only — as is this whole feature.
+   */
+  sidePanelStateStorage.watch((isOpen) => {
+    if (!isOpen) {
+      startTimer();
+      return;
+    }
+
+    clearTimeout(timer);
+    timerGeneration++; // Invalidates any pending async timer generation
+    if (ui) {
+      ui.remove();
+      ui = null;
     }
   });
 
