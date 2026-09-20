@@ -18,6 +18,7 @@ export function BottomNavigation() {
     "/library/entries/:id/edit", // Matches /library/entries/123/edit
     "/library/topics/new",
     "/library/topics/:id/edit",
+    // Potentially add detail pages
   ];
 
   // Check if current path matches any of our hidden patterns
@@ -98,7 +99,7 @@ export function BottomNavigation() {
                 }
                 title={onCurrentRoute ? "" : item.label}
                 draggable={false}
-                viewTransition={pathname === item.path ? false : true}
+                viewTransition={pathname !== item.path}
                 className="group flex flex-col items-center py-4 w-full"
               >
                 {({ isActive }) => {

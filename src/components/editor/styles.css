@@ -8,7 +8,7 @@
    our own blocks.
 
    TODO: the prefixes are not applied consistently — some rules carry
-   the root scope, some do not. Normalising them changes specificity
+   the root scope, some do not. Normalizing them changes specificity
    throughout, so it wants doing deliberately, not in passing.
    ==================================================================== */
 

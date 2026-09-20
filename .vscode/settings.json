@@ -33,5 +33,19 @@
     "srgb",
     "flexbox",
     "viewports",
+    "oklch",
+    "oklab",
+    "contenteditable",
+    "rgba",
+    "focusable",
+    "colour",
+    "tablist",
+    "madefor",
+    "segoe",
+    "avenir",
+    "menlo",
+    "consolas",
+    "nowrap",
+    "keycap"
   ]
 }

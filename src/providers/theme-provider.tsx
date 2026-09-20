@@ -29,6 +29,7 @@ export function ThemeProvider({
   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
   const [isLoading, setIsLoading] = useState(true);
 
+  // oxlint-disable-next-line no-shadow
   const applyThemeToDocument = (theme: Theme) => {
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
@@ -84,6 +85,7 @@ export function ThemeProvider({
   // anything with a colour transition (every Button has `transition-all`)
   // would then visibly fade into the dark palette on open.
   useLayoutEffect(() => {
+    // oxlint-disable-next-line react/set-state-in-effect
     if (!isLoading) applyThemeToDocument(theme);
   }, [theme, isLoading]);
 

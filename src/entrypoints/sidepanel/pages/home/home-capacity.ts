@@ -8,10 +8,10 @@
  *
  * The AI layout is the exception. Its prompt textarea grows with the viewport
  * and takes whatever height is left, so there the topic count still steps with
- * the window — the original behaviour, untouched.
+ * the window — the original behavior, untouched.
  */
 
-/** Topics listed under the favourites row. */
+/** Topics listed under the favorites row. */
 export const HOME_TOPIC_LIMIT = 6;
 /** Entry rows, shared between "From this site" and "Recent entries". */
 export const HOME_ENTRY_LIMIT = 6;
