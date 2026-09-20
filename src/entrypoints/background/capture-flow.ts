@@ -1,7 +1,15 @@
 import { MSG } from "@/constants/messaging";
 import { sendMessage } from "@/lib/messaging";
-import type { CaptureMode, PageData } from "@/types/page-data.types";
-import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
+import type {
+  CaptureFailureReason,
+  CaptureMode,
+  PageData,
+} from "@/types/page-data.types";
+import {
+  setPendingCapture,
+  setPendingCaptureFailure,
+  setPendingNavigation,
+} from "./messaging-handler";
 
 /**
  * The capture steps shared by every trigger — context menu, keyboard shortcut,
@@ -96,6 +104,41 @@ export function toggleSidePanel(windowId: number | undefined): void {
 }
 
 /**
+ * Tells the side panel a capture produced nothing, so it can say why rather
+ * than sit on the loading skeleton it showed when the capture started.
+ *
+ * Pushed to an open panel and stored for one that is still opening, the same
+ * way capture data is delivered.
+ */
+export async function reportCaptureFailure(
+  windowId: number | undefined,
+  reason: CaptureFailureReason,
+): Promise<void> {
+  setPendingCapture(null);
+  setPendingNavigation(null);
+  setPendingCaptureFailure(reason);
+
+  if (windowId === undefined) return;
+
+  const delivered = await sendMessage(MSG.CAPTURE_FAILED, {
+    windowId,
+    reason,
+  }).catch(() => null);
+
+  if (delivered === true) setPendingCaptureFailure(null);
+}
+
+/**
+ * The reason to report when `messages` came back empty: a selection capture
+ * asks only for the selection, so nothing there means nothing was selected.
+ */
+function failureReasonFor(messages: CaptureMessage[]): CaptureFailureReason {
+  return messages.length === 1 && messages[0] === MSG.GET_PAGE_SELECTION_DATA
+    ? "no-selection"
+    : "unreachable";
+}
+
+/**
  * Fetches capture data and delivers it to the side panel — pushed if it is
  * already open, otherwise left pending for it to pull once it loads.
  */
@@ -105,8 +148,12 @@ export async function requestAndForwardCapture(
   messages: CaptureMessage[],
 ): Promise<PageData | null> {
   const pageCaptureData = await fetchCaptureData(tabId, messages);
-  if (!pageCaptureData) return null;
+  if (!pageCaptureData) {
+    await reportCaptureFailure(windowId, failureReasonFor(messages));
+    return null;
+  }
 
+  setPendingCaptureFailure(null);
   setPendingCapture(pageCaptureData);
 
   const clearPendingNavigation = await sendMessage(MSG.NAVIGATE_IN_SIDEPANEL, {

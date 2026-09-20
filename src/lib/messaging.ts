@@ -1,5 +1,9 @@
 import { MSG } from "@/constants/messaging";
-import type { CaptureMode, PageData } from "@/types/page-data.types";
+import type {
+  CaptureFailureReason,
+  CaptureMode,
+  PageData,
+} from "@/types/page-data.types";
 import type { TabData } from "@/types/tab-data.types";
 import { defineExtensionMessaging } from "@webext-core/messaging";
 
@@ -8,6 +12,7 @@ interface ProtocolMap {
   [MSG.OPEN_SIDEPANEL](): void;
   [MSG.REQUEST_PENDING_DATA](data: null): PageData | null;
   [MSG.REQUEST_PENDING_NAVIGATION](data: null): string | null;
+  [MSG.REQUEST_PENDING_CAPTURE_FAILURE](data: null): CaptureFailureReason | null;
   [MSG.REQUEST_PAGE_CAPTURE](
     data: TabData & { fromContext: string; mode?: CaptureMode },
   ): void;
@@ -22,6 +27,11 @@ interface ProtocolMap {
   [MSG.SEND_PAGE_CAPTURE_DATA](data: {
     windowId: number | string;
     payload: PageData | null;
+  }): boolean | null;
+  /** A capture that produced nothing, so the panel can say why; see capture-flow. */
+  [MSG.CAPTURE_FAILED](data: {
+    windowId: number | string;
+    reason: CaptureFailureReason;
   }): boolean | null;
 
   // Content-targeted (AI feature, pending full implementation)

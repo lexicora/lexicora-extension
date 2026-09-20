@@ -65,3 +65,41 @@ describe("context menu: open or close side panel", () => {
     );
   });
 });
+
+describe("context menu: a capture that finds nothing", () => {
+  it("says nothing is selected when the selection capture comes back empty", async () => {
+    vi.spyOn(browser.tabs, "sendMessage").mockImplementation((async () =>
+      null) as never);
+
+    onClicked({ menuItemId: CMI_ID.CAPTURE_SELECTION_AS_IS }, tab);
+    await flush();
+
+    const sent = runtimeSendMessage.mock.calls.map(
+      ([message]) => message as { type: string; data: unknown },
+    );
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        type: MSG.CAPTURE_FAILED,
+        data: { windowId: 3, reason: "no-selection" },
+      }),
+    );
+  });
+
+  it("says the page could not be read when a page capture comes back empty", async () => {
+    vi.spyOn(browser.tabs, "sendMessage").mockImplementation((async () =>
+      null) as never);
+
+    onClicked({ menuItemId: CMI_ID.CAPTURE_PAGE_AS_IS }, tab);
+    await flush();
+
+    const sent = runtimeSendMessage.mock.calls.map(
+      ([message]) => message as { type: string; data: unknown },
+    );
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        type: MSG.CAPTURE_FAILED,
+        data: { windowId: 3, reason: "unreachable" },
+      }),
+    );
+  });
+});

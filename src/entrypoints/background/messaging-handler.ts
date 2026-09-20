@@ -1,11 +1,15 @@
 import { onMessage } from "@/lib/messaging";
 import { MSG } from "@/constants/messaging";
-import type { PageData } from "@/types/page-data.types";
+import type {
+  CaptureFailureReason,
+  PageData,
+} from "@/types/page-data.types";
 import { handleCaptureRequest } from "./capture-request";
 
 // This stays private to this module (encapsulation)
 let pendingCapture: PageData | null = null;
 let pendingNavigation: string | null = null;
+let pendingCaptureFailure: CaptureFailureReason | null = null;
 
 // Export the setter so context-menu.ts can call it
 export const setPendingCapture = (data: PageData | null) => {
@@ -14,6 +18,17 @@ export const setPendingCapture = (data: PageData | null) => {
 
 export const setPendingNavigation = (path: string | null) => {
   pendingNavigation = path;
+};
+
+/**
+ * Held for a panel that is still opening, which cannot receive the push yet.
+ * A new capture clears it, so the panel never reports a failure the user has
+ * already moved past.
+ */
+export const setPendingCaptureFailure = (
+  reason: CaptureFailureReason | null,
+) => {
+  pendingCaptureFailure = reason;
 };
 
 /**
@@ -30,6 +45,12 @@ export function setupMessagingHandlers() {
     const path = pendingNavigation;
     pendingNavigation = null; // Clear after delivery to prevent stale navigation
     return path;
+  });
+
+  onMessage(MSG.REQUEST_PENDING_CAPTURE_FAILURE, () => {
+    const reason = pendingCaptureFailure;
+    pendingCaptureFailure = null; // Clear after delivery, like the others
+    return reason;
   });
 
   onMessage(MSG.OPEN_SIDEPANEL, (/*message.*/ { sender }) => {

@@ -4,6 +4,7 @@ import type { CaptureMode } from "@/types/page-data.types";
 import {
   captureMessagesFor,
   openSidePanel,
+  reportCaptureFailure,
   requestAndForwardCapture,
   toggleSidePanel,
 } from "./capture-flow";
@@ -41,10 +42,11 @@ function captureWithShortcut(
 
   // On a page that cannot be captured (browser pages, the web stores, PDFs)
   // there is no content script to answer, so the panel would sit on a loading
-  // skeleton. Open it on its current page instead, where the disabled capture
-  // button already says why.
+  // skeleton. Open it on its current page instead and say why, since a
+  // shortcut gives no other sign that nothing happened.
   if (!isCapturableUrl(tab.url)) {
     openSidePanel(tab.windowId);
+    void reportCaptureFailure(tab.windowId, "unsupported");
     return;
   }
 

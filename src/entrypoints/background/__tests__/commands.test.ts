@@ -94,12 +94,45 @@ describe("browser-wide shortcuts", () => {
     ]);
   });
 
-  it("only opens the panel on a page that cannot be captured", async () => {
+  it("only opens the panel on a page that cannot be captured, and says why", async () => {
+    const runtimeSendMessage = vi
+      .spyOn(browser.runtime, "sendMessage")
+      .mockImplementation((async () => null) as never);
+
     onCommand(COMMAND_ID.CAPTURE, tab("chrome://extensions/"));
     await flush();
 
     expect(sidePanelOpen).toHaveBeenCalledWith({ windowId: 3 });
     expect(tabsSendMessage).not.toHaveBeenCalled();
+    expect(
+      runtimeSendMessage.mock.calls.map(([message]) => message),
+    ).toContainEqual(
+      expect.objectContaining({
+        type: MSG.CAPTURE_FAILED,
+        data: { windowId: 3, reason: "unsupported" },
+      }),
+    );
+  });
+
+  it("says nothing was selected when a selection capture finds none", async () => {
+    const runtimeSendMessage = vi
+      .spyOn(browser.runtime, "sendMessage")
+      .mockImplementation((async () => null) as never);
+    tabsSendMessage.mockImplementation(async () => null);
+
+    onCommand(COMMAND_ID.BOOKMARK, tab("https://example.com/article"));
+    await flush();
+
+    // A bookmark asks for metadata, so an empty answer means the page never
+    // replied — not that nothing was selected.
+    expect(
+      runtimeSendMessage.mock.calls.map(([message]) => message),
+    ).toContainEqual(
+      expect.objectContaining({
+        type: MSG.CAPTURE_FAILED,
+        data: { windowId: 3, reason: "unreachable" },
+      }),
+    );
   });
 
   it("toggles with its own shortcut: opens synchronously, then asks an open panel to close", async () => {

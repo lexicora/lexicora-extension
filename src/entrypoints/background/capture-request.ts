@@ -1,7 +1,11 @@
 import { MSG } from "@/constants/messaging";
 import { sendMessage } from "@/lib/messaging";
 import { setPendingCapture, setPendingNavigation } from "./messaging-handler";
-import { captureMessagesFor, fetchCaptureData } from "./capture-flow";
+import {
+  captureMessagesFor,
+  fetchCaptureData,
+  reportCaptureFailure,
+} from "./capture-flow";
 import type { TabData } from "@/types/tab-data.types";
 import type { CaptureMode } from "@/types/page-data.types";
 
@@ -37,7 +41,12 @@ export async function handleCaptureRequest(
     captureMessagesFor(mode),
   );
 
-  if (!pageSelectionData) return;
+  if (!pageSelectionData) {
+    // The popup navigated the panel to the new-entry page before asking, and
+    // the side panel navigated itself, so both are waiting on a skeleton.
+    await reportCaptureFailure(tabData.windowId, "unreachable");
+    return;
+  }
 
   // Store for pull logic in side panel
   setPendingCapture(pageSelectionData);

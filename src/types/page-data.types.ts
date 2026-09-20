@@ -50,3 +50,20 @@ export type PageData = {
  *   capture shortcuts, which have no separate "capture selection" key.
  */
 export type CaptureMode = "page" | "bookmark" | "auto";
+
+/**
+ * Why a capture produced nothing. Every trigger — context menu, keyboard
+ * shortcut, popup, side panel — reports one so the panel can say what
+ * happened instead of leaving its loading skeleton in place.
+ *
+ * - `unsupported` — a page the extension is not allowed to read (browser
+ *   pages, the web stores, PDFs), so no content script runs there.
+ * - `no-selection` — a selection capture with nothing selected.
+ * - `unreachable` — the content script did not answer: the tab was closed or
+ *   navigated away, or the page was open before the extension was installed
+ *   or updated and has not been reloaded since.
+ */
+export type CaptureFailureReason =
+  | "unsupported"
+  | "no-selection"
+  | "unreachable";

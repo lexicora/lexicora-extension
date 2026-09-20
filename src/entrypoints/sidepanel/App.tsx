@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 
 // Hooks, Providers and Components
+import { CaptureFailureListener } from "@/hooks/sidepanel/capture-failure-listener";
 import { RouterListener } from "@/hooks/sidepanel/router-listener";
 import { usePanelShortcuts } from "@/hooks/sidepanel/use-panel-shortcuts";
 import { SidePanelToggleListener } from "@/hooks/sidepanel/side-panel-toggle-listener";
@@ -83,6 +84,7 @@ function RootLayout() {
   return (
     <AppMessagingProvider>
       <RouterListener />
+      <CaptureFailureListener />
       {!import.meta.env.FIREFOX && <SidePanelToggleListener />}
       {disableScrollRestoration || <ScrollRestoration />}
       <ScrollObserverProvider>
