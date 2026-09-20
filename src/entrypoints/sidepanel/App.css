@@ -1,5 +1,17 @@
 :root {
   --lc-content-max-width: 44rem; /* 704px */
+
+  /*
+   * The app's horizontal gutters. The right one keeps the content clear of the
+   * classic scrollbar, so both read as 12px whether or not one is shown. They
+   * live here rather than on .lc-page-container so viewport-fixed chrome
+   * outside a page (the toaster, see below) can line up with the content
+   * column. The `100%` inside --lc-scrollbar-offset resolves at the use site,
+   * which comes out the same either way: a block in the content flow and a
+   * fixed element both measure against the scrollbar-less viewport width.
+   */
+  --lc-page-gutter-left: 12px;
+  --lc-page-gutter-right: calc(var(--lc-scrollbar-offset) + 2px);
 }
 
 #root {
@@ -54,8 +66,7 @@ body[data-scroll-locked] {
 
 .lc-page-container {
   /*max-width: 1280px;*/
-  --lc-page-gutter-left: 12px;
-  --lc-page-gutter-right: calc(var(--lc-scrollbar-offset) + 2px);
+  /*the gutters themselves are :root tokens, shared with the toaster*/
   padding: 12px;
   padding-left: var(--lc-page-gutter-left);
   padding-right: var(--lc-page-gutter-right);
@@ -90,4 +101,49 @@ body[data-scroll-locked] {
   max-width: var(--lc-content-max-width);
   margin-inline: auto;
   /*inset-inline: 0;*/
+}
+
+/*
+ * Sonner anchors its toaster to the viewport, which excludes the classic
+ * scrollbar, while every page keeps its right gutter clear of that scrollbar
+ * with --lc-scrollbar-offset. A symmetric offset therefore lands the toast
+ * ~10px left of the content column. Its own offsets cannot correct that:
+ * below 600px the toaster is `left/right: var(--mobile-offset-*)` *plus*
+ * `width: 100%`, so the over-constrained `right` is dropped and the toast is
+ * sized from the left offset alone; above 600px the toaster is a fixed-width
+ * box centred on the viewport rather than on the content column.
+ *
+ * Pinning it to the page's own gutters replaces both layouts with one that
+ * follows the content column at any width: `width: auto` lets both insets
+ * apply, and the auto inline margins centre the capped box between them. The
+ * toast then just fills the list.
+ *
+ * Up to 600px the toast takes the whole column, however wide that is. Past
+ * it the cap is Sonner's own --width (356px, set on the toaster itself), so a
+ * wide panel gets a card rather than a banner, centred on the column because
+ * the column is centred between the same two gutters. 600px is Sonner's own
+ * mobile breakpoint, and `width > 600px` is its exact complement, so the two
+ * layouts meet without a gap even at a fractional panel width.
+ *
+ * It lives here, unlayered, rather than in components.css: Sonner injects its
+ * stylesheet unlayered at runtime, and unlayered rules beat layered ones
+ * whatever their specificity. The attribute is repeated to outweigh Sonner's
+ * own rules, which are otherwise as specific, so load order would decide.
+ */
+[data-sonner-toaster][data-sonner-toaster][data-x-position="center"] {
+  left: var(--lc-page-gutter-left);
+  right: var(--lc-page-gutter-right);
+  width: auto;
+  margin-inline: auto;
+  transform: none; /*replaces the >=600px translateX(-50%) centring*/
+}
+
+@media (width > 600px) {
+  [data-sonner-toaster][data-sonner-toaster][data-x-position="center"] {
+    max-width: var(--width);
+  }
+}
+
+[data-sonner-toaster][data-sonner-toaster] [data-sonner-toast] {
+  width: 100%;
 }
