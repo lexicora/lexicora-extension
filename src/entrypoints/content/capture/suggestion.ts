@@ -11,9 +11,7 @@ import {
   sidePanelStateStorage,
 } from "@/lib/storage/settings";
 import { UNSUPPORTED_URL_REGEX } from "@/constants/support-capture-sites";
-import "@fontsource/wix-madefor-text/400.css";
-import "@fontsource/wix-madefor-text/500.css";
-// TODO: Look in to different font handling, so sites blocking this import still have this font.
+import { ensurePromptFont } from "./prompt-font";
 
 const isUnsupportedUrl = () => UNSUPPORTED_URL_REGEX.test(location.href);
 
@@ -29,6 +27,10 @@ export async function setupCaptureSuggestion(ctx: ContentScriptContext) {
   let onDragEnd: (() => void) | null = null;
 
   const mountUi = async () => {
+    // Registered on the page's document, where a shadow root reads its fonts
+    // from. Awaited so the prompt does not swap typeface after appearing.
+    await ensurePromptFont();
+
     // Initial cleanup
     if (ui) {
       ui.remove();

@@ -49,6 +49,11 @@ export default defineConfig({
       //host_permissions: ["<all_urls>"], //* NOTE: Not needed, activeTab should be enough
       // Browser-wide keyboard shortcuts — see src/constants/shortcuts.ts
       commands: manifestCommands(browser),
+      //* The capture prompt reads its font file itself, rather than through a
+      //* stylesheet a page's font-src policy can refuse; see prompt-font.ts.
+      web_accessible_resources: [
+        { resources: ["fonts/*.woff2"], matches: ["<all_urls>"] },
+      ],
     };
 
     let userManifest: UserManifest = manifestBase;
