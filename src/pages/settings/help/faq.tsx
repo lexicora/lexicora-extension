@@ -20,6 +20,11 @@ const FAQ_ITEMS = [
       "Navigate to any webpage and click the Lexicora icon in your browser toolbar to open the side panel. From there you can create a new entry and the page URL and metadata will be pre-filled. You can also use the capture suggestion prompt that appears after spending time on a page.",
   },
   {
+    question: "What is the difference between Capture page and Bookmark?",
+    answer:
+      "Capture page reads the page and fills the entry's editor with its content, so the text is yours to keep, edit and search even if the page changes or disappears. Bookmark saves only what the page says about itself — title, link, site, description, author and date — and leaves the editor empty. Use Bookmark for something you only want to find again, and Capture page for something you want to keep or write about. Both create an ordinary entry in a topic, and you can always add your own notes afterwards.",
+  },
+  {
     question: "How do I organize my captures?",
     answer:
       "Use topics to group related entries together. Think of topics like folders or projects. Create a topic from the Library tab, then assign entries to it when capturing or editing.",
@@ -38,6 +43,11 @@ const FAQ_ITEMS = [
     question: "How do I search my captures?",
     answer:
       "Use the search bar at the top of the Library tab to search across all your entries and topics. Search works on titles, tags, descriptions, and site names.",
+  },
+  {
+    question: "Can I add images or files to an entry?",
+    answer:
+      "You can add an image, video, audio or file block and point it at a web address, and it will be shown in the entry. Uploading a file from your computer is not supported: Lexicora stores your library in the browser, and copies of files would quickly fill it. That also means these blocks show what is still online — if the page removes an image, it stops appearing here too, and it is not included in an export.",
   },
   {
     question: "How do I export my data?",
