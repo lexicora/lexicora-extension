@@ -34,7 +34,7 @@ export default defineConfig({
       description:
         "The Lexicora browser extension for capturing and organizing web content.",
       //"A browser extension for the Lexicora platform and services.",
-      version: "0.1.0",
+      version: "1.0.0",
       permissions: [
         "storage",
         "tabs",
@@ -51,8 +51,12 @@ export default defineConfig({
       commands: manifestCommands(browser),
       //* The capture prompt reads its font file itself, rather than through a
       //* stylesheet a page's font-src policy can refuse; see prompt-font.ts.
+      //* Reachable from the pages the content script runs on, and no others.
       web_accessible_resources: [
-        { resources: ["fonts/*.woff2"], matches: ["<all_urls>"] },
+        {
+          resources: ["fonts/*.woff2"],
+          matches: ["http://*/*", "https://*/*", "file:///*"],
+        },
       ],
     };
 
