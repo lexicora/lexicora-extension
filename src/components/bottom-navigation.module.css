@@ -33,7 +33,7 @@
 }
 
 .bottomNav {
-    backface-visibility: hidden;
+    backface-visibility: hidden; /*! Cause of Firefox rendering issues */
     pointer-events: auto;
     /* Add filter to will-change to warn the browser */
     /* will-change: transform, opacity, box-shadow, visibility;*/ /* filter */

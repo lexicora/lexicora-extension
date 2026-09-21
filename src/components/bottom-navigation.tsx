@@ -41,7 +41,7 @@ export function BottomNavigation() {
         isHidden
           ? style.bottomNavHidden
           : isNoShadowPath || FEATURES.SIDE_PANEL_NEW_BOTTOM_NAV_STYLE
-            ? "shadow-none"
+            ? "" // was: "shadow-none", now unnecessary.
             : isAtBottom
               ? "shadow-none"
               : "shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-2px_rgba(0,0,0,0.1)]/4 dark:shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-2px_rgba(0,0,0,0.1)]/26",
