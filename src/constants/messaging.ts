@@ -28,6 +28,7 @@ export const MSG = {
   NAVIGATE_IN_SIDEPANEL: "sidepanel/NAVIGATE_IN_SIDEPANEL",
   TOGGLE_SIDEPANEL: "sidepanel/TOGGLE_SIDEPANEL",
   CAPTURE_FAILED: "sidepanel/CAPTURE_FAILED",
+  SIDEPANEL_NOTICE: "sidepanel/SIDEPANEL_NOTICE",
 
   // From side-panel to background
   REQUEST_PENDING_DATA: "background/REQUEST_PENDING_DATA",

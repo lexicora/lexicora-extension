@@ -129,6 +129,7 @@ export function setupContextMenuStateSync(/*menuId: string*/) {
     const isDisabled = UNSUPPORTED_URL_REGEX.test(url);
 
     try {
+
       if (FEATURES.AI) {
         await browser.contextMenus.update(
           CMI_ID.CAPTURE_SELECTION_AI_ASSISTED,
@@ -176,4 +177,11 @@ export function setupContextMenuStateSync(/*menuId: string*/) {
       // Tab might be gone or restricted
     }
   });
+
+  // 3. And once now, so the first right-click is already right rather than
+  //    waiting for a tab to change.
+  browser.tabs
+    .query({ active: true, currentWindow: true })
+    .then(([tab]) => updateUi(tab?.url))
+    .catch(() => null);
 }

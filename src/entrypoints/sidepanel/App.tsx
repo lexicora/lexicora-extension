@@ -9,6 +9,7 @@ import {
 
 // Hooks, Providers and Components
 import { CaptureFailureListener } from "@/hooks/sidepanel/capture-failure-listener";
+import { PanelNoticeListener } from "@/hooks/sidepanel/panel-notice-listener";
 import { RouterListener } from "@/hooks/sidepanel/router-listener";
 import { usePanelShortcuts } from "@/hooks/sidepanel/use-panel-shortcuts";
 import { SidePanelToggleListener } from "@/hooks/sidepanel/side-panel-toggle-listener";
@@ -87,6 +88,7 @@ function RootLayout() {
     <AppMessagingProvider>
       <RouterListener />
       <CaptureFailureListener />
+      <PanelNoticeListener />
       {!import.meta.env.FIREFOX && <SidePanelToggleListener />}
       {disableScrollRestoration || <ScrollRestoration />}
       <ScrollObserverProvider>

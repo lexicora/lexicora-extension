@@ -21,23 +21,7 @@ export const CMI_ID = {
 // port, so localhost and a dev server are already included.
 export const CAPTURE_URL_PATTERNS = ["*://*/*", "file:///*"];
 
-// Everywhere except the extension's own pages.
-//
-// Toggling the panel works on any page the browser can show — its internal
-// ones included — but not inside the panel itself, where the click carries no
-// window and `sidePanel.open` rejects it. Match patterns can only allow-list,
-// so "anything but an extension page" has to be enumerated: the web, local
-// files, and each browser's own scheme. What is deliberately absent is every
-// extension scheme: chrome-extension://, moz-extension://, extension:// on
-// Edge, safari-web-extension:// .
-//
-// A browser validates every pattern and refuses the whole item over one it
-// does not know, so these go in as a chain: the full list, then the two
-// schemes most likely to be accepted, then the web alone. The menu creation
-// in `background/index.ts` walks it and logs, in dev, where it landed.
-const FIREFOX_INTERNAL_PATTERNS = ["about:*", "resource://*/*"];
-
-const CHROMIUM_INTERNAL_PATTERNS = [
+export const TOGGLE_EXTENDED_URL_PATTERNS = [
   "chrome://*/*", // Chrome and Chromium
   "edge://*/*", // Edge
   "brave://*/*", // Brave
@@ -45,20 +29,39 @@ const CHROMIUM_INTERNAL_PATTERNS = [
   "vivaldi://*/*", // Vivaldi
   "browser://*/*", // Yandex
   "arc://*/*", // Arc
+  "about:*", // about:blank and the internal pages that use it
 ];
 
-const INTERNAL_PATTERNS = import.meta.env.FIREFOX
-  ? FIREFOX_INTERNAL_PATTERNS
-  : CHROMIUM_INTERNAL_PATTERNS;
-
-/** Most generous first, web-only last; the first the browser accepts wins. */
-export const NON_EXTENSION_PATTERN_CHAIN: string[][] = [
-  [...CAPTURE_URL_PATTERNS, "ftp://*/*", ...INTERNAL_PATTERNS],
-  [...CAPTURE_URL_PATTERNS, INTERNAL_PATTERNS[0]!],
-  CAPTURE_URL_PATTERNS,
-];
-
-export const NON_EXTENSION_URL_PATTERNS = NON_EXTENSION_PATTERN_CHAIN[0]!;
+// The side-panel item wants to appear anywhere except inside the extension
+// itself, where the click carries no window and `sidePanel.open` rejects it.
+//
+// Firefox can say that: `viewTypes: ["tab"]` is every page in a tab and
+// nothing else — not the sidebar, not the popup.
+//
+// Chromium cannot. Its only filter is `documentUrlPatterns`, whose scheme may
+// be http, https, `*` or file, so the browser's own pages cannot be named,
+// and the extension's own pages cannot be excluded. Every arrangement was
+// tried: patterns alone lost the item on internal pages, and a second
+// patternless item shown by active-tab URL still appeared inside the panel.
+//
+// So Chromium gets no patterns at all. The item shows everywhere, the panel
+// included, and clicking it there says why it does nothing rather than
+// failing silently — see `toggleSidePanel` in `background/capture-flow`.
+const TOGGLE_SIDE_PANEL_ITEM = (
+  import.meta.env.FIREFOX
+    ? {
+        id: CMI_ID.TOGGLE_SIDE_PANEL,
+        title: "Toggle side panel",
+        contexts: ["all"],
+        viewTypes: ["tab"],
+      }
+    : {
+        id: CMI_ID.TOGGLE_SIDE_PANEL,
+        title: "Toggle side panel",
+        contexts: ["all"],
+      }
+  // viewTypes is Firefox's own; the Chromium types do not know it.
+) as ContextMenuCreateProps;
 
 // MAYBE: localize titles later and change order for better UX
 /**
@@ -70,14 +73,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   //* back, decide what this menu should look like: both entries (and in which
   //* order, with a separator?), or keep only one. Until then, turning the flag
   //* on swaps the panel item out for the website one.
-  {
-    id: CMI_ID.TOGGLE_SIDE_PANEL,
-    // Closes an open panel too, like the keyboard shortcut.
-    title: "Toggle side panel",
-    contexts: ["all"],
-    // Everywhere but the extension's own pages; see the constant.
-    documentUrlPatterns: NON_EXTENSION_URL_PATTERNS,
-  },
+  TOGGLE_SIDE_PANEL_ITEM,
   {
     id: CMI_ID.OPEN_LEXICORA,
     title: "Open Lexicora Website",

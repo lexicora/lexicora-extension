@@ -28,6 +28,12 @@ interface ProtocolMap {
     windowId: number | string;
     payload: PageData | null;
   }): boolean | null;
+  /**
+   * Something the panel should tell the user about, with nowhere else to say
+   * it. Broadcast rather than addressed: it is used where the trigger carries
+   * no window to aim at.
+   */
+  [MSG.SIDEPANEL_NOTICE](data: { text: string }): boolean | null;
   /** A capture that produced nothing, so the panel can say why; see capture-flow. */
   [MSG.CAPTURE_FAILED](data: {
     windowId: number | string;

@@ -67,9 +67,9 @@ describe("context menu: open or close side panel", () => {
 });
 
 describe("context menu: a click that carries no window", () => {
-  it("does not try to open the panel in window -1", async () => {
-    // The item is not offered on extension pages (see documentUrlPatterns),
-    // but a click without a window would throw "No window with id: -1".
+  it("says so in the panel instead of throwing", async () => {
+    // Chromium offers the item inside the panel too, where there is nothing
+    // to toggle: sidePanel.open would throw "No window with id: -1".
     onClicked({ menuItemId: CMI_ID.TOGGLE_SIDE_PANEL }, {
       id: 7,
       windowId: -1,
@@ -77,6 +77,14 @@ describe("context menu: a click that carries no window", () => {
     await flush();
 
     expect(sidePanelOpen).not.toHaveBeenCalled();
+    expect(
+      runtimeSendMessage.mock.calls.map(([message]) => message),
+    ).toContainEqual(
+      expect.objectContaining({
+        type: MSG.SIDEPANEL_NOTICE,
+        data: { text: "Can't toggle the panel from inside it" },
+      }),
+    );
   });
 });
 

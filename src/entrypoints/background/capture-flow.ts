@@ -109,7 +109,16 @@ export function toggleSidePanel(windowId: number | undefined): void {
     return;
   }
 
-  if (!isRealWindow(windowId)) return; // Maybe unnecessary, but likely good to keep.
+  if (!isRealWindow(windowId)) {
+    // Chromium offers the context menu item inside the panel too, where there
+    // is no window to toggle. Saying so beats an item that looks ordinary and
+    // does nothing; see the item in `constants/context-menu-items`.
+    sendMessage(MSG.SIDEPANEL_NOTICE, {
+      text: "Can't toggle the panel from inside it",
+    }).catch(() => null);
+    return;
+  }
+
   openSidePanel(windowId);
   sendMessage(MSG.TOGGLE_SIDEPANEL, { windowId }).catch(() => null);
 }
