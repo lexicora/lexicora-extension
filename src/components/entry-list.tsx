@@ -213,7 +213,13 @@ export function EntryList({
           useWindowScroll
           initialScrollTop={savedScrollTop}
           data={entries}
+          // Two different knobs: overscan chunks the rendering so scrolling
+          // causes fewer re-renders, while increaseViewportBy renders items
+          // before they come into view — that is the one that stops an item
+          // appearing late. Downwards is where reading happens, so it gets
+          // more. Both cost DOM nodes, so raise them in small steps.
           overscan={220} // MAYBE: increase/decrease (was initially 200)
+          increaseViewportBy={{ top: 200, bottom: 400 }}
           // A render function Virtuoso calls, not a component, so nothing remounts.
           // oxlint-disable-next-line react/no-unstable-nested-components
           itemContent={(_, entry) => (
