@@ -61,6 +61,7 @@ import FaqPage from "@/pages/settings/help/faq";
 import TipsAndTricksPage from "@/pages/settings/help/tips-and-tricks";
 import AboutPage from "@/pages/settings/about/about";
 import LicensesPage from "@/pages/settings/about/licenses";
+import LicenseSettingsPage from "@/pages/settings/about/license";
 // import NotificationsSettingsPage from "@/pages/settings/notifications";
 
 function RootLayout() {
@@ -170,6 +171,7 @@ const router = createMemoryRouter([
       },
       { path: "settings/about", element: <AboutPage /> },
       { path: "settings/about/licenses", element: <LicensesPage /> },
+      { path: "settings/about/license", element: <LicenseSettingsPage /> },
     ],
   },
 ]);

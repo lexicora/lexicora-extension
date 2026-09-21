@@ -10,7 +10,12 @@ import {
   ItemDescription,
 } from "@/components/ui/item";
 import { SettingsItemSeparator } from "@/components/settings";
-import { ChevronRightIcon, FileTextIcon, TagIcon } from "lucide-react";
+import {
+  ChevronRightIcon,
+  FileTextIcon,
+  ScrollTextIcon,
+  TagIcon,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 function AboutPage() {
@@ -84,11 +89,28 @@ function AboutPage() {
           </Item>
         </section>
 
-        <section>
+        <section className="not-dark:shadow-xs rounded-2xl">
           <Item
             variant="muted"
             size="sm"
-            className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl not-dark:shadow-xs"
+            className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl rounded-b-none"
+            asChild
+          >
+            <Link to="/settings/about/license" draggable={false} viewTransition>
+              <ItemMedia variant="icon">
+                <ScrollTextIcon className="size-5 text-amber-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>License</ItemTitle>
+              </ItemContent>
+              <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
+            </Link>
+          </Item>
+          <SettingsItemSeparator />
+          <Item
+            variant="muted"
+            size="sm"
+            className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl rounded-t-none"
             asChild
           >
             <Link
@@ -106,7 +128,8 @@ function AboutPage() {
             </Link>
           </Item>
           <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
-            Libraries and tools that make Lexicora possible.
+            Lexicora's own terms, and the libraries and tools that make it
+            possible.
           </p>
         </section>
       </main>

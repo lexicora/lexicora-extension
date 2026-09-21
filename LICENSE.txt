@@ -1,37 +1,72 @@
 Lexicora Extension License
-Version 1.2 — 2026
+Version 1.3 — 2026
 
 Copyright (c) 2025-2026 Lexicora / Timothy (@tgmaurer). All rights reserved.
 
-Permission is hereby granted to any individual or organization to use, copy, modify, merge, publish, and redistribute this software and its source code, provided that all such use is strictly non-commercial and that appropriate attribution is given to Lexicora.
+Permission is hereby granted to any individual or organization to use, copy, modify, merge, publish, and redistribute the Software, provided that all such use is strictly non-commercial and that appropriate attribution is given to Lexicora.
+
+0. Definitions
+"Software" means everything covered by this license in any form: the source code in this repository, the compiled, bundled, packaged or otherwise built artifacts produced from it (including a packaged browser extension and anything distributed through a browser extension store), the accompanying assets, and the documentation. A build of the Software is the Software; converting source into a distributable form creates no rights that the source did not already carry.
+
+"You" means the individual or organization exercising the permissions granted here.
+
+"Non-commercial" means use that is not primarily intended for or directed toward commercial advantage or monetary compensation. Personal, educational and research use is non-commercial. See Section 1 for what is not.
+
+"Contribution" means any work you intentionally submit for inclusion in the Software, by pull request, patch, issue attachment or otherwise.
 
 1. Non-Commercial Use
-You may use, copy, modify, or redistribute this software and its source code for personal, educational, or research purposes, or within non-commercial projects. Commercial use is not permitted under this license. Commercial use includes, but is not limited to: selling the software, integrating it into a commercial product or service, using it within a for-profit enterprise (even for internal purposes), or distributing it in any manner that generates revenue (including ad-supported platforms).
+You may use, copy, modify, or redistribute the Software for personal, educational, or research purposes, or within non-commercial projects. Commercial use is not permitted under this license. Commercial use includes, but is not limited to: selling the Software, integrating it into a commercial product or service, using it within a for-profit enterprise (even for internal purposes), offering it as a hosted or managed service, bundling it with a paid offering, or distributing it in any manner that generates revenue (including ad-supported platforms).
+
+Using the Software as an individual, for your own purposes, is non-commercial even if you happen to be employed.
 
 To request permission for commercial use, contact:
 Email: tgmaurer@icloud.com
 
 2. Attribution
-Any redistribution or modification of this software must include clear and visible attribution to Lexicora. At minimum, the following notice must remain in all copies or substantial portions of the software:
+Any redistribution or modification of the Software must include clear and visible attribution to Lexicora. At minimum, the following notice must remain in all copies or substantial portions of the Software, and must be reachable by a user of a distributed build (for example in an "About" screen or store listing) as well as present in the source:
 
 This software is based on the Lexicora Extension.
 Copyright (c) 2025-2026 Lexicora / Timothy (@tgmaurer). All rights reserved.
 Used under the Lexicora Extension License.
 
 3. Share-Alike
-If you modify or create derivative works of this software, you must license your modifications under the same terms as this license.
+If you modify or create derivative works of the Software, you must license your modifications under the same terms as this license.
 
-4. Disclaimer of Warranty
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+4. Redistribution of Builds
+You may distribute builds of the Software, modified or not, under Sections 1 through 3. You may not publish the Software, or anything substantially derived from it, to a browser extension store or comparable distribution channel under a name or branding likely to be confused with Lexicora. A modified build must be identifiably yours.
 
-5. Limitation of Liability
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+5. Contributions
+Unless you state otherwise in writing when you submit it, you license each Contribution to Lexicora under the terms of this license, and additionally grant Lexicora a perpetual, worldwide, irrevocable, royalty-free right to use, modify, sublicense and distribute that Contribution under any terms, including commercial ones. You confirm that you are entitled to grant this.
 
-6. Trademarks
-The names Lexicora, Lexicora Extension, and associated branding are trademarks of Lexicora. You may not use these names or branding for commercial purposes without permission.
+6. Patents
+Subject to the terms of this license, each contributor grants you a perpetual, worldwide, non-exclusive, royalty-free patent license to make, use and distribute the Software, limited to the patent claims that contributor can license and that are necessarily infringed by their contribution alone or by its combination with the Software.
 
-7. Scope
-This license applies only to the code explicitly contained within the Lexicora Extension repository. Other Lexicora products, such as the backend, web application, or mobile clients, may use different licensing terms.
+If you initiate patent litigation against anyone alleging that the Software or a contribution to it infringes a patent, every license granted to you here terminates on the day that litigation is filed.
 
-8. Termination
-Any violation of the terms of this license automatically terminates your rights to use the software.
+No other patent rights are granted, by implication, estoppel or otherwise.
+
+7. Third-Party Components
+The Software incorporates third-party components that remain under their own licenses, which are listed in the extension under Settings → About → Licenses and in the project's dependency manifest. Nothing in this license alters those terms, and nothing in those terms extends to the Software itself.
+
+8. Disclaimer of Warranty
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
+9. Limitation of Liability
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+10. Trademarks
+The names Lexicora, Lexicora Extension, and associated branding are trademarks of Lexicora. This license grants no right to use them, except for the attribution required by Section 2 and for ordinary descriptive reference to the Software.
+
+11. Scope
+This license applies only to the code explicitly contained within the Lexicora Extension repository, and to builds produced from it. Other Lexicora products, such as the backend, web application, or mobile clients, may use different licensing terms.
+
+Each version of the Software is licensed under the license text distributed with it. Lexicora may release later versions under different terms; doing so does not change the terms of a version you already received.
+
+12. Termination
+Any violation of the terms of this license automatically terminates your rights to use the Software. If the violation is one that can be put right and you do so within 30 days of becoming aware of it, your rights are reinstated, unless Lexicora has already terminated them in writing.
+
+13. Severability
+If any provision of this license is held unenforceable, it is to be applied as far as it can be, or severed if it cannot, and the remaining provisions stay in force.
+
+14. Governing Law
+This license is governed by the laws of Switzerland, without regard to its conflict of law rules.

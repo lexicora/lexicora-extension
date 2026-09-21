@@ -2,6 +2,7 @@
   "name": "lexicora-extension",
   "description": "The Lexicora browser extension for capturing and organizing web content.",
   "private": true,
+  "license": "SEE LICENSE IN LICENSE.txt",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

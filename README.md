@@ -202,3 +202,13 @@ The core vision remains intentionally narrow: **turning ephemeral web knowledge 
 ## What Lexicora Is Not
 
 Lexicora intentionally avoids becoming a full project management tool, a generic note-taking app, a deeply nested workspace, or a social platform. Those problems are already solved elsewhere — often at the cost of speed and clarity.
+
+---
+
+## License
+
+Source and builds alike are covered by the [Lexicora Extension License](LICENSE.txt):
+free to use, modify and redistribute for non-commercial purposes, with
+attribution and share-alike; commercial use needs permission. It is not an
+OSI-approved open source license — the non-commercial restriction is what
+makes it a source-available license instead.
