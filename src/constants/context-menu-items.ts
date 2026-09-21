@@ -16,6 +16,50 @@ export const CMI_ID = {
   //CAPTURE_FROM_CLIPBOARD: "save-from-clipboard",
 } as const;
 
+// Where a capture item is offered: the pages a content script runs in, since
+// a capture needs one to answer. The http/https wildcard covers any host and
+// port, so localhost and a dev server are already included.
+export const CAPTURE_URL_PATTERNS = ["*://*/*", "file:///*"];
+
+// Everywhere except the extension's own pages.
+//
+// Toggling the panel works on any page the browser can show — its internal
+// ones included — but not inside the panel itself, where the click carries no
+// window and `sidePanel.open` rejects it. Match patterns can only allow-list,
+// so "anything but an extension page" has to be enumerated: the web, local
+// files, and each browser's own scheme. What is deliberately absent is every
+// extension scheme: chrome-extension://, moz-extension://, extension:// on
+// Edge, safari-web-extension:// .
+//
+// A browser validates every pattern and refuses the whole item over one it
+// does not know, so these go in as a chain: the full list, then the two
+// schemes most likely to be accepted, then the web alone. The menu creation
+// in `background/index.ts` walks it and logs, in dev, where it landed.
+const FIREFOX_INTERNAL_PATTERNS = ["about:*", "resource://*/*"];
+
+const CHROMIUM_INTERNAL_PATTERNS = [
+  "chrome://*/*", // Chrome and Chromium
+  "edge://*/*", // Edge
+  "brave://*/*", // Brave
+  "opera://*/*", // Opera
+  "vivaldi://*/*", // Vivaldi
+  "browser://*/*", // Yandex
+  "arc://*/*", // Arc
+];
+
+const INTERNAL_PATTERNS = import.meta.env.FIREFOX
+  ? FIREFOX_INTERNAL_PATTERNS
+  : CHROMIUM_INTERNAL_PATTERNS;
+
+/** Most generous first, web-only last; the first the browser accepts wins. */
+export const NON_EXTENSION_PATTERN_CHAIN: string[][] = [
+  [...CAPTURE_URL_PATTERNS, "ftp://*/*", ...INTERNAL_PATTERNS],
+  [...CAPTURE_URL_PATTERNS, INTERNAL_PATTERNS[0]!],
+  CAPTURE_URL_PATTERNS,
+];
+
+export const NON_EXTENSION_URL_PATTERNS = NON_EXTENSION_PATTERN_CHAIN[0]!;
+
 // MAYBE: localize titles later and change order for better UX
 /**
  * Context Menu Items Definitions
@@ -26,12 +70,13 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   //* back, decide what this menu should look like: both entries (and in which
   //* order, with a separator?), or keep only one. Until then, turning the flag
   //* on swaps the panel item out for the website one.
-  // TODO: Deactivate some of these items when the context menu is within the side panel itself
   {
     id: CMI_ID.TOGGLE_SIDE_PANEL,
     // Closes an open panel too, like the keyboard shortcut.
     title: "Toggle side panel",
     contexts: ["all"],
+    // Everywhere but the extension's own pages; see the constant.
+    documentUrlPatterns: NON_EXTENSION_URL_PATTERNS,
   },
   {
     id: CMI_ID.OPEN_LEXICORA,
@@ -47,13 +92,13 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
     id: CMI_ID.CAPTURE_SELECTION_AI_ASSISTED,
     title: "Capture Selection with AI",
     contexts: ["selection"],
-    documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
+    documentUrlPatterns: CAPTURE_URL_PATTERNS,
   },
   {
     id: CMI_ID.CAPTURE_SELECTION_AS_IS,
     title: "Capture Selection",
     contexts: ["selection"],
-    documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
+    documentUrlPatterns: CAPTURE_URL_PATTERNS,
   },
   {
     id: "separator2",
@@ -67,7 +112,8 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
       "audio",
       "frame",
       "editable",
-    ], // TODO (Firefox pass): Potentially change to just "all".
+    ],
+    documentUrlPatterns: CAPTURE_URL_PATTERNS,
   },
   {
     id: CMI_ID.CAPTURE_PAGE_AI_ASSISTED,
@@ -82,7 +128,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
       "frame",
       "editable",
     ],
-    documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
+    documentUrlPatterns: CAPTURE_URL_PATTERNS,
   },
   {
     id: CMI_ID.CAPTURE_PAGE_AS_IS,
@@ -97,7 +143,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
       "frame",
       "editable",
     ], // TODO (Firefox pass): Potentially change to just "all".
-    documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
+    documentUrlPatterns: CAPTURE_URL_PATTERNS,
   },
   {
     id: CMI_ID.CAPTURE_PAGE_BOOKMARK,
@@ -112,7 +158,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
       "frame",
       "editable",
     ], // TODO (Firefox pass): Potentially change to just "all".
-    documentUrlPatterns: ["http://*/*", "https://*/*", "file:///*"], //MAYBE: Add more later, if necessary or useful
+    documentUrlPatterns: CAPTURE_URL_PATTERNS,
   },
   // {
   //   id: CMI_ID.CAPTURE_FROM_CLIPBOARD,

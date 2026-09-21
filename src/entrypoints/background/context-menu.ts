@@ -19,7 +19,6 @@ import { WEBSITE_URL } from "@/constants/site";
 export function setupContextMenuActions() {
   browser.contextMenus.onClicked.addListener(async (info, tab) => {
     if (!tab) return;
-    // Add browser-specific excluded URLs if needed (like extensions own pages)
     switch (info.menuItemId) {
       case CMI_ID.TOGGLE_SIDE_PANEL: {
         // Toggled straight from the click: opening is only allowed while the
@@ -156,7 +155,6 @@ export function setupContextMenuStateSync(/*menuId: string*/) {
         //enabled: !isDisabled,
         visible: !isDisabled,
       });
-      // TODO (Firefox pass): Possibly add "separator2" item in enable/disable logic if needed.
     } catch {
       // Silently catch errors if the menu item hasn't been created yet
     }

@@ -55,6 +55,17 @@ export async function fetchCaptureData(
 }
 
 /**
+ * Whether this is a window the panel can open in.
+ *
+ * A click that did not come from a browser window — inside the panel itself,
+ * for instance — reports `WINDOW_ID_NONE` (-1), and passing that to
+ * `sidePanel.open` throws "No window with id: -1".
+ */
+function isRealWindow(windowId: number | undefined): windowId is number {
+  return windowId !== undefined && windowId >= 0;
+}
+
+/**
  * Opens the side panel, queueing a navigation to the new-entry page when it is
  * opening for a capture.
  *
@@ -72,7 +83,7 @@ export function openSidePanel(
   if (import.meta.env.FIREFOX) {
     // @ts-ignore: sidebarAction is a Firefox-specific API
     browser.sidebarAction.open();
-  } else if (windowId !== undefined) {
+  } else if (isRealWindow(windowId)) {
     browser.sidePanel.open({ windowId });
   }
 }
@@ -98,7 +109,7 @@ export function toggleSidePanel(windowId: number | undefined): void {
     return;
   }
 
-  if (windowId === undefined) return;
+  if (!isRealWindow(windowId)) return; // Maybe unnecessary, but likely good to keep.
   openSidePanel(windowId);
   sendMessage(MSG.TOGGLE_SIDEPANEL, { windowId }).catch(() => null);
 }

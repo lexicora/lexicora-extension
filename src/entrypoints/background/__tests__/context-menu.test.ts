@@ -11,7 +11,7 @@ import { setupContextMenuActions } from "../context-menu";
  */
 
 type ClickListener = (
-  info: { menuItemId: string },
+  info: { menuItemId: string; pageUrl?: string; frameUrl?: string },
   tab?: Browser.tabs.Tab,
 ) => void;
 
@@ -63,6 +63,20 @@ describe("context menu: open or close side panel", () => {
         data: { windowId: 3 },
       }),
     );
+  });
+});
+
+describe("context menu: a click that carries no window", () => {
+  it("does not try to open the panel in window -1", async () => {
+    // The item is not offered on extension pages (see documentUrlPatterns),
+    // but a click without a window would throw "No window with id: -1".
+    onClicked({ menuItemId: CMI_ID.TOGGLE_SIDE_PANEL }, {
+      id: 7,
+      windowId: -1,
+    } as Browser.tabs.Tab);
+    await flush();
+
+    expect(sidePanelOpen).not.toHaveBeenCalled();
   });
 });
 
