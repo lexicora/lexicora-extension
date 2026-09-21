@@ -176,6 +176,11 @@ html:has(
   }
   & .bn-lc-adjustments .bn-block-content[data-content-type="codeBlock"] select {
     cursor: default;
+    user-select: text;
+    -webkit-user-select: text;
+    /* Maybe add this style in the future, so its always visible. */
+    /* cursor: text;
+    opacity: 0.5; */
   }
 }
 
@@ -869,8 +874,8 @@ html:has(
 [data-editor-wide]
   .bn-root[data-color-scheme]
   .bn-editor[contenteditable="true"] {
-  padding-inline-start: 50px;
-  padding-inline-end: calc(var(--lc-scrollbar-offset) + 40px) !important;
+  padding-inline-start: 51px;
+  padding-inline-end: calc(var(--lc-scrollbar-offset) + 41px) !important;
 }
 
 /* 20px on both sides once the scrollbar is counted in: the same text position
