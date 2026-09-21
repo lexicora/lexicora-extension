@@ -52,7 +52,7 @@ function captureWithShortcut(
   // shortcut gives no other sign that nothing happened.
   if (!isCapturableUrl(tab.url)) {
     openSidePanel(tab.windowId);
-    void reportCaptureFailure(tab.windowId, "unsupported");
+    void reportCaptureFailure(tab.windowId, "unsupported", mode);
     return;
   }
 

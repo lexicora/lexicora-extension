@@ -44,7 +44,7 @@ export async function handleCaptureRequest(
   if (!pageSelectionData) {
     // The popup navigated the panel to the new-entry page before asking, and
     // the side panel navigated itself, so both are waiting on a skeleton.
-    await reportCaptureFailure(tabData.windowId, "unreachable");
+    await reportCaptureFailure(tabData.windowId, "unreachable", mode);
     return;
   }
 

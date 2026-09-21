@@ -109,7 +109,7 @@ describe("browser-wide shortcuts", () => {
     ).toContainEqual(
       expect.objectContaining({
         type: MSG.CAPTURE_FAILED,
-        data: { windowId: 3, reason: "unsupported" },
+        data: { windowId: 3, reason: "unsupported", mode: "auto" },
       }),
     );
   });
@@ -130,7 +130,8 @@ describe("browser-wide shortcuts", () => {
     ).toContainEqual(
       expect.objectContaining({
         type: MSG.CAPTURE_FAILED,
-        data: { windowId: 3, reason: "unreachable" },
+        // A bookmark asks for metadata, so the panel says "bookmarked".
+        data: { windowId: 3, reason: "unreachable", mode: "bookmark" },
       }),
     );
   });

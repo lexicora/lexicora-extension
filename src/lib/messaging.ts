@@ -1,4 +1,5 @@
 import { MSG } from "@/constants/messaging";
+import type { PendingCaptureFailure } from "@/entrypoints/background/messaging-handler";
 import type {
   CaptureFailureReason,
   CaptureMode,
@@ -12,7 +13,9 @@ interface ProtocolMap {
   [MSG.OPEN_SIDEPANEL](): void;
   [MSG.REQUEST_PENDING_DATA](data: null): PageData | null;
   [MSG.REQUEST_PENDING_NAVIGATION](data: null): string | null;
-  [MSG.REQUEST_PENDING_CAPTURE_FAILURE](data: null): CaptureFailureReason | null;
+  [MSG.REQUEST_PENDING_CAPTURE_FAILURE](
+    data: null,
+  ): PendingCaptureFailure | null;
   [MSG.REQUEST_PAGE_CAPTURE](
     data: TabData & { fromContext: string; mode?: CaptureMode },
   ): void;
@@ -38,6 +41,8 @@ interface ProtocolMap {
   [MSG.CAPTURE_FAILED](data: {
     windowId: number | string;
     reason: CaptureFailureReason;
+    /** What was asked for, so the panel says "bookmark" when that is it. */
+    mode: CaptureMode;
   }): boolean | null;
 
   // Content-targeted (AI feature, pending full implementation)

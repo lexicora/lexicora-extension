@@ -2,14 +2,21 @@ import { onMessage } from "@/lib/messaging";
 import { MSG } from "@/constants/messaging";
 import type {
   CaptureFailureReason,
+  CaptureMode,
   PageData,
 } from "@/types/page-data.types";
+
+/** Why a capture produced nothing, and what had been asked for. */
+export interface PendingCaptureFailure {
+  reason: CaptureFailureReason;
+  mode: CaptureMode;
+}
 import { handleCaptureRequest } from "./capture-request";
 
 // This stays private to this module (encapsulation)
 let pendingCapture: PageData | null = null;
 let pendingNavigation: string | null = null;
-let pendingCaptureFailure: CaptureFailureReason | null = null;
+let pendingCaptureFailure: PendingCaptureFailure | null = null;
 
 // Export the setter so context-menu.ts can call it
 export const setPendingCapture = (data: PageData | null) => {
@@ -26,9 +33,9 @@ export const setPendingNavigation = (path: string | null) => {
  * already moved past.
  */
 export const setPendingCaptureFailure = (
-  reason: CaptureFailureReason | null,
+  failure: PendingCaptureFailure | null,
 ) => {
-  pendingCaptureFailure = reason;
+  pendingCaptureFailure = failure;
 };
 
 /**
@@ -48,9 +55,9 @@ export function setupMessagingHandlers() {
   });
 
   onMessage(MSG.REQUEST_PENDING_CAPTURE_FAILURE, () => {
-    const reason = pendingCaptureFailure;
+    const failure = pendingCaptureFailure;
     pendingCaptureFailure = null; // Clear after delivery, like the others
-    return reason;
+    return failure;
   });
 
   onMessage(MSG.OPEN_SIDEPANEL, (/*message.*/ { sender }) => {

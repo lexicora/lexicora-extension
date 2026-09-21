@@ -133,16 +133,18 @@ export function toggleSidePanel(windowId: number | undefined): void {
 export async function reportCaptureFailure(
   windowId: number | undefined,
   reason: CaptureFailureReason,
+  mode: CaptureMode,
 ): Promise<void> {
   setPendingCapture(null);
   setPendingNavigation(null);
-  setPendingCaptureFailure(reason);
+  setPendingCaptureFailure({ reason, mode });
 
   if (windowId === undefined) return;
 
   const delivered = await sendMessage(MSG.CAPTURE_FAILED, {
     windowId,
     reason,
+    mode,
   }).catch(() => null);
 
   if (delivered === true) setPendingCaptureFailure(null);
@@ -158,6 +160,13 @@ function failureReasonFor(messages: CaptureMessage[]): CaptureFailureReason {
     : "unreachable";
 }
 
+/** What the caller asked for, read back from the messages it sent. */
+function modeFor(messages: CaptureMessage[]): CaptureMode {
+  return messages.length === 1 && messages[0] === MSG.GET_PAGE_METADATA
+    ? "bookmark"
+    : "page";
+}
+
 /**
  * Fetches capture data and delivers it to the side panel — pushed if it is
  * already open, otherwise left pending for it to pull once it loads.
@@ -169,7 +178,11 @@ export async function requestAndForwardCapture(
 ): Promise<PageData | null> {
   const pageCaptureData = await fetchCaptureData(tabId, messages);
   if (!pageCaptureData) {
-    await reportCaptureFailure(windowId, failureReasonFor(messages));
+    await reportCaptureFailure(
+      windowId,
+      failureReasonFor(messages),
+      modeFor(messages),
+    );
     return null;
   }
 

@@ -102,7 +102,7 @@ describe("context menu: a capture that finds nothing", () => {
     expect(sent).toContainEqual(
       expect.objectContaining({
         type: MSG.CAPTURE_FAILED,
-        data: { windowId: 3, reason: "no-selection" },
+        data: { windowId: 3, reason: "no-selection", mode: "page" },
       }),
     );
   });
@@ -120,7 +120,7 @@ describe("context menu: a capture that finds nothing", () => {
     expect(sent).toContainEqual(
       expect.objectContaining({
         type: MSG.CAPTURE_FAILED,
-        data: { windowId: 3, reason: "unreachable" },
+        data: { windowId: 3, reason: "unreachable", mode: "page" },
       }),
     );
   });

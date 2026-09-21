@@ -5,14 +5,35 @@ import { toast } from "sonner";
 import { MSG } from "@/constants/messaging";
 import { onMessage, sendMessage } from "@/lib/messaging";
 import { useAppWindowId } from "@/providers/app-messaging";
-import type { CaptureFailureReason } from "@/types/page-data.types";
+import type {
+  CaptureFailureReason,
+  CaptureMode,
+} from "@/types/page-data.types";
 
-/** What the user is told, per reason. One line each: a toast, not an essay. */
-export const CAPTURE_FAILURE_MESSAGE: Record<CaptureFailureReason, string> = {
-  unsupported: "This page can't be captured",
-  "no-selection": "Nothing is selected on the page",
-  unreachable: "Couldn't read the page — reload it and try again",
-};
+/**
+ * What the user is told. One line each: a toast, not an essay.
+ *
+ * The wording follows what was asked for — a bookmark that fails should not
+ * say "captured" — except where the reason itself makes the action plain.
+ */
+export function captureFailureMessage(
+  reason: CaptureFailureReason,
+  mode: CaptureMode = "page",
+): string {
+  const bookmarking = mode === "bookmark";
+
+  switch (reason) {
+    case "unsupported":
+      return bookmarking
+        ? "This page can't be bookmarked"
+        : "This page can't be captured";
+    case "no-selection":
+      return "Nothing is selected on the page";
+    case "unreachable":
+      // True of either action: the page never answered.
+      return "Couldn't read the page — reload it and try again";
+  }
+}
 
 /**
  * Says why a capture produced nothing, whatever triggered it: a keyboard
@@ -39,8 +60,8 @@ export function CaptureFailureListener() {
   }, [location]);
 
   useEffect(() => {
-    const report = (reason: CaptureFailureReason) => {
-      toast.error(CAPTURE_FAILURE_MESSAGE[reason]);
+    const report = (reason: CaptureFailureReason, mode: CaptureMode) => {
+      toast.error(captureFailureMessage(reason, mode));
 
       const current = locationRef.current;
       if (current.state?.isCapturePending !== true) return;
@@ -54,14 +75,14 @@ export function CaptureFailureListener() {
     // Pushed, when the panel was already open.
     const unsubscribe = onMessage(MSG.CAPTURE_FAILED, (msg) => {
       if (msg.data.windowId !== windowId) return null;
-      report(msg.data.reason);
+      report(msg.data.reason, msg.data.mode);
       return true; // Signals the background to drop its pending failure
     });
 
     // Pulled, when the trigger opened the panel and it was not listening yet.
     void sendMessage(MSG.REQUEST_PENDING_CAPTURE_FAILURE, null)
-      .then((reason) => {
-        if (reason) report(reason);
+      .then((failure) => {
+        if (failure) report(failure.reason, failure.mode);
       })
       .catch(() => null);
 

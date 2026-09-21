@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
+import { captureFailureMessage } from "./capture-failure-listener";
+
 import {
   BOTTOM_NAV_ACTIONS,
   type PanelShortcutAction,
@@ -93,10 +95,11 @@ export function usePanelShortcuts() {
         }
         case "capture":
         case "bookmark": {
-          const captured = await capture(
-            action === "capture" ? "auto" : "bookmark",
-          );
-          if (!captured) toast.error("This page can't be captured");
+          const mode = action === "capture" ? "auto" : "bookmark";
+          const captured = await capture(mode);
+          // The same wording the background's failures use, so a bookmark
+          // that cannot happen never says "captured".
+          if (!captured) toast.error(captureFailureMessage("unsupported", mode));
           return;
         }
         case "home":
