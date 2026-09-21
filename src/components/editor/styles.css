@@ -139,7 +139,7 @@ html:has(
   font-family: var(--lc-font-sans); /*maybe unnecessary*/
   padding-top: 8px;
   padding-bottom: 8px;
-  padding-inline-start: 50px; /*MAYBE: Increase to 52px later*/
+  padding-inline-start: 51px; /* 51px looks right with*/
   padding-inline-end: 8px !important;
   /*MAYBE: Revert inline padding to default if enough space is available*/
   min-height: var(--lc-editor-min-height);
