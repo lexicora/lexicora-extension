@@ -33,7 +33,13 @@
 }
 
 .bottomNav {
-    backface-visibility: hidden; /*! Cause of Firefox rendering issues */
+    /* No backface-visibility: hidden here. It used to force this onto its own
+       compositor layer, a habit from browsers that flickered during transforms.
+       Both engines composite transform and opacity animations by themselves
+       now, and in Firefox it gave the bar a compositing context that the
+       ::before blur then drew against, so the shadow and the backdrop-filter
+       fought each other. If flicker ever comes back, the modern lever is
+       will-change: transform, opacity — not this. */
     pointer-events: auto;
     /* Add filter to will-change to warn the browser */
     /* will-change: transform, opacity, box-shadow, visibility;*/ /* filter */
