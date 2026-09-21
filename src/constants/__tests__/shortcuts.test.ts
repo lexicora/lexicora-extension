@@ -8,6 +8,7 @@ import {
   formatBinding,
   manifestCommands,
   BOTTOM_NAV_ACTIONS,
+  suggestedKeyFor,
 } from "../shortcuts";
 import { isCapturableUrl } from "../support-capture-sites";
 
@@ -164,5 +165,20 @@ describe("BOTTOM_NAV_ACTIONS", () => {
       "library",
       "settings",
     ]);
+  });
+});
+
+describe("suggestedKeyFor", () => {
+  it("says what to type into the browser's own settings", () => {
+    // The settings page shows this for a command the browser left unset, so
+    // it has to read the way that page writes keys: MacCtrl is Ctrl there.
+    expect(suggestedKeyFor(COMMAND_ID.CAPTURE, false)).toBe("Alt+Shift+S");
+    expect(suggestedKeyFor(COMMAND_ID.CAPTURE, true)).toBe("Ctrl+Shift+C");
+    expect(suggestedKeyFor(COMMAND_ID.BOOKMARK, false)).toBe("Alt+Shift+D");
+  });
+
+  it("has nothing to say about a command that is not ours", () => {
+    expect(suggestedKeyFor("_execute_action", false)).toBeNull();
+    expect(suggestedKeyFor(undefined, false)).toBeNull();
   });
 });

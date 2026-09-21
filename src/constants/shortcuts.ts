@@ -45,8 +45,11 @@ export const BROWSER_COMMANDS: Record<
     suggestedKey: { default: "Alt+Shift+L", mac: "MacCtrl+Shift+L" },
   },
   capture: {
+    // Alt+Shift+C never registered on Windows or Linux — something there
+    // holds it, as Chrome itself holds Alt+Shift+B and Alt+Shift+T. S, as in
+    // save, is the next best mnemonic. macOS keeps ⌃⇧C, which works.
     description: "Capture the selection, or the whole page if nothing is selected",
-    suggestedKey: { default: "Alt+Shift+C", mac: "MacCtrl+Shift+C" },
+    suggestedKey: { default: "Alt+Shift+S", mac: "MacCtrl+Shift+C" },
   },
   bookmark: {
     // Not Alt+Shift+B, which is Chrome's own "focus the bookmarks toolbar" on
@@ -57,6 +60,30 @@ export const BROWSER_COMMANDS: Record<
     suggestedKey: { default: "Alt+Shift+D", mac: "MacCtrl+Shift+B" },
   },
 };
+
+/** The key a command asks the browser for, by command name. */
+export const COMMAND_SUGGESTED_KEYS: Record<
+  string,
+  BrowserCommand["suggestedKey"]
+> = {
+  [COMMAND_ID.OPEN_SIDE_PANEL]: BROWSER_COMMANDS.openSidePanel.suggestedKey,
+  [COMMAND_ID.FIREFOX_OPEN_SIDEBAR]: BROWSER_COMMANDS.openSidePanel.suggestedKey,
+  [COMMAND_ID.CAPTURE]: BROWSER_COMMANDS.capture.suggestedKey,
+  [COMMAND_ID.BOOKMARK]: BROWSER_COMMANDS.bookmark.suggestedKey,
+};
+
+/**
+ * What to type into the browser's own shortcut settings for a command that
+ * arrived unset, written the way that page writes keys.
+ */
+export function suggestedKeyFor(
+  command: string | undefined,
+  isMac: boolean,
+): string | null {
+  const key = command ? COMMAND_SUGGESTED_KEYS[command] : undefined;
+  if (!key) return null;
+  return isMac ? key.mac.replace("MacCtrl", "Ctrl") : key.default;
+}
 
 /** Descriptions by command name, for commands.getAll() results that lack one. */
 export const COMMAND_DESCRIPTIONS: Record<string, string> = {

@@ -18,6 +18,7 @@ import {
   formatBinding,
   LIBRARY_SHORTCUTS,
   PANEL_SHORTCUTS,
+  suggestedKeyFor,
   type Shortcut,
 } from "@/constants/shortcuts";
 import { IS_MAC } from "@/hooks/sidepanel/panel-shortcuts";
@@ -151,6 +152,15 @@ function KeyboardShortcutsSettingsPage() {
     return () => window.removeEventListener("focus", load);
   }, []);
 
+  // What the browser did not give us a key for, and what we asked for.
+  const unsetCommands = (commands ?? [])
+    .filter((command) => !command.shortcut)
+    .map((command) => ({
+      name: command.name ?? "",
+      key: suggestedKeyFor(command.name, IS_MAC),
+    }))
+    .filter((entry): entry is { name: string; key: string } => !!entry.key);
+
   return (
     <PageContainer>
       <PageHeader title="Keyboard Shortcuts" goBackButton />
@@ -202,10 +212,24 @@ function KeyboardShortcutsSettingsPage() {
               </div>
             ))}
           </div>
-          <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
-            A shortcut shows <em>Not set</em> when the browser or another
-            extension already uses its keys.
-          </p>
+          <div className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2 flex flex-col gap-1.5">
+            <p>
+              A shortcut shows <em>Not set</em> when the browser or another
+              extension already uses its keys.
+            </p>
+            {unsetCommands.length > 0 && (
+              <p>
+                Set one yourself below. Lexicora asks the browser for{" "}
+                {unsetCommands.map(({ name, key }, index) => (
+                  <span key={name}>
+                    {index > 0 && ", "}
+                    <span className="font-medium text-foreground">{key}</span>
+                  </span>
+                ))}
+                , in the order above.
+              </p>
+            )}
+          </div>
           <div className="flex justify-center mt-3">
             <Button
               variant="outline"
