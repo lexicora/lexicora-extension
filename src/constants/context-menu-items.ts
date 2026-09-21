@@ -26,6 +26,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
   //* back, decide what this menu should look like: both entries (and in which
   //* order, with a separator?), or keep only one. Until then, turning the flag
   //* on swaps the panel item out for the website one.
+  // TODO: Deactivate some of these items when the context menu is within the side panel itself
   {
     id: CMI_ID.TOGGLE_SIDE_PANEL,
     // Closes an open panel too, like the keyboard shortcut.
