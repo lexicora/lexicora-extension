@@ -51,7 +51,7 @@ function LicenseSettingsPage() {
         </section>
 
         <section className="not-dark:shadow-xs rounded-2xl bg-card px-3.5 py-3">
-          <pre className="text-xs text-muted-foreground whitespace-pre-wrap break-words font-sans leading-relaxed select-text">
+          <pre className="text-xs text-muted-foreground whitespace-pre-wrap wrap-break-word font-sans leading-relaxed select-text">
             {licenseText}
           </pre>
         </section>
