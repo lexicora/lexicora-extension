@@ -12,6 +12,9 @@
  *   shortcut settings. Defaults use Control+Shift on macOS rather than Option,
  *   which types characters on many layouts (Option+L is "@" on a German Mac),
  *   and Alt+Shift elsewhere, since Chrome already claims many Ctrl+Shift keys.
+ *   Alt+Shift+T and Alt+Shift+B belong to Chrome itself on Windows and Linux
+ *   (focus the toolbar, focus the bookmarks toolbar): a suggested key the
+ *   browser already owns is silently dropped and shows as "Not set".
  *
  * - **In-panel** shortcuts are plain key handlers in the side panel. They only
  *   ever fire while the panel has focus — the page never sees them — and never
@@ -46,8 +49,12 @@ export const BROWSER_COMMANDS: Record<
     suggestedKey: { default: "Alt+Shift+C", mac: "MacCtrl+Shift+C" },
   },
   bookmark: {
+    // Not Alt+Shift+B, which is Chrome's own "focus the bookmarks toolbar" on
+    // Windows and Linux; the browser's shortcuts win and ours arrives unset.
+    // D follows Chrome's own Ctrl+D for bookmarking. macOS has no such
+    // binding, so ⌃⇧B stays there.
     description: "Bookmark the page (metadata only)",
-    suggestedKey: { default: "Alt+Shift+B", mac: "MacCtrl+Shift+B" },
+    suggestedKey: { default: "Alt+Shift+D", mac: "MacCtrl+Shift+B" },
   },
 };
 

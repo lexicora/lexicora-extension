@@ -20,6 +20,12 @@ import {
  */
 export function setupCommands() {
   browser.commands.onCommand.addListener((command, tab) => {
+    //* INFO: Debug log — says whether a key reached the extension at all,
+    //* which is the first question when a shortcut appears to do nothing.
+    if (import.meta.env.DEV) {
+      console.log("Command:", command, "tab:", tab?.id, tab?.windowId);
+    }
+
     switch (command) {
       case COMMAND_ID.OPEN_SIDE_PANEL:
         toggleSidePanel(tab?.windowId);
