@@ -22,6 +22,7 @@ import {
   //EllipsisIcon, // used by the commented-out General items below
   FileTextIcon,
   HeartPlusIcon,
+  HistoryIcon,
   InfoIcon,
   KeyboardIcon,
   //LanguagesIcon, // used by the commented-out General items below
@@ -308,6 +309,14 @@ function SettingsPage() {
               mediaIconColor="text-blue-500"
               itemTitle="About"
               roundingClass="rounded-b-none"
+            />
+            <SettingsItem
+              to="/settings/about/whats-changed"
+              size="sm"
+              MediaIcon={HistoryIcon}
+              mediaIconColor="text-orange-500"
+              itemTitle="What's Changed"
+              roundingClass="rounded-none!"
             />
             <SettingsItem
               to="/settings/about/licenses"
