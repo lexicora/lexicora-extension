@@ -32,7 +32,7 @@ This is a [WXT](https://wxt.dev)-based browser extension (Chrome MV3 / Firefox M
 | Entrypoint | Context | Purpose |
 |---|---|---|
 | `background/` | Service worker | Orchestrates messaging, context menus, port tracking |
-| `content/` | Every page | Injects capture-suggestion toast UI; relays page data |
+| `content/` | Web pages (http, https, file) | Injects capture-suggestion toast UI; relays page data |
 | `sidepanel/` | Side panel | Full React app — the primary user-facing UI |
 | `popup/` | Browser toolbar popup | Minimal React app (currently a home page only) |
 

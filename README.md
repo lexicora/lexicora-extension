@@ -120,11 +120,14 @@ bun run dev:edge         # Edge dev server
 bun run dev:firefox      # Firefox (MV2) dev server
 ```
 
-Load the extension in Chrome:
+Each command starts the dev server **and opens a browser with the extension
+already installed**, in a profile of its own — your everyday profile, and its
+extensions, are left alone. Edits rebuild and reload as you save.
 
-1. Open `chrome://extensions`
-2. Enable **Developer mode**
-3. Click **Load unpacked** and select the `.output/chrome-mv3` directory
+To point a command at a browser that is not where WXT expects it (Edge, or
+Firefox Developer Edition), copy `web-ext.config.example.mac.ts` or
+`web-ext.config.example.windows.ts` to `web-ext.config.ts` and set the paths.
+That file is git-ignored, so everyone can keep their own.
 
 ### Build
 
@@ -134,6 +137,12 @@ bun run build:firefox    # Production build for Firefox
 bun run zip              # Package for Chrome Web Store
 bun run zip:firefox      # Package for AMO (Firefox Add-ons)
 ```
+
+To try a production build rather than the dev server, load it by hand: open
+`chrome://extensions`, turn on **Developer mode**, choose **Load unpacked**
+and select `.output/chrome-mv3`. In Firefox, open `about:debugging`, choose
+**This Firefox**, then **Load Temporary Add-on** and select any file in
+`.output/firefox-mv2`.
 
 ### Type-Check and Lint
 
@@ -164,7 +173,7 @@ Tests use Vitest with WXT's `WxtVitest()` plugin and `fakeBrowser` for in-memory
 | Entrypoint | Context | Purpose |
 | --- | --- | --- |
 | `background/` | Service worker | Orchestrates messaging, context menus, port tracking |
-| `content/` | Every page | Injects capture-suggestion toast; relays page data |
+| `content/` | Web pages (http, https, file) | Injects capture-suggestion toast; relays page data |
 | `sidepanel/` | Side panel | Full React app — primary user-facing UI |
 | `popup/` | Browser toolbar | Minimal React app (currently a home page only) |
 
