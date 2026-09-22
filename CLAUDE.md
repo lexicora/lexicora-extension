@@ -35,6 +35,7 @@ This is a [WXT](https://wxt.dev)-based browser extension (Chrome MV3 / Firefox M
 | `content/` | Web pages (http, https, file) | Injects capture-suggestion toast UI; relays page data |
 | `sidepanel/` | Side panel | Full React app — the primary user-facing UI |
 | `popup/` | Browser toolbar popup | Minimal React app (currently a home page only) |
+| `onboarding/` | Tab (unlisted page) | Getting-started page, opened once on install and from Settings → Help |
 
 ### Data Layer — RxDB + Dexie
 
