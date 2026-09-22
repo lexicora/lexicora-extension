@@ -20,7 +20,7 @@ import {
   DownloadIcon,
   HardDriveIcon,
   //EllipsisIcon, // used by the commented-out General items below
-  FileTextIcon,
+  //FileTextIcon,
   HeartPlusIcon,
   HistoryIcon,
   InfoIcon,
@@ -316,16 +316,16 @@ function SettingsPage() {
               MediaIcon={HistoryIcon}
               mediaIconColor="text-orange-500"
               itemTitle="What's Changed"
-              roundingClass="rounded-none!"
+              roundingClass="rounded-t-none"
             />
-            <SettingsItem
+            {/* <SettingsItem
               to="/settings/about/licenses"
               size="sm"
               MediaIcon={FileTextIcon}
               mediaIconColor="text-emerald-500"
               itemTitle="Licenses"
               roundingClass="rounded-t-none"
-            />
+            /> */}
           </div>
         </section>
       </main>
