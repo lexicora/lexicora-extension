@@ -12,7 +12,6 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import { Label } from "@/components/ui/label";
 import { COMMAND_ID, suggestedKeyFor } from "@/constants/shortcuts";
 import { IS_MAC } from "@/hooks/sidepanel/panel-shortcuts";
 import { cn } from "cn";
@@ -99,6 +98,52 @@ function Card({
           </Item>
         </div>
       ))}
+    </div>
+  );
+}
+
+/** A section's title and what it is about, above or beside its content. */
+function SectionHeading({
+  title,
+  description,
+}: {
+  title: string;
+  description: React.ReactNode;
+}) {
+  return (
+    <div className="mb-4 md:mb-5">
+      <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
+      <p className="mt-1.5 text-sm text-muted-foreground text-pretty max-w-prose">
+        {description}
+      </p>
+    </div>
+  );
+}
+
+/** One way of doing something, as a card of its own in a grid. */
+function Tile({
+  row,
+  keys,
+}: {
+  row: Row;
+  keys: Record<string, string> | null;
+}) {
+  return (
+    <div className="flex flex-col gap-3 rounded-2xl bg-card p-4 not-dark:shadow-xs">
+      <div className="flex items-center justify-between gap-2">
+        <span className="flex size-9 items-center justify-center rounded-xl bg-muted">
+          <row.icon className={cn("size-5", row.iconColor)} />
+        </span>
+        {row.command && keys && (
+          <CommandKey command={row.command} keys={keys} />
+        )}
+      </div>
+      <div>
+        <h3 className="text-sm font-medium">{row.title}</h3>
+        <p className="mt-1 text-sm text-muted-foreground text-pretty">
+          {row.description}
+        </p>
+      </div>
     </div>
   );
 }
@@ -241,40 +286,42 @@ function OnboardingPage() {
   ];
 
   return (
-    <div className="min-h-screen w-full px-4 py-10 sm:py-16">
-      <main className="mx-auto flex max-w-xl flex-col gap-5.75 text-left">
-        <section>
-          <Item
-            variant="muted"
-            size="default"
-            className="bg-card rounded-2xl not-dark:shadow-xs flex-col items-center pt-7 pb-6 gap-1 text-center"
-          >
-            <span className="flex justify-center gap-1.5 items-baseline mb-3">
+    // Nothing here is content to copy, so none of it selects: the page reads
+    // as the app's own surface rather than a document.
+    <div className="min-h-screen w-full px-4 py-10 sm:px-8 sm:py-16 select-none">
+      <main className="mx-auto flex max-w-5xl flex-col gap-12 text-left">
+        {/* Welcome and the one action, beside the step worth doing first. */}
+        <section className="grid items-center gap-8 md:grid-cols-[1.15fr_1fr]">
+          <div className="flex flex-col items-start">
+            <span className="flex gap-1.5 items-baseline mb-5">
               <img
                 src={lexicoraLightThemeLogoNoBg}
-                className="h-[1.3rem] lc-display-light rounded-xs"
+                className="h-[1.1rem] lc-display-light rounded-xs"
                 alt=""
                 aria-hidden
                 draggable="false"
               />
               <img
                 src={lexicoraDarkThemeLogoNoBg}
-                className="h-[1.3rem] lc-display-dark rounded-xs"
+                className="h-[1.1rem] lc-display-dark rounded-xs"
                 alt=""
                 aria-hidden
                 draggable="false"
               />
               {/*#00143d is the Lexicora color */}
-              <h1 className="text-3xl font-bold text-[#00143d] dark:text-foreground leading-0">
+              <span className="text-2xl font-bold text-[#00143d] dark:text-foreground leading-0">
                 Lexicora
-              </h1>
+              </span>
             </span>
-            <p className="text-sm text-muted-foreground text-pretty max-w-sm">
-              Keep what you read: capture it, sort it into topics, find it
-              again. Here is where everything is — it takes a minute.
+            <h1 className="text-4xl font-bold tracking-tight text-balance">
+              Keep what you read.
+            </h1>
+            <p className="mt-3 text-base text-muted-foreground text-pretty max-w-md">
+              Capture a page or bookmark it, sort it into topics, and find it
+              again later. Here is where everything is — it takes a minute.
             </p>
             <Button
-              className="mt-4"
+              className="mt-6"
               size="lg"
               onClick={openPanel}
               disabled={!canOpen}
@@ -282,67 +329,64 @@ function OnboardingPage() {
               <PanelRightIcon data-icon="inline-start" />
               Open the {PANEL}
             </Button>
-            <p className="text-xs text-muted-foreground mt-1.5">
+            <p className="text-xs text-muted-foreground mt-2">
               {openFailed
                 ? `The ${PANEL} didn't open here — use one of the ways below.`
                 : "This tab closes once it is open."}
             </p>
-          </Item>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <Card rows={[pinRow]} keys={keys} />
+            <Card
+              keys={keys}
+              rows={[
+                {
+                  icon: ShieldCheckIcon,
+                  iconColor: "text-indigo-500",
+                  title: "Your library stays on this device",
+                  description:
+                    "No account, no server, no analytics. Lexicora makes no network requests of its own.",
+                },
+              ]}
+            />
+          </div>
         </section>
 
         <section>
-          <Label className="text-sm ml-2 mb-0.5">
-            <PinIcon className="size-3.5 text-amber-400" /> Keep it in reach
-          </Label>
-          <Card rows={[pinRow]} keys={keys} />
-        </section>
-
-        <section>
-          <Label className="text-sm ml-2 mb-0.5">
-            <PanelRightIcon className="size-3.5 text-blue-400" /> Open the{" "}
-            {PANEL}
-          </Label>
-          <Card rows={openRows} keys={keys} />
-          <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
-            The {PANEL} is Lexicora itself: your library, the editor and
-            settings, beside the page you are reading.
-          </p>
-        </section>
-
-        <section>
-          <Label className="text-sm ml-2 mb-0.5">
-            <BookmarkIcon className="size-3.5 text-emerald-400" /> Save what you
-            read
-          </Label>
-          <Card rows={saveRows} keys={keys} />
-          <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
-            Both are on the {PANEL}'s home page, in the popup and in the
-            right-click menu. Keys marked <em>Not set</em> were taken by the
-            browser; choose your own under Settings → Keyboard shortcuts.
-          </p>
-        </section>
-
-        <section>
-          <Card
-            keys={keys}
-            rows={[
-              {
-                icon: ShieldCheckIcon,
-                iconColor: "text-indigo-500",
-                title: "Your library stays on this device",
-                description:
-                  "No account, no server, no analytics. Lexicora makes no network requests of its own; the full policy is under Settings → General → Privacy policy.",
-              },
-              {
-                icon: LightbulbIcon,
-                iconColor: "text-yellow-500",
-                title: "More when you want it",
-                description:
-                  "Settings → Help has Tips & Tricks, the FAQ, and this page again under Getting started.",
-              },
-            ]}
+          <SectionHeading
+            title={`Open the ${PANEL}`}
+            description={`The ${PANEL} is Lexicora itself: your library, the editor and settings, beside the page you are reading.`}
           />
+          <div className="grid gap-3 md:grid-cols-3">
+            {openRows.map((row) => (
+              <Tile key={row.title} row={row} keys={keys} />
+            ))}
+          </div>
         </section>
+
+        <section className="grid gap-6 md:grid-cols-[1fr_1.6fr] md:gap-8">
+          <SectionHeading
+            title="Save what you read"
+            description={
+              <>
+                Both are on the {PANEL}'s home page, in the popup and in the
+                right-click menu, as well as on the keys shown. A key marked{" "}
+                <em>Not set</em> was taken by the browser; choose your own under
+                Settings → Keyboard shortcuts.
+              </>
+            }
+          />
+          <Card rows={saveRows} keys={keys} />
+        </section>
+
+        <footer className="flex items-center justify-center gap-2 text-sm text-muted-foreground text-center text-pretty">
+          <LightbulbIcon className="size-4 shrink-0 text-yellow-500" />
+          <span>
+            More in Settings → Help: Tips &amp; Tricks, the FAQ, and this page
+            again under Getting started.
+          </span>
+        </footer>
       </main>
     </div>
   );
