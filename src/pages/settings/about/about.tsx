@@ -10,8 +10,10 @@ import {
   ItemDescription,
 } from "@/components/ui/item";
 import { SettingsItemSeparator } from "@/components/settings";
+import { REPOSITORY_URL } from "@/constants/site";
 import {
   ChevronRightIcon,
+  CodeXmlIcon,
   FileTextIcon,
   ScrollTextIcon,
   TagIcon,
@@ -110,7 +112,7 @@ function AboutPage() {
           <Item
             variant="muted"
             size="sm"
-            className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl rounded-t-none"
+            className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-none"
             asChild
           >
             <Link
@@ -127,9 +129,33 @@ function AboutPage() {
               <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
             </Link>
           </Item>
+          <SettingsItemSeparator />
+          <Item
+            variant="muted"
+            size="sm"
+            className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl rounded-t-none"
+            asChild
+          >
+            {/* The only link out of this page: the source, where an issue can
+                be raised and the licence read in context. */}
+            <a
+              href={REPOSITORY_URL}
+              target="_blank"
+              rel="noreferrer"
+              draggable={false}
+            >
+              <ItemMedia variant="icon">
+                <CodeXmlIcon className="size-5 text-violet-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>Source code</ItemTitle>
+              </ItemContent>
+              <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
+            </a>
+          </Item>
           <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
-            Lexicora's own terms, and the libraries and tools that make it
-            possible.
+            Lexicora's own terms, the libraries and tools that make it
+            possible, and where it is built.
           </p>
         </section>
       </main>
