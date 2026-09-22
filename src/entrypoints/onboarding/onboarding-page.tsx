@@ -1,6 +1,4 @@
-import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
-import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Kbd } from "@/components/kbd";
 import { SettingsItemSeparator } from "@/components/settings";
@@ -29,6 +27,7 @@ import {
   TextSelectIcon,
 } from "lucide-react";
 
+import { LogoLockup, useLogoIntro } from "./logo-intro";
 import { useCommandKeys } from "./use-command-keys";
 import { useToolbarPin } from "./use-toolbar-pin";
 
@@ -183,6 +182,10 @@ function OnboardingPage() {
   const keys = useCommandKeys();
   const isPinned = useToolbarPin();
 
+  const lockupRef = useRef<HTMLSpanElement>(null);
+  const contentRef = useRef<HTMLElement>(null);
+  const intro = useLogoIntro(lockupRef, contentRef);
+
   // Resolved up front, so the click can open the panel before any `await`:
   // both browsers only open it straight from a user gesture.
   const [tab, setTab] = useState<{ id?: number; windowId?: number } | null>(
@@ -295,30 +298,24 @@ function OnboardingPage() {
     // one, both sides are equal. max() keeps a wide scrollbar from asking for
     // negative padding.
     <div className="min-h-screen w-full py-8 sm:py-10 select-none pl-4 pr-[max(0px,calc(var(--lc-scrollbar-offset)+6px))] sm:pl-8 sm:pr-[max(0px,calc(var(--lc-scrollbar-offset)+22px))]">
-      <main className="mx-auto flex max-w-5xl flex-col gap-12 text-left">
+      {intro.copy}
+      <main
+        ref={contentRef}
+        className="mx-auto flex max-w-5xl flex-col gap-12 text-left"
+        style={{ opacity: intro.isDone ? undefined : 0 }}
+        // Invisible is not absent: a click meant to skip the intro must not
+        // land on the button underneath.
+        inert={!intro.isDone}
+      >
         {/* Welcome and the one action, beside the step worth doing first. */}
         <section className="grid items-center gap-8 md:grid-cols-[1.15fr_1fr]">
           <div className="flex flex-col items-start">
-            <span className="flex gap-1.5 items-baseline mb-5">
-              <img
-                src={lexicoraLightThemeLogoNoBg}
-                className="h-[1.1rem] lc-display-light rounded-xs"
-                alt=""
-                aria-hidden
-                draggable="false"
-              />
-              <img
-                src={lexicoraDarkThemeLogoNoBg}
-                className="h-[1.1rem] lc-display-dark rounded-xs"
-                alt=""
-                aria-hidden
-                draggable="false"
-              />
-              {/*#00143d is the Lexicora color */}
-              <span className="text-2xl font-bold text-[#00143d] dark:text-foreground leading-0">
-                Lexicora
-              </span>
-            </span>
+            <div
+              className="mb-5"
+              style={{ visibility: intro.isDone ? undefined : "hidden" }}
+            >
+              <LogoLockup ref={lockupRef} />
+            </div>
             <h1 className="text-4xl font-bold tracking-tight text-balance">
               Keep what you read.
             </h1>
