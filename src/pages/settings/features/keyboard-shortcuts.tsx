@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { Kbd } from "@/components/kbd";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { SettingsItemSeparator } from "@/components/settings";
@@ -24,25 +25,6 @@ import {
 import { IS_MAC } from "@/hooks/sidepanel/panel-shortcuts";
 import { cn } from "cn";
 import { GlobeIcon, KeyboardIcon, PanelRightIcon } from "lucide-react";
-
-function Kbd({
-  children,
-  muted,
-}: {
-  children: React.ReactNode;
-  muted?: boolean;
-}) {
-  return (
-    <kbd
-      className={cn(
-        "inline-flex items-center justify-center min-w-6 h-6 px-1.5 rounded-md border bg-muted font-sans text-xs font-medium whitespace-nowrap",
-        muted ? "text-muted-foreground italic" : "text-foreground",
-      )}
-    >
-      {children}
-    </kbd>
-  );
-}
 
 /** Every binding of a shortcut that works on this platform, as keycap labels. */
 function panelKeyLabels({ bindings }: Shortcut): string[] {

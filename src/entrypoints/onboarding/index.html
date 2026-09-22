@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en" translate="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to Lexicora</title>
+    <!-- The page is English, and a browser set to another language offers to
+         translate it — a bar over the intro, on the first thing a new user
+         sees. The meta stops Chrome's prompt; translate="no" says the same to
+         other browsers. The side panel and popup never get the prompt. -->
+    <meta name="google" content="notranslate" />
+    <link rel="icon" type="image/png" href="/icon/32.png" />
+    <!-- The first frames, before the stylesheet and React arrive: the page's
+         own background, so dark mode does not open on a white flash. It
+         follows the system, as the theme does until the user picks one; the
+         stored choice is only readable asynchronously, and once the theme
+         provider sets .light or .dark the stylesheet takes over. Inline
+         styles are allowed on extension pages, inline scripts are not.
+         Keep the colours in step with --background in globals.css. -->
+    <style>
+      html:not(.light):not(.dark) {
+        background-color: oklch(0.955 0.004 264.5);
+      }
+      @media (prefers-color-scheme: dark) {
+        html:not(.light):not(.dark) {
+          background-color: oklch(0.13 0.028 261.692);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      You need to enable Javascript to run this application.
+    </noscript>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>

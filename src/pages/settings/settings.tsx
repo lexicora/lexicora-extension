@@ -13,6 +13,7 @@ import {
 } from "@heroicons/react/16/solid";
 import { SparklesIcon } from "@heroicons/react/24/solid";
 import {
+  ArrowUpRightIcon,
   CameraIcon,
   ChevronRightIcon,
   DatabaseIcon,
@@ -28,6 +29,7 @@ import {
   LightbulbIcon,
   MessageCircleQuestionMarkIcon,
   PaletteIcon,
+  RocketIcon,
   //PersonStandingIcon, // used by the commented-out General items below
   Settings2Icon,
   ShieldCheckIcon,
@@ -40,7 +42,8 @@ import { Link } from "react-router-dom";
 //import styles from "./settings-page.module.css";
 
 import { FEATURES } from "@/constants/features";
-import { SettingsItem } from "@/components/settings";
+import { SettingsItem, SettingsItemSeparator } from "@/components/settings";
+import { onboardingUrl } from "@/lib/onboarding";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 
@@ -239,6 +242,31 @@ function SettingsPage() {
             <LifeBuoyIcon className="size-3.5 text-pink-400" /> Help
           </Label>
           <div className="rounded-2xl not-dark:shadow-xs">
+            <Item
+              variant="muted"
+              size="sm"
+              className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl rounded-b-none"
+              asChild
+            >
+              {/* The page shown on install, in a tab of its own again. */}
+              <a
+                href={onboardingUrl()}
+                target="_blank"
+                rel="noreferrer"
+                draggable={false}
+              >
+                <ItemMedia variant="icon">
+                  <RocketIcon className="size-5 text-sky-500" />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>Getting started</ItemTitle>
+                </ItemContent>
+                <ItemActions>
+                  <ArrowUpRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
+                </ItemActions>
+              </a>
+            </Item>
+            <SettingsItemSeparator />
             <SettingsItem
               // Maybe drop the /support and just have it link to settings/help
               to="/settings/help/support"
@@ -246,7 +274,7 @@ function SettingsPage() {
               MediaIcon={HeartPlusIcon}
               mediaIconColor="text-rose-500"
               itemTitle="Support"
-              roundingClass="rounded-b-none"
+              roundingClass="rounded-none!"
             />
             <SettingsItem
               to="/settings/help/faq"
