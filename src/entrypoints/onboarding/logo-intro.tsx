@@ -50,6 +50,10 @@ const MOVE = 1000;
 /** The content starts appearing this far into the move. */
 const CONTENT_LAG = 350;
 const CONTENT_FADE = MOVE - CONTENT_LAG;
+/** Enough to set the content back, not enough to smear it. */
+const CONTENT_BLUR = 8;
+/** How long the blur outlasts the fade, so focus arrives after the lockup. */
+const BLUR_LINGER = 300;
 
 // Symmetric, so the lockup leaves the centre as gently as it lands.
 const MOVE_EASING = "cubic-bezier(0.65, 0, 0.35, 1)";
@@ -144,6 +148,18 @@ export function useLogoIntro(
         {
           delay: START_DELAY + FADE_IN + HOLD + CONTENT_LAG,
           duration: CONTENT_FADE,
+          easing: CONTENT_EASING,
+          fill: "both",
+        },
+      ),
+      // Revealed out of focus, so the eye stays on the one sharp thing moving
+      // across it. Its own animation, so it can outlast the fade: the page
+      // comes into focus just after the lockup has landed.
+      content.animate(
+        [{ filter: `blur(${CONTENT_BLUR}px)` }, { filter: "blur(0px)" }],
+        {
+          delay: START_DELAY + FADE_IN + HOLD + CONTENT_LAG,
+          duration: CONTENT_FADE + BLUR_LINGER,
           easing: CONTENT_EASING,
           fill: "both",
         },
