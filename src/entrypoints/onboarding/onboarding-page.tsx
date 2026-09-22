@@ -131,7 +131,7 @@ function Tile({
   return (
     <div className="flex flex-col gap-3 rounded-2xl bg-card p-4 not-dark:shadow-xs">
       <div className="flex items-center justify-between gap-2">
-        <span className="flex size-9 items-center justify-center rounded-xl bg-muted">
+        <span className="flex size-9 items-center justify-center rounded-md bg-muted">
           <row.icon className={cn("size-5", row.iconColor)} />
         </span>
         {row.command && keys && (
@@ -288,7 +288,13 @@ function OnboardingPage() {
   return (
     // Nothing here is content to copy, so none of it selects: the page reads
     // as the app's own surface rather than a document.
-    <div className="min-h-screen w-full px-4 py-10 sm:px-8 sm:py-16 select-none">
+    //
+    // The right padding gives back the width a classic scrollbar takes
+    // (--lc-scrollbar-offset is 10px less that width), so the column is
+    // centred on the window, not on what the scrollbar leaves of it. Without
+    // one, both sides are equal. max() keeps a wide scrollbar from asking for
+    // negative padding.
+    <div className="min-h-screen w-full py-8 sm:py-10 select-none pl-4 pr-[max(0px,calc(var(--lc-scrollbar-offset)+6px))] sm:pl-8 sm:pr-[max(0px,calc(var(--lc-scrollbar-offset)+22px))]">
       <main className="mx-auto flex max-w-5xl flex-col gap-12 text-left">
         {/* Welcome and the one action, beside the step worth doing first. */}
         <section className="grid items-center gap-8 md:grid-cols-[1.15fr_1fr]">
