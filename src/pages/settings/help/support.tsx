@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/item";
 import { REPOSITORY_URL } from "@/constants/site";
 import {
+  ArrowUpRightIcon,
   BugIcon,
-  ChevronRightIcon,
   CodeXmlIcon,
   HeartPlusIcon,
 } from "lucide-react";
@@ -106,7 +106,8 @@ function SupportPage() {
                         {description}
                       </ItemDescription>
                     </ItemContent>
-                    <ChevronRightIcon className="size-4 text-muted-foreground shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
+                    {/* Every row here opens a browser tab. */}
+                    <ArrowUpRightIcon className="size-4.5 text-muted-foreground shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
                   </Item>
                 </a>
               </div>

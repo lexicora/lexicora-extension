@@ -12,6 +12,7 @@ import {
 import { SettingsItemSeparator } from "@/components/settings";
 import { REPOSITORY_URL } from "@/constants/site";
 import {
+  ArrowUpRightIcon,
   ChevronRightIcon,
   CodeXmlIcon,
   FileTextIcon,
@@ -150,7 +151,9 @@ function AboutPage() {
               <ItemContent>
                 <ItemTitle>Source code</ItemTitle>
               </ItemContent>
-              <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
+              {/* An arrow away, not a chevron: this row leaves the extension,
+                  unlike the two above it. */}
+              <ArrowUpRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
             </a>
           </Item>
           <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
