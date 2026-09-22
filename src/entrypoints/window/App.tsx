@@ -59,6 +59,8 @@ import FaqPage from "@/pages/settings/help/faq";
 import TipsAndTricksPage from "@/pages/settings/help/tips-and-tricks";
 import AboutPage from "@/pages/settings/about/about";
 import LicensesPage from "@/pages/settings/about/licenses";
+import WhatsChangedPage from "@/pages/settings/about/whats-changed";
+import WhatsChangedReleasePage from "@/pages/settings/about/whats-changed-release";
 import { cn } from "cn";
 
 function SidebarTransitionGuard() {
@@ -163,6 +165,11 @@ const router = createMemoryRouter([
       },
       { path: "settings/about", element: <AboutPage /> },
       { path: "settings/about/licenses", element: <LicensesPage /> },
+      { path: "settings/about/whats-changed", element: <WhatsChangedPage /> },
+      {
+        path: "settings/about/whats-changed/:version",
+        element: <WhatsChangedReleasePage />,
+      },
     ],
   },
 ]);
