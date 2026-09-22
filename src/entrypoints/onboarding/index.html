@@ -1,9 +1,14 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" translate="no">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Welcome to Lexicora</title>
+    <!-- The page is English, and a browser set to another language offers to
+         translate it — a bar over the intro, on the first thing a new user
+         sees. The meta stops Chrome's prompt; translate="no" says the same to
+         other browsers. The side panel and popup never get the prompt. -->
+    <meta name="google" content="notranslate" />
     <link rel="icon" type="image/png" href="/icon/32.png" />
     <!-- The first frames, before the stylesheet and React arrive: the page's
          own background, so dark mode does not open on a white flash. It
