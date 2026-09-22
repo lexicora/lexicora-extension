@@ -5,6 +5,7 @@ import {
   CONTEXT_MENU_ITEMS_WEBSITE,
 } from "@/constants/context-menu-items";
 import { FEATURES } from "@/constants/features";
+import { openOnboardingOnInstall } from "@/lib/onboarding";
 import {
   setupContextMenuActions,
   setupContextMenuStateSync,
@@ -15,7 +16,8 @@ import { setupPortHandlers } from "./port-handler";
 
 export default defineBackground(() => {
   //console.log("Hello background!", { id: browser.runtime.id });
-  browser.runtime.onInstalled.addListener(() => {
+  browser.runtime.onInstalled.addListener(({ reason }) => {
+    openOnboardingOnInstall(reason).catch(() => null);
     //console.log("Extension installed");
     //browser.contextMenus.removeAll();
 
