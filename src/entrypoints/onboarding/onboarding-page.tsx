@@ -299,7 +299,7 @@ function OnboardingPage() {
     // centred on the window, not on what the scrollbar leaves of it. Without
     // one, both sides are equal. max() keeps a wide scrollbar from asking for
     // negative padding.
-    <div className="min-h-screen w-full py-8 sm:py-10 select-none pl-4 pr-[max(0px,calc(var(--lc-scrollbar-offset)+6px))] sm:pl-8 sm:pr-[max(0px,calc(var(--lc-scrollbar-offset)+22px))]">
+    <div className="min-h-screen w-full py-6 sm:py-8 select-none pl-4 pr-[max(0px,calc(var(--lc-scrollbar-offset)+6px))] sm:pl-8 sm:pr-[max(0px,calc(var(--lc-scrollbar-offset)+22px))]">
       {intro.copy}
       <main
         ref={contentRef}

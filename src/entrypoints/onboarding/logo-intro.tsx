@@ -1,6 +1,12 @@
 import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
 import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
-import { useEffect, useRef, useState, type RefObject } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import { createPortal } from "react-dom";
 
 /** The logo and the name, as the page's header shows them. */
@@ -82,6 +88,25 @@ export function useLogoIntro(
   );
   const [rect, setRect] = useState<DOMRect | null>(null);
   const copyRef = useRef<HTMLDivElement>(null);
+
+  // No scrolling and no scrollbar until the page is revealed, then the
+  // scrollbar fades in: see onboarding.css. Before the first paint, so the
+  // page never shows a scrollbar that then vanishes.
+  const isPlaying = phase !== "done";
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    if (isPlaying) {
+      root.dataset.lcIntro = "playing";
+      return;
+    }
+    if (root.dataset.lcIntro === undefined) return; // reduced motion
+    // Scrollable again but still transparent, and the style read makes the
+    // browser apply that before the attribute goes: otherwise the two changes
+    // would merge and the colour would be set rather than transitioned.
+    root.dataset.lcIntro = "revealing";
+    void getComputedStyle(root).scrollbarColor;
+    delete root.dataset.lcIntro;
+  }, [isPlaying]);
 
   // Measure only once the font and the logo are in: either one arriving later
   // would move the real lockup away from where the copy lands.

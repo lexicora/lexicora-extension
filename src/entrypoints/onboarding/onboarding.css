@@ -1,0 +1,26 @@
+/*
+ * The page's scrollbar around the intro (see logo-intro.tsx), which sets
+ * data-lc-intro on <html>:
+ *
+ * - "playing": no scrolling at all, and so no scrollbar, while the lockup
+ *   travels. overflow: hidden stops the wheel, trackpad, keys and scrollbar
+ *   dragging alike. The page's padding makes up for a classic scrollbar's
+ *   width, so the content does not move when it comes back.
+ * - "revealing": scrolling is back, with the scrollbar still transparent.
+ *   The hook applies it and removes it at once, so that the removal fades
+ *   the thumb to its colour instead of setting it.
+ *
+ * Unlayered, so it wins over the scrollbar colours in globals.css.
+ */
+html[data-lc-intro="playing"] {
+  overflow: hidden;
+}
+
+html.light[data-lc-intro],
+html.dark[data-lc-intro] {
+  scrollbar-color: transparent transparent;
+}
+
+html {
+  transition: scrollbar-color 500ms ease;
+}

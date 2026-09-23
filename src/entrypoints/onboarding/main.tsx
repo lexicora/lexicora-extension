@@ -6,6 +6,7 @@ import "@fontsource/wix-madefor-text/500.css";
 import "@fontsource/wix-madefor-text/600.css";
 import "@fontsource/wix-madefor-text/700.css";
 import "../../assets/styles/globals.css";
+import "./onboarding.css";
 import { installInputModality } from "@/lib/input-modality";
 
 // Focus rings for keyboard navigation only, as in the other pages.
