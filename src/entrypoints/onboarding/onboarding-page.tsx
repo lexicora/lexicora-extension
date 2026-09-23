@@ -28,7 +28,9 @@ import {
 } from "lucide-react";
 
 import { LogoLockup, useLogoIntro } from "./logo-intro";
+import { ToolbarPointer } from "./toolbar-pointer";
 import { useCommandKeys } from "./use-command-keys";
+import { useDisableZoom } from "./use-disable-zoom";
 import { useToolbarPin } from "./use-toolbar-pin";
 
 /** Firefox calls it a sidebar, in its own menus and in ours. */
@@ -181,9 +183,11 @@ function CommandKey({
 function OnboardingPage() {
   const keys = useCommandKeys();
   const isPinned = useToolbarPin();
+  useDisableZoom();
 
   const lockupRef = useRef<HTMLSpanElement>(null);
   const contentRef = useRef<HTMLElement>(null);
+  const pinCardRef = useRef<HTMLDivElement>(null);
   const intro = useLogoIntro(lockupRef, contentRef);
 
   // Resolved up front, so the click can open the panel before any `await`:
@@ -256,7 +260,7 @@ function OnboardingPage() {
     {
       icon: MousePointerClickIcon,
       iconColor: "text-violet-500",
-      title: "From the right-click menu",
+      title: "From the context menu",
       description:
         "Right-click a page and choose Lexicora → Toggle side panel.",
     },
@@ -297,7 +301,7 @@ function OnboardingPage() {
     // centred on the window, not on what the scrollbar leaves of it. Without
     // one, both sides are equal. max() keeps a wide scrollbar from asking for
     // negative padding.
-    <div className="min-h-screen w-full py-8 sm:py-10 select-none pl-4 pr-[max(0px,calc(var(--lc-scrollbar-offset)+6px))] sm:pl-8 sm:pr-[max(0px,calc(var(--lc-scrollbar-offset)+22px))]">
+    <div className="min-h-screen w-full py-6 sm:py-8 md:pt-12 select-none pl-4 pr-[max(0px,calc(var(--lc-scrollbar-offset)+6px))] sm:pl-8 sm:pr-[max(0px,calc(var(--lc-scrollbar-offset)+22px))]">
       {intro.copy}
       <main
         ref={contentRef}
@@ -312,35 +316,45 @@ function OnboardingPage() {
           <div className="flex flex-col items-start">
             <div
               className="mb-5"
+              data-lc-occlude
               style={{ visibility: intro.isDone ? undefined : "hidden" }}
             >
               <LogoLockup ref={lockupRef} />
             </div>
+            {/* data-lc-occlude: the toolbar pointer breaks around each line
+                of this, as if it passed beneath; see toolbar-pointer.tsx. */}
             <h1 className="text-4xl font-bold tracking-tight text-balance">
-              Keep what you read.
+              <span data-lc-occlude>Keep what you read.</span>
             </h1>
             <p className="mt-3 text-base text-muted-foreground text-pretty max-w-md">
-              Capture a page or bookmark it, sort it into topics, and find it
-              again later. Here is where everything is — it takes a minute.
+              <span data-lc-occlude>
+                Capture a page or bookmark it, sort it into topics, and find it
+                again later. Here is where everything is — it takes a minute.
+              </span>
             </p>
             <Button
               className="mt-6"
               size="lg"
               onClick={openPanel}
               disabled={!canOpen}
+              data-lc-occlude
             >
               <PanelRightIcon data-icon="inline-start" />
               Open the {PANEL}
             </Button>
             <p className="text-xs text-muted-foreground mt-2">
-              {openFailed
-                ? `The ${PANEL} didn't open here — use one of the ways below.`
-                : "This tab closes once it is open."}
+              <span data-lc-occlude>
+                {openFailed
+                  ? `The ${PANEL} didn't open here — use one of the ways below.`
+                  : "This tab closes once it is open."}
+              </span>
             </p>
           </div>
 
           <div className="flex flex-col gap-3">
-            <Card rows={[pinRow]} keys={keys} />
+            <div ref={pinCardRef}>
+              <Card rows={[pinRow]} keys={keys} />
+            </div>
             <Card
               keys={keys}
               rows={[
@@ -391,6 +405,13 @@ function OnboardingPage() {
           </span>
         </footer>
       </main>
+      {/* Once the page is revealed, and only until Lexicora is pinned. After
+          <main>: refs attach in tree order, and the pointer measures the pin
+          card in a layout effect. */}
+      <ToolbarPointer
+        anchorRef={pinCardRef}
+        visible={intro.isDone && isPinned !== true}
+      />
     </div>
   );
 }

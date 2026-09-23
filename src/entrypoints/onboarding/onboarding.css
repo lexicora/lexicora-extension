@@ -1,0 +1,171 @@
+/*
+ * The page's scrollbar around the intro (see logo-intro.tsx), which sets
+ * data-lc-intro on <html>:
+ *
+ * - "playing": no scrolling at all, and so no scrollbar, while the lockup
+ *   travels. overflow: hidden stops the wheel, trackpad, keys and scrollbar
+ *   dragging alike. The page's padding makes up for a classic scrollbar's
+ *   width, so the content does not move when it comes back.
+ * - "revealing": scrolling is back, with the scrollbar still transparent.
+ *   The hook applies it and removes it at once, so that the removal fades
+ *   the thumb to its colour instead of setting it.
+ *
+ * Unlayered, so it wins over the scrollbar colours in globals.css.
+ */
+html[data-lc-intro="playing"] {
+  overflow: hidden;
+}
+
+html.light[data-lc-intro],
+html.dark[data-lc-intro] {
+  scrollbar-color: transparent transparent;
+}
+
+html {
+  transition: scrollbar-color 500ms ease;
+}
+
+/*
+ * The toolbar pointer (toolbar-pointer.tsx): an arrow from the pin card to
+ * the top of the page, under the browser's Extensions button, and a glow
+ * there. data-drawn plays the entrance once; data-visible fades it in and out.
+ */
+.lc-toolbar-pointer {
+  /* Darker and stronger in light mode, where a pale glow barely shows. */
+  --lc-pointer-color: oklch(0.546 0.245 262.881); /* blue-600 */
+  --lc-pointer-base: 34%;
+  /* Darker than muted text in light mode, where that grey reads as faint. */
+  --lc-pointer-arrow: oklch(0.44 0.027 264.364);
+  --lc-pointer-crest: 80%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow: clip; /* the glow never widens the page */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+.dark .lc-toolbar-pointer {
+  --lc-pointer-color: oklch(0.707 0.165 254.624); /* blue-400 */
+  --lc-pointer-base: 30%;
+  --lc-pointer-arrow: var(--muted-foreground);
+  --lc-pointer-crest: 75%;
+}
+.lc-toolbar-pointer[data-visible] {
+  opacity: 1;
+}
+
+/* The glow fades out before the page's right edge instead of meeting the
+   scrollbar in a hard line. Its own layer, so an arrow rising close to that
+   edge is not faded with it. */
+.lc-toolbar-pointer-glow-layer {
+  position: absolute;
+  inset: 0;
+  mask-image: linear-gradient(to left, transparent 10px, black 36px);
+}
+
+.lc-toolbar-pointer-arrow {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  fill: none;
+  /* Neutral, so it reads as an annotation leading to the glow, which is
+     the one coloured thing and marks where to look. */
+  stroke: var(--lc-pointer-arrow);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.lc-toolbar-pointer-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.lc-toolbar-pointer-head {
+  opacity: 0;
+}
+[data-drawn] .lc-toolbar-pointer-line {
+  animation: lc-pointer-draw 800ms 250ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+[data-drawn] .lc-toolbar-pointer-head {
+  animation: lc-pointer-appear 200ms 1000ms ease-out forwards;
+}
+
+/* A flat band of light along the top edge, the rest clipped above it. */
+.lc-toolbar-pointer-glow {
+  position: absolute;
+  top: -22px;
+  width: 280px;
+  height: 44px;
+  translate: -50% 0;
+  opacity: 0;
+}
+[data-drawn] .lc-toolbar-pointer-glow {
+  animation: lc-pointer-appear 600ms 900ms ease-out forwards;
+}
+/* After the entrance, parts that come and go with the window's size appear
+   at once rather than playing it again. */
+[data-settled] .lc-toolbar-pointer-line,
+[data-settled] .lc-toolbar-pointer-head,
+[data-settled] .lc-toolbar-pointer-glow {
+  animation: none;
+  stroke-dashoffset: 0;
+  opacity: 1;
+}
+.lc-toolbar-pointer-glow-wave {
+  width: 100%;
+  height: 100%;
+  /* The band's shape: strongest in the middle, fading to its ends. */
+  mask-image: radial-gradient(closest-side, black, transparent);
+  /* A steady glow, with crests of light rolling through it one way without
+     end, across the area the button is likely in rather than on one spot
+     it cannot be sure of. */
+  background:
+    linear-gradient(
+        90deg,
+        transparent,
+        color-mix(
+          in oklch,
+          var(--lc-pointer-color) var(--lc-pointer-crest),
+          transparent
+        ),
+        transparent
+      )
+      0 0 / 120px 100% repeat-x,
+    color-mix(
+      in oklch,
+      var(--lc-pointer-color) var(--lc-pointer-base),
+      transparent
+    );
+  animation: lc-pointer-wave 3600ms linear infinite;
+}
+
+/* One crest's width per loop, so the wave never jumps. */
+@keyframes lc-pointer-wave {
+  to {
+    background-position:
+      120px 0,
+      0 0;
+  }
+}
+@keyframes lc-pointer-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes lc-pointer-appear {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lc-toolbar-pointer-line,
+  .lc-toolbar-pointer-head,
+  .lc-toolbar-pointer-glow,
+  .lc-toolbar-pointer-glow-wave {
+    animation: none !important;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
