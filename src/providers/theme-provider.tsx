@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 import { themeStorage, type Theme } from "@/lib/storage/settings";
+import { mirrorTheme } from "@/lib/theme-mirror";
 
 type ThemeProviderState = {
   theme: Theme;
@@ -84,9 +85,15 @@ export function ThemeProvider({
   // that commit. The first frame would be drawn without the theme class, and
   // anything with a colour transition (every Button has `transition-all`)
   // would then visibly fade into the dark palette on open.
+  //
+  // Every theme the page applies — loaded, chosen here, or changed in another
+  // page or on another device — is also copied for public/theme-init.js, so
+  // the next page to open starts in it.
   useLayoutEffect(() => {
+    if (isLoading) return;
     // oxlint-disable-next-line react/set-state-in-effect
-    if (!isLoading) applyThemeToDocument(theme);
+    applyThemeToDocument(theme);
+    mirrorTheme(theme);
   }, [theme, isLoading]);
 
   const value = {
