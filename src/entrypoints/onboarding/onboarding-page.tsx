@@ -29,6 +29,7 @@ import {
 
 import { LogoLockup, useLogoIntro } from "./logo-intro";
 import { useCommandKeys } from "./use-command-keys";
+import { useDisableZoom } from "./use-disable-zoom";
 import { useToolbarPin } from "./use-toolbar-pin";
 
 /** Firefox calls it a sidebar, in its own menus and in ours. */
@@ -181,6 +182,7 @@ function CommandKey({
 function OnboardingPage() {
   const keys = useCommandKeys();
   const isPinned = useToolbarPin();
+  useDisableZoom();
 
   const lockupRef = useRef<HTMLSpanElement>(null);
   const contentRef = useRef<HTMLElement>(null);
