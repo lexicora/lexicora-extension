@@ -1,4 +1,5 @@
 import type { PageData } from "@/types/page-data.types";
+import { cloneComposedDocument } from "@/lib/utils/compose-shadow-dom";
 import { parseDocument } from "@/lib/utils/document-parser";
 
 // MAYBE: Make this function not return a nullable type, so Promise<PageData>.
@@ -7,7 +8,8 @@ import { parseDocument } from "@/lib/utils/document-parser";
  * @returns A Promise that resolves to a PageData object containing the page's content, metadata, and other relevant information, or null if the page cannot be parsed.
  */
 export async function getPageData(): Promise<PageData | null> {
-  const documentClone = document.cloneNode(true) as Document;
+  // Shadow DOM included: a plain clone leaves web components empty.
+  const documentClone = cloneComposedDocument(document);
   const parsedPage = parseDocument(documentClone);
 
   return {

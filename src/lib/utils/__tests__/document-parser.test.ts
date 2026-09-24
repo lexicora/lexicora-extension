@@ -24,7 +24,11 @@ import {
  * description meta tags — a bookmark capture relies on it to carry no content.
  */
 
-function makeDoc(head: string, body = "", url = "https://example.com/articles/one") {
+function makeDoc(
+  head: string,
+  body = "",
+  url = "https://example.com/articles/one",
+) {
   const doc = document.implementation.createHTMLDocument("");
   doc.documentElement.innerHTML = `<head><base href="${url}">${head}</head><body>${body}</body>`;
   return doc;
@@ -58,7 +62,6 @@ function textOf(block: { content?: unknown }): string {
 function paragraph(label: string): string {
   return `<p>${label}: ${"A sentence, with a clause, and another one. ".repeat(4)}</p>`;
 }
-
 
 describe("extractPageMetadata", () => {
   it("reads title, description, site name, author and published date", () => {
@@ -241,6 +244,66 @@ describe("parseDocument code blocks", () => {
   });
 });
 
+describe("parseDocument code editors and SyntaxHighlighter", () => {
+  it("reads the language from a SyntaxHighlighter brush class", () => {
+    // MDN and older blogs: `class="brush: js"`.
+    const { content } = parseBody(
+      '<article><pre class="brush: js notranslate"><code>' +
+        '<span class="token keyword">let</span> a;</code></pre></article>',
+    );
+
+    const [block] = toBlocks(content);
+
+    expect(block!.type).toBe("codeBlock");
+    expect(block!.props.language).toBe("js");
+    expect(textOf(block!)).toBe("let a;");
+  });
+
+  it("turns a CodeMirror 6 editor into a code block, without its gutter", () => {
+    const { content } = parseBody(
+      '<article><div class="cm-editor"><div class="cm-scroller">' +
+        '<div class="cm-gutters"><div class="cm-gutterElement">1</div>' +
+        '<div class="cm-gutterElement">2</div></div>' +
+        '<div class="cm-content" contenteditable="true" data-language="javascript">' +
+        '<div class="cm-line"><span>function</span> f() {</div>' +
+        '<div class="cm-line">}</div>' +
+        "</div></div></div></article>",
+    );
+
+    const blocks = toBlocks(content);
+
+    expect(blocks).toHaveLength(1);
+    expect(blocks[0]!.type).toBe("codeBlock");
+    expect(blocks[0]!.props.language).toBe("javascript");
+    expect(textOf(blocks[0]!)).toBe("function f() {\n}");
+  });
+
+  it("turns a CodeMirror 5 editor into one code block, not one per line", () => {
+    const { content } = parseBody(
+      '<article><div class="CodeMirror"><div class="CodeMirror-code">' +
+        '<div><pre class="CodeMirror-line"><span>a = 1</span></pre></div>' +
+        '<div><pre class="CodeMirror-line"><span>b = 2</span></pre></div>' +
+        "</div></div></article>",
+    );
+
+    const blocks = toBlocks(content);
+
+    expect(blocks).toHaveLength(1);
+    expect(textOf(blocks[0]!)).toBe("a = 1\nb = 2");
+  });
+
+  it("turns an editor in a selection into a code block too", () => {
+    const snippet = document.createElement("div");
+    snippet.innerHTML =
+      '<div class="cm-editor"><div class="cm-content">' +
+      '<div class="cm-line">x()</div></div></div>';
+
+    const { content } = parseSnippet(snippet, document);
+
+    expect(toBlocks(content)[0]!.type).toBe("codeBlock");
+  });
+});
+
 describe("parseDocument text", () => {
   it("drops control labels and screen-reader text", () => {
     const { content } = parseBody(
@@ -339,7 +402,9 @@ describe("parseDocument images in text", () => {
       "image",
     ]);
     expect(textOf(blocks[0]!).trim()).toBe("Home");
-    expect(blocks[2]!.props.url).toBe("https://example.com/demo/raw/main/filter.png");
+    expect(blocks[2]!.props.url).toBe(
+      "https://example.com/demo/raw/main/filter.png",
+    );
   });
 
   it("keeps the text on both sides of a picture, in order", async () => {
@@ -472,7 +537,7 @@ describe("parseSnippet", () => {
   it("keeps the text controls show, since the user selected it", () => {
     const snippet = makeSnippet(
       "<p>Press <button>Save</button> to keep " +
-        '<select><option>all</option><option selected>some</option></select> ' +
+        "<select><option>all</option><option selected>some</option></select> " +
         'rows named <input type="text" value="draft"><input type="checkbox">.</p>',
     );
 
@@ -499,9 +564,7 @@ describe("parseSnippet", () => {
   it("reports the page's metadata", () => {
     const doc = makeDoc("<title>The page</title>");
 
-    expect(parseSnippet(makeSnippet("<p>Bit</p>"), doc).title).toBe(
-      "The page",
-    );
+    expect(parseSnippet(makeSnippet("<p>Bit</p>"), doc).title).toBe("The page");
   });
 });
 

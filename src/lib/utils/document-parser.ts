@@ -4,6 +4,7 @@
 import DomPurify from "dompurify";
 
 import { normalizeCallouts } from "./document-callouts";
+import { normalizeCodeEditors } from "./document-code-editors";
 
 export interface ParseResult {
   content: string;
@@ -270,10 +271,11 @@ const srcsetCandidatePattern = /[\s,]*(\S*[^\s,])(?:,+|\s+([^,]*)(?:,|$)|$)/g;
 
 /**
  * A language class as highlighters write it: `language-js` (Prism,
- * highlight.js), `lang-js`, `highlight-source-js` (GitHub).
+ * highlight.js), `lang-js`, `highlight-source-js` (GitHub), `brush: js`
+ * (SyntaxHighlighter, still on older blogs, and MDN).
  */
 const codeLanguagePattern =
-  /\b(?:lang(?:uage)?|highlight(?:-source|-text)?)-([a-z0-9+#]+)/i;
+  /\b(?:(?:lang(?:uage)?|highlight(?:-source|-text)?)-|brush:\s*)([a-z0-9+#]+)/i;
 
 /** The document that owns `root`, for creating elements that go into it. */
 function documentOf(root: Document | Element): Document {
@@ -560,6 +562,7 @@ function normalizeContent(root: Document | Element, baseUrl: string): void {
   normalizeImages(root, baseUrl);
   liftImagesOutOfText(root);
   normalizeLinks(root, baseUrl);
+  normalizeCodeEditors(root);
   root.querySelectorAll("pre").forEach((pre) => normalizeCodeBlock(pre, doc));
   normalizeCallouts(root);
 
