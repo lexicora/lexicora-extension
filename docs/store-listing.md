@@ -120,16 +120,55 @@ future version sends anything anywhere.
 
 ## Screenshots
 
-Chrome takes 1280×800 or 640×400, up to five. Suggested set, in order:
+Chrome takes 1280×800 or 640×400, up to five; export exactly 1280×800 rather
+than relying on the store to scale. AMO accepts other sizes, but the same set
+works there. Together the five tell one story — read something, capture it,
+write in it, find it again, take it with you.
 
 1. **The side panel beside an article**, showing "Capture page" and "Bookmark"
-   — what the extension is, in one image.
+   — what the extension is, in one image. Use an evergreen Wikipedia article
+   with a freely licensed lead image near the top (James Webb Space
+   Telescope, Octopus, Great Barrier Reef). Not a current event: the listing
+   stays up for years, and a capture button beside news, or a disaster, reads
+   badly.
 2. **An entry open in the editor**, with a callout and a code block, showing
-   that what is captured is editable.
-3. **The library**, with topics and entries, tags visible.
-4. **Search with `site:react.dev`**, showing the filter in use.
+   that what is captured is editable. Capture a react.dev page with real code
+   in it (Synchronizing with Effects, say) and add a callout of your own; on a
+   Wikipedia note a code block would look staged.
+3. **The library**, with topics and entries, tags visible. The dev seed data
+   works, if every name reads like a real library and nothing like a
+   placeholder.
+4. **Search with `site:react.dev`**, showing the filter in use — the exact
+   example the description gives. The library needs three to five react.dev
+   entries among others, so the filter visibly narrows it.
 5. **Settings → Export**, showing Markdown and JSON export, for "your data is
    yours".
+
+**Look.** Dark mode throughout: it stands apart from the stores' white pages
+and is where Lexicora's design is strongest. All of it dark in every shot —
+the browser's own theme, the page (Wikipedia, react.dev and MDN all have a
+dark mode) and Lexicora — since one white page beside a dark panel is the
+jarring version. Check each at 640×400: muted text loses contrast when
+scaled down, and if it blurs, zoom the page a step before capturing or add a
+caption in Figma.
+
+**Capturing on a Retina Mac.** Size the browser window to exactly 1280×800
+points, which a Retina display captures at 2560×1600 — exactly twice the
+store size, so halving it keeps text sharp. A fullscreen window on a 14-inch
+MacBook Pro is 16:10 too (3024×1890 below the notch), but scales down by an
+uneven factor. With the dev browser in front:
+
+```sh
+osascript -e 'tell application "Google Chrome for Testing" to set bounds of front window to {100, 60, 1380, 860}'
+```
+
+(or `"Google Chrome"`, whichever the dev browser is called). Capture the
+window with ⌘⇧4, Space, then ⌥-click, which leaves out the drop shadow, and
+export at 50% as PNG without transparency, or JPEG.
+
+**Before capturing.** Use the fresh `bun run dev` profile — no bookmarks bar,
+profile picture, other extensions or personal tabs — and pin Lexicora to the
+toolbar so its icon shows.
 
 Avoid: personal bookmarks, real names, anything from a private site. The store
 listing is public and the screenshots are the most-read part of it.
