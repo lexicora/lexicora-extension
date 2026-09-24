@@ -26,11 +26,10 @@ All without changing how they already browse or use AI tools.
 ## How It Works
 
 1. Browse the web — AI chats, docs, articles, wikis, anywhere
-2. The extension detects relevant content or allows manual selection
-3. Save with a single action from the browser side panel
-4. Lexicora cleans the content and preserves its structure (headings, paragraphs, lists, code, tables, callouts)
-5. Saved knowledge becomes instantly searchable
-6. When revisiting a related page, Lexicora can surface existing saved knowledge
+2. Capture the page, just the text you selected, or a bookmark of it — from the side panel, the toolbar popup, the right-click menu or a keyboard shortcut. After a while on a page, Lexicora can also suggest capturing it, and accepting opens the side panel (Chrome and Edge)
+3. Lexicora keeps the content and its structure (headings, paragraphs, lists, code, tables, callouts, images) and leaves out the menus, sidebars and ads around it
+4. The entry lands in a topic, editable and searchable at once
+5. When you are back on a site, the side panel shows what you already saved from it
 
 Most interactions happen inside the **browser side panel**, keeping context and flow intact.
 
@@ -45,7 +44,7 @@ Most interactions happen inside the **browser side panel**, keeping context and 
 - **Keyboard-driven** — minimal mouse usage
 - **Browser-native** — works where knowledge is consumed
 - **AI-optional** — useful without AI, powerful with it
-- **Offline-friendly** — designed with offline availability in mind
+- **Local-first** — the library lives on your device; v1.0 works fully offline
 
 ---
 
@@ -53,14 +52,15 @@ Most interactions happen inside the **browser side panel**, keeping context and 
 
 - Browser extension with side panel UI (Chrome, Edge, Firefox)
 - Capture a page's content, or bookmark it for the link alone
-- Web content cleaned by its own parser, into the blocks the editor uses
+- Web content cleaned by its own parser, into the blocks the editor uses — including what web components render in shadow DOM, and code from embedded editors
 - Block-based structured storage with the BlockNote editor
 - Capture from the panel, the toolbar popup, the right-click menu or a keyboard shortcut
-- Fast full-text search across all saved knowledge, with a `site:` filter
-- Automatic capture suggestion toast on relevant pages
+- Fast search over titles, tags, descriptions, sites and dates, with a `site:` filter
+- A capture suggestion after a while on a page, with an adjustable delay, that opens the side panel (Chrome and Edge)
 - Export as Markdown (one note, a topic, or the whole library as a zip) and a JSON backup that can be imported again
 - Offline-first local database (RxDB)
-- Theme support (light / dark)
+- Light, dark or system theme, painted correctly from the first frame
+- A getting-started page on install
 - Keyboard-driven navigation, browser-wide and in the panel
 
 ### v1.0 scope
@@ -87,7 +87,7 @@ and the standalone window are built but hidden behind feature flags
 | Extension framework | [WXT](https://wxt.dev) (Chrome MV3 / Firefox MV2) |
 | UI | [React 19](https://react.dev), [TailwindCSS v4](https://tailwindcss.com), [shadcn-ui](https://ui.shadcn.com/) (built on [Radix UI](https://www.radix-ui.com/) + [Base UI](https://base-ui.com/)) |
 | Routing | [React Router](https://reactrouter.com/) |
-| Editor | [BlockNote](https://www.blocknotejs.org//) |
+| Editor | [BlockNote](https://www.blocknotejs.org/) |
 | Local database | [RxDB](https://rxdb.info/) + [Dexie](https://dexie.org/) |
 | Messaging | [@webext-core/messaging](https://github.com/aklinker1/webext-core) |
 | Content parsing | Its own DOM parser (`src/lib/utils/document-parser.ts`) + [DOMPurify](https://github.com/cure53/DOMPurify) |
@@ -176,6 +176,7 @@ Tests use Vitest with WXT's `WxtVitest()` plugin and `fakeBrowser` for in-memory
 | `content/` | Web pages (http, https, file) | Injects capture-suggestion toast; relays page data |
 | `sidepanel/` | Side panel | Full React app — primary user-facing UI |
 | `popup/` | Browser toolbar | Minimal React app (currently a home page only) |
+| `onboarding/` | Tab (unlisted page) | Getting-started page, opened once on install and from Settings → Help |
 
 ### Data Layer
 
@@ -193,6 +194,10 @@ Stored via WXT's storage API:
 
 - `sync:` prefix — synced across devices (theme, capture settings)
 - `session:` prefix — transient RAM, cleared on browser close (sidepanel state)
+
+The theme is also copied to `localStorage`, which `public/theme-init.js` reads
+in each page's `<head>` to paint the right colors before the app loads;
+`sync:` storage stays the source of truth.
 
 Use the `useAppStorage` hook for reactive access in React components.
 

@@ -2,7 +2,7 @@
 
 Everything a submission asks for, written once. Each field says which store
 asks for it and any length limit. Nothing here is marketing that the extension
-cannot back up — a reviewer checks the listing against the behaviour, and a
+cannot back up — a reviewer checks the listing against the behavior, and a
 promise the app does not keep is a rejection.
 
 Keep this file in step with the extension: the same claims appear in
@@ -13,12 +13,12 @@ Keep this file in step with the extension: the same claims appear in
 ## Identity
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | Name | Lexicora |
 | Category | Productivity (Chrome) / Bookmarks & Tabs (AMO) |
 | Language | English (UK spelling in the UI) |
 | Website | Repository, until lexicora.com is live |
-| Support | https://github.com/lexicora/lexicora-extension/issues |
+| Support | <https://github.com/lexicora/lexicora-extension/issues> |
 | Privacy policy | Section below, published wherever the store requires a URL |
 | Licence | Custom, source-available; see `LICENSE.txt` |
 
@@ -43,16 +43,16 @@ Keep this file in step with the extension: the same claims appear in
 > Most of what is worth remembering is read once and lost — in a tab, a doc site, a chat. Lexicora captures it while you are there and makes it findable afterwards.
 >
 > **Two ways to save**
-> Capture a page and its content lands in an editor you can edit, annotate and search, so it survives the page changing or disappearing. Or bookmark it, and only what the page says about itself is kept: title, link, site, description, author, date. Either way it becomes an ordinary entry in a topic of your choosing.
+> Capture a page and its content lands in an editor you can edit and annotate, so it survives the page changing or disappearing. Lexicora keeps the article itself — headings, lists, tables, code and images — and leaves out the menus, sidebars and ads around it. Or bookmark it, and only what the page says about itself is kept: title, link, site, description, author, date. Either way it becomes an ordinary entry in a topic of your choosing.
 >
 > **Save from wherever you are**
-> The side panel sits beside the page. Capture from it, from the toolbar popup, from the right-click menu — including just the text you have selected — or with a keyboard shortcut. The page arrives with its details already filled in.
+> The side panel sits beside the page. Capture from it, from the toolbar popup, from the right-click menu — including just the text you have selected — or with a keyboard shortcut. The page arrives with its details already filled in. In Chrome and Edge, Lexicora can also suggest capturing a page you have spent a while on; accepting opens the side panel, where you decide.
 >
 > **Sort it your way**
-> Topics group what belongs together. Tags cut across them. Pin what you return to, archive what you are done with, favourite what matters.
+> Topics group what belongs together. Tags cut across them. Pin what you return to, archive what you are done with, favorite what matters.
 >
 > **Find it again**
-> Search runs over titles, tags, descriptions and site names. Narrow it to a single site by typing site:react.dev, alone or with words after it.
+> Search runs over titles, tags, descriptions, site names and dates. Narrow it to a single site by typing site:react.dev, alone or with words after it. And when you are back on a site, the side panel shows what you already saved from it.
 >
 > **Write in it**
 > Every entry has a rich editor: headings, lists, tables, code blocks with syntax highlighting, and callouts. Drag text or images in from the page you are reading.
@@ -63,13 +63,17 @@ Keep this file in step with the extension: the same claims appear in
 > **It is yours**
 > No account. No server. No analytics. Lexicora makes no network requests of its own, and everything you capture is stored by your browser on your device. Delete it all at once whenever you like.
 >
-> Lexicora is source-available under a non-commercial licence, and developed in the open.
+> Lexicora is source-available under a non-commercial license, and developed in the open.
+
+On AMO, leave out the sentence about the capture suggestion: it does not
+exist in Firefox, and a listing may only describe what the
+build does.
 
 ---
 
 ## Single purpose (Chrome requires one sentence)
 
-> Lexicora captures web pages and bookmarks into a local, searchable library that the user organises into topics.
+> Lexicora captures web pages and bookmarks into a local, searchable library that the user organizes into topics.
 
 ---
 
@@ -79,7 +83,7 @@ Chrome asks per permission, in a text box each. These are written for a
 reviewer: what it does, and why the extension cannot do its job without it.
 
 | Permission | Justification |
-|---|---|
+| --- | --- |
 | `activeTab` | Reading the page the user has asked to save. A capture or bookmark starts from an explicit action — a button, a menu item or a shortcut — and reads only the tab that action came from. |
 | `scripting` | Reading the page's content and metadata at the moment of capture, by running the extension's own function in the tab the user acted on. Nothing is injected in the background or on pages the user has not chosen. |
 | `tabs` | Knowing which tab is active and what its URL is, so a capture goes to the right page, the side panel shows what would be saved, and the controls are disabled on pages that cannot be read. |
@@ -120,16 +124,55 @@ future version sends anything anywhere.
 
 ## Screenshots
 
-Chrome takes 1280×800 or 640×400, up to five. Suggested set, in order:
+Chrome takes 1280×800 or 640×400, up to five; export exactly 1280×800 rather
+than relying on the store to scale. AMO accepts other sizes, but the same set
+works there. Together the five tell one story — read something, capture it,
+write in it, find it again, take it with you.
 
 1. **The side panel beside an article**, showing "Capture page" and "Bookmark"
-   — what the extension is, in one image.
+   — what the extension is, in one image. Use an evergreen Wikipedia article
+   with a freely licensed lead image near the top (James Webb Space
+   Telescope, Octopus, Great Barrier Reef). Not a current event: the listing
+   stays up for years, and a capture button beside news, or a disaster, reads
+   badly.
 2. **An entry open in the editor**, with a callout and a code block, showing
-   that what is captured is editable.
-3. **The library**, with topics and entries, tags visible.
-4. **Search with `site:react.dev`**, showing the filter in use.
+   that what is captured is editable. Capture a react.dev page with real code
+   in it (Synchronizing with Effects, say) and add a callout of your own; on a
+   Wikipedia note a code block would look staged.
+3. **The library**, with topics and entries, tags visible. The dev seed data
+   works, if every name reads like a real library and nothing like a
+   placeholder.
+4. **Search with `site:react.dev`**, showing the filter in use — the exact
+   example the description gives. The library needs three to five react.dev
+   entries among others, so the filter visibly narrows it.
 5. **Settings → Export**, showing Markdown and JSON export, for "your data is
    yours".
+
+**Look.** Dark mode throughout: it stands apart from the stores' white pages
+and is where Lexicora's design is strongest. All of it dark in every shot —
+the browser's own theme, the page (Wikipedia, react.dev and MDN all have a
+dark mode) and Lexicora — since one white page beside a dark panel is the
+jarring version. Check each at 640×400: muted text loses contrast when
+scaled down, and if it blurs, zoom the page a step before capturing or add a
+caption in Figma.
+
+**Capturing on a Retina Mac.** Size the browser window to exactly 1280×800
+points, which a Retina display captures at 2560×1600 — exactly twice the
+store size, so halving it keeps text sharp. A fullscreen window on a 14-inch
+MacBook Pro is 16:10 too (3024×1890 below the notch), but scales down by an
+uneven factor. With the dev browser in front:
+
+```sh
+osascript -e 'tell application "Google Chrome for Testing" to set bounds of front window to {100, 60, 1380, 860}'
+```
+
+(or `"Google Chrome"`, whichever the dev browser is called). Capture the
+window with ⌘⇧4, Space, then ⌥-click, which leaves out the drop shadow, and
+export at 50% as PNG without transparency, or JPEG.
+
+**Before capturing.** Use the fresh `bun run dev` profile — no bookmarks bar,
+profile picture, other extensions or personal tabs — and pin Lexicora to the
+toolbar so its icon shows.
 
 Avoid: personal bookmarks, real names, anything from a private site. The store
 listing is public and the screenshots are the most-read part of it.
