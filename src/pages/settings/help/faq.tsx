@@ -6,7 +6,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { COMMAND_ID, suggestedKeyFor } from "@/constants/shortcuts";
+import { IS_MAC } from "@/hooks/sidepanel/panel-shortcuts";
 import { cn } from "cn";
+
+/** The key Lexicora asks this browser for, on this platform. */
+const defaultKey = (command: string) =>
+  suggestedKeyFor(command, IS_MAC, import.meta.env.FIREFOX) ?? "";
 
 const FAQ_ITEMS = [
   {
@@ -68,6 +74,10 @@ const FAQ_ITEMS = [
     question: "Are there keyboard shortcuts?",
     answer:
       "Yes, and Settings → Keyboard Shortcuts lists all of them with the keys for your platform. Some work anywhere in the browser — opening the panel, capturing, bookmarking — and you can change those in the browser's own settings. The rest work while the side panel is focused: single keys for moving around, searching, creating and editing. They are ignored while you type.",
+  },
+  {
+    question: "Why does a browser-wide shortcut not work?",
+    answer: `Lexicora asks the browser for ${defaultKey(COMMAND_ID.OPEN_SIDE_PANEL)} to open or close the panel, ${defaultKey(COMMAND_ID.CAPTURE)} to capture and ${defaultKey(COMMAND_ID.BOOKMARK)} to bookmark. The browser only hands over a key that nothing else holds: if the browser itself, your system or another extension already uses it, it stays unset — for these keys and for any you choose yourself. Settings → Keyboard Shortcuts shows which one and what to set instead.${import.meta.env.FIREFOX ? " In Firefox, a website's own shortcuts also win over an extension's, so a key can work on one site and not on another." : ""}`,
   },
   {
     question: "What does cleaning up the database do?",
