@@ -46,18 +46,22 @@ export const BROWSER_COMMANDS: Record<
   },
   capture: {
     // Alt+Shift+C never registered on Windows or Linux — something there
-    // holds it, as Chrome itself holds Alt+Shift+B and Alt+Shift+T. S, as in
-    // save, is the next best mnemonic. macOS keeps ⌃⇧C, which works.
+    // holds it, as Chrome itself holds Alt+Shift+B and Alt+Shift+T. Not
+    // Alt+Shift+S either: Firefox opens its History menu with it (Alt plus a
+    // menu letter: F, E, V, S, B, T, H). Firefox also lets a page's access
+    // keys win over an extension's command, and MediaWiki gives X to "random
+    // article", so not X. W is free in both browsers, under the left hand
+    // beside D. macOS keeps ⌃⇧C, which works.
     description: "Capture the selection, or the whole page if nothing is selected",
-    suggestedKey: { default: "Alt+Shift+S", mac: "MacCtrl+Shift+C" },
+    suggestedKey: { default: "Alt+Shift+W", mac: "MacCtrl+Shift+C" },
   },
   bookmark: {
     // Not Alt+Shift+B, which is Chrome's own "focus the bookmarks toolbar" on
     // Windows and Linux; the browser's shortcuts win and ours arrives unset.
-    // D follows Chrome's own Ctrl+D for bookmarking. macOS has no such
-    // binding, so ⌃⇧B stays there.
+    // D follows the browsers' own Cmd/Ctrl+D for bookmarking, and is D on
+    // macOS too: easier to reach beside C than B, and free there.
     description: "Bookmark the page (metadata only)",
-    suggestedKey: { default: "Alt+Shift+D", mac: "MacCtrl+Shift+B" },
+    suggestedKey: { default: "Alt+Shift+D", mac: "MacCtrl+Shift+D" },
   },
 };
 

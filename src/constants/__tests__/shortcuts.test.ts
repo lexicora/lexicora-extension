@@ -172,9 +172,10 @@ describe("suggestedKeyFor", () => {
   it("says what to type into the browser's own settings", () => {
     // The settings page shows this for a command the browser left unset, so
     // it has to read the way that page writes keys: MacCtrl is Ctrl there.
-    expect(suggestedKeyFor(COMMAND_ID.CAPTURE, false)).toBe("Alt+Shift+S");
+    expect(suggestedKeyFor(COMMAND_ID.CAPTURE, false)).toBe("Alt+Shift+W");
     expect(suggestedKeyFor(COMMAND_ID.CAPTURE, true)).toBe("Ctrl+Shift+C");
     expect(suggestedKeyFor(COMMAND_ID.BOOKMARK, false)).toBe("Alt+Shift+D");
+    expect(suggestedKeyFor(COMMAND_ID.BOOKMARK, true)).toBe("Ctrl+Shift+D");
   });
 
   it("has nothing to say about a command that is not ours", () => {
