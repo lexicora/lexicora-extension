@@ -20,6 +20,9 @@ import { ShieldCheckIcon } from "lucide-react";
  * is "makes no requests of its own": it holds because the only `fetch` in the
  * extension reads a font from its own files. A future feature that talks to a
  * server — sync, AI — changes this page before it ships.
+ *
+ * `PRIVACY.md` at the repository root holds the same text, as the public
+ * address the store listings link to. Change both together, date included.
  */
 
 const LAST_UPDATED = "21 September 2026";

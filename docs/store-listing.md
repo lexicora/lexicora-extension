@@ -6,7 +6,7 @@ cannot back up — a reviewer checks the listing against the behavior, and a
 promise the app does not keep is a rejection.
 
 Keep this file in step with the extension: the same claims appear in
-`README.md` and in Settings → General → Privacy policy.
+`README.md`, `PRIVACY.md` and Settings → General → Privacy policy.
 
 ---
 
@@ -19,7 +19,7 @@ Keep this file in step with the extension: the same claims appear in
 | Language | English (UK spelling in the UI) |
 | Website | Repository, until lexicora.com is live |
 | Support | <https://github.com/lexicora/lexicora-extension/issues> |
-| Privacy policy | Section below, published wherever the store requires a URL |
+| Privacy policy | <https://github.com/lexicora/lexicora-extension/blob/main/PRIVACY.md> |
 | Licence | Custom, source-available; see `LICENSE.txt` |
 
 ---
@@ -114,7 +114,9 @@ scripts are fetched, evaluated or loaded from a server.
 ## Privacy policy
 
 The extension's own page (Settings → General → Privacy policy) holds the full
-text; publish that same text where the store asks for a URL. Its structure:
+text, and [`PRIVACY.md`](../PRIVACY.md) holds the same text at a public
+address, which is the URL both stores get. Change the two together. Its
+structure:
 what is stored and where, what leaves the device (nothing the extension sends,
 though the browser still loads site icons and linked images from their hosts),
 why each permission is needed, how to delete everything, and what happens if a
