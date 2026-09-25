@@ -38,6 +38,24 @@ describe("browser-wide commands", () => {
     );
   });
 
+  it("gives Firefox its own capture key on Windows and Linux only", () => {
+    // Alt+Shift+S opens Firefox's History menu; Alt+Shift+W is blocked in
+    // Chrome. The manifest gets plain keys, never the `firefox` field.
+    const chrome = manifestCommands("chrome")[COMMAND_ID.CAPTURE];
+    const firefox = manifestCommands("firefox")[COMMAND_ID.CAPTURE];
+    expect(chrome.suggested_key).toEqual({
+      default: "Alt+Shift+S",
+      mac: "MacCtrl+Shift+S",
+    });
+    expect(firefox.suggested_key).toEqual({
+      default: "Alt+Shift+W",
+      mac: "MacCtrl+Shift+S",
+    });
+    expect(manifestCommands("firefox")[COMMAND_ID.BOOKMARK].suggested_key).toEqual(
+      manifestCommands("chrome")[COMMAND_ID.BOOKMARK].suggested_key,
+    );
+  });
+
   it("gives every key a required modifier and never Ctrl+Alt", () => {
     for (const key of suggestedKeys) {
       expect(key).toMatch(/\b(Ctrl|Alt|MacCtrl|Command)\+/);
@@ -172,14 +190,21 @@ describe("suggestedKeyFor", () => {
   it("says what to type into the browser's own settings", () => {
     // The settings page shows this for a command the browser left unset, so
     // it has to read the way that page writes keys: MacCtrl is Ctrl there.
-    expect(suggestedKeyFor(COMMAND_ID.CAPTURE, false)).toBe("Alt+Shift+W");
-    expect(suggestedKeyFor(COMMAND_ID.CAPTURE, true)).toBe("Ctrl+Shift+C");
-    expect(suggestedKeyFor(COMMAND_ID.BOOKMARK, false)).toBe("Alt+Shift+D");
-    expect(suggestedKeyFor(COMMAND_ID.BOOKMARK, true)).toBe("Ctrl+Shift+D");
+    expect(suggestedKeyFor(COMMAND_ID.CAPTURE, false, false)).toBe("Alt+Shift+S");
+    expect(suggestedKeyFor(COMMAND_ID.CAPTURE, true, false)).toBe("Ctrl+Shift+S");
+    expect(suggestedKeyFor(COMMAND_ID.BOOKMARK, false, false)).toBe("Alt+Shift+D");
+    expect(suggestedKeyFor(COMMAND_ID.BOOKMARK, true, false)).toBe("Ctrl+Shift+D");
+  });
+
+  it("says Firefox's own key where it differs", () => {
+    expect(suggestedKeyFor(COMMAND_ID.CAPTURE, false, true)).toBe("Alt+Shift+W");
+    // macOS is the same in both browsers, and so is everything else.
+    expect(suggestedKeyFor(COMMAND_ID.CAPTURE, true, true)).toBe("Ctrl+Shift+S");
+    expect(suggestedKeyFor(COMMAND_ID.BOOKMARK, false, true)).toBe("Alt+Shift+D");
   });
 
   it("has nothing to say about a command that is not ours", () => {
-    expect(suggestedKeyFor("_execute_action", false)).toBeNull();
-    expect(suggestedKeyFor(undefined, false)).toBeNull();
+    expect(suggestedKeyFor("_execute_action", false, false)).toBeNull();
+    expect(suggestedKeyFor(undefined, false, false)).toBeNull();
   });
 });

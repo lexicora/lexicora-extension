@@ -139,7 +139,7 @@ function KeyboardShortcutsSettingsPage() {
     .filter((command) => !command.shortcut)
     .map((command) => ({
       name: command.name ?? "",
-      key: suggestedKeyFor(command.name, IS_MAC),
+      key: suggestedKeyFor(command.name, IS_MAC, import.meta.env.FIREFOX),
     }))
     .filter((entry): entry is { name: string; key: string } => !!entry.key);
 
