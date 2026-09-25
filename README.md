@@ -45,6 +45,7 @@ Most interactions happen inside the **browser side panel**, keeping context and 
 - **Browser-native** — works where knowledge is consumed
 - **AI-optional** — useful without AI, powerful with it
 - **Local-first** — the library lives on your device; v1.0 works fully offline
+  and sends nothing anywhere (see the [privacy policy](PRIVACY.md))
 
 ---
 
