@@ -27,7 +27,7 @@ describe("findTipCategory", () => {
   });
 
   it("returns null for a path this build does not know", () => {
-    expect(findTipCategory("general")).toBeNull();
+    expect(findTipCategory("settings")).toBeNull();
     expect(findTipCategory(undefined)).toBeNull();
   });
 });

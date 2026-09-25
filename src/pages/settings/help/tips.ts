@@ -1,7 +1,9 @@
 import {
   ArchiveIcon,
+  ArrowUpToLineIcon,
   BookmarkIcon,
   CameraIcon,
+  CompassIcon,
   FolderOpenIcon,
   GlobeIcon,
   HandGrabIcon,
@@ -23,8 +25,8 @@ import {
 
 /**
  * Settings → Help → Tips & Tricks, one page per category. The list page
- * shows the categories in this order — capture, write, find, the order the
- * app is used in — and each opens its own page of tips.
+ * shows the categories in this order — what applies everywhere, then capture,
+ * write, find, the order the app is used in — and each opens its own page.
  *
  * A new tip is one more entry in its category.
  */
@@ -62,9 +64,32 @@ const captureSuggestionTips: Tip[] = import.meta.env.FIREFOX
 
 export const TIP_CATEGORIES: readonly TipCategory[] = [
   {
+    id: "general",
+    title: "General",
+    summary: "Getting around the side panel",
+    icon: CompassIcon,
+    iconColor: "text-teal-500",
+    tips: [
+      {
+        icon: ArrowUpToLineIcon,
+        iconColor: "text-teal-500",
+        title: "Back to the top",
+        description:
+          "Once you have scrolled down, click the header at the top of the page to jump back to the top — or press t with the side panel focused.",
+      },
+      {
+        icon: KeyboardIcon,
+        iconColor: "text-slate-500",
+        title: "Keys for the things you do often",
+        description:
+          "With the side panel focused: n for a new entry, Shift+N for a new topic, e to edit what is open, / to search, and ? for the full list.",
+      },
+    ],
+  },
+  {
     id: "capturing",
     title: "Capturing",
-    summary: "Getting pages, selections and images in",
+    summary: "Saving pages and selections",
     icon: ScanTextIcon,
     iconColor: "text-red-500",
     tips: [
@@ -139,7 +164,7 @@ export const TIP_CATEGORIES: readonly TipCategory[] = [
   {
     id: "library",
     title: "Library",
-    summary: "Organizing and finding what you saved",
+    summary: "Organizing and finding entries",
     icon: LibraryBigIcon,
     iconColor: "text-blue-500",
     tips: [
@@ -184,13 +209,6 @@ export const TIP_CATEGORIES: readonly TipCategory[] = [
         title: "Everything from this site",
         description:
           "The home page shows what you already have from the site you are on. The link beside that group opens the Library filtered to it, however many there are.",
-      },
-      {
-        icon: KeyboardIcon,
-        iconColor: "text-slate-500",
-        title: "Keys for the things you do often",
-        description:
-          "With the side panel focused: n for a new entry, Shift+N for a new topic, e to edit what is open, / to search, and ? for the full list.",
       },
     ],
   },
