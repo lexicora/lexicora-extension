@@ -7,6 +7,7 @@ import { WebsiteLink } from "@/components/website-link";
 import { CurrentPageCard } from "@/components/capture/current-page-card";
 import { Button } from "@/components/ui/button";
 import { PanelRightIcon } from "lucide-react";
+import { cn } from "cn";
 
 interface PopupCompactLayoutProps {
   activeTab: Browser.tabs.Tab | null;
@@ -15,6 +16,8 @@ interface PopupCompactLayoutProps {
   onCapturePage: () => void;
   onBookmarkPage: () => void;
 }
+
+const extraRounding = import.meta.env.FIREFOX; // Aligns with Firefox's new design.
 
 /**
  * The popup without AI: a launcher rather than a workspace.
@@ -32,7 +35,7 @@ export function PopupCompactLayout({
 }: PopupCompactLayoutProps) {
   return (
     <div className="w-85 select-none p-3 /*pb-3.5*/">
-      <header className="flex items-center justify-between gap-2">
+      <header className="flex items-center justify-between gap-2 ml-1.5">
         <div className="flex items-center gap-2 min-w-0">
           <AccountMenu className="bg-secondary/80" />
           <img
@@ -58,7 +61,7 @@ export function PopupCompactLayout({
           variant="ghost"
           size="icon"
           title="Open Lexicora side panel"
-          className="shrink-0"
+          className={cn("shrink-0", extraRounding && "rounded-lg")}
         >
           <PanelRightIcon className="size-4.5" />
         </Button>
@@ -75,7 +78,7 @@ export function PopupCompactLayout({
           isSupported={isSupported}
           onCapturePage={onCapturePage}
           onBookmarkPage={onBookmarkPage}
-          //extraRounding
+          extraRounding={extraRounding}
         />
         <WebsiteLink className="mt-2.5" size="xs" />
       </footer>
