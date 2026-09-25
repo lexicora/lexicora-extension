@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { sendMessage, onMessage } from "@/lib/messaging";
 import { useAppWindowId } from "@/providers/app-messaging";
-import { isEntryEditPath } from "@/lib/routes";
+import { NEW_ENTRY_PATH, isEntryEditPath } from "@/lib/routes";
 
 export function RouterListener() {
   const navigate = useNavigate();
@@ -12,10 +12,8 @@ export function RouterListener() {
 
   const [pushEnabled, setPushEnabled] = useState(false);
 
-  const pathToSetIsCapturePending = [
-    "/entries/new",
-    /*"/entries/[id]"*/
-  ];
+  // The pages that show a loading skeleton until the capture arrives.
+  const pathToSetIsCapturePending = [NEW_ENTRY_PATH];
 
   useEffect(() => {
     if (!pushEnabled) return;
@@ -28,7 +26,7 @@ export function RouterListener() {
       // If the user is currently editing an entry, absorb capture-triggered
       // navigation to entry-create so the captured data goes into the open editor.
       const isOnEntryEdit = isEntryEditPath(location.pathname);
-      if (path === "/library/entries/new" && isOnEntryEdit) {
+      if (path === NEW_ENTRY_PATH && isOnEntryEdit) {
         return true; // Signal background to clear pending navigation; skip navigate()
       }
 
@@ -60,7 +58,7 @@ export function RouterListener() {
       ).catch(() => null);
       if (path) {
         const isOnEntryEdit = isEntryEditPath(location.pathname);
-        const suppressed = path === "/library/entries/new" && isOnEntryEdit;
+        const suppressed = path === NEW_ENTRY_PATH && isOnEntryEdit;
         if (!suppressed && path !== location.pathname) {
           navigate(path, {
             viewTransition: true,

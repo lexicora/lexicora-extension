@@ -81,6 +81,32 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+/**
+ * The fields as they appear on screen, each input's id being its name, so a
+ * failed save can take the user to the first one wrong.
+ */
+const FIELD_ORDER = [
+  "topicId",
+  "title",
+  "tags",
+  "description",
+  "siteName",
+  "languageCode",
+  "url",
+  "faviconUrl",
+] as const satisfies readonly (keyof FormValues)[];
+type OrderedField = (typeof FIELD_ORDER)[number];
+
+/** The fields inside "Additional fields & metadata". */
+const METADATA_FIELDS: ReadonlySet<OrderedField> = new Set([
+  "tags",
+  "description",
+  "siteName",
+  "languageCode",
+  "url",
+  "faviconUrl",
+]);
+
 type SourceField =
   | "url"
   | "siteName"
@@ -110,12 +136,13 @@ interface EntryFormProps {
   initialData?: Partial<EntryFormData>;
   overrideExisting?: boolean;
   /**
-   * Opens "Additional fields & metadata" whenever new `initialData` arrives
-   * with this set. Used for bookmarks: with no content to review, the metadata
-   * is the whole entry, so it should not be hidden. Only ever opens — the user
-   * can still collapse it, and captures without it leave it as it was.
+   * Opens "Additional fields & metadata" each time this changes to a new
+   * object. Pages pass each bookmark that arrives: with no content to review,
+   * the metadata is the whole entry, so it should not be hidden — even when
+   * the same page is bookmarked again after the user collapsed the section.
+   * Only ever opens; captures without it leave the section as it was.
    */
-  expandMetadata?: boolean;
+  revealMetadataFor?: object | null;
   /**
    * Set while a page capture is still loading. The fields the capture fills
    * are read-only until it arrives, since it would overwrite anything typed
@@ -133,7 +160,7 @@ export function EntryForm({
   id,
   initialData,
   overrideExisting = true,
-  expandMetadata = false,
+  revealMetadataFor = null,
   isCapturePending = false,
   topics,
   onSubmit,
@@ -151,6 +178,9 @@ export function EntryForm({
     formState: { errors, isDirty },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema), // Applying the zodResolver
+    // See onInvalidSubmit: the topic is not focusable through the form, and
+    // a field in the collapsed section is not on the page at all.
+    shouldFocusError: false,
     defaultValues: {
       title: initialData?.title || "",
       topicId: initialData?.topicId || "",
@@ -166,6 +196,10 @@ export function EntryForm({
 
   const prevInitialDataId = useRef<string | null>(null);
   const [isMetadataOpen, setIsMetadataOpen] = useState(false);
+  // An object, so saving twice with the same field wrong goes there twice.
+  const [invalidTarget, setInvalidTarget] = useState<{
+    field: OrderedField;
+  } | null>(null);
   const [topicInputValue, setTopicInputValue] = useState("");
   const topicDisplayInitialized = useRef(false);
 
@@ -201,17 +235,17 @@ export function EntryForm({
     isCapturePending ? "Loading page data..." : placeholder;
 
   useEffect(() => {
+    if (revealMetadataFor) setIsMetadataOpen(true);
+  }, [revealMetadataFor]);
+
+  useEffect(() => {
     if (!initialData) return;
 
     // Simple hash/stringification to avoid infinite loops if initialData object reference changes but content doesn't.
     // If performance is an issue, a more granular check or passing individual values could be done.
-    // expandMetadata is part of the key so that bookmarking a page already
-    // captured in full, whose fields are identical, still opens the section.
-    const currentDataId = JSON.stringify([initialData, expandMetadata]);
+    const currentDataId = JSON.stringify(initialData);
     if (prevInitialDataId.current === currentDataId) return;
     prevInitialDataId.current = currentDataId;
-
-    if (expandMetadata) setIsMetadataOpen(true);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateField = (name: keyof FormValues, newValue: any) => {
@@ -232,7 +266,7 @@ export function EntryForm({
     updateField("siteName", initialData.siteName);
     updateField("languageCode", initialData.languageCode);
     updateField("isFavorite", initialData.isFavorite);
-  }, [initialData, overrideExisting, expandMetadata, setValue, getValues]);
+  }, [initialData, overrideExisting, setValue, getValues]);
 
   const onValidSubmit = (data: FormValues) => {
     const tagsArray = parseTagsInput(data.tags);
@@ -249,6 +283,37 @@ export function EntryForm({
       isFavorite: data.isFavorite,
     });
   };
+
+  /**
+   * A save that fails — by Enter, the header's button or ⌘/Ctrl+S — shows the
+   * first field that is wrong, wherever the user has scrolled to in the
+   * editor below. Opens the metadata section first when the field is in it.
+   */
+  const onInvalidSubmit = (
+    invalid: Partial<Record<keyof FormValues, unknown>>,
+  ) => {
+    const field = FIELD_ORDER.find((name) => invalid[name]);
+    if (!field) return;
+    if (METADATA_FIELDS.has(field)) setIsMetadataOpen(true);
+    setInvalidTarget({ field });
+  };
+
+  // Once the field is on the page: after the render that opens the section.
+  useEffect(() => {
+    if (!invalidTarget) return;
+    const input = document.getElementById(invalidTarget.field);
+    if (!input) return;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    // Centred, so the sticky page header never covers it.
+    input.scrollIntoView({
+      block: "center",
+      behavior: reduceMotion ? "auto" : "smooth",
+    });
+    input.focus({ preventScroll: true });
+    setInvalidTarget(null);
+  }, [invalidTarget, isMetadataOpen]);
 
   const handleFetchMetadata = async () => {
     try {
@@ -341,7 +406,7 @@ export function EntryForm({
   return (
     <form
       id={id}
-      onSubmit={handleSubmit(onValidSubmit)}
+      onSubmit={handleSubmit(onValidSubmit, onInvalidSubmit)}
       className="py-3.5 space-y-4"
     >
       <FieldGroup className="">
@@ -432,6 +497,7 @@ export function EntryForm({
                 >
                   <div className="relative w-full">
                     <ComboboxInput
+                      id="topicId"
                       placeholder="Search or select a topic..."
                       className="w-full"
                       aria-invalid={!!errors.topicId}

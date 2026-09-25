@@ -59,6 +59,7 @@ import PrivacyPolicySettingsPage from "@/pages/settings/general/privacy-policy";
 import SupportPage from "@/pages/settings/help/support";
 import FaqPage from "@/pages/settings/help/faq";
 import TipsAndTricksPage from "@/pages/settings/help/tips-and-tricks";
+import TipsAndTricksCategoryPage from "@/pages/settings/help/tips-and-tricks-category";
 import AboutPage from "@/pages/settings/about/about";
 import LicensesPage from "@/pages/settings/about/licenses";
 import WhatsChangedPage from "@/pages/settings/about/whats-changed";
@@ -170,6 +171,10 @@ const router = createMemoryRouter([
       {
         path: "settings/help/tips-and-tricks",
         element: <TipsAndTricksPage />,
+      },
+      {
+        path: "settings/help/tips-and-tricks/:category",
+        element: <TipsAndTricksCategoryPage />,
       },
       { path: "settings/about", element: <AboutPage /> },
       { path: "settings/about/licenses", element: <LicensesPage /> },
