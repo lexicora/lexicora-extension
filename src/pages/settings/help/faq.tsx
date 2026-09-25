@@ -25,6 +25,11 @@ const FAQ_ITEMS = [
       "Capture page reads the page and fills the entry's editor with its content, so the text is yours to keep, edit and search even if the page changes or disappears. Bookmark saves only what the page says about itself — title, link, site, description, author and date — and leaves the editor empty. Use Bookmark for something you only want to find again, and Capture page for something you want to keep or write about. Both create an ordinary entry in a topic, and you can always add your own notes afterwards.",
   },
   {
+    question: "Why did a capture come out empty or incomplete?",
+    answer:
+      "Capture page keeps what a page is about — the article, the documentation, the post — and leaves out the menus, sidebars, link lists and buttons around it. A page made mostly of those, such as a product's landing page or a web app, can have little or nothing it recognises as content, and the entry's editor stays empty. Then select what you want on the page and choose \"Capture Selection\" from the right-click menu, or press the capture shortcut, which takes the selection whenever there is one: a selection is kept as you chose it. No capture is perfect, either. Every site is built differently, so the result is usually close to the best that can be read from the page, but it can miss a piece or keep a stray one — which is what the editor is for.",
+  },
+  {
     question: "How do I organize my captures?",
     answer:
       "Use topics to group related entries together. Think of topics like folders or projects. Create a topic from the Library tab, then assign entries to it when capturing or editing.",
@@ -42,7 +47,7 @@ const FAQ_ITEMS = [
   {
     question: "How do I search my captures?",
     answer:
-      "The search bar at the top of the Library searches titles, tags, descriptions and site names, for entries and topics alike. To narrow it to one website, put site: in front of a domain — site:react.dev — on its own or together with words, as in site:react.dev hooks. The \"Total\" link on the home page opens exactly that search for the site you are on.",
+      "The search bar at the top of the Library searches titles, tags, descriptions, site names and dates, for entries and topics alike. A date matches the way the list shows it, as in 20.05.26, or by month and year, as in may 2026. To narrow it to one website, put site: in front of a domain — site:react.dev — on its own or together with words, as in site:react.dev hooks. The \"Total\" link on the home page opens exactly that search for the site you are on.",
   },
   {
     question: "Can I add images or files to an entry?",

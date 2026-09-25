@@ -17,11 +17,14 @@ import {
   CameraIcon,
   FolderOpenIcon,
   HandGrabIcon,
+  HashIcon,
   LightbulbIcon,
   MousePointerClickIcon,
   PinIcon,
   SearchIcon,
+  SquareSlashIcon,
   TagIcon,
+  TextSelectIcon,
   TriangleAlertIcon,
   WrapTextIcon,
 } from "lucide-react";
@@ -33,6 +36,13 @@ const TIPS = [
     title: "Tune capture suggestions",
     description:
       "Adjust the capture prompt delay in Settings → Capture Suggestions so it appears after the right amount of time for your browsing habits.",
+  },
+  {
+    icon: TextSelectIcon,
+    iconColor: "text-teal-500",
+    title: "When a capture comes back empty",
+    description:
+      "A capture keeps what a page is about and leaves out its menus, link lists and buttons, so a landing page or a web app can have little it recognises as content. Select what you want and capture that instead: Capture Selection in the right-click menu, or the capture shortcut, which takes the selection whenever there is one.",
   },
   {
     icon: HandGrabIcon,
@@ -47,6 +57,20 @@ const TIPS = [
     title: "Right-click to select a block",
     description:
       "Right-click the drag handle next to a block to select all of its content and bring up the formatting toolbar. A regular click still opens the block menu.",
+  },
+  {
+    icon: SquareSlashIcon,
+    iconColor: "text-sky-500",
+    title: "Every block from one key",
+    description:
+      "Type / in the editor for a menu of every block — headings, lists, tables, images, code, alerts and more — and keep typing to narrow it down.",
+  },
+  {
+    icon: HashIcon,
+    iconColor: "text-fuchsia-500",
+    title: "Markdown as you type",
+    description:
+      "Start a line with # and a space for a heading (## and ### for smaller ones), - for a bullet list, 1. for a numbered list, [ ] for a checklist, > for a quote, ``` for a code block or --- for a divider. **Bold**, *italic* and `code` work within a line.",
   },
   {
     icon: WrapTextIcon,
@@ -88,7 +112,7 @@ const TIPS = [
     iconColor: "text-cyan-500",
     title: "Search is powerful",
     description:
-      "The search bar scans titles, tags, descriptions and site names. For one website exactly, type site:react.dev — alone, or with words after it to search within that site.",
+      "The search bar scans titles, tags, descriptions, site names and dates. For one website exactly, type site:react.dev — alone, or with words after it to search within that site.",
   },
   {
     icon: BookmarkIcon,
