@@ -22,7 +22,7 @@ export const blockTypes = [
   "numberedListItem",
   "checkListItem",
   "toggleListItem",
-  "codeblock",
+  "codeBlock",
   "file",
   "image",
   "video",

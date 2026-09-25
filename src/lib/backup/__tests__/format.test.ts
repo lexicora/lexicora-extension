@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 
+import { appBlockNoteConfig } from "@/components/editor/config";
 import type { BlockDocType } from "@/db/schemas/block";
+import { blockTypes } from "@/db/schemas/common";
 import type { EntryDocType } from "@/db/schemas/entry";
 import type { TopicDocType } from "@/db/schemas/topic";
 
@@ -245,6 +247,26 @@ describe("parseBackup", () => {
     };
 
     expect(parseBackup(JSON.stringify(file)).blocks[0]?.type).toBe("alert");
+  });
+
+  // The list is written by hand, so check it against the editor's own schema:
+  // it once spelled `codeBlock` as `codeblock`, and every backup holding a
+  // code block was refused.
+  it("knows every block type in the editor's schema, spelled the same", () => {
+    const editorTypes = Object.keys(appBlockNoteConfig.schema.blockSpecs);
+
+    expect([...blockTypes].sort()).toEqual(editorTypes.sort());
+  });
+
+  it("accepts a code block", () => {
+    const file = {
+      formatVersion: 1,
+      topics: [],
+      entries: [],
+      blocks: [block({ type: "codeBlock", propsJson: { language: "text" } })],
+    };
+
+    expect(parseBackup(JSON.stringify(file)).blocks[0]?.type).toBe("codeBlock");
   });
 
   it("names the record that is invalid", () => {
