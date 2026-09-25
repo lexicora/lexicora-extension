@@ -653,6 +653,24 @@ html:has(
     background-color: light-dark(#202020, #111116);
 }*/
 
+/*
+ * Room between a code block and the text around it, which the dark box
+ * otherwise meets with only every block's 3px padding. Set on the block's
+ * outer wrapper, outside the box the side menu measures, so the drag handle
+ * stays level with the code; and not at the top or bottom of the document.
+ */
+.bn-root[data-color-scheme]
+  .bn-block-outer:has(
+    > .bn-lc-adjustments > .bn-block-content[data-content-type="codeBlock"]
+  ) {
+  &:not(:first-child) {
+    margin-top: 8px;
+  }
+  &:not(:last-child) {
+    margin-bottom: 4px;
+  }
+}
+
 /* ====================================================================
    Tables
    ==================================================================== */

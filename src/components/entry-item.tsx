@@ -309,14 +309,14 @@ export function EntryItem({
               <div className="flex items-center gap-1.5 text-[12px] font-medium text-muted-foreground/90 shrink-0 max-w-32">
                 {entry.faviconUrl && (
                   <>
-                    <Avatar.Root className="size-4.25 rounded-sm opacity-90 shrink-0 ml-0.75">
+                    <Avatar.Root className="size-4.25 rounded-xs opacity-90 shrink-0 ml-0.75">
                       <Avatar.Image
-                        className="rounded-sm"
+                        className="rounded-xs"
                         src={entry.faviconUrl}
                         alt="Favicon"
                       />
                       <Avatar.Fallback delayMs={50}>
-                        <div className="bg-gray-400/35 dark:bg-gray-700/50 size-4.25 rounded-sm"></div>
+                        <div className="bg-gray-400/35 dark:bg-gray-700/50 size-4.25 rounded-xs"></div>
                       </Avatar.Fallback>
                     </Avatar.Root>
                   </>

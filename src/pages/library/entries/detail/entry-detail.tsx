@@ -217,14 +217,14 @@ function EntryDetailPage() {
           {(entry.faviconUrl || entry.siteName || entry.url) && (
             <div className="flex items-center gap-1.5 mt-3 min-w-0">
               {entry.faviconUrl && (
-                <Avatar.Root className="size-4.5 rounded-sm opacity-90 shrink-0 ml-0.5">
+                <Avatar.Root className="size-4.5 rounded-xs opacity-90 shrink-0 ml-0.5">
                   <Avatar.Image
-                    className="rounded-sm"
+                    className="rounded-xs"
                     src={entry.faviconUrl}
                     alt="Favicon"
                   />
                   <Avatar.Fallback delayMs={50}>
-                    <div className="bg-gray-400/35 dark:bg-gray-700/50 size-4.25 rounded-sm" />
+                    <div className="bg-gray-400/35 dark:bg-gray-700/50 size-4.25 rounded-xs" />
                   </Avatar.Fallback>
                 </Avatar.Root>
               )}
