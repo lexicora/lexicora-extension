@@ -33,7 +33,16 @@ export const COMMAND_ID = {
 
 interface BrowserCommand {
   description: string;
-  suggestedKey: { default: string; mac: string };
+  suggestedKey: {
+    default: string;
+    mac: string;
+    /**
+     * Firefox's key on Windows and Linux, where it differs from Chrome's.
+     * The two browsers hold different Alt+Shift letters, so one key cannot
+     * always serve both. macOS is the same in both.
+     */
+    firefox?: string;
+  };
 }
 
 export const BROWSER_COMMANDS: Record<
@@ -45,21 +54,27 @@ export const BROWSER_COMMANDS: Record<
     suggestedKey: { default: "Alt+Shift+L", mac: "MacCtrl+Shift+L" },
   },
   capture: {
-    // Alt+Shift+C never registered on Windows or Linux — something there
-    // holds it, as Chrome itself holds Alt+Shift+B and Alt+Shift+T. Not
-    // Alt+Shift+S either: Firefox opens its History menu with it (Alt plus a
-    // menu letter: F, E, V, S, B, T, H). Firefox also lets a page's access
-    // keys win over an extension's command, and MediaWiki gives X to "random
-    // article", so not X. W is free in both browsers, under the left hand
-    // beside D. macOS keeps ⌃⇧C, which works.
+    // S, as in save, beside D for bookmarking. Alt+Shift+C never registered
+    // on Windows or Linux — something there holds it, as Chrome itself holds
+    // Alt+Shift+B and Alt+Shift+T.
+    //
+    // Firefox on Windows and Linux cannot have S: it opens its History menu
+    // with it (Alt plus a menu letter: F, E, V, S, B, T, H). It also lets a
+    // page's access keys win over an extension's command, which rules out X
+    // (Wikipedia's "random article"). W works there — and is blocked in
+    // Chrome, so each browser gets its own. macOS is Ctrl+Shift+S in both.
     description: "Capture the selection, or the whole page if nothing is selected",
-    suggestedKey: { default: "Alt+Shift+W", mac: "MacCtrl+Shift+C" },
+    suggestedKey: {
+      default: "Alt+Shift+S",
+      mac: "MacCtrl+Shift+S",
+      firefox: "Alt+Shift+W",
+    },
   },
   bookmark: {
     // Not Alt+Shift+B, which is Chrome's own "focus the bookmarks toolbar" on
     // Windows and Linux; the browser's shortcuts win and ours arrives unset.
     // D follows the browsers' own Cmd/Ctrl+D for bookmarking, and is D on
-    // macOS too: easier to reach beside C than B, and free there.
+    // macOS too: easier to reach than B, and free there.
     description: "Bookmark the page (metadata only)",
     suggestedKey: { default: "Alt+Shift+D", mac: "MacCtrl+Shift+D" },
   },
@@ -79,14 +94,19 @@ export const COMMAND_SUGGESTED_KEYS: Record<
 /**
  * What to type into the browser's own shortcut settings for a command that
  * arrived unset, written the way that page writes keys.
+ *
+ * The browser is passed in rather than read here, since `wxt.config.ts`
+ * imports this file outside the extension.
  */
 export function suggestedKeyFor(
   command: string | undefined,
   isMac: boolean,
+  isFirefox: boolean,
 ): string | null {
   const key = command ? COMMAND_SUGGESTED_KEYS[command] : undefined;
   if (!key) return null;
-  return isMac ? key.mac.replace("MacCtrl", "Ctrl") : key.default;
+  if (isMac) return key.mac.replace("MacCtrl", "Ctrl");
+  return (isFirefox && key.firefox) || key.default;
 }
 
 /** Descriptions by command name, for commands.getAll() results that lack one. */
@@ -102,10 +122,15 @@ export const COMMAND_DESCRIPTIONS: Record<string, string> = {
 
 /** The manifest `commands` object for a given browser. */
 export function manifestCommands(browser: string) {
-  const toManifest = ({ description, suggestedKey }: BrowserCommand) => ({
-    description,
-    suggested_key: suggestedKey,
-  });
+  const toManifest = ({ description, suggestedKey }: BrowserCommand) => {
+    // Not a manifest field: it replaces `default` in Firefox's build.
+    const { firefox, ...keys } = suggestedKey;
+    return {
+      description,
+      suggested_key:
+        browser === "firefox" && firefox ? { ...keys, default: firefox } : keys,
+    };
+  };
 
   return {
     ...(browser === "firefox"

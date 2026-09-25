@@ -160,7 +160,7 @@ function CommandKey({
   const bound = keys[command];
   if (bound) return <Kbd>{bound}</Kbd>;
 
-  const suggested = suggestedKeyFor(command, IS_MAC);
+  const suggested = suggestedKeyFor(command, IS_MAC, import.meta.env.FIREFOX);
   return (
     <span
       className="flex shrink-0"
