@@ -324,7 +324,9 @@ function EntryCreatePage() {
                   overrideExisting={
                     capturedData?.misc?.overrideExisting ?? true
                   }
-                  expandMetadata={capturedData?.misc?.metadataOnly === true}
+                  revealMetadataFor={
+                    capturedData?.misc?.metadataOnly ? capturedData : null
+                  }
                   isCapturePending={showSkeleton}
                   initialData={{
                     title:

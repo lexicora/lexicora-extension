@@ -200,6 +200,9 @@ function EntryEditContent({
                     formApiRef.current = api;
                   }}
                   overrideExisting={true}
+                  revealMetadataFor={
+                    capturedData?.misc.metadataOnly ? capturedData : null
+                  }
                   initialData={{
                     title: entry.title,
                     topicId: entry.topicId,
