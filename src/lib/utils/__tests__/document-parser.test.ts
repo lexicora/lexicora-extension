@@ -480,9 +480,45 @@ describe("parseDocument link lists", () => {
 
     expect(content).toBe("<p>The article.</p>");
   });
+
+  it("keeps the content when the wrapper around the page is mostly links", () => {
+    // svelte.dev: the app's root <div> holds a link-heavy page, and judged by
+    // all of its text it read as a link farm, <main> and all.
+    const links = Array.from(
+      { length: 12 },
+      (_, i) => `<a href="/docs/${i}">Documentation page number ${i}</a>`,
+    ).join(" ");
+    const { textContent } = parseBody(
+      `<div><div class="cards">${links}</div>` +
+        "<main><h1>web development for the rest of us</h1>" +
+        "<p>Svelte is a UI framework that uses a compiler.</p></main></div>",
+    );
+
+    expect(textContent).toContain("web development for the rest of us");
+    expect(textContent).toContain("uses a compiler");
+    expect(textContent).not.toContain("Documentation page");
+  });
 });
 
 describe("parseDocument without a semantic container", () => {
+  it("takes the whole page when no block holds enough prose", () => {
+    // vite.dev: headings and short feature cards, and one testimonial long
+    // enough to score, which on its own would have been the whole capture.
+    const feature = (title: string) =>
+      `<div class="feature"><h3>${title}</h3><p>Short and fast.</p></div>`;
+    const { textContent } = parseBody(
+      '<div id="app"><h1>The Build Tool for the Web</h1>' +
+        feature("Instant Server Start") +
+        feature("Lightning Fast HMR") +
+        '<div class="quote"><p>Wow, wow, wow, Vite is, well, wow.</p></div>' +
+        "</div>",
+    );
+
+    expect(textContent).toContain("The Build Tool for the Web");
+    expect(textContent).toContain("Lightning Fast HMR");
+    expect(textContent).toContain("Vite is, well, wow.");
+  });
+
   it("takes the element holding the prose, not the layout around it", () => {
     const { textContent } = parseBody(
       '<div id="page"><div id="wrap">' +

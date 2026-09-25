@@ -234,6 +234,9 @@ const headingButtonSelector = ["h1", "h2", "h3", "h4", "h5", "h6"]
   .map((heading) => `${heading} button`)
   .join(", ");
 
+/** Below this much text, the scoring fallback's winner is not the content. */
+const minContentLength = 250;
+
 const semanticContainerSelector =
   'article, main, [role="main"], .markdown-body, .post-content, #bodyContent';
 
@@ -574,13 +577,35 @@ function normalizeContent(root: Document | Element, baseUrl: string): void {
 }
 
 /**
+ * The page's semantic container and every element around it. Pruning judges
+ * a block by all the text inside it, so a layout wrapper around the whole
+ * page could read as a link farm — svelte.dev's root is 60% links — and take
+ * the content with it. These are never removed whole; what is inside them is
+ * still judged on its own.
+ */
+function contentAndAncestors(doc: Document): Set<Element> {
+  const kept = new Set<Element>();
+  for (
+    let el = findSemanticContainer(doc);
+    el && el !== doc.documentElement;
+    el = el.parentElement
+  ) {
+    kept.add(el);
+  }
+  return kept;
+}
+
+/**
  * Removes blocks whose class or id reads like page furniture, and link farms
  * (navigation, "Related articles") that no class gives away.
  */
 function pruneUnlikelyBlocks(doc: Document): void {
+  const kept = contentAndAncestors(doc);
+
   doc.querySelectorAll("div, section, ul, ol, li, p").forEach((el) => {
     // Already gone with a removed ancestor.
     if (!el.isConnected) return;
+    if (kept.has(el)) return;
 
     // 1. Regex Pruning
     const className = el.getAttribute("class") ?? "";
@@ -680,6 +705,14 @@ function findContentByScore(doc: Document): Element {
       best = parent;
       parent = parent.parentElement;
     }
+  }
+
+  // A winner this short is a stray quote or caption on a page that has no
+  // prose to speak of — a landing page of headings and feature cards, like
+  // vite.dev, whose one scoring paragraph is a testimonial. The whole cleaned
+  // page is closer to what the reader sees.
+  if ((best.textContent?.trim().length ?? 0) < minContentLength) {
+    return doc.body;
   }
 
   return best;
