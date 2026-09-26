@@ -9,7 +9,7 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import { REPOSITORY_URL } from "@/constants/site";
+import { CONTACT_EMAIL, REPOSITORY_URL } from "@/constants/site";
 import { ShieldCheckIcon } from "lucide-react";
 
 /**
@@ -25,7 +25,7 @@ import { ShieldCheckIcon } from "lucide-react";
  * address the store listings link to. Change both together, date included.
  */
 
-const LAST_UPDATED = "21 September 2026";
+const LAST_UPDATED = "26 September 2026";
 
 const SECTIONS = [
   {
@@ -132,14 +132,21 @@ function PrivacyPolicySettingsPage() {
 
         <p className="text-xs text-muted-foreground mx-2.5 -mt-4 text-pretty text-left">
           Last updated {LAST_UPDATED}. Questions, or something here that does
-          not match what you see?{" "}
+          not match what you see? Write to{" "}
           <a
-            href={REPOSITORY_URL}
+            href={`mailto:${CONTACT_EMAIL}`}
+            className="underline underline-offset-2 hover:text-lc-muted-foreground-hover"
+          >
+            {CONTACT_EMAIL}
+          </a>{" "}
+          or{" "}
+          <a
+            href={`${REPOSITORY_URL}/issues`}
             target="_blank"
             rel="noreferrer"
             className="underline underline-offset-2 hover:text-lc-muted-foreground-hover"
           >
-            Open an issue
+            open an issue
           </a>
           .
         </p>
