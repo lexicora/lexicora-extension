@@ -62,7 +62,7 @@ function WhatsChangedReleasePage() {
               </ItemDescription>
               {(release.date || isInstalled) && (
                 <ItemDescription className="flex items-center gap-1.5 mt-1.5">
-                  {release.date && formatReleaseDate(release.date)}
+                  {release.date && formatReleaseDate(release.date, "long")}
                   {isInstalled && <InstalledBadge />}
                 </ItemDescription>
               )}

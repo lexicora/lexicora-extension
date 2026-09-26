@@ -55,14 +55,17 @@ function ReleaseRow({
         <ItemContent>
           <ItemTitle>
             Version {release.version}
+            {release.date && (
+              <>
+                <span>·</span>
+                <span className="font-normal text-lc-muted-foreground">
+                  {formatReleaseDate(release.date, "medium")}
+                </span>
+              </>
+            )}
             {isInstalled && <InstalledBadge className="ml-1" />}
           </ItemTitle>
           <ItemDescription className="line-clamp-2 text-pretty">
-            {release.date && (
-              <span className="font-medium">
-                {formatReleaseDate(release.date)} ·{" "}
-              </span>
-            )}
             {release.summary}
           </ItemDescription>
         </ItemContent>

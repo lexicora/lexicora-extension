@@ -26,6 +26,7 @@ export const CHANGE_KINDS: readonly ChangeKind[] = ["new", "improved", "fixed"];
 export const RELEASES: readonly Release[] = [
   {
     version: "1.0.0",
+    date: "2026-09-26",
     summary:
       "The first release: capture, sort and search what you read, entirely on your device.",
     changes: {
@@ -50,9 +51,12 @@ export function findRelease(version: string | undefined): Release | undefined {
 }
 
 /** A release date for display. Parsed as UTC, so it is never a day early. */
-export function formatReleaseDate(date: string): string {
+export function formatReleaseDate(
+  date: string,
+  dateStyle: "short" | "medium" | "long" = "medium",
+): string {
   return new Date(`${date}T00:00:00Z`).toLocaleDateString(undefined, {
-    dateStyle: "long",
+    dateStyle: dateStyle,
     timeZone: "UTC",
   });
 }
