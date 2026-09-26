@@ -213,7 +213,7 @@ export function EntryForm({
         setValue(name, value, { shouldDirty: true }),
       getFieldValue: (name) => (getValues(name) as string) ?? "",
     });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const watchTopicId = watch("topicId");
 
