@@ -27,7 +27,9 @@ Keep this file in step with the extension: the same claims appear in
 
 ## Short description
 
-**Chrome Web Store, 132 characters maximum.** This is 123:
+**Chrome Web Store, 132 characters maximum.** This is 123. The store takes it
+from the manifest's `description`, which WXT fills in from `package.json`, so
+it is changed there and ships with the package, not typed into the dashboard:
 
 > Capture a page or bookmark it, sort it into topics, search it later. Fully offline — your library never leaves your device.
 
@@ -72,43 +74,57 @@ build does.
 
 ---
 
-## Single purpose (Chrome requires one sentence)
+## Single purpose
 
-> Lexicora captures web pages and bookmarks into a local, searchable library that the user organizes into topics.
+Chrome asks what the extension is for, in its own text box. The reviewer
+checks that every feature and permission serves this one purpose, so it names
+the purpose and then how each feature belongs to it:
+
+> Lexicora lets users save web pages they choose into a personal library on their own device, and find them again later. A page is saved either with its content, in an editor where the user can add their own notes, or as a bookmark with only its title, link and description. Saved pages are sorted into topics and tags and can be searched. Everything else in the extension serves this library: the side panel, toolbar popup, right-click menu and keyboard shortcuts are ways to save a page, the optional save prompt offers to save a page the user has been reading for a while, and export and backup take the library elsewhere.
 
 ---
 
 ## Permission justifications
 
-Chrome asks per permission, in a text box each. These are written for a
-reviewer: what it does, and why the extension cannot do its job without it.
+Chrome asks per permission, in a text box each. Written for a reviewer who
+has never seen Lexicora: what the permission does in plain words, and when.
 
 | Permission | Justification |
 | --- | --- |
-| `activeTab` | Reading the page the user has asked to save. A capture or bookmark starts from an explicit action — a button, a menu item or a shortcut — and reads only the tab that action came from. |
-| `scripting` | Reading the page's content and metadata at the moment of capture, by running the extension's own function in the tab the user acted on. Nothing is injected in the background or on pages the user has not chosen. |
-| `tabs` | Knowing which tab is active and what its URL is, so a capture goes to the right page, the side panel shows what would be saved, and the controls are disabled on pages that cannot be read. |
-| `storage` | Keeping the user's library and settings on their own device. Nothing is sent anywhere. |
-| `contextMenus` | Adding Lexicora's right-click entries: capture the page, capture the selection, bookmark, and open or close the side panel. |
-| `sidePanel` | The side panel is the extension's main interface, opened beside the page being read. |
-| `clipboardWrite` | Copying an entry or a topic to the clipboard when the user presses Copy, as rich text and Markdown together. |
+| `storage` | Stores the user's settings, such as the theme and whether the save prompt is shown. The saved pages themselves are kept in the extension's own database on the device. Nothing is sent anywhere. |
+| `tabs` | Reads the address and title of the tab the user is looking at, so Lexicora knows which page it would save, can show what the user already saved from that website, and can switch off its buttons and menu entries on pages that cannot be saved, such as the browser's own pages. |
+| `activeTab` | Gives Lexicora access to the current tab only after the user acts — clicking the toolbar button, a Lexicora menu entry or a keyboard shortcut — so it can read the page they asked to save. |
+| `scripting` | When the user presses "Refresh Metadata" while editing a saved page, runs a small function in the current tab that reads the page's link, icon, site name and language. It never runs on its own or on any other tab. |
+| `contextMenus` | Adds Lexicora's entries to the right-click menu: save the page, save the selected text, bookmark the page, and open or close the side panel. |
+| `sidePanel` | The side panel is Lexicora's main window. It opens beside the page the user is reading, so they can save it and look through their library without leaving the page. |
+| `clipboardWrite` | Copies a saved page or a topic to the clipboard, as formatted text and as Markdown, when the user presses Copy. |
 
-**Host permissions** (`http://*/*`, `https://*/*`, `file:///*`):
+**Host permissions.** The manifest asks for none, but the content script runs
+on `http://*/*`, `https://*/*` and `file:///*`, which Chrome treats as access
+to all websites and asks to justify:
 
-> Lexicora saves the page the user is reading, so it has to be able to read a page on any site — which site is the user's choice, made at the moment they capture. The content script is limited to http, https and local files, the schemes a capture can actually read, and it does nothing on a page until the user asks for a capture or the capture prompt is shown. No page data is sent anywhere; it goes into the user's own library in their browser.
+> Lexicora can save a page from any website, because which page to save is the user's choice. Its content script is therefore present on web pages, but it reads a page only when the user asks to save it. Its only other job is the optional save prompt in Chrome and Edge, which is on by default and can be switched off in Settings: after the user has spent some minutes on a page (five by default), it offers to save it, and accepting opens the side panel. Nothing it reads leaves the device; saved pages go into the user's own library in the browser.
 
 **Remote code:** No. Everything the extension runs is in the package. No
 scripts are fetched, evaluated or loaded from a server.
 
-**Data usage disclosures** (Chrome's form, all of which are "no"):
+**Data usage disclosures.** Google counts data an extension handles on the
+device as well, not only what it sends somewhere — its user data FAQ says so
+outright ("even when data is processed or stored locally on a user's device").
+Lexicora stores the pages the user saves, so two categories apply. Ticking
+them is what an honest listing shows; the store then says the data is handled,
+next to the three certifications below.
 
-- Personally identifiable information — not collected
-- Health, financial, authentication information — not collected
-- Personal communications, location, web history, user activity — not collected
-- Website content — read only on an explicit capture, stored on the device,
-  never transmitted
-- Certify: not sold to third parties, not used for unrelated purposes, not
-  used to determine creditworthiness
+- **Website content — yes.** The text, images and links of the pages the user
+  saves, stored in the extension's database on their device.
+- **Web history — yes.** The addresses and titles of the pages the user
+  saves, and the address of the current tab, read to show what was already
+  saved from that site. Stored or read on the device only.
+- Personally identifiable, health, financial, authentication information,
+  personal communications, location, user activity — no.
+- Certify all three: not sold to third parties, not used or transferred for
+  purposes unrelated to the single purpose, not used to determine
+  creditworthiness or for lending.
 
 ---
 
@@ -191,6 +207,17 @@ listing is public and the screenshots are the most-read part of it.
   from the repository, since a reviewer may ask how the bundle was produced —
   `bun install && bun run zip:firefox`.
 - **Categories:** Bookmarks & Tabs, with Productivity as secondary.
+- **Version numbers are final.** AMO never accepts a version number twice,
+  not even after the upload is deleted. Upload the Firefox zip only once the
+  build is final; a fix after that is 1.0.1.
+
+## Replacing a package before submitting
+
+On the Chrome Web Store, an item that has not been submitted for review can
+take a new package as often as needed, with the same version number. The rule
+that each upload must have a higher version applies once a version has been
+submitted or published. So until "Submit for review", rebuild and upload
+again freely.
 
 ## Edge Add-ons
 
