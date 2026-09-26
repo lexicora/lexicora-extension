@@ -20,7 +20,7 @@ You may use, copy, modify, or redistribute the Software for personal, educationa
 Using the Software as an individual, for your own purposes, is non-commercial even if you happen to be employed.
 
 To request permission for commercial use, contact:
-Email: tgmaurer@icloud.com
+Email: hello@tgmaurer.dev
 
 2. Attribution
 Any redistribution or modification of the Software must include clear and visible attribution to Lexicora. At minimum, the following notice must remain in all copies or substantial portions of the Software, and must be reachable by a user of a distributed build (for example in an "About" screen or store listing) as well as present in the source:
