@@ -22,7 +22,9 @@ import {
 import { Link } from "react-router-dom";
 
 function AboutPage() {
-  const version = browser.runtime.getManifest().version;
+  // Both from package.json, through the manifest: the description is also the
+  // store's summary, so the page and the listing never disagree.
+  const { version, description } = browser.runtime.getManifest();
 
   return (
     <PageContainer>
@@ -68,9 +70,7 @@ function AboutPage() {
           >
             <ItemContent>
               <ItemDescription className="line-clamp-none text-foreground/80 text-pretty">
-                A browser extension for capturing and organizing web content.
-                Save pages, highlight text, and write notes — all stored
-                locally, always private, fully offline.
+                {description}
               </ItemDescription>
             </ItemContent>
           </Item>
