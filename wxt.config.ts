@@ -37,6 +37,10 @@ export default defineConfig({
       // characters; the version names the zips too.
       permissions: [
         "storage",
+        //* The library is the only copy, on this device: without this the
+        //* browser may evict the database when the disk runs low. No install
+        //* warning in Chrome; persistent IndexedDB in Firefox.
+        "unlimitedStorage",
         "tabs",
         "activeTab",
         "scripting",

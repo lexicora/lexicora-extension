@@ -92,6 +92,7 @@ has never seen Lexicora: what the permission does in plain words, and when.
 | Permission | Justification |
 | --- | --- |
 | `storage` | Stores the user's settings, such as the theme and whether the save prompt is shown. The saved pages themselves are kept in the extension's own database on the device. Nothing is sent anywhere. |
+| `unlimitedStorage` | Lexicora keeps the user's library only on their device, in the extension's own database — there is no server copy. This permission stops the browser from deleting that database when disk space runs low, which would otherwise lose the user's whole library. It does not change what is stored or where. |
 | `tabs` | Reads the address and title of the tab the user is looking at, so Lexicora knows which page it would save, can show what the user already saved from that website, and can switch off its buttons and menu entries on pages that cannot be saved, such as the browser's own pages. |
 | `activeTab` | Gives Lexicora access to the current tab only after the user acts — clicking the toolbar button, a Lexicora menu entry or a keyboard shortcut — so it can read the page they asked to save. |
 | `scripting` | When the user presses "Refresh Metadata" while editing a saved page, runs a small function in the current tab that reads the page's link, icon, site name and language. It never runs on its own or on any other tab. |
