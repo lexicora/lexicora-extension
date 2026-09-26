@@ -111,7 +111,7 @@ reject permissions broader than the feature needs, so `tabs` next to
 on `http://*/*`, `https://*/*` and `file:///*`, which Chrome treats as access
 to all websites and asks to justify:
 
-> The user can save a page from any website, so the content script runs on all http, https and file pages. It reads a page only when the user asks to save it: the full page, the selected text, or for a bookmark only the title, link and description. In Chrome and Edge it also shows an optional prompt to save a page the user has kept open for a while (five minutes by default, can be turned off in Settings). The prompt only counts the time the page is visible and reads nothing from it. The content script does not run on browser pages or extension stores, and nothing it reads leaves the device.
+> The user can save a page from any website, so the content script runs on all http, https and file pages. It reads a page only when the user asks to save it: the full page, the selected text, or, for a bookmark, only the title, link and description. In Chrome and Edge it also offers to save a page the user has kept open for a while (five minutes by default). This prompt is on by default and can be turned off in Settings. It only counts the time the page is visible and reads nothing from it. The content script does not run on browser pages or extension stores, and nothing it reads leaves the device.
 
 **Remote code:** No. Everything the extension runs is in the package. No
 scripts are fetched, evaluated or loaded from a server.
