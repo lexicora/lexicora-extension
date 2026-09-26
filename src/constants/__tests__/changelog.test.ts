@@ -1,15 +1,13 @@
 import { describe, it, expect } from "vitest";
 
 import { findRelease, formatReleaseDate, RELEASES } from "../changelog";
-// The config as text: importing it would run WXT's own setup.
-import wxtConfig from "../../../wxt.config.ts?raw";
+// The version WXT puts in the manifest.
+import { version as manifestVersion } from "../../../package.json";
 
 /**
  * The changelog is written by hand, so these catch what is easy to get wrong:
  * a version bump without notes, a duplicate, and entries out of order.
  */
-
-const manifestVersion = /version:\s*"([^"]+)"/.exec(wxtConfig)?.[1];
 
 const parts = (version: string) => version.split(".").map(Number);
 

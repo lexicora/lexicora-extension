@@ -1,6 +1,6 @@
 # Lexicora privacy policy
 
-_Last updated 21 September 2026._
+_Last updated 26 September 2026._
 
 Lexicora is a browser extension for Chrome, Edge and Firefox. It keeps
 everything you capture on your own computer. It has no accounts, no servers
@@ -59,5 +59,6 @@ is yours to switch on rather than something that happens quietly.
 
 ## Contact
 
-Questions, or something here that does not match what you see?
-[Open an issue](https://github.com/lexicora/lexicora-extension/issues).
+Questions, or something here that does not match what you see? Write to
+[hello@tgmaurer.dev](mailto:hello@tgmaurer.dev) or
+[open an issue](https://github.com/lexicora/lexicora-extension/issues).

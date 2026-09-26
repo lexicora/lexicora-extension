@@ -2,9 +2,10 @@
  * What changed in each release — Settings → About → What's changed.
  *
  * Newest first. The first entry is the version this build is: a test checks
- * it against the manifest version in `wxt.config.ts`, so a version bump
- * without notes fails. Write for the user, not the commit log: what they can
- * do now that they could not before, and what no longer goes wrong.
+ * it against the version in `package.json`, which the manifest takes, so a
+ * version bump without notes fails. Write for the user, not the commit log:
+ * what they can do now that they could not before, and what no longer goes
+ * wrong.
  */
 
 export type ChangeKind = "new" | "improved" | "fixed";

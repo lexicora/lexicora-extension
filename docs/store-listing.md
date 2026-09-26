@@ -19,6 +19,7 @@ Keep this file in step with the extension: the same claims appear in
 | Language | English (UK spelling in the UI) |
 | Website | Repository, until lexicora.com is live |
 | Support | <https://github.com/lexicora/lexicora-extension/issues> |
+| Contact email | hello@tgmaurer.dev (account-wide on the Chrome Web Store; also in the privacy policy and on the Support page) |
 | Privacy policy | <https://github.com/lexicora/lexicora-extension/blob/main/PRIVACY.md> |
 | Licence | Custom, source-available; see `LICENSE.txt` |
 

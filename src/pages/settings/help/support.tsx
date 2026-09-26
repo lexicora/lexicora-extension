@@ -9,19 +9,20 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import { REPOSITORY_URL } from "@/constants/site";
+import { CONTACT_EMAIL, REPOSITORY_URL } from "@/constants/site";
 import {
   ArrowUpRightIcon,
   BugIcon,
   CodeXmlIcon,
   HeartPlusIcon,
+  MailIcon,
 } from "lucide-react";
 
 /**
- * Where to report a problem. One destination for now — the repository — since
- * that is the only place anyone answers. It is its own page rather than a link
- * straight out of the settings list, so more can join it later (the website,
- * once there is one).
+ * Where to report a problem: the repository, and an email address for anyone
+ * without a GitHub account or with something that is not a bug. It is its own
+ * page rather than a link straight out of the settings list, so more can join
+ * it later (the website, once there is one).
  */
 
 const LINKS = [
@@ -32,6 +33,13 @@ const LINKS = [
     title: "Report a problem",
     description:
       "Open an issue on GitHub. Saying which browser you use and what you did before it went wrong is usually enough to reproduce it.",
+  },
+  {
+    href: `mailto:${CONTACT_EMAIL}`,
+    Icon: MailIcon,
+    iconColor: "text-sky-500",
+    title: "Write an email",
+    description: `${CONTACT_EMAIL} — for anything that is not a bug report, or if you have no GitHub account.`,
   },
   {
     href: REPOSITORY_URL,
@@ -87,7 +95,9 @@ function SupportPage() {
                 {index > 0 && <SettingsItemSeparator />}
                 <a
                   href={href}
-                  target="_blank"
+                  // Web links open a tab; mailto hands off to the mail app,
+                  // and a new tab for it would be left empty.
+                  target={href.startsWith("mailto:") ? undefined : "_blank"}
                   rel="noreferrer"
                   draggable={false}
                   className="group block"
@@ -106,7 +116,7 @@ function SupportPage() {
                         {description}
                       </ItemDescription>
                     </ItemContent>
-                    {/* Every row here opens a browser tab. */}
+                    {/* Every row here leaves the extension. */}
                     <ArrowUpRightIcon className="size-4.5 text-muted-foreground shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
                   </Item>
                 </a>
