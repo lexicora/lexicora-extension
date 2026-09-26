@@ -34,7 +34,8 @@ export default defineConfig({
       description:
         "The Lexicora browser extension for capturing and organizing web content.",
       //"A browser extension for the Lexicora platform and services.",
-      version: "1.0.0",
+      // No `version`: WXT takes it from package.json, which also names the
+      // zips, so a release bumps that one number.
       permissions: [
         "storage",
         "tabs",
