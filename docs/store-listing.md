@@ -91,20 +91,20 @@ has never seen Lexicora: what the permission does in plain words, and when.
 
 | Permission | Justification |
 | --- | --- |
-| `storage` | Stores the user's settings, such as the theme and whether the save prompt is shown. The saved pages themselves are kept in the extension's own database on the device. Nothing is sent anywhere. |
-| `unlimitedStorage` | Lexicora keeps the user's library only on their device, in the extension's own database — there is no server copy. This permission stops the browser from deleting that database when disk space runs low, which would otherwise lose the user's whole library. It does not change what is stored or where. |
-| `tabs` | Reads the address and title of the tab the user is looking at, so Lexicora knows which page it would save, can show what the user already saved from that website, and can switch off its buttons and menu entries on pages that cannot be saved, such as the browser's own pages. |
-| `activeTab` | Gives Lexicora access to the current tab only after the user acts — clicking the toolbar button, a Lexicora menu entry or a keyboard shortcut — so it can read the page they asked to save. |
-| `scripting` | When the user presses "Refresh Metadata" while editing a saved page, runs a small function in the current tab that reads the page's link, icon, site name and language. It never runs on its own or on any other tab. |
-| `contextMenus` | Adds Lexicora's entries to the right-click menu: save the page, save the selected text, bookmark the page, and open or close the side panel. |
+| `storage` | Stores the user's settings — the theme, whether the save prompt is shown and after how long, and the editor width — and whether the side panel is open. If the user has browser sync switched on, the browser carries these settings to their other devices; Lexicora itself sends nothing. The saved pages are not kept here but in the extension's IndexedDB database on the device. |
+| `unlimitedStorage` | Lexicora keeps the user's library only on their device, in the extension's IndexedDB database — there is no server copy. This permission stops the browser from deleting that database when disk space runs low, which would otherwise lose the user's whole library. It does not change what is stored or where. |
+| `tabs` | Reads the address and title of the tab the user is looking at, so Lexicora knows which page it would save, can show what the user already saved from that website, and can switch off its buttons and menu entries on pages that cannot be saved, such as the browser's own pages. It only looks at the active tab, keeps no record of the pages the user visits, and sends nothing anywhere. |
+| `activeTab` | Gives Lexicora temporary access to the current tab only after the user acts — clicking the toolbar button, a Lexicora menu entry or a keyboard shortcut — so it can read the page they asked to save. The access ends when that tab navigates away or is closed. |
+| `scripting` | When the user presses "Refresh Metadata" while creating or editing an entry, runs a small function in the current tab that reads the page's link, icon, site name and language, to fill in those fields. It never runs on its own or on any other tab, and changes nothing on the page. |
+| `contextMenus` | Adds Lexicora's entries to the right-click menu: "Capture Page", "Capture Selection" (only when text is selected), "Bookmark Page" and "Toggle side panel". Each one acts on the current page only when the user clicks it. |
 | `sidePanel` | The side panel is Lexicora's main window. It opens beside the page the user is reading, so they can save it and look through their library without leaving the page. |
-| `clipboardWrite` | Copies a saved page or a topic to the clipboard, as formatted text and as Markdown, when the user presses Copy. |
+| `clipboardWrite` | Copies a saved entry or topic to the clipboard, as formatted text and as Markdown, when the user presses Copy. Lexicora only writes to the clipboard; it never reads it. |
 
 **Host permissions.** The manifest asks for none, but the content script runs
 on `http://*/*`, `https://*/*` and `file:///*`, which Chrome treats as access
 to all websites and asks to justify:
 
-> Lexicora can save a page from any website, because which page to save is the user's choice. Its content script is therefore present on web pages, but it reads a page only when the user asks to save it. Its only other job is the optional save prompt in Chrome and Edge, which is on by default and can be switched off in Settings: after the user has spent some minutes on a page (five by default), it offers to save it, and accepting opens the side panel. Nothing it reads leaves the device; saved pages go into the user's own library in the browser.
+> Lexicora can save a page from any website, because which page to save is the user's choice. Its content script is therefore present on web pages, but it reads a page only when the user asks to save it — the whole page, only the text they selected, or, for a bookmark, only the page's title, link and description. Its only other job is the optional save prompt in Chrome and Edge, which is on by default and can be switched off in Settings: it counts how long the page has been visible, reads nothing from it, and after some minutes (five by default) offers to save it; accepting opens the side panel. The content script does not run on the browser's own pages or on the extension stores. Nothing it reads leaves the device; saved pages go into the user's own library in the browser.
 
 **Remote code:** No. Everything the extension runs is in the package. No
 scripts are fetched, evaluated or loaded from a server.
@@ -122,7 +122,10 @@ next to the three certifications below.
   saves, and the address of the current tab, read to show what was already
   saved from that site. Stored or read on the device only.
 - Personally identifiable, health, financial, authentication information,
-  personal communications, location, user activity — no.
+  personal communications, location, user activity — no. The save prompt
+  counts only how long a page has been visible; it records no clicks,
+  keystrokes, scrolling or mouse movement, which is what "user activity"
+  means.
 - Certify all three: not sold to third parties, not used or transferred for
   purposes unrelated to the single purpose, not used to determine
   creditworthiness or for lending.
