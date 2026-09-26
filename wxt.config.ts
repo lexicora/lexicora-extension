@@ -30,14 +30,17 @@ export default defineConfig({
   // }),
   manifest: ({ browser }) => {
     const manifestBase: UserManifest = {
+      // Not package.json's name, which npm needs lowercase and hyphenated.
       name: "Lexicora",
-      description:
-        "The Lexicora browser extension for capturing and organizing web content.",
-      //"A browser extension for the Lexicora platform and services.",
-      // No `version`: WXT takes it from package.json, which also names the
-      // zips, so a release bumps that one number.
+      // No `description` or `version`: WXT takes both from package.json. The
+      // description is the Chrome Web Store's summary, so at most 132
+      // characters; the version names the zips too.
       permissions: [
         "storage",
+        //* The library is the only copy, on this device: without this the
+        //* browser may evict the database when the disk runs low. No install
+        //* warning in Chrome; persistent IndexedDB in Firefox.
+        "unlimitedStorage",
         "tabs",
         "activeTab",
         "scripting",

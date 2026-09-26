@@ -47,7 +47,7 @@ const SECTIONS = [
     heading: "Why the permissions are needed",
     paragraphs: [
       "Reading the current tab, and running a script in it: to take the page's text and metadata when you capture or bookmark it, and to show the capture prompt.",
-      "Storage: to keep your library and settings on this device.",
+      "Storage: to keep your library and settings on this device, and to stop the browser from deleting your library when disk space runs low — it is the only copy.",
       "Context menus: to add Lexicora's right-click entries.",
       "Clipboard: to copy an entry or a topic when you ask for it.",
       "The side panel: to open Lexicora beside the page.",

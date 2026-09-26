@@ -1,6 +1,6 @@
 {
   "name": "lexicora-extension",
-  "description": "The Lexicora browser extension for capturing and organizing web content.",
+  "description": "Capture a page or bookmark it, sort it into topics, search it later. Fully offline — your library never leaves your device.",
   "private": true,
   "license": "SEE LICENSE IN LICENSE.txt",
   "version": "1.0.0",
