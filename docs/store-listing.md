@@ -15,7 +15,7 @@ Keep this file in step with the extension: the same claims appear in
 | Field | Value |
 | --- | --- |
 | Name | Lexicora |
-| Category | Productivity (Chrome) / Bookmarks & Tabs (AMO) |
+| Category | Productivity (Chrome) / Bookmarks (AMO) |
 | Language | English (UK spelling in the UI) |
 | Website | Repository, until lexicora.com is live |
 | Support | <https://github.com/lexicora/lexicora-extension/issues> |
@@ -211,13 +211,15 @@ listing is public and the screenshots are the most-read part of it.
 
 ## AMO specifics
 
-- **Licence:** AMO's dropdown only lists standard licences, and Lexicora's is
-  custom. Choose "Custom License" and paste `LICENSE.txt` in full.
+- **Licence:** AMO only lists standard licences, and Lexicora's is custom.
+  Choose "Other", name it "Lexicora Extension License" (the title of
+  `LICENSE.txt`) and paste `LICENSE.txt` in full.
 - **Review:** listed add-ons are signed and published after automated
   validation; human review can follow at any time. Keep the source buildable
   from the repository, since a reviewer may ask how the bundle was produced:
   `bun install && bun run zip:firefox`.
-- **Categories:** Bookmarks & Tabs, with Productivity as secondary.
+- **Categories:** Bookmarks only. AMO offers up to three, but has no
+  Productivity category, and Tabs is for tab managers.
 - **Version numbers are final.** AMO never accepts a version number twice,
   not even after the upload is deleted. Upload the Firefox zip only once the
   build is final; a fix after that is 1.0.1.
