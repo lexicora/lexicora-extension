@@ -104,8 +104,8 @@ reject permissions broader than the feature needs, so `tabs` next to
 | `activeTab` | Required to grant access to the current tab when the user clicks the toolbar button, a context menu action/entry or a keyboard shortcut, so Lexicora can read the page the user chose to save. |
 | `scripting` | Needed for when the user clicks "Refresh Metadata" in the entry form, it runs a function in the active tab that reads the page's URL, favicon, site name and language to fill in those fields. It runs only on that click and does not modify the page. |
 | `contextMenus` | Required for adding context menu actions/entries to capture the page, capture the selected text, bookmark the page and toggle the side panel. These common actions are easy to access in the context menu for the user. |
-| `sidePanel` | The side panel is Lexicora's main interface. The user saves the current page and browses their library in it, next to the page they are reading. |
 | `clipboardWrite` | Needed for copying an entry or topic to the clipboard as formatted text and Markdown when the user clicks Copy. Lexicora never reads the clipboard. |
+| `sidePanel` | The side panel is Lexicora's main interface. The user saves the current page and browses their library in it, next to the page they are reading. |
 
 **Host permissions.** The manifest asks for none, but the content script runs
 on `http://*/*`, `https://*/*` and `file:///*`, which Chrome treats as access
