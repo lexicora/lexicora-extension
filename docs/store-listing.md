@@ -15,7 +15,7 @@ Keep this file in step with the extension: the same claims appear in
 | Field | Value |
 | --- | --- |
 | Name | Lexicora |
-| Category | Productivity (Chrome) / Bookmarks (AMO) |
+| Category | Productivity › Workflow & Planning (Chrome, where similar extensions such as Notion Web Clipper, Evernote Web Clipper and Raindrop.io are listed) / Productivity (Edge) / Bookmarks (AMO) |
 | Language | English (UK spelling in the UI) |
 | Website | Repository, until lexicora.com is live |
 | Support | <https://github.com/lexicora/lexicora-extension/issues> |
