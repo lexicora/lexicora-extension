@@ -19,7 +19,7 @@ Keep this file in step with the extension: the same claims appear in
 | Language | English (UK spelling in the UI) |
 | Website | Repository, until lexicora.com is live |
 | Support | <https://github.com/lexicora/lexicora-extension/issues> |
-| Contact email | hello@tgmaurer.dev (account-wide on the Chrome Web Store; also in the privacy policy and on the Support page) |
+| Contact email | <hello@tgmaurer.dev> (account-wide on the Chrome Web Store; also in the privacy policy and on the Support page) |
 | Privacy policy | <https://github.com/lexicora/lexicora-extension/blob/main/PRIVACY.md> |
 | Licence | Custom, source-available; see `LICENSE.txt` |
 
@@ -101,11 +101,11 @@ reject permissions broader than the feature needs, so `tabs` next to
 | `storage` | Saves the user's settings, such as the theme, the editor width and the save prompt options, and whether the side panel is open. The saved pages are stored in IndexedDB, not here. |
 | `unlimitedStorage` | The user's library is stored only on their device, in IndexedDB, with no copy on a server. This permission keeps the browser from deleting that database when disk space runs low, which would erase the library. |
 | `tabs` | Reads the URL and title of the active tab, and updates when the user switches tabs or navigates. This is used to show in the side panel what the user already saved from the current site, and to disable the save buttons and context menu entries on pages that cannot be saved, such as browser settings pages. The activeTab permission is not enough because the side panel stays open across tab changes, without a new user action on each tab. |
-| `activeTab` | Grants access to the current tab when the user clicks the toolbar button, a context menu entry or a keyboard shortcut, so Lexicora can read the page the user chose to save. |
-| `scripting` | When the user clicks "Refresh Metadata" in the entry form, runs a function in the active tab that reads the page's URL, favicon, site name and language to fill in those fields. It runs only on that click and does not modify the page. |
-| `contextMenus` | Adds context menu entries to capture the page, capture the selected text, bookmark the page and toggle the side panel. |
+| `activeTab` | Required to grant access to the current tab when the user clicks the toolbar button, a context menu action/entry or a keyboard shortcut, so Lexicora can read the page the user chose to save. |
+| `scripting` | Needed for when the user clicks "Refresh Metadata" in the entry form, it runs a function in the active tab that reads the page's URL, favicon, site name and language to fill in those fields. It runs only on that click and does not modify the page. |
+| `contextMenus` | Required for adding context menu actions/entries to capture the page, capture the selected text, bookmark the page and toggle the side panel. These common actions are easy to access in the context menu for the user. |
 | `sidePanel` | The side panel is Lexicora's main interface. The user saves the current page and browses their library in it, next to the page they are reading. |
-| `clipboardWrite` | Copies an entry or topic to the clipboard as formatted text and Markdown when the user clicks Copy. Lexicora never reads the clipboard. |
+| `clipboardWrite` | Needed for copying an entry or topic to the clipboard as formatted text and Markdown when the user clicks Copy. Lexicora never reads the clipboard. |
 
 **Host permissions.** The manifest asks for none, but the content script runs
 on `http://*/*`, `https://*/*` and `file:///*`, which Chrome treats as access
