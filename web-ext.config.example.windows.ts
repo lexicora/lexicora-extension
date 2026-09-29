@@ -8,3 +8,5 @@ export default defineWebExtConfig({
     firefox: "firefoxdeveloperedition",
   },
 });
+
+//* For real usage the file containing this code must be web-ext.config.ts, this file is only an example of how to configure web-ext for Windows.
