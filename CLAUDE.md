@@ -30,8 +30,14 @@ Type-check with `bun run compile` and lint with `bun run lint` (oxlint, configur
 - When creating a worktree, run:
   `git worktree add ../lexicora-extension-worktrees/<branch-name> -b <branch-name>`
 - Copy relevant local configuration files (e.g., `.env`, `.env.local`) to the new worktree upon creation.
+- Run `bun install` in the new worktree before `bun run compile`, `lint`, `test` or `dev` (a fresh worktree has no `node_modules`).
 - When removing, verify changes are merged or stashed, then run:
   `git worktree remove ../lexicora-extension-worktrees/<branch-name>`
+
+## Project Worktree Cleanup
+
+- Sibling Cleanup Path: When tearing down a feature branch, navigate back to `lexicora-extension/` and target `../lexicora-extension-worktrees/<branch-name>`.
+- Empty Directory Check: If `../lexicora-extension-worktrees` becomes completely empty after removing a worktree, leave the parent directory intact for future worktrees.
 
 ## Architecture
 

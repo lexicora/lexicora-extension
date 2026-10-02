@@ -1,5 +1,14 @@
 {
   "attribution": {
     "sessionUrl": false
+  },
+  "permissions": {
+    "deny": [
+      "Bash(git worktree remove *--force*)",
+      "Bash(git worktree remove * -f*)",
+      "Bash(git branch -D *)",
+      "Bash(git branch * -D*)",
+      "Bash(git branch --delete --force *)"
+    ]
   }
 }
