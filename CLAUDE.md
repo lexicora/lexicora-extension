@@ -36,6 +36,7 @@ Type-check with `bun run compile` and lint with `bun run lint` (oxlint, configur
 
 ## Project Worktree Cleanup
 
+- Explicit Deletion Only: Never delete a branch or worktree unless the user explicitly asks for that specific deletion. Finishing a task, merging a PR or saying "clean up" is not permission, so ask first.
 - Sibling Cleanup Path: When tearing down a feature branch, navigate back to `lexicora-extension/` and target `../lexicora-extension-worktrees/<branch-name>`.
 - Empty Directory Check: If `../lexicora-extension-worktrees` becomes completely empty after removing a worktree, leave the parent directory intact for future worktrees.
 
