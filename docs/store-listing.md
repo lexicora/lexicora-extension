@@ -21,6 +21,9 @@ Keep this file in step with the extension: the same claims appear in
 | Support | <https://github.com/lexicora/lexicora-extension/issues> |
 | Contact email | <hello@tgmaurer.dev> (account-wide on the Chrome Web Store; also in the privacy policy and on the Support page) |
 | Privacy policy | <https://github.com/lexicora/lexicora-extension/blob/main/PRIVACY.md> |
+| Chrome Web Store | <https://chromewebstore.google.com/detail/ainigcpoeibgglaldkjippcccaicnjjd> |
+| Microsoft Edge Add-ons | <https://microsoftedge.microsoft.com/addons/detail/lexicora/cedcfjhhgnnhicanijilpadchcfkbjgl> |
+| Firefox Add-ons (AMO) | <https://addons.mozilla.org/addon/lexicora/> |
 | Licence | Custom, source-available; see `LICENSE.txt` |
 
 ---
