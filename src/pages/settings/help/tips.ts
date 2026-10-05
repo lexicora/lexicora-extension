@@ -121,7 +121,7 @@ export const TIP_CATEGORIES: readonly TipCategory[] = [
         iconColor: "text-lime-500",
         title: "Capturing local files",
         description:
-          "To capture a file opened from your computer (a page that starts with file://), turn on Allow access to file URLs for Lexicora on the browser's extensions page. The browser leaves it off until you switch it on yourself, and capture will not work on local files without it.",
+          "To capture a file opened from your computer (a page that starts with file://), you have to switch on Allow access to file URLs yourself. Right-click Lexicora in the toolbar (or under the puzzle icon), choose Manage extension, and turn it on. Capture does not work on local files without it.",
       },
       ...captureSuggestionTips,
     ],
