@@ -100,6 +100,14 @@ and the standalone window are built but hidden behind feature flags
 
 ---
 
+## Install
+
+- [Chrome Web Store](https://chromewebstore.google.com/detail/ainigcpoeibgglaldkjippcccaicnjjd)
+- [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/lexicora/cedcfjhhgnnhicanijilpadchcfkbjgl)
+- [Firefox Add-ons](https://addons.mozilla.org/addon/lexicora/)
+
+---
+
 ## Getting Started
 
 ### Prerequisites

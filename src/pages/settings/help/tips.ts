@@ -4,6 +4,7 @@ import {
   BookmarkIcon,
   CameraIcon,
   CompassIcon,
+  FileTextIcon,
   FolderOpenIcon,
   GlobeIcon,
   HandGrabIcon,
@@ -13,6 +14,7 @@ import {
   MousePointerClickIcon,
   PenLineIcon,
   PinIcon,
+  RefreshCwIcon,
   ScanTextIcon,
   SearchIcon,
   SquareSlashIcon,
@@ -106,6 +108,20 @@ export const TIP_CATEGORIES: readonly TipCategory[] = [
         title: "Drag and drop from the page",
         description:
           "While editing an entry, drag selected text or images from the page straight into the editor. It works alongside Capture Selection and is cleaned up the same way.",
+      },
+      {
+        icon: RefreshCwIcon,
+        iconColor: "text-sky-500",
+        title: "Capture not working? Refresh the page",
+        description:
+          "If any kind of capture does nothing, refresh the page and try again. Lexicora reads a page through a small script that loads with it, so a tab that was open before the extension was installed or updated needs a refresh to get it.",
+      },
+      {
+        icon: FileTextIcon,
+        iconColor: "text-lime-500",
+        title: "Capturing local files",
+        description:
+          "To capture a file opened from your computer (a page that starts with file://), you have to switch on Allow access to file URLs yourself. Right-click Lexicora in the toolbar (or under the puzzle icon), choose Manage extension, and turn it on. Capture does not work on local files without it.",
       },
       ...captureSuggestionTips,
     ],
