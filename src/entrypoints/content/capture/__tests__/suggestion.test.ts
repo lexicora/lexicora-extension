@@ -20,8 +20,6 @@ const remove = vi.fn();
 vi.mock("wxt/utils/content-script-ui/shadow-root", () => ({
   createShadowRootUi: vi.fn(async () => ({ mount, remove })),
 }));
-vi.mock("@fontsource/wix-madefor-text/400.css", () => ({}));
-vi.mock("@fontsource/wix-madefor-text/500.css", () => ({}));
 
 const { setupCaptureSuggestion } = await import("../suggestion");
 

@@ -1,5 +1,7 @@
 import type { PublicPath } from "wxt/browser";
 
+import { PROMPT_FONT_PATH } from "@/constants/prompt-font";
+
 /**
  * The capture prompt's font, loaded from the extension's own files.
  *
@@ -15,38 +17,32 @@ import type { PublicPath } from "wxt/browser";
  * prompt picks this up through its ordinary `font-family`.
  *
  * Only the Latin subset ships, since the prompt's text is the extension's own.
+ * It is the variable font, so one file serves every weight the prompt uses.
  * Anything unexpected falls back to the system stack in the prompt's CSS, so a
  * failure here costs the typeface and nothing else.
  */
 
 const FAMILY = "Wix Madefor Text";
 
-const FACES = [
-  { weight: "400", file: "/fonts/wix-madefor-text-latin-400-normal.woff2" },
-  { weight: "500", file: "/fonts/wix-madefor-text-latin-500-normal.woff2" },
-] as const satisfies ReadonlyArray<{
-  weight: string;
-  file: PublicPath;
-}>;
-
 /** Resolves once per page, however many times the prompt is mounted. */
 let loaded: Promise<void> | null = null;
 
-async function addFace(weight: string, file: PublicPath): Promise<void> {
-  const response = await fetch(browser.runtime.getURL(file));
+async function addFace(): Promise<void> {
+  // Copied in by the build rather than kept in public/, so WXT's list of
+  // public paths does not know it; see constants/prompt-font.
+  const response = await fetch(
+    browser.runtime.getURL(`/${PROMPT_FONT_PATH}` as PublicPath),
+  );
   const data = await response.arrayBuffer();
-  const face = new FontFace(FAMILY, data, { weight, display: "swap" });
+  const face = new FontFace(FAMILY, data, {
+    weight: "400 800",
+    display: "swap",
+  });
   await face.load();
   document.fonts.add(face);
 }
 
 export function ensurePromptFont(): Promise<void> {
-  loaded ??= Promise.all(
-    FACES.map(({ weight, file }) =>
-      // Per face: a missing weight should not cost the other one.
-      addFace(weight, file).catch(() => undefined),
-    ),
-  ).then(() => undefined);
-
+  loaded ??= addFace().catch(() => undefined);
   return loaded;
 }
