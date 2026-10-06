@@ -44,6 +44,13 @@ type Phase = "measuring" | "playing" | "done";
 /** How large the lockup starts, relative to where it lands. */
 const START_SCALE = 1.75;
 /**
+ * The longest the intro waits for the browser to go idle. Right after an
+ * install the browser is busy — the background starting, its install handlers
+ * running, nothing cached yet — and an intro started then stutters on slower
+ * machines, though it runs smoothly on a reload.
+ */
+const IDLE_TIMEOUT = 1000;
+/**
  * An empty page first. The first frames after load are the busiest — React
  * mounting, the stylesheet applying — and a fade started in them loses its
  * beginning, so the lockup appears to pop in rather than fade.
@@ -108,24 +115,44 @@ export function useLogoIntro(
     delete root.dataset.lcIntro;
   }, [isPlaying]);
 
+  // The content gets its own layer while still hidden, so the browser builds
+  // it, blur included, before the reveal rather than in its first frames.
+  useLayoutEffect(() => {
+    const content = contentRef.current;
+    if (!content || !isPlaying) return;
+    content.style.willChange = "opacity, transform, filter";
+    return () => {
+      content.style.willChange = "";
+    };
+  }, [isPlaying, contentRef]);
+
   // Measure only once the font and the logo are in: either one arriving later
-  // would move the real lockup away from where the copy lands.
+  // would move the real lockup away from where the copy lands. Then start
+  // once the browser is idle, so the intro does not compete with whatever
+  // else is loading; see IDLE_TIMEOUT.
   useEffect(() => {
     if (phase !== "measuring") return;
     const lockup = lockupRef.current;
     if (!lockup) return;
     let cancelled = false;
+    let idleHandle: number | undefined;
 
     const images = [...lockup.querySelectorAll("img")].map((img) =>
       img.decode().catch(() => undefined),
     );
     void Promise.all([document.fonts.ready, ...images]).then(() => {
       if (cancelled) return;
-      setRect(lockup.getBoundingClientRect());
-      setPhase("playing");
+      idleHandle = requestIdleCallback(
+        () => {
+          setRect(lockup.getBoundingClientRect());
+          setPhase("playing");
+        },
+        { timeout: IDLE_TIMEOUT },
+      );
     });
     return () => {
       cancelled = true;
+      if (idleHandle !== undefined) cancelIdleCallback(idleHandle);
     };
   }, [phase, lockupRef]);
 
@@ -226,6 +253,9 @@ export function useLogoIntro(
               height: rect.height,
               zIndex: 50,
               opacity: 0,
+              // Its own layer from the start, built while it is still
+              // transparent rather than as it begins to fade in.
+              willChange: "transform, opacity",
             }}
           >
             <LogoLockup />
