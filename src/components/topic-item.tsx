@@ -282,7 +282,7 @@ export function TopicItem({ topic, topUIScrollOffset }: TopicItemProps) {
           </ItemContent>
         </div>
         {topic.tags && topic.tags.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5 w-[90%] mt-0 h-5.5 overflow-hidden content-start">
+          <div className="flex flex-wrap items-center gap-1.5 w-full mt-0 h-5.5 overflow-hidden content-start">
             {topic.tags.map((tag, index) => (
               <span
                 key={topic.id + "-tag-" + index}

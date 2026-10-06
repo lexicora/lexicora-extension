@@ -304,7 +304,7 @@ export function EntryItem({
         {((entry.tags && entry.tags.length > 0) ||
           entry.hostnameUrl ||
           entry.siteName) && (
-          <div className="flex flex-wrap items-center gap-1.5 w-[90%] mt-0 h-5.5 overflow-hidden content-start">
+          <div className="flex flex-wrap items-center gap-1.5 w-full mt-0 h-5.5 overflow-hidden content-start">
             {(entry.hostnameUrl || entry.siteName) && (
               <div className="flex items-center gap-1.5 text-[12px] font-medium text-muted-foreground/90 shrink-0 max-w-32">
                 {entry.faviconUrl && (
