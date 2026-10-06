@@ -295,7 +295,7 @@ function ImportSettingsPage() {
           if (!open) setPendingFile(null);
         }}
       >
-        <AlertDialogContent size="sm">
+        <AlertDialogContent size="sm" className="select-none p-4">
           <AlertDialogHeader>
             <AlertDialogTitle>Replace your library?</AlertDialogTitle>
             <AlertDialogDescription>

@@ -168,7 +168,7 @@ function StorageSettingsPage() {
       </main>
 
       <AlertDialog open={clearOpen} onOpenChange={setClearOpen}>
-        <AlertDialogContent size="sm">
+        <AlertDialogContent size="sm" className="select-none p-4">
           <AlertDialogHeader>
             <AlertDialogTitle>Clear all data?</AlertDialogTitle>
             <AlertDialogDescription>

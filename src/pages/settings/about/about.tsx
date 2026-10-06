@@ -92,73 +92,79 @@ function AboutPage() {
           </Item>
         </section>
 
-        <section className="not-dark:shadow-xs rounded-2xl">
-          <Item
-            variant="muted"
-            size="sm"
-            className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl rounded-b-none"
-            asChild
-          >
-            <Link to="/settings/about/license" draggable={false} viewTransition>
-              <ItemMedia variant="icon">
-                <ScrollTextIcon className="size-5 text-amber-500" />
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle>License</ItemTitle>
-              </ItemContent>
-              <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
-            </Link>
-          </Item>
-          <SettingsItemSeparator />
-          <Item
-            variant="muted"
-            size="sm"
-            className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-none"
-            asChild
-          >
-            <Link
-              to="/settings/about/licenses"
-              draggable={false}
-              viewTransition
+        <section>
+          <article className="not-dark:shadow-xs rounded-2xl">
+            <Item
+              variant="muted"
+              size="sm"
+              className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl rounded-b-none"
+              asChild
             >
-              <ItemMedia variant="icon">
-                <FileTextIcon className="size-5 text-emerald-500" />
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle>Open Source Licenses</ItemTitle>
-              </ItemContent>
-              <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
-            </Link>
-          </Item>
-          <SettingsItemSeparator />
-          <Item
-            variant="muted"
-            size="sm"
-            className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl rounded-t-none"
-            asChild
-          >
-            {/* The only link out of this page: the source, where an issue can
+              <Link
+                to="/settings/about/license"
+                draggable={false}
+                viewTransition
+              >
+                <ItemMedia variant="icon">
+                  <ScrollTextIcon className="size-5 text-amber-500" />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>License</ItemTitle>
+                </ItemContent>
+                <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
+              </Link>
+            </Item>
+            <SettingsItemSeparator />
+            <Item
+              variant="muted"
+              size="sm"
+              className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-none"
+              asChild
+            >
+              <Link
+                to="/settings/about/licenses"
+                draggable={false}
+                viewTransition
+              >
+                <ItemMedia variant="icon">
+                  <FileTextIcon className="size-5 text-emerald-500" />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>Open Source Licenses</ItemTitle>
+                </ItemContent>
+                <ChevronRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
+              </Link>
+            </Item>
+            <SettingsItemSeparator />
+            <Item
+              variant="muted"
+              size="sm"
+              className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl rounded-t-none"
+              asChild
+            >
+              {/* The only link out of this page: the source, where an issue can
                 be raised and the licence read in context. */}
-            <a
-              href={REPOSITORY_URL}
-              target="_blank"
-              rel="noreferrer"
-              draggable={false}
-            >
-              <ItemMedia variant="icon">
-                <CodeXmlIcon className="size-5 text-violet-500" />
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle>Source code</ItemTitle>
-              </ItemContent>
-              {/* An arrow away, not a chevron: this row leaves the extension,
+              <a
+                href={REPOSITORY_URL}
+                target="_blank"
+                rel="noreferrer"
+                draggable={false}
+              >
+                <ItemMedia variant="icon">
+                  <CodeXmlIcon className="size-5 text-violet-500" />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>Source code</ItemTitle>
+                </ItemContent>
+                {/* An arrow away, not a chevron: this row leaves the extension,
                   unlike the two above it. */}
-              <ArrowUpRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
-            </a>
-          </Item>
+                <ArrowUpRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
+              </a>
+            </Item>
+          </article>
           <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
-            Lexicora's own terms, the libraries and tools that make it
-            possible, and where it is built.
+            Lexicora's own terms, the libraries and tools that make it possible,
+            and where it is built.
           </p>
         </section>
       </main>

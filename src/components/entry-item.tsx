@@ -117,7 +117,7 @@ export function EntryItem({
       variant="default"
       className={cn(
         "button-default cursor-pointer duration-150 ease-out",
-        "h-full /*min-h-26.25*/ flex-col items-start py-2.75 px-3.25 rounded-2xl",
+        "h-full /*min-h-26.25*/ flex-col items-start pt-2.75 pb-2.5 px-3.25 rounded-2xl",
         !entry.tags?.length &&
           !entry.hostnameUrl &&
           !entry.siteName &&
@@ -309,7 +309,7 @@ export function EntryItem({
               <div className="flex items-center gap-1.5 text-[12px] font-medium text-muted-foreground/90 shrink-0 max-w-32">
                 {entry.faviconUrl && (
                   <>
-                    <Avatar.Root className="size-4.25 rounded-xs opacity-90 shrink-0 ml-0.75">
+                    <Avatar.Root className="size-4.25 rounded-xs opacity-90 shrink-0 ml-0.5">
                       <Avatar.Image
                         className="rounded-xs"
                         src={entry.faviconUrl}
