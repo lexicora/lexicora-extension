@@ -205,7 +205,7 @@ function TopicEntriesPage() {
       </div>
 
       {filterReady && (
-        <main className="mb-0.75 mt-px">
+        <main className="mb-6.75 mt-px">
           <EntryList
             topicId={id}
             search={deferredSearch}

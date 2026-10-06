@@ -276,7 +276,7 @@ function LibraryPage() {
           </div>
         </PageHeader>
         <TabsContent value="entries">
-          <main className="mb-0">
+          <main className="mb-6">
             <EntryList
               search={deferredSearch}
               filter={filter}
@@ -285,7 +285,7 @@ function LibraryPage() {
           </main>
         </TabsContent>
         <TabsContent value="topics">
-          <main className="mb-0">
+          <main className="mb-6">
             <TopicList
               search={deferredSearch}
               filter={filter}
