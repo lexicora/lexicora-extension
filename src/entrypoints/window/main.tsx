@@ -23,7 +23,7 @@ import { installInputModality } from "@/lib/input-modality";
 installInputModality();
 
 // The dev server keeps the app reachable so work on it can continue.
-const enabled = FEATURES.WINDOWED_APP || import.meta.env.PROD;
+const enabled = FEATURES.WINDOWED_APP || import.meta.env.DEV;
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
