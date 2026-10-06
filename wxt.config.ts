@@ -1,11 +1,26 @@
+import { resolve } from "node:path";
 import { defineConfig, type UserManifest } from "wxt";
 import tailwindcss from "@tailwindcss/vite";
+import {
+  PROMPT_FONT_PATH,
+  PROMPT_FONT_SOURCE,
+} from "./src/constants/prompt-font";
 import { manifestCommands } from "./src/constants/shortcuts";
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   srcDir: "src",
+  hooks: {
+    // The capture prompt's font, copied from the package rather than kept in
+    // public/, so it always matches the installed version; see prompt-font.ts.
+    "build:publicAssets": (_, assets) => {
+      assets.push({
+        absoluteSrc: resolve(PROMPT_FONT_SOURCE),
+        relativeDest: PROMPT_FONT_PATH,
+      });
+    },
+  },
   vite: () => ({
     plugins: [tailwindcss()],
     resolve: { alias: { "tailwind-merge": "cn", clsx: "cn" } }, //* cn is faster, but if this causes issues, then remove.
@@ -58,7 +73,7 @@ export default defineConfig({
       //* Reachable from the pages the content script runs on, and no others.
       web_accessible_resources: [
         {
-          resources: ["fonts/*.woff2"],
+          resources: [PROMPT_FONT_PATH],
           matches: ["http://*/*", "https://*/*", "file:///*"],
         },
       ],
