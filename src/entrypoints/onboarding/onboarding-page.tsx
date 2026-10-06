@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
 import { Kbd } from "@/components/kbd";
 import { SettingsItemSeparator } from "@/components/settings";
@@ -12,6 +12,10 @@ import {
 } from "@/components/ui/item";
 import { COMMAND_ID, suggestedKeyFor } from "@/constants/shortcuts";
 import { IS_MAC } from "@/hooks/sidepanel/panel-shortcuts";
+import {
+  PANEL_NAME as PANEL,
+  useOpenSidePanelFromTab,
+} from "@/hooks/use-open-side-panel-from-tab";
 import { cn } from "cn";
 import {
   BookmarkIcon,
@@ -32,9 +36,6 @@ import { ToolbarPointer } from "./toolbar-pointer";
 import { useCommandKeys } from "./use-command-keys";
 import { useDisableZoom } from "./use-disable-zoom";
 import { useToolbarPin } from "./use-toolbar-pin";
-
-/** Firefox calls it a sidebar, in its own menus and in ours. */
-const PANEL = import.meta.env.FIREFOX ? "sidebar" : "side panel";
 
 const OPEN_COMMAND = import.meta.env.FIREFOX
   ? COMMAND_ID.FIREFOX_OPEN_SIDEBAR
@@ -190,36 +191,11 @@ function OnboardingPage() {
   const pinCardRef = useRef<HTMLDivElement>(null);
   const intro = useLogoIntro(lockupRef, contentRef);
 
-  // Resolved up front, so the click can open the panel before any `await`:
-  // both browsers only open it straight from a user gesture.
-  const [tab, setTab] = useState<{ id?: number; windowId?: number } | null>(
-    null,
-  );
-  const [openFailed, setOpenFailed] = useState(false);
-
-  useEffect(() => {
-    browser.tabs
-      .getCurrent()
-      .then((current) =>
-        setTab({ id: current?.id, windowId: current?.windowId }),
-      )
-      .catch(() => setTab({}));
-  }, []);
-
-  const openPanel = () => {
-    const opening: Promise<unknown> = import.meta.env.FIREFOX
-      ? // @ts-ignore: sidebarAction is a Firefox-specific API
-        browser.sidebarAction.open()
-      : browser.sidePanel.open({ windowId: tab!.windowId! });
-
-    // The panel belongs to the window, not this tab, so it stays open once
-    // the tab is gone and shows beside whichever page comes to the front.
-    opening
-      .then(() => (tab?.id !== undefined ? browser.tabs.remove(tab.id) : null))
-      .catch(() => setOpenFailed(true));
-  };
-
-  const canOpen = import.meta.env.FIREFOX || tab?.windowId !== undefined;
+  const {
+    open: openPanel,
+    canOpen,
+    failed: openFailed,
+  } = useOpenSidePanelFromTab();
 
   const pinRow: Row =
     isPinned === true
