@@ -98,7 +98,8 @@ export const FEATURES = {
    * The standalone windowed app (`window.html`). The entrypoint is functional
    * but unpolished — its home page is a placeholder and several window-specific
    * issues are open (#179, #180, #182, #184). Off until that work is finished;
-   * the entrypoint still builds so development can continue.
+   * the entrypoint still builds so development can continue, and runs in full
+   * on the dev server, while production builds show `WindowUnavailable`.
    */
   WINDOWED_APP: false,
 } satisfies Record<string, boolean>;

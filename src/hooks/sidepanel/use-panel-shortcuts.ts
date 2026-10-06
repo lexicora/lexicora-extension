@@ -57,12 +57,14 @@ export function usePanelShortcuts() {
 
       switch (action) {
         case "save": {
-          // The page's header save button: clicking it rather than submitting
-          // the form directly means a save already in progress, which disables
-          // the button, cannot be started twice.
+          if (!isEditingPath(location.pathname)) return;
+          // The page's save button — in the header on the entry pages, at the
+          // end of the form on the topic pages. Clicking it rather than
+          // submitting the form directly means a save already in progress,
+          // which disables the button, cannot be started twice.
           document
             .querySelector<HTMLButtonElement>(
-              'button[type="submit"][form]:not(:disabled)',
+              'button[type="submit"]:not(:disabled)',
             )
             ?.click();
           return;

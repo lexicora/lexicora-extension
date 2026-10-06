@@ -1,4 +1,5 @@
 import { ChevronRightIcon, GlobeIcon } from "lucide-react";
+import { Avatar } from "radix-ui";
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
@@ -71,20 +72,20 @@ export function RecentEntries({
               })
             }
           >
-            {entry.faviconUrl ? (
-              <img
-                src={entry.faviconUrl}
-                alt=""
-                aria-hidden
-                draggable="false"
-                className="size-3.5 shrink-0 rounded-xs"
-                onError={(e) => {
-                  e.currentTarget.style.visibility = "hidden";
-                }}
-              />
-            ) : (
-              <GlobeIcon className="size-3.5 text-muted-foreground shrink-0" />
-            )}
+            {/* The globe stands in when there is no favicon or it fails to load. */}
+            <Avatar.Root className="flex size-3.5 shrink-0" aria-hidden>
+              {entry.faviconUrl && (
+                <Avatar.Image
+                  src={entry.faviconUrl}
+                  alt=""
+                  draggable="false"
+                  className="size-3.5 rounded-xs"
+                />
+              )}
+              <Avatar.Fallback delayMs={entry.faviconUrl ? 50 : 0}>
+                <GlobeIcon className="size-3.5 text-muted-foreground" />
+              </Avatar.Fallback>
+            </Avatar.Root>
             <span className="text-sm truncate flex-1">{entry.title}</span>
             <ChevronRightIcon className="transition-opacity size-3.5 text-muted-foreground shrink-0 opacity-70 group-hover:opacity-100" />
           </Button>
