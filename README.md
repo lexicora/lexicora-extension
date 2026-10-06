@@ -6,7 +6,11 @@ Lexicora is built for people who consume large amounts of information on the web
 
 It is intentionally opinionated: not a general-purpose note-taking app, not a workspace OS, not a social platform. It is a **tool** — optimized for turning web content into usable, searchable knowledge with minimal friction.
 
----
+## Install
+
+- [Chrome Web Store](https://chromewebstore.google.com/detail/ainigcpoeibgglaldkjippcccaicnjjd)
+- [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/lexicora/cedcfjhhgnnhicanijilpadchcfkbjgl)
+- [Firefox Add-ons](https://addons.mozilla.org/addon/lexicora/)
 
 ## The Problem
 
@@ -21,8 +25,6 @@ Lexicora solves this by letting users:
 
 All without changing how they already browse or use AI tools.
 
----
-
 ## How It Works
 
 1. Browse the web — AI chats, docs, articles, wikis, anywhere
@@ -32,8 +34,6 @@ All without changing how they already browse or use AI tools.
 5. When you are back on a site, the side panel shows what you already saved from it
 
 Most interactions happen inside the **browser side panel**, keeping context and flow intact.
-
----
 
 ## Design Principles
 
@@ -46,8 +46,6 @@ Most interactions happen inside the **browser side panel**, keeping context and 
 - **AI-optional** — useful without AI, powerful with it
 - **Local-first** — the library lives on your device; v1.0 works fully offline
   and sends nothing anywhere (see the [privacy policy](PRIVACY.md))
-
----
 
 ## Key Features
 
@@ -66,10 +64,9 @@ Most interactions happen inside the **browser side panel**, keeping context and 
 
 ### v1.0 scope
 
-v1.0 ships as a polished, **offline-only** extension: everything stays on the
-device and the extension makes no network requests of its own. AI, accounts
-and the standalone window are built but hidden behind feature flags
-(`src/constants/features.ts`), so nothing promises an unbuilt feature. See
+v1.0 is **offline-only**: everything stays on the device and the extension
+makes no network requests of its own. AI, accounts and the standalone window
+are built but hidden behind feature flags (`src/constants/features.ts`). See
 [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ### Planned / Beyond v1.0
@@ -78,8 +75,6 @@ and the standalone window are built but hidden behind feature flags
 - Sync across devices, and a web app for expanded views and management
 - Light sharing and collaboration
 - The standalone windowed app, which is built but parked
-
----
 
 ## Tech Stack
 
@@ -98,17 +93,7 @@ and the standalone window are built but hidden behind feature flags
 | Language | [TypeScript](https://www.typescriptlang.org/) |
 | Package manager | [Bun](https://bun.sh) |
 
----
-
-## Install
-
-- [Chrome Web Store](https://chromewebstore.google.com/detail/ainigcpoeibgglaldkjippcccaicnjjd)
-- [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/lexicora/cedcfjhhgnnhicanijilpadchcfkbjgl)
-- [Firefox Add-ons](https://addons.mozilla.org/addon/lexicora/)
-
----
-
-## Getting Started
+## Development
 
 ### Prerequisites
 
@@ -173,8 +158,6 @@ bun run test:coverage    # With V8 coverage report
 
 Tests use Vitest with WXT's `WxtVitest()` plugin and `fakeBrowser` for in-memory extension API stubs — no real browser required. Test files live in `__tests__/` directories co-located with the code they test.
 
----
-
 ## Architecture Overview
 
 ### Entrypoints
@@ -210,23 +193,17 @@ in each page's `<head>` to paint the right colors before the app loads;
 
 Use the `useAppStorage` hook for reactive access in React components.
 
----
-
 ## Status
 
-Lexicora is under active development. The current milestone is v1.0, the
-offline-only extension described above; the backend, web app and AI features
-come after it, as the core experience settles.
+v1.0, the offline-only extension described above, is out in the stores.
+Work continues on v1.x refinements; the backend, web app and AI features come
+after, as the core experience settles.
 
 The core vision remains intentionally narrow: **turning ephemeral web knowledge into permanent, accessible understanding**.
-
----
 
 ## What Lexicora Is Not
 
 Lexicora intentionally avoids becoming a full project management tool, a generic note-taking app, a deeply nested workspace, or a social platform. Those problems are already solved elsewhere — often at the cost of speed and clarity.
-
----
 
 ## License
 
