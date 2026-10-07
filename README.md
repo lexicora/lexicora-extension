@@ -12,6 +12,21 @@ It is intentionally opinionated: not a general-purpose note-taking app, not a wo
 - [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/lexicora/cedcfjhhgnnhicanijilpadchcfkbjgl)
 - [Firefox Add-ons](https://addons.mozilla.org/addon/lexicora/)
 
+## Screenshots
+
+<img src="docs/store/screenshots/1.png" alt="The Lexicora side panel next to a Wikipedia article, showing topics, entries from the same site and the Capture page button" width="100%">
+
+<details>
+<summary>More screenshots</summary>
+<br>
+
+<img src="docs/store/screenshots/2.png" alt="A React Router docs page captured into the editor, with its headings, lists, callout and code block" width="49%">
+<img src="docs/store/screenshots/3.png" alt="The library's entry list with tags, favicons, pins and favourites" width="49%">
+<img src="docs/store/screenshots/4.png" alt="Library search narrowed to one site with site:react.dev" width="49%">
+<img src="docs/store/screenshots/5.png" alt="The export page, offering a JSON backup or a Markdown archive" width="49%">
+
+</details>
+
 ## The Problem
 
 Most valuable knowledge today lives in AI chat conversations, documentation sites, blogs, and Wikipedia — scattered across tabs, sessions, and tools. Once consumed, it is usually lost, buried, or extremely hard to retrieve later.

@@ -11,6 +11,11 @@ import { manifestCommands } from "./src/constants/shortcuts";
 export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   srcDir: "src",
+  zip: {
+    // Store screenshots and artwork play no part in the build, so they stay
+    // out of the sources zip that AMO reviews with every release.
+    excludeSources: ["docs/store/**"],
+  },
   hooks: {
     // The capture prompt's font, copied from the package rather than kept in
     // public/, so it always matches the installed version; see prompt-font.ts.
