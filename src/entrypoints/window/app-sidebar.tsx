@@ -15,8 +15,7 @@ import {
   Settings2Icon,
 } from "lucide-react";
 
-import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
-import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
+import { LexicoraLogo } from "@/components/lexicora-logo";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -242,18 +241,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           className="flex items-center gap-2 px-2 py-1.5"
           title="Lexicora"
         >
-          <img
-            src={lexicoraLightThemeLogoNoBg}
-            className="h-5 lc-display-light rounded-xs"
-            alt="Lexicora logo"
-            draggable="false"
-          />
-          <img
-            src={lexicoraDarkThemeLogoNoBg}
-            className="h-5 lc-display-dark rounded-xs"
-            alt="Lexicora logo"
-            draggable="false"
-          />
+          <LexicoraLogo className="h-5 rounded-xs" />
           <span className="text-base font-semibold">Lexicora</span>
         </NavLink>
         <NavMain />

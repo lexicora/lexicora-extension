@@ -1,7 +1,6 @@
 import { useState } from "react";
 import styles from "./home.module.css";
-import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
-import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
+import { LexicoraLogo } from "@/components/lexicora-logo";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
@@ -75,18 +74,7 @@ function HomePage() {
         titleContent={
           <>
             <span className="flex justify-center gap-3 items-baseline mb-3">
-              <img
-                src={lexicoraLightThemeLogoNoBg}
-                className="h-6.5 lc-display-light rounded-xs"
-                alt="Lexicora logo"
-                draggable="false"
-              />
-              <img
-                src={lexicoraDarkThemeLogoNoBg}
-                className="h-6.5 lc-display-dark rounded-xs"
-                alt="Lexicora logo"
-                draggable="false"
-              />
+              <LexicoraLogo className="h-6.5 rounded-xs" />
               <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground leading-0">
                 Lexicora
               </h1>

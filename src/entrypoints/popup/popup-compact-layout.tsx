@@ -1,5 +1,4 @@
-import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
-import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
+import { LexicoraLogo } from "@/components/lexicora-logo";
 
 import { AccountMenu } from "@/components/account-menu";
 import { CaptureActions } from "@/components/capture/capture-actions";
@@ -38,20 +37,7 @@ export function PopupCompactLayout({
       <header className="flex items-center justify-between gap-2 ml-1.5">
         <div className="flex items-center gap-2 min-w-0">
           <AccountMenu className="bg-secondary/80" />
-          <img
-            src={lexicoraLightThemeLogoNoBg}
-            className="h-6 lc-display-light rounded-xs shrink-0"
-            alt=""
-            aria-hidden
-            draggable="false"
-          />
-          <img
-            src={lexicoraDarkThemeLogoNoBg}
-            className="h-6 lc-display-dark rounded-xs shrink-0"
-            alt=""
-            aria-hidden
-            draggable="false"
-          />
+          <LexicoraLogo className="h-6 rounded-xs shrink-0" decorative />
           <span className="text-lg font-bold text-[#00143d] dark:text-foreground truncate">
             Lexicora
           </span>

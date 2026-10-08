@@ -1,5 +1,4 @@
-import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
-import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
+import { LexicoraLogo } from "@/components/lexicora-logo";
 
 import { AccountMenu } from "@/components/account-menu";
 import { Button } from "@/components/ui/button";
@@ -57,18 +56,7 @@ export function PopupAiLayout({
               title="Scroll to top"
             >
               {/*Maybe remove later and keep it blank*/}
-              <img
-                src={lexicoraLightThemeLogoNoBg}
-                className="h-8 lc-display-light rounded-[3px]"
-                alt="Lexicora logo"
-                draggable="false"
-              />
-              <img
-                src={lexicoraDarkThemeLogoNoBg}
-                className="h-8 lc-display-dark rounded-[3px]"
-                alt="Lexicora logo"
-                draggable="false"
-              />
+              <LexicoraLogo className="h-8 rounded-[3px]" />
             </div>
             <div className="flex justify-end flex-1">
               <Button
@@ -86,18 +74,7 @@ export function PopupAiLayout({
         <section className="mt-1">
           <span className="flex justify-center gap-3 items-baseline mb-3">
             {/*Maybe add link to lexicora.com */}
-            <img
-              src={lexicoraLightThemeLogoNoBg}
-              className="h-6.5 lc-display-light rounded-xs"
-              alt="Lexicora logo"
-              draggable="false"
-            />
-            <img
-              src={lexicoraDarkThemeLogoNoBg}
-              className="h-6.5 lc-display-dark rounded-xs"
-              alt="Lexicora logo"
-              draggable="false"
-            />
+            <LexicoraLogo className="h-6.5 rounded-xs" />
             {/*#00143d is the Lexicora color */}
             <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground leading-0">
               Lexicora

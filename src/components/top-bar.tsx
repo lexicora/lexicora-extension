@@ -3,8 +3,7 @@ import { AccountMenu } from "@/components/account-menu";
 import { Button } from "@/components/ui/button";
 import { SquareArrowOutUpRightIcon } from "lucide-react";
 
-import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
-import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
+import { LexicoraLogo } from "@/components/lexicora-logo";
 
 import { FEATURES } from "@/constants/features";
 import { useScrollPos } from "@/providers/scroll-observer";
@@ -52,18 +51,7 @@ export function TopBar() {
           title="Scroll to top"
         >
           {/*Maybe remove later and keep it blank*/}
-          <img
-            src={lexicoraLightThemeLogoNoBg}
-            className="h-8 lc-display-light rounded-[3px]"
-            alt="Lexicora logo"
-            draggable="false"
-          />
-          <img
-            src={lexicoraDarkThemeLogoNoBg}
-            className="h-8 lc-display-dark rounded-[3px]"
-            alt="Lexicora logo"
-            draggable="false"
-          />
+          <LexicoraLogo className="h-8 rounded-[3px]" />
         </div>
         {/* Kept as a spacer so the logo stays centered when the window app is off. */}
         <div className="flex justify-end flex-1">
