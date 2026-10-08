@@ -117,7 +117,7 @@ export function EntryItem({
       variant="default"
       className={cn(
         "button-default cursor-pointer duration-150 ease-out",
-        "h-full /*min-h-26.25*/ flex-col items-start pt-2.75 pb-2.5 px-3.25 rounded-2xl",
+        "h-full /*min-h-26.25*/ flex-col items-start py-2.75 px-3.25 rounded-2xl",
         !entry.tags?.length &&
           !entry.hostnameUrl &&
           !entry.siteName &&
