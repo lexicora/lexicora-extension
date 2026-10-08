@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
 @import "tw-animate-css";
 
 /*@import "./base.css" layer(base);*/
@@ -8,7 +8,17 @@
 
 @layer base, components, utilities, animations;
 
-@source "../../../node_modules/@blocknote/shadcn";
+/* Where Tailwind looks for class names: exactly the code that ships, and
+   nothing else. Left to detect them itself, it scans the whole project, and
+   the CSS then depends on what happens to be lying around — the tests, docs,
+   an earlier build in .output, leftovers in node_modules. A build from the
+   source zip, as AMO's reviewers make, would then differ from the uploaded
+   one. */
+@source "../..";
+@source not "../../**/__tests__";
+/* BlockNote's compiled components, not the whole package: its sources and
+   nested node_modules hold class names the editor never uses. */
+@source "../../../node_modules/@blocknote/shadcn/dist";
 
 @custom-variant dark (&:is(.dark *));
 
