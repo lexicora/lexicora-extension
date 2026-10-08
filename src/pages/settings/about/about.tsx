@@ -1,5 +1,4 @@
-import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
-import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
+import { LexicoraLogo } from "@/components/lexicora-logo";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import {
@@ -38,18 +37,7 @@ function AboutPage() {
           >
             <span className="flex justify-center gap-1.5 items-baseline mb-3">
               {/*Maybe add link to lexicora.com */}
-              <img
-                src={lexicoraLightThemeLogoNoBg}
-                className="h-[1.06rem] lc-display-light rounded-xs"
-                alt="Lexicora logo"
-                draggable="false"
-              />
-              <img
-                src={lexicoraDarkThemeLogoNoBg}
-                className="h-[1.06rem] lc-display-dark rounded-xs"
-                alt="Lexicora logo"
-                draggable="false"
-              />
+              <LexicoraLogo className="h-[1.06rem] rounded-xs" />
               {/*#00143d is the Lexicora color */}
               <h2 className="text-2xl font-bold text-[#00143d] dark:text-foreground leading-0">
                 Lexicora

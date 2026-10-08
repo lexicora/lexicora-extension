@@ -1,5 +1,4 @@
-import lexicoraLightThemeLogoNoBg from "@/assets/logos/lexicora_inverted_no-bg.svg";
-import lexicoraDarkThemeLogoNoBg from "@/assets/logos/lexicora_standard_no-bg.svg";
+import { LexicoraLogo } from "@/components/lexicora-logo";
 import {
   useEffect,
   useLayoutEffect,
@@ -17,20 +16,7 @@ export function LogoLockup({
 }) {
   return (
     <span ref={ref} className="flex gap-1.5 items-baseline">
-      <img
-        src={lexicoraLightThemeLogoNoBg}
-        className="h-[1.1rem] lc-display-light rounded-xs"
-        alt=""
-        aria-hidden
-        draggable="false"
-      />
-      <img
-        src={lexicoraDarkThemeLogoNoBg}
-        className="h-[1.1rem] lc-display-dark rounded-xs"
-        alt=""
-        aria-hidden
-        draggable="false"
-      />
+      <LexicoraLogo className="h-[1.1rem] rounded-xs" decorative />
       {/*#00143d is the Lexicora color */}
       <span className="text-2xl font-bold text-[#00143d] dark:text-foreground leading-0">
         Lexicora
