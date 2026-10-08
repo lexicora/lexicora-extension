@@ -59,7 +59,11 @@ describe("findRelease", () => {
 
 describe("formatReleaseDate", () => {
   it("keeps the day as written, whatever the time zone", () => {
-    expect(formatReleaseDate("2026-01-01")).toMatch(/2026/);
-    expect(formatReleaseDate("2026-01-01")).toMatch(/\b1\b/);
+    // Read as local midnight, 1 January would be 31 December 2025 west of
+    // UTC. Only the year and that day are checked, since the format is the
+    // locale's: "1 Jan 2026", "Jan 1, 2026" or "01.01.2026".
+    const formatted = formatReleaseDate("2026-01-01");
+    expect(formatted).toMatch(/2026/);
+    expect(formatted).not.toMatch(/2025|31/);
   });
 });

@@ -153,6 +153,26 @@ and select `.output/chrome-mv3`. In Firefox, open `about:debugging`, choose
 **This Firefox**, then **Load Temporary Add-on** and select any file in
 `.output/firefox-mv2`.
 
+### Reproducing a store build
+
+The store builds are reproducible: building the same source the same way gives
+byte-identical zips. This is what Firefox Add-ons reviewers check, and it
+needs:
+
+- [Bun](https://bun.sh) 1.4.2, which installs the dependencies and runs the
+  scripts
+- [Node.js](https://nodejs.org) 24, which the build itself runs on (tested
+  with 24.14.0 and 24.21.0). Not Bun's own runtime: `bun --bun` gives a
+  different build.
+
+```bash
+bun install --frozen-lockfile
+bun run zip:firefox      # or bun run zip, for Chrome and Edge
+```
+
+The zip is written to `.output/lexicora-extension-<version>-firefox.zip`, and
+the same files unpacked to `.output/firefox-mv2/`.
+
 ### Type-Check and Lint
 
 ```bash

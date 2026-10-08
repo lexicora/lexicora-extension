@@ -218,14 +218,62 @@ listing is public and the screenshots are the most-read part of it.
   Choose "Other", name it "Lexicora Extension License" (the title of
   `LICENSE.txt`) and paste `LICENSE.txt` in full.
 - **Review:** listed add-ons are signed and published after automated
-  validation; human review can follow at any time. Keep the source buildable
-  from the repository, since a reviewer may ask how the bundle was produced:
-  `bun install && bun run zip:firefox`.
+  validation; human review can follow at any time.
 - **Categories:** Bookmarks only. AMO offers up to three, but has no
   Productivity category, and Tabs is for tab managers.
 - **Version numbers are final.** AMO never accepts a version number twice,
   not even after the upload is deleted. Upload the Firefox zip only once the
-  build is final; a fix after that is 1.0.1.
+  build is final, and checked as below; a fix after that needs the next
+  version number. 1.0.1 was lost this way: its build could not be reproduced
+  from its sources, so Firefox went from 1.0.0 to 1.0.2.
+
+### Source code
+
+The bundle is minified, so AMO asks for the source with every version. Upload
+`lexicora-extension-<version>-sources.zip`, which `bun run zip:firefox` writes
+next to the Firefox zip.
+
+A reviewer rebuilds the extension from that zip and diffs the result against
+the upload, and ["there must be no differences"](https://extensionworkshop.com/documentation/publish/source-code-submission/).
+Their default environment is Ubuntu with Node.js and npm, so the notes below
+say what this build needs instead.
+
+**Build the release from a clean install.** `rm -rf node_modules .output &&
+bun install --frozen-lockfile`, then the zips. A long-lived `node_modules` can
+hold leftovers that a fresh install does not, and anything they change in the
+build is something the reviewer cannot reproduce.
+
+**Check it as the reviewer will**, before uploading: unzip the sources zip
+into an empty folder, run the commands from the notes below, and compare the
+Firefox zip that comes out with the one about to be uploaded. They must be
+byte-identical (same `md5`). Only then upload.
+
+### Notes to reviewer
+
+Paste into the version's "Notes to Reviewer", with the version number in the
+output name filled in:
+
+> Source: the attached source package (also at https://github.com/lexicora/lexicora-extension).
+>
+> Requirements: Bun 1.4.2 (https://bun.sh) and Node.js 24 (tested with 24.14.0 and 24.21.0), on any OS. Bun installs the dependencies and runs the scripts; the build itself runs on Node.js, so do not use Bun's own runtime (no `--bun`).
+>
+> Build:
+> 1. bun install --frozen-lockfile
+> 2. bun run zip:firefox
+>
+> Output: .output/lexicora-extension-1.0.2-firefox.zip, and the same files unpacked in .output/firefox-mv2/.
+>
+> Notes:
+> - No remote code. Nothing is fetched or evaluated from a server.
+> - All data stays on the device: the library in IndexedDB, settings in storage.sync. The manifest declares data_collection_permissions: none.
+> - The content script reads a page only when the user captures or bookmarks it.
+> - Features that are not part of this release (AI, accounts, website link) are switched off by build-time flags in src/constants/features.ts and cannot be reached in the UI.
+
+### Release notes
+
+AMO shows a version's release notes on the listing, to people who have not
+installed it yet, so they repeat the version's entry from
+`src/constants/changelog.ts` as plain text rather than pointing to the app.
 
 ## Replacing a package before submitting
 

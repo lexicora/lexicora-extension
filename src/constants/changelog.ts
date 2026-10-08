@@ -25,6 +25,17 @@ export const CHANGE_KINDS: readonly ChangeKind[] = ["new", "improved", "fixed"];
 
 export const RELEASES: readonly Release[] = [
   {
+    version: "1.0.2",
+    date: "2026-10-08",
+    summary:
+      "1.0.1, rebuilt so that Firefox Add-ons can verify it against its source code.",
+    changes: {
+      improved: [
+        "Lexicora now builds identically from its published source code, which Firefox Add-ons checks before publishing an update.",
+      ],
+    },
+  },
+  {
     version: "1.0.1",
     date: "2026-10-08",
     summary:
