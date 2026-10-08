@@ -25,6 +25,26 @@ export const CHANGE_KINDS: readonly ChangeKind[] = ["new", "improved", "fixed"];
 
 export const RELEASES: readonly Release[] = [
   {
+    version: "1.0.1",
+    date: "2026-10-08",
+    summary:
+      "Fixes and polish after the first release, and a download about a third smaller.",
+    changes: {
+      improved: [
+        "Lexicora is about a third smaller to download and install.",
+        "Tags on entries and topics use the full width of the row.",
+        "Two new tips under Settings → Help: what to do when a capture does nothing, and how to use Lexicora on local files.",
+        "Small spacing fixes in entry and topic items and in Settings.",
+      ],
+      fixed: [
+        "⌘/Ctrl+S now saves when creating or editing a topic, as it already did for entries.",
+        "The last item in a list is no longer covered by the + button once scrolled to the end.",
+        "Recent entries on the home page, and the current page in the popup, show a globe when a site's icon fails to load, instead of an empty gap.",
+        "The getting-started page's opening animation no longer stutters right after installing.",
+      ],
+    },
+  },
+  {
     version: "1.0.0",
     date: "2026-09-26",
     summary:
