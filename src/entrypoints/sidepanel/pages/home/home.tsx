@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronRightIcon, HistoryIcon, PinIcon, StarIcon } from "lucide-react";
 import { useCaptureActiveTab } from "@/hooks/sidepanel/use-capture-active-tab";
 import { FEATURES } from "@/constants/features";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { cn } from "cn";
 import { useHomeData } from "./__hooks__/use-home-data";
 import { AiPromptSection } from "@/components/home/ai-prompt-section";

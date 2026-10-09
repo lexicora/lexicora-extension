@@ -16,7 +16,7 @@ import {
 } from "@/constants/changelog";
 import { cn } from "cn";
 import { ChevronRightIcon, HistoryIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 import { InstalledBadge } from "./installed-badge";
 

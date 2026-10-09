@@ -5,7 +5,7 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import {
   ChevronRightIcon,
   SquareDashedIcon as PlaceHolderIcon,

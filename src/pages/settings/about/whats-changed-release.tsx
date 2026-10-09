@@ -11,7 +11,7 @@ import {
 } from "@/constants/changelog";
 import { cn } from "cn";
 import { SparklesIcon, TrendingUpIcon, WrenchIcon } from "lucide-react";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router";
 
 import { InstalledBadge } from "./installed-badge";
 

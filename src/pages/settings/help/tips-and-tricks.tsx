@@ -11,7 +11,7 @@ import {
 import { SettingsItemSeparator } from "@/components/settings";
 import { cn } from "cn";
 import { ChevronRightIcon, LightbulbIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 import { TIP_CATEGORIES } from "./tips";
 

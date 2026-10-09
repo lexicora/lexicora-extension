@@ -1,6 +1,6 @@
 import { MSG } from "@/constants/messaging";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import { sendMessage, onMessage } from "@/lib/messaging";
 import { useAppWindowId } from "@/providers/app-messaging";
 import { NEW_ENTRY_PATH, isEntryEditPath } from "@/lib/routes";
@@ -62,7 +62,9 @@ export function RouterListener() {
         if (!suppressed && path !== location.pathname) {
           navigate(path, {
             viewTransition: true,
-            state: { isCapturePending: pathToSetIsCapturePending.includes(path) },
+            state: {
+              isCapturePending: pathToSetIsCapturePending.includes(path),
+            },
           });
         }
       }

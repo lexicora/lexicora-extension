@@ -14,7 +14,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { useDeferredValue, useEffect, useState } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router";
 
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";

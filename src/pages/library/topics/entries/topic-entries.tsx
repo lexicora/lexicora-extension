@@ -24,7 +24,7 @@ import {
   useNavigationType,
   useParams,
   useSearchParams,
-} from "react-router-dom";
+} from "react-router";
 import { useRxCollection } from "rxdb/plugins/react";
 import { useAppHost } from "@/providers/app-host";
 import { FEATURES } from "@/constants/features";

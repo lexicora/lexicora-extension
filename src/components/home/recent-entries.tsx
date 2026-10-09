@@ -1,6 +1,6 @@
 import { ChevronRightIcon, GlobeIcon } from "lucide-react";
 import { Avatar } from "radix-ui";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";

@@ -39,7 +39,7 @@ import {
   UserIcon,
   UserRoundIcon,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 //import styles from "./settings-page.module.css";
 
 import { FEATURES } from "@/constants/features";

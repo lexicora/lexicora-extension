@@ -5,11 +5,7 @@ import { TopicItem } from "@/components/topic-item";
 import type { TopicDocType } from "@/db/schemas/topic";
 import { FoldersIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  NavigationType,
-  useNavigate,
-  useNavigationType,
-} from "react-router-dom";
+import { NavigationType, useNavigate, useNavigationType } from "react-router";
 import { Virtuoso } from "react-virtuoso";
 import { useRxCollection } from "rxdb/plugins/react";
 import type { MangoQuerySelector } from "rxdb";
@@ -116,14 +112,15 @@ export function TopicList({
       <div className="flex items-center gap-2.5 w-full px-1.5 pb-0.75">
         <Separator className="flex-1" />
         <span className="text-xs text-muted-foreground font-medium tracking-widest">
-          <FoldersIcon className="size-3.5 inline -mt-0.5" /> {visibleTopics.length}
+          <FoldersIcon className="size-3.5 inline -mt-0.5" />{" "}
+          {visibleTopics.length}
           {/* {topics.length === 1 ? " item" : " items"} */}
         </span>
         <Separator className="flex-1" />
       </div>
       {isLoaded && visibleTopics.length === 0 && (
         <div className="flex flex-col items-center justify-center py-10 px-3 text-center">
-            {search.trim() ? (
+          {search.trim() ? (
             <>
               <p className="text-muted-foreground mb-3">
                 No topics found matching{" "}

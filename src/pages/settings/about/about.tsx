@@ -18,7 +18,7 @@ import {
   ScrollTextIcon,
   TagIcon,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 function AboutPage() {
   // Both from package.json, through the manifest: the description is also the

@@ -16,7 +16,7 @@ import {
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { useRxCollection } from "rxdb/plugins/react";
-import { useBlocker, useNavigate, useSearchParams } from "react-router-dom";
+import { useBlocker, useNavigate, useSearchParams } from "react-router";
 import { toast } from "sonner";
 import { navLock } from "@/lib/navigation-lock";
 import { uuidv7 } from "uuidv7";

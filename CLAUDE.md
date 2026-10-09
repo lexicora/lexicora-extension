@@ -87,7 +87,7 @@ Use the `useAppStorage` hook (`src/hooks/use-app-storage.ts`) for reactive acces
 
 ### Sidepanel UI Structure
 
-The sidepanel uses `react-router-dom` with a **MemoryRouter** (not URL-based). Routes are declared in `src/entrypoints/sidepanel/App.tsx`. Navigation is driven by messages from the background via `RouterListener` (`src/hooks/sidepanel/router-listener.tsx`).
+The sidepanel uses `react-router` with a **MemoryRouter** (not URL-based). Routes are declared in `src/entrypoints/sidepanel/App.tsx`. Navigation is driven by messages from the background via `RouterListener` (`src/hooks/sidepanel/router-listener.tsx`).
 
 Layout wraps every route: `TopBar` → `Outlet` → `BottomNavigation`, all inside `ScrollObserverProvider` and `AppMessagingProvider` (which resolves and provides the current `windowId`).
 

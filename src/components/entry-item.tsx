@@ -28,7 +28,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { Avatar } from "radix-ui";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useRxCollection } from "rxdb/plugins/react";
 import { deleteEntryCascade } from "@/db/cascade-delete";
 

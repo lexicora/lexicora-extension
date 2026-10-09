@@ -45,7 +45,7 @@ import { ArrowUpIcon, SaveIcon } from "lucide-react";
 import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
 import { useCreateBlockNote } from "@blocknote/react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useBlocker, useNavigate, useParams } from "react-router-dom";
+import { useBlocker, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 import { useRxCollection } from "rxdb/plugins/react";
 import { uuidv7 } from "uuidv7";

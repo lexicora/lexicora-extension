@@ -5,7 +5,7 @@ import {
   Outlet,
   ScrollRestoration,
   useLocation,
-} from "react-router-dom";
+} from "react-router";
 
 // Hooks, Providers and Components
 import { CaptureFailureListener } from "@/hooks/sidepanel/capture-failure-listener";

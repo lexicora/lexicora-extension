@@ -5,11 +5,7 @@ import { EntryItem } from "@/components/entry-item";
 import type { EntryDocType } from "@/db/schemas/entry";
 import { FilesIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  NavigationType,
-  useNavigate,
-  useNavigationType,
-} from "react-router-dom";
+import { NavigationType, useNavigate, useNavigationType } from "react-router";
 import { Virtuoso } from "react-virtuoso";
 import { useRxCollection } from "rxdb/plugins/react";
 import type { MangoQuerySelector } from "rxdb";
