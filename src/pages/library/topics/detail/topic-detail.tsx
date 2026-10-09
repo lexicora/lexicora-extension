@@ -41,7 +41,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import { useRxCollection } from "rxdb/plugins/react";
 import { deleteTopicCascade } from "@/db/cascade-delete";
 import { setTopicEntriesArchived } from "@/db/archive-cascade";

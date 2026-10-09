@@ -2,7 +2,7 @@ import { FEATURES } from "@/constants/features";
 import styles from "./page-header.module.css";
 import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useScrollPos } from "@/providers/scroll-observer";
 import { useAppHost } from "@/providers/app-host";
 import { useSidebar } from "@/components/ui/sidebar";

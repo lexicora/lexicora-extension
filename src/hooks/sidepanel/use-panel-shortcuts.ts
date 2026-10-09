@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 
 import { captureFailureMessage } from "./capture-failure-listener";
@@ -29,7 +29,9 @@ function editPathFor(pathname: string): string | null {
   const entry = pathname.match(/^\/library\/entries\/([^/]+)$/)?.[1];
   if (entry && entry !== "new") return `/library/entries/${entry}/edit`;
 
-  const topic = pathname.match(/^\/library\/topics\/([^/]+)(?:\/entries)?$/)?.[1];
+  const topic = pathname.match(
+    /^\/library\/topics\/([^/]+)(?:\/entries)?$/,
+  )?.[1];
   if (topic && topic !== "new") return `/library/topics/${topic}/edit`;
 
   return null;
@@ -101,7 +103,8 @@ export function usePanelShortcuts() {
           const captured = await capture(mode);
           // The same wording the background's failures use, so a bookmark
           // that cannot happen never says "captured".
-          if (!captured) toast.error(captureFailureMessage("unsupported", mode));
+          if (!captured)
+            toast.error(captureFailureMessage("unsupported", mode));
           return;
         }
         case "home":
@@ -113,7 +116,8 @@ export function usePanelShortcuts() {
               : action === "library"
                 ? "/library"
                 : "/settings";
-          if (location.pathname !== path) navigate(path, { viewTransition: true });
+          if (location.pathname !== path)
+            navigate(path, { viewTransition: true });
           return;
         }
         case "scrollToTop": {

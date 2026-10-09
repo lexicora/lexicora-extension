@@ -5,7 +5,7 @@ import {
   RouterProvider,
   Outlet,
   ScrollRestoration,
-} from "react-router-dom";
+} from "react-router";
 
 // Hooks, Providers and Components
 //import { RouterListener } from "@/hooks/sidepanel/router-listener";

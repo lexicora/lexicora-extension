@@ -1,4 +1,4 @@
-import { matchPath } from "react-router-dom";
+import { matchPath } from "react-router";
 
 /** Routes that more than one place needs to know. */
 

@@ -27,7 +27,7 @@ import {
   StarIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useRxCollection } from "rxdb/plugins/react";
 import { deleteTopicCascade } from "@/db/cascade-delete";
 import { setTopicEntriesArchived } from "@/db/archive-cascade";

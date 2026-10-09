@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 
 import { MSG } from "@/constants/messaging";
 import { useTabSupport } from "@/hooks/use-tab-support";

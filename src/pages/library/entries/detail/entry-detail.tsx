@@ -52,7 +52,7 @@ import {
 } from "lucide-react";
 import { Avatar } from "radix-ui";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import { useRxCollection } from "rxdb/plugins/react";
 import { deleteEntryCascade } from "@/db/cascade-delete";
 import { copyEntry, downloadEntry } from "@/lib/export";

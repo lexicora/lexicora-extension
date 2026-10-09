@@ -2,7 +2,7 @@ import style from "./bottom-navigation.module.css";
 import { cn } from "cn";
 
 import { NAV_ITEMS } from "@/lib/nav-items";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router";
 
 import { isEditingPath } from "@/lib/routes";
 

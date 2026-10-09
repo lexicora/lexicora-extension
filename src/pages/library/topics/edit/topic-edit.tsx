@@ -15,7 +15,7 @@ import type { TopicDocType } from "@/db/schemas/topic";
 import { navLock } from "@/lib/navigation-lock";
 import { hasChanges } from "@/db/doc-changes";
 import { useEffect, useState } from "react";
-import { useBlocker, useNavigate, useParams } from "react-router-dom";
+import { useBlocker, useNavigate, useParams } from "react-router";
 import { useRxCollection } from "rxdb/plugins/react";
 import { toast } from "sonner";
 
