@@ -15,6 +15,7 @@ bun run build:firefox    # Production build for Firefox
 bun run zip              # Package for Chrome Web Store
 bun run zip:firefox      # Package for AMO
 bun run compile          # TypeScript type-check only (no emit)
+bun check                # TypeScript type-check only (faster than `bun run compile`; built into Bun 1.4.3+)
 bun run lint             # Lint with oxlint, including type-aware rules
 bun run test             # Run unit tests (Vitest, single pass)
 bun run test:watch       # Run tests in watch mode
@@ -47,7 +48,7 @@ This is a [WXT](https://wxt.dev)-based browser extension (Chrome MV3 / Firefox M
 ### Entrypoints (`src/entrypoints/`)
 
 | Entrypoint | Context | Purpose |
-|---|---|---|
+| --- | --- | --- |
 | `background/` | Service worker | Orchestrates messaging, context menus, port tracking |
 | `content/` | Web pages (http, https, file) | Injects capture-suggestion toast UI; relays page data |
 | `sidepanel/` | Side panel | Full React app — the primary user-facing UI |
@@ -59,6 +60,7 @@ This is a [WXT](https://wxt.dev)-based browser extension (Chrome MV3 / Firefox M
 `src/db/` holds the local-first database. The singleton is initialized via `getDb()` in `src/db/index.ts` and exposed to React via `RxDBProvider` (`src/providers/rxdb-provider.tsx`).
 
 Three collections:
+
 - **topics** — top-level grouping containers
 - **entries** — web captures belonging to a topic; include metadata like `url`, `hostnameUrl`, `faviconUrl`, `isPinned`, `isArchived`
 - **blocks** — rich text blocks (BlockNote) attached to entries
@@ -80,6 +82,7 @@ For content script messaging (`GET_PAGE_DATA`, `GET_PAGE_SELECTION_DATA`), nativ
 ### Settings / Storage
 
 Settings are stored via WXT's storage API (`src/lib/utils/storage/settings.ts`):
+
 - `sync:` prefix — synced across devices (theme, capture-suggestion toggle, delay multiplier)
 - `session:` prefix — transient RAM storage, lost on browser close (sidepanel open/closed state)
 
@@ -98,6 +101,7 @@ The content script (`src/entrypoints/content/capture/suggestion.ts`) shows a dra
 ### Firefox vs. Chrome/Edge Parity
 
 Known divergences (marked with `NOTE: Feature parity discrepancy` comments):
+
 - `browser.sidePanel` API → Firefox uses `browser.sidebarAction`
 - Capture suggestion toast → unsupported on Firefox
 - Port-based sidepanel state tracking → unsupported on Firefox
