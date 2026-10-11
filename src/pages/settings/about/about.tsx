@@ -25,10 +25,12 @@ function AboutPage() {
   // Both from package.json, through the manifest: the description is also the
   // store's summary, so the page and the listing never disagree.
   const { version, description } = browser.runtime.getManifest();
-  const store = currentStoreListing(
-    import.meta.env.FIREFOX,
-    navigator.userAgent,
-  );
+  const store = currentStoreListing({
+    extensionId: browser.runtime.id,
+    isFirefox: import.meta.env.FIREFOX,
+    isEdgeBuild: import.meta.env.EDGE,
+    userAgent: navigator.userAgent,
+  });
 
   return (
     <PageContainer>

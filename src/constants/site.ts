@@ -13,30 +13,52 @@ export const CONTACT_EMAIL = "hello@tgmaurer.dev";
 /**
  * The extension's page in each browser's store, where it can be reviewed.
  * `where` reads after "on": "on the Chrome Web Store", "on Edge Add-ons".
+ * `id` is the extension ID that store signs its copy with.
  */
 export const STORE_LISTINGS = {
   chrome: {
+    id: "ainigcpoeibgglaldkjippcccaicnjjd",
     where: "the Chrome Web Store",
     url: "https://chromewebstore.google.com/detail/ainigcpoeibgglaldkjippcccaicnjjd",
   },
   edge: {
+    id: "cedcfjhhgnnhicanijilpadchcfkbjgl",
     where: "Edge Add-ons",
     url: "https://microsoftedge.microsoft.com/addons/detail/lexicora/cedcfjhhgnnhicanijilpadchcfkbjgl",
   },
   firefox: {
+    id: null,
     where: "Firefox Add-ons",
     url: "https://addons.mozilla.org/addon/lexicora/",
   },
 } as const;
 
+export type StoreListing = (typeof STORE_LISTINGS)[keyof typeof STORE_LISTINGS];
+
 /**
- * The store this copy of Lexicora came from. Edge is told apart at run time:
- * it installs the same build as Chrome, so `import.meta.env.EDGE` is not set.
+ * The store this copy of Lexicora was installed from.
+ *
+ * Chrome and Edge install the same build, so the build cannot say which store
+ * it came from — but each store signs it with its own ID, which
+ * `runtime.id` reports. That also sends someone who installed the Chrome Web
+ * Store copy in Edge to the listing they actually used. An unpacked copy has
+ * neither ID, and falls back to an Edge build, then the browser.
  */
-export function currentStoreListing(
-  isFirefox: boolean,
-  userAgent: string,
-): (typeof STORE_LISTINGS)[keyof typeof STORE_LISTINGS] {
+export function currentStoreListing({
+  extensionId,
+  isFirefox,
+  isEdgeBuild,
+  userAgent,
+}: {
+  extensionId: string;
+  isFirefox: boolean;
+  isEdgeBuild: boolean;
+  userAgent: string;
+}): StoreListing {
   if (isFirefox) return STORE_LISTINGS.firefox;
-  return /\bEdg\//.test(userAgent) ? STORE_LISTINGS.edge : STORE_LISTINGS.chrome;
+  if (extensionId === STORE_LISTINGS.edge.id) return STORE_LISTINGS.edge;
+  if (extensionId === STORE_LISTINGS.chrome.id) return STORE_LISTINGS.chrome;
+  return isEdgeBuild || /\bEdg\//.test(userAgent)
+    ? STORE_LISTINGS.edge
+    : STORE_LISTINGS.chrome;
 }
