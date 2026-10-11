@@ -16,6 +16,7 @@ import {
   PANEL_NAME as PANEL,
   useOpenSidePanelFromTab,
 } from "@/hooks/use-open-side-panel-from-tab";
+import { isOnboardingFromInstall } from "@/lib/onboarding";
 import { cn } from "cn";
 import {
   BookmarkIcon,
@@ -179,6 +180,9 @@ function CommandKey({
  * side panel itself. Not a flow — everything is on one screen, and the button
  * at the top leaves it.
  */
+/** Read once: a reload of the install tab still counts as the install. */
+const OPENED_ON_INSTALL = isOnboardingFromInstall(window.location.search);
+
 function OnboardingPage() {
   const keys = useCommandKeys();
   const isPinned = useToolbarPin();
@@ -379,13 +383,17 @@ function OnboardingPage() {
           </span>
         </footer>
       </main>
-      {/* Once the page is revealed, and only until Lexicora is pinned. After
-          <main>: refs attach in tree order, and the pointer measures the pin
-          card in a layout effect. */}
-      <ToolbarPointer
-        anchorRef={pinCardRef}
-        visible={intro.isDone && isPinned !== true}
-      />
+      {/* Once the page is revealed, and only until Lexicora is pinned. Not
+          on the tab the install opened, where the browser's Extensions menu
+          is open over it and already offers the pin (see onboarding.ts).
+          After <main>: refs attach in tree order, and the pointer measures
+          the pin card in a layout effect. */}
+      {!OPENED_ON_INSTALL && (
+        <ToolbarPointer
+          anchorRef={pinCardRef}
+          visible={intro.isDone && isPinned !== true}
+        />
+      )}
     </div>
   );
 }

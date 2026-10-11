@@ -7,8 +7,22 @@
 /** The unlisted page WXT builds from `entrypoints/onboarding/`. */
 export const ONBOARDING_PATH = "/onboarding.html";
 
-export function onboardingUrl(): string {
-  return browser.runtime.getURL(ONBOARDING_PATH);
+/**
+ * Marks the tab opened on install. The browser opens its Extensions menu at
+ * the same moment, offering to pin Lexicora, and that menu covers the page's
+ * own arrow to it — so the page leaves the arrow out there, and keeps it for
+ * when it is opened again from Settings, where no menu shows.
+ */
+export const INSTALL_SEARCH_PARAM = "installed";
+
+export function onboardingUrl({ onInstall = false } = {}): string {
+  const url = browser.runtime.getURL(ONBOARDING_PATH);
+  return onInstall ? `${url}?${INSTALL_SEARCH_PARAM}` : url;
+}
+
+/** Whether this page was opened by the install, rather than from Settings. */
+export function isOnboardingFromInstall(search: string): boolean {
+  return new URLSearchParams(search).has(INSTALL_SEARCH_PARAM);
 }
 
 /**
@@ -17,5 +31,5 @@ export function onboardingUrl(): string {
  */
 export async function openOnboardingOnInstall(reason: string): Promise<void> {
   if (reason !== "install") return;
-  await browser.tabs.create({ url: onboardingUrl() });
+  await browser.tabs.create({ url: onboardingUrl({ onInstall: true }) });
 }
