@@ -10,6 +10,7 @@ import { Virtuoso } from "react-virtuoso";
 import { useRxCollection } from "rxdb/plugins/react";
 import type { MangoQuerySelector } from "rxdb";
 import { parseSearchQuery, searchTextPattern } from "@/lib/search-query";
+import { formatCount, formatCountExact } from "@/lib/utils/count-formatter";
 
 interface TopicListProps {
   search: string;
@@ -111,9 +112,12 @@ export function TopicList({
     <>
       <div className="flex items-center gap-2.5 w-full px-1.5 pb-0.75">
         <Separator className="flex-1" />
-        <span className="text-xs text-muted-foreground font-medium tracking-widest">
+        <span
+          className="text-xs text-muted-foreground font-medium tracking-widest"
+          title={`${formatCountExact(visibleTopics.length)} topics`}
+        >
           <FoldersIcon className="size-3.5 inline -mt-0.5" />{" "}
-          {visibleTopics.length}
+          {formatCount(visibleTopics.length)}
           {/* {topics.length === 1 ? " item" : " items"} */}
         </span>
         <Separator className="flex-1" />
