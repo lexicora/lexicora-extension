@@ -25,6 +25,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import type { TopicDocType } from "@/db/schemas/topic";
 import { cn } from "cn";
+import { formatCount, formatCountExact } from "@/lib/utils/count-formatter";
 import { formatDate } from "@/lib/utils/date-formatter";
 import { useAppHost } from "@/providers/app-host";
 import {
@@ -33,6 +34,7 @@ import {
   ClipboardIcon,
   DownloadIcon,
   EllipsisIcon,
+  FilesIcon,
   LayoutListIcon,
   PinIcon,
   PlusIcon,
@@ -327,37 +329,52 @@ function TopicDetailPage() {
         </div>
       </section>
 
-      {/* Favorite entries preview */}
-      {favoriteEntries.length > 0 && (
-        <section className="px-0.75 mx-auto w-full max-w-(--lc-content-max-width) mt-2 mb-7.75">
-          <Separator className="mx-auto max-w-[calc(100%-8px)] mt-0 mb-3 opacity-60" />
-          <div className="flex items-center gap-1.5 mb-2.5 px-1.5">
-            <StarIcon className="size-3.5 text-muted-foreground" />
-            <span className="text-xs font-medium text-muted-foreground tracking-wide">
-              Favorites
-            </span>
+      {/* Entries: the total always, the favorites when there are any */}
+      <section className="px-0.75 mx-auto w-full max-w-(--lc-content-max-width) mt-2 mb-7.75">
+        <Separator className="mx-auto max-w-[calc(100%-8px)] mt-0 mb-3 opacity-60" />
+        <div className="flex items-center gap-1.5 mb-2.5 px-1.5">
+          {favoriteEntries.length > 0 ? (
             <button
-              className="ml-auto flex items-center gap-1 text-xs text-muted-foreground hover:text-lc-muted-foreground-hover hover:underline underline-offset-2 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-lc-muted-foreground-hover hover:underline underline-offset-2 transition-colors cursor-pointer"
+              title="View favorite entries"
               onClick={() =>
-                navigate(`/library/topics/${topic.id}/entries`, {
+                navigate(`/library/topics/${topic.id}/entries?favorites=true`, {
                   viewTransition: true,
                 })
               }
             >
-              {/* <ListIcon className="size-3.5 shrink-0" /> */}
-              <span className="font-medium!" title="View all">
-                Total {entriesCount}
-              </span>
-              <ChevronRightIcon className="size-3.5 shrink-0 opacity-70" />
+              <StarIcon className="size-3.5" />
+              <span className="font-medium tracking-wide">Favorites</span>
             </button>
-          </div>
+          ) : (
+            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <FilesIcon className="size-3.5" />
+              <span className="font-medium tracking-wide">Entries</span>
+            </span>
+          )}
+          <button
+            className="ml-auto flex items-center gap-1 text-xs text-muted-foreground hover:text-lc-muted-foreground-hover hover:underline underline-offset-2 transition-colors cursor-pointer"
+            title={`View all ${formatCountExact(entriesCount)} entries`}
+            onClick={() =>
+              navigate(`/library/topics/${topic.id}/entries`, {
+                viewTransition: true,
+              })
+            }
+          >
+            <span className="font-medium!">
+              Total {formatCount(entriesCount)}
+            </span>
+            <ChevronRightIcon className="size-3.5 shrink-0 opacity-70" />
+          </button>
+        </div>
+        {favoriteEntries.length > 0 && (
           <div className="flex flex-col gap-2.5">
             {favoriteEntries.map((entry) => (
               <EntryItem key={entry.id} entry={entry} disableScrollRestore />
             ))}
           </div>
-        </section>
-      )}
+        )}
+      </section>
 
       {/* Floating create entry button — hidden for archived topics and in windowed host */}
       {!topic.isArchived && !isWindowed && (
