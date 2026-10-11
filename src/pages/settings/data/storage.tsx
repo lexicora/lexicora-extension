@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import {
@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import {
   BrushCleaningIcon,
+  DatabaseIcon,
+  GaugeIcon,
   HardDriveIcon,
   LocateIcon,
   Trash2Icon,
@@ -31,6 +33,37 @@ import { cleanupNow } from "@/db/cleanup";
 import { clearAllData } from "@/db/clear-all";
 import { Label } from "@/components/ui/label";
 import { SettingsItemSeparator } from "@/components/settings";
+import { formatBytes } from "@/lib/utils/count-formatter";
+
+/**
+ * What the browser estimates Lexicora stores. `null` where the API is missing
+ * or fails, so the row is left out rather than wrong.
+ *
+ * An estimate for the whole extension, not the library alone: it pads the
+ * figure on purpose and includes extension storage and caches. And it does not
+ * drop straight after a cleanup, since IndexedDB keeps freed pages until it
+ * compacts — the row says so rather than looking like the cleanup failed.
+ */
+async function readStorageUsage(): Promise<number | null> {
+  try {
+    const estimate = await navigator.storage?.estimate();
+    return estimate?.usage ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function useStorageUsage() {
+  const [usage, setUsage] = useState<number | null>(null);
+
+  const refresh = useCallback(() => readStorageUsage().then(setUsage), []);
+
+  useEffect(() => {
+    void readStorageUsage().then(setUsage);
+  }, []);
+
+  return { usage, refresh };
+}
 
 /** Disables every action while one is running — the purge holds a write lock. */
 type BusyAction = "cleanup" | "clear";
@@ -45,6 +78,7 @@ type BusyAction = "cleanup" | "clear";
 function StorageSettingsPage() {
   const [clearOpen, setClearOpen] = useState(false);
   const [busy, setBusy] = useState<BusyAction | null>(null);
+  const { usage, refresh: refreshUsage } = useStorageUsage();
 
   const topicsCollection = useRxCollection("topics");
   const entriesCollection = useRxCollection("entries");
@@ -52,7 +86,10 @@ function StorageSettingsPage() {
 
   const runExclusive = (action: BusyAction, work: () => Promise<void>) => {
     setBusy(action);
-    return work().finally(() => setBusy(null));
+    return work().finally(() => {
+      setBusy(null);
+      void refreshUsage();
+    });
   };
 
   const handleCleanup = () => {
@@ -117,6 +154,29 @@ function StorageSettingsPage() {
             </ItemContent>
           </Item>
         </section>
+        {usage !== null && (
+          <section>
+            <Label className="text-sm ml-2 mb-0.5">
+              <GaugeIcon className="size-3.5 text-sky-400" /> Usage
+            </Label>
+            <Item
+              variant="muted"
+              size="sm"
+              className="transition-none bg-card not-dark:shadow-xs rounded-2xl"
+            >
+              <ItemMedia variant="icon">
+                <DatabaseIcon className="size-5 text-sky-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>About {formatBytes(usage)} used</ItemTitle>
+              </ItemContent>
+            </Item>
+            <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
+              The browser's estimate for everything Lexicora keeps, settings
+              included. Space a cleanup frees can take a while to show here.
+            </p>
+          </section>
+        )}
         <section>
           <Label className="text-sm ml-2 mb-0.5">
             <LocateIcon className="size-3.5 text-purple-400" /> Actions
