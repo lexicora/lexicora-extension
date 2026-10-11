@@ -3,6 +3,7 @@ import { Separator } from "@/components/ui/separator";
 
 import { EntryItem } from "@/components/entry-item";
 import type { EntryDocType } from "@/db/schemas/entry";
+import { formatCount, formatCountExact } from "@/lib/utils/count-formatter";
 import { FilesIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { NavigationType, useNavigate, useNavigationType } from "react-router";
@@ -139,8 +140,12 @@ export function EntryList({
     <>
       <div className="flex items-center gap-2.5 w-full px-1.5 pb-0.75">
         <Separator className="flex-1" />
-        <span className="text-xs text-muted-foreground font-medium tracking-widest">
-          <FilesIcon className="size-3.5 inline -mt-0.5" /> {entries.length}
+        <span
+          className="text-xs text-muted-foreground font-medium tracking-widest"
+          title={`${formatCountExact(entries.length)} entries`}
+        >
+          <FilesIcon className="size-3.5 inline -mt-0.5" />{" "}
+          {formatCount(entries.length)}
           {/* {entries.length === 1 ? " item" : " items"} */}
         </span>
         <Separator className="flex-1" />
