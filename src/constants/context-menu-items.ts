@@ -60,8 +60,7 @@ const TOGGLE_SIDE_PANEL_ITEM = (
         title: "Toggle side panel",
         contexts: ["all"],
       }
-  // viewTypes is Firefox's own; the Chromium types do not know it.
-) as ContextMenuCreateProps;
+) as ContextMenuCreateProps; // viewTypes is Firefox's own; the Chromium types do not know it.
 
 // MAYBE: localize titles later and change order for better UX
 /**
@@ -83,6 +82,7 @@ export const CONTEXT_MENU_ITEMS: ContextMenuCreateProps[] = [
     id: "separator1",
     type: "separator",
     contexts: ["selection"],
+    documentUrlPatterns: CAPTURE_URL_PATTERNS,
   },
   {
     id: CMI_ID.CAPTURE_SELECTION_AI_ASSISTED,

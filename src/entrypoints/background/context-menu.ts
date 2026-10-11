@@ -129,7 +129,6 @@ export function setupContextMenuStateSync(/*menuId: string*/) {
     const isDisabled = UNSUPPORTED_URL_REGEX.test(url);
 
     try {
-
       if (FEATURES.AI) {
         await browser.contextMenus.update(
           CMI_ID.CAPTURE_SELECTION_AI_ASSISTED,
@@ -156,6 +155,7 @@ export function setupContextMenuStateSync(/*menuId: string*/) {
         //enabled: !isDisabled,
         visible: !isDisabled,
       });
+      //* INFO: Doesn't appear to work for separator type items. (they cant be disabled or hidden based on observations)
     } catch {
       // Silently catch errors if the menu item hasn't been created yet
     }
