@@ -8,11 +8,10 @@ export interface TopicDetailData {
   topic: TopicDocType | null | undefined;
   favoriteEntries: EntryDocType[];
   /**
-   * Entries that follow the topic: all but those archived by hand. The same
-   * number whether the topic is archived or not, since archiving it archives
-   * exactly these (see `setTopicEntriesArchived`) — counting by `isArchived`
-   * made the total jump when the topic was archived, as the entries archived
-   * earlier were added to it.
+   * The entries the topic's entry list opens on: the unarchived ones, or for
+   * an archived topic every archived entry — those archived with it and those
+   * archived by hand before. That number can change when the topic is
+   * archived, so the page labels it "Total archived" rather than "Total".
    */
   entriesCount: number;
 }
@@ -56,18 +55,17 @@ export function useTopicDetail(id: string | undefined): TopicDetailData {
     return () => sub.unsubscribe();
   }, [entriesCollection, id]);
 
+  const isArchived = topic?.isArchived ?? false;
   useEffect(() => {
     if (!entriesCollection || !id) return;
-    // Answered from the ['topicId', 'archivedExplicitly'] index, which a count
-    // on Dexie requires.
     const sub = entriesCollection
-      .count({ selector: { topicId: id, archivedExplicitly: false } })
+      .count({ selector: { topicId: id, isArchived } })
       .$.subscribe({
         next: setEntriesCount,
         error: () => setEntriesCount(0),
       });
     return () => sub.unsubscribe();
-  }, [entriesCollection, id]);
+  }, [entriesCollection, id, isArchived]);
 
   return { topic, favoriteEntries, entriesCount };
 }

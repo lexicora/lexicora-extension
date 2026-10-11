@@ -74,7 +74,7 @@ function ExportFormat({
             <DownloadIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
           </button>
         </Item>
-        <SettingsItemSeparator />
+        <SettingsItemSeparator symmetric />
         {/* A label, so the whole row toggles the switch inside it. */}
         <Item
           variant="muted"

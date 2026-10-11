@@ -221,10 +221,10 @@ function EntryDetailPage() {
             <div className="flex items-center gap-1.5 mt-3 min-w-0">
               {/* The globe stands in when there is no favicon or it fails to
                 load, as on the home page and in the popup. */}
-              <Avatar.Root className="flex items-center justify-center size-4.5 rounded-xs opacity-90 shrink-0 ml-0.5">
+              <Avatar.Root className="flex items-center justify-center size-4.5 rounded-xs opacity-90 shrink-0">
                 {entry.faviconUrl && (
                   <Avatar.Image
-                    className="rounded-xs"
+                    className="rounded-xs ml-0.5"
                     src={entry.faviconUrl}
                     alt="Favicon"
                   />
