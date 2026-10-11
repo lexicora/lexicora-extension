@@ -44,9 +44,7 @@ const OPEN_COMMAND = import.meta.env.FIREFOX
 /** Where each browser keeps the pin, in its own words. */
 const PIN_STEPS = import.meta.env.FIREFOX
   ? "Open the Extensions button (the puzzle piece) in the toolbar, then Lexicora's gear menu, and choose Pin to Toolbar."
-  : import.meta.env.EDGE
-    ? "Open the Extensions button (the puzzle piece) in the toolbar and select the eye icon next to Lexicora."
-    : "Open the Extensions button (the puzzle piece) in the toolbar and select the pin next to Lexicora.";
+  : "Open the Extensions button (the puzzle piece) in the toolbar and select the pin next to Lexicora."; // No eye icon for edge.
 
 /** Rounds the first and last row of a stacked card only. */
 function rowRounding(index: number, count: number): string {
