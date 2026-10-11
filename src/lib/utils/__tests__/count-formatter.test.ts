@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatCount } from "../count-formatter";
+import { formatBytes, formatCount } from "../count-formatter";
 
 describe("formatCount", () => {
   it.each([
@@ -27,5 +27,18 @@ describe("formatCount", () => {
       const shown = Number.parseFloat(formatCount(count)) * 1000;
       expect(shown).toBeLessThanOrEqual(count);
     }
+  });
+});
+
+describe("formatBytes", () => {
+  it.each([
+    [0, "0 kB"],
+    [512, "0.5 kB"],
+    [12_345, "12.3 kB"],
+    [840_000, "840 kB"],
+    [12_400_000, "12.4 MB"],
+    [3_210_000_000, "3.2 GB"],
+  ])("%i → %s", (bytes, expected) => {
+    expect(formatBytes(bytes)).toBe(expected);
   });
 });
