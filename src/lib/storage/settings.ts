@@ -46,3 +46,19 @@ export const editorWideModeStorage = storage.defineItem<boolean>(
   "sync:settings-editor-wide-mode",
   { fallback: false },
 );
+
+/**
+ * Settings → Export: write the JSON backup without indentation. Local, not
+ * synced: how one machine exports says nothing about another, and the synced
+ * settings are the ones the privacy policy lists.
+ */
+export const exportCompactJsonStorage = storage.defineItem<boolean>(
+  "local:settings-export-compact-json",
+  { fallback: false },
+);
+
+/** Settings → Export: leave archived topics and entries out of the Markdown archive. */
+export const exportMarkdownSkipArchivedStorage = storage.defineItem<boolean>(
+  "local:settings-export-markdown-skip-archived",
+  { fallback: false },
+);

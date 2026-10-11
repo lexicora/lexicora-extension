@@ -92,12 +92,20 @@ export function downloadEntry(
  * data leaving the app, so nothing is silently dropped. Archived notes are
  * marked `archived: true` in their front matter instead. Newest first, as the
  * library lists them.
+ *
+ * `skipArchived` leaves them out, for a library export the user asked to
+ * limit to what is current.
  */
 async function loadTopicEntries(
   topicId: string,
   entries: RxCollection,
+  skipArchived = false,
 ): Promise<EntryDocType[]> {
-  const docs = await entries.find({ selector: { topicId } }).exec();
+  const docs = await entries
+    .find({
+      selector: skipArchived ? { topicId, isArchived: false } : { topicId },
+    })
+    .exec();
   return docs
     .map((doc) => doc.toJSON() as EntryDocType)
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
@@ -250,6 +258,14 @@ function libraryIndexMarkdown(
   return `${lines.join("\n")}\n`;
 }
 
+export interface LibraryExportOptions {
+  /**
+   * Leave out archived topics, with all their entries, and archived entries
+   * in the topics that remain. Off by default: nothing is dropped unasked.
+   */
+  skipArchived?: boolean;
+}
+
 export interface LibraryExportProgress {
   /** Topics finished so far. */
   done: number;
@@ -267,10 +283,13 @@ export interface LibraryExportProgress {
 export async function downloadLibrary(
   { topics, entries, blocks }: ExportCollections & { topics?: RxCollection | null },
   onProgress?: (progress: LibraryExportProgress) => void,
+  { skipArchived = false }: LibraryExportOptions = {},
 ): Promise<number> {
   if (!topics) return 0;
 
-  const topicDocs = (await topics.find().exec())
+  const topicDocs = (
+    await topics.find(skipArchived ? { selector: { isArchived: false } } : {}).exec()
+  )
     .map((doc) => doc.toJSON() as TopicDocType)
     .sort((a, b) => a.name.localeCompare(b.name));
 
@@ -281,7 +300,9 @@ export async function downloadLibrary(
   const index: Array<{ topic: TopicDocType; folder: string; filename: string }> = [];
 
   for (const [position, topic] of topicDocs.entries()) {
-    const topicEntries = entries ? await loadTopicEntries(topic.id, entries) : [];
+    const topicEntries = entries
+      ? await loadTopicEntries(topic.id, entries, skipArchived)
+      : [];
     const blocksByEntry = blocks
       ? await loadBlocksByEntry(
           topicEntries.map((entry) => entry.id),
