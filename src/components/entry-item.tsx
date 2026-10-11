@@ -28,9 +28,42 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { Avatar } from "radix-ui";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useRxCollection } from "rxdb/plugins/react";
 import { deleteEntryCascade } from "@/db/cascade-delete";
+
+/**
+ * Favicons that failed to load this session. Lists remount on every visit, and
+ * a known-broken icon should not hold its space for a moment and then vanish
+ * each time.
+ */
+const failedFavicons = new Set<string>();
+
+/**
+ * An entry's favicon, or nothing: when it fails to load it is left out, as
+ * when there is none, so the row keeps its room for tags. The site name next
+ * to it already says where the entry comes from.
+ */
+function EntryItemFavicon({ url }: { url: string }) {
+  const [failed, setFailed] = useState(() => failedFavicons.has(url));
+  if (failed) return null;
+
+  return (
+    <Avatar.Root className="size-4.25 rounded-xs opacity-90 shrink-0 ml-0.5">
+      <Avatar.Image
+        className="rounded-xs"
+        src={url}
+        alt="Favicon"
+        onLoadingStatusChange={(status) => {
+          if (status !== "error") return;
+          failedFavicons.add(url);
+          setFailed(true);
+        }}
+      />
+    </Avatar.Root>
+  );
+}
 
 export interface EntryItemProps {
   entry: EntryDocType;
@@ -308,18 +341,10 @@ export function EntryItem({
             {(entry.hostnameUrl || entry.siteName) && (
               <div className="flex items-center gap-1.5 text-[12px] font-medium text-muted-foreground/90 shrink-0 max-w-32">
                 {entry.faviconUrl && (
-                  <>
-                    <Avatar.Root className="size-4.25 rounded-xs opacity-90 shrink-0 ml-0.5">
-                      <Avatar.Image
-                        className="rounded-xs"
-                        src={entry.faviconUrl}
-                        alt="Favicon"
-                      />
-                      <Avatar.Fallback delayMs={50}>
-                        <div className="bg-gray-400/35 dark:bg-gray-700/50 size-4.25 rounded-xs"></div>
-                      </Avatar.Fallback>
-                    </Avatar.Root>
-                  </>
+                  <EntryItemFavicon
+                    key={entry.faviconUrl}
+                    url={entry.faviconUrl}
+                  />
                 )}
                 <span className="truncate">
                   {entry.siteName || entry.hostnameUrl}
