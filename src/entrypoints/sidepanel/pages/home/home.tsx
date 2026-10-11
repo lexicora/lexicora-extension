@@ -18,15 +18,7 @@ import { CapturedPageRow } from "@/components/home/captured-page-row";
 import { useSiteEntries } from "./__hooks__/use-site-entries";
 import { WebsiteLink } from "@/components/website-link";
 import { siteSearchQuery } from "@/lib/search-query";
-
-function formatFavoriteCount(count: number): string {
-  if (count < 1000) return String(count);
-  if (count < 10000) {
-    const value = count / 1000;
-    return `${value % 1 === 0 ? value : value.toFixed(1)}k`;
-  }
-  return `${Math.floor(count / 1000)}k+`;
-}
+import { formatCount } from "@/lib/utils/count-formatter";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -103,7 +95,7 @@ function HomePage() {
               <StarIcon className="size-3.5 text-yellow-600 fill-yellow-600 dark:text-yellow-500 dark:fill-yellow-500 shrink-0" />
               Entries
               <span className="text-xs text-muted-foreground mt-0.5">
-                {formatFavoriteCount(favoriteEntriesCount)}
+                {formatCount(favoriteEntriesCount)}
               </span>
               <ChevronRightIcon className="transition-opacity size-3 shrink-0 opacity-70 group-hover:opacity-90" />
             </Button>
@@ -121,7 +113,7 @@ function HomePage() {
               <StarIcon className="size-3.5 text-yellow-600 fill-yellow-600 dark:text-yellow-500 dark:fill-yellow-500 shrink-0" />
               Topics
               <span className="text-xs text-muted-foreground mt-0.5">
-                {formatFavoriteCount(favoriteTopicsCount)}
+                {formatCount(favoriteTopicsCount)}
               </span>
               <ChevronRightIcon className="transition-opacity size-3 shrink-0 opacity-70 group-hover:opacity-90" />
             </Button>
@@ -193,7 +185,7 @@ function HomePage() {
                 // way to everything from this site, filtered to the host.
                 hostname
                   ? {
-                      label: `Total ${siteTotal}`,
+                      label: `Total ${formatCount(siteTotal)}`,
                       title: `View all from ${hostname}`,
                       onClick: () =>
                         navigate(
