@@ -7,6 +7,10 @@ export interface TopicDetailData {
   /** undefined = loading, null = not found */
   topic: TopicDocType | null | undefined;
   favoriteEntries: EntryDocType[];
+  /**
+   * Entries the topic's entry list shows by default: the archived ones for an
+   * archived topic, whose entries are archived with it, the others otherwise.
+   */
   entriesCount: number;
 }
 
@@ -49,16 +53,17 @@ export function useTopicDetail(id: string | undefined): TopicDetailData {
     return () => sub.unsubscribe();
   }, [entriesCollection, id]);
 
+  const isArchived = topic?.isArchived ?? false;
   useEffect(() => {
     if (!entriesCollection || !id) return;
     const sub = entriesCollection
-      .count({ selector: { topicId: id, isArchived: false } })
+      .count({ selector: { topicId: id, isArchived } })
       .$.subscribe({
         next: setEntriesCount,
         error: () => setEntriesCount(0),
       });
     return () => sub.unsubscribe();
-  }, [entriesCollection, id]);
+  }, [entriesCollection, id, isArchived]);
 
   return { topic, favoriteEntries, entriesCount };
 }
