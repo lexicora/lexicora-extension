@@ -46,6 +46,7 @@ import {
   DownloadIcon,
   EllipsisIcon,
   FileTextIcon,
+  GlobeIcon,
   PinIcon,
   SquarePenIcon,
   StarIcon,
@@ -218,18 +219,20 @@ function EntryDetailPage() {
         </p> */}
           {(entry.faviconUrl || entry.siteName || entry.url) && (
             <div className="flex items-center gap-1.5 mt-3 min-w-0">
-              {entry.faviconUrl && (
-                <Avatar.Root className="size-4.5 rounded-xs opacity-90 shrink-0 ml-0.5">
+              {/* The globe stands in when there is no favicon or it fails to
+                load, as on the home page and in the popup. */}
+              <Avatar.Root className="flex items-center justify-center size-4.5 rounded-xs opacity-90 shrink-0 ml-0.5">
+                {entry.faviconUrl && (
                   <Avatar.Image
                     className="rounded-xs"
                     src={entry.faviconUrl}
                     alt="Favicon"
                   />
-                  <Avatar.Fallback delayMs={50}>
-                    <div className="bg-gray-400/35 dark:bg-gray-700/50 size-4.25 rounded-xs" />
-                  </Avatar.Fallback>
-                </Avatar.Root>
-              )}
+                )}
+                <Avatar.Fallback delayMs={entry.faviconUrl ? 50 : 0}>
+                  <GlobeIcon className="size-4 text-muted-foreground" />
+                </Avatar.Fallback>
+              </Avatar.Root>
               {(entry.siteName || entry.hostnameUrl) && (
                 <div className="flex items-center mt-px min-w-0 gap-1">
                   {entry.url ? (
