@@ -9,13 +9,14 @@ import {
   ItemDescription,
 } from "@/components/ui/item";
 import { SettingsItemSeparator } from "@/components/settings";
-import { REPOSITORY_URL } from "@/constants/site";
+import { currentStoreListing, REPOSITORY_URL } from "@/constants/site";
 import {
   ArrowUpRightIcon,
   ChevronRightIcon,
   CodeXmlIcon,
   FileTextIcon,
   ScrollTextIcon,
+  StarIcon,
   TagIcon,
 } from "lucide-react";
 import { Link } from "react-router";
@@ -24,6 +25,10 @@ function AboutPage() {
   // Both from package.json, through the manifest: the description is also the
   // store's summary, so the page and the listing never disagree.
   const { version, description } = browser.runtime.getManifest();
+  const store = currentStoreListing(
+    import.meta.env.FIREFOX,
+    navigator.userAgent,
+  );
 
   return (
     <PageContainer>
@@ -130,8 +135,8 @@ function AboutPage() {
               className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl rounded-t-none"
               asChild
             >
-              {/* The only link out of this page: the source, where an issue can
-                be raised and the licence read in context. */}
+              {/* The source, where an issue can be raised and the licence read
+                in context. */}
               <a
                 href={REPOSITORY_URL}
                 target="_blank"
@@ -153,6 +158,28 @@ function AboutPage() {
           <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
             Lexicora's own terms, the libraries and tools that make it possible,
             and where it is built.
+          </p>
+        </section>
+
+        <section>
+          <Item
+            variant="muted"
+            size="sm"
+            className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl"
+            asChild
+          >
+            <a href={store.url} target="_blank" rel="noreferrer" draggable={false}>
+              <ItemMedia variant="icon">
+                <StarIcon className="size-5 text-yellow-500" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>Leave a review</ItemTitle>
+              </ItemContent>
+              <ArrowUpRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
+            </a>
+          </Item>
+          <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
+            Enjoying Lexicora? A review on {store.where} helps others find it.
           </p>
         </section>
       </main>
