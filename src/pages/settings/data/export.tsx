@@ -3,7 +3,6 @@ import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import {
   Item,
-  ItemActions,
   ItemTitle,
   ItemContent,
   ItemDescription,
@@ -13,11 +12,12 @@ import {
 import { Switch } from "@/components/ui/switch";
 import {
   DatabaseIcon,
+  DownloadIcon,
   FileBracesCornerIcon,
   FileTextIcon,
-  SlidersHorizontalIcon,
   UploadIcon,
 } from "lucide-react";
+import type { ReactNode } from "react";
 import { useRxCollection } from "rxdb/plugins/react";
 import { toast } from "sonner";
 import { downloadBackup } from "@/lib/backup";
@@ -28,11 +28,82 @@ import { SettingsItemSeparator } from "@/components/settings";
 import { useAppStorage } from "@/hooks/use-app-storage";
 import {
   exportCompactJsonStorage,
-  exportMarkdownSkipArchivedStorage,
+  exportMarkdownIncludeArchivedStorage,
 } from "@/lib/storage/settings";
 
 /** Disables the other action while one is running. */
 type BusyAction = "export" | "export-markdown";
+
+/**
+ * One export: the button, and below it in the same card the one option that
+ * shapes it, so an option is never read as applying to the other format.
+ */
+function ExportFormat({
+  icon,
+  title,
+  onExport,
+  disabled,
+  option,
+  caption,
+}: {
+  icon: ReactNode;
+  title: string;
+  onExport: () => void;
+  disabled: boolean;
+  option: {
+    label: string;
+    checked: boolean;
+    onCheckedChange: (checked: boolean) => void;
+  };
+  caption: string;
+}) {
+  return (
+    <div>
+      <div className="rounded-2xl not-dark:shadow-xs">
+        <Item
+          variant="muted"
+          size="sm"
+          className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl rounded-b-none hover:cursor-pointer disabled:opacity-55 disabled:pointer-events-none"
+          asChild
+        >
+          <button onClick={onExport} disabled={disabled}>
+            <ItemMedia variant="icon">{icon}</ItemMedia>
+            <ItemContent>
+              <ItemTitle>{title}</ItemTitle>
+            </ItemContent>
+            <DownloadIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
+          </button>
+        </Item>
+        <SettingsItemSeparator />
+        {/* A label, so the whole row toggles the switch inside it. */}
+        <Item
+          variant="muted"
+          size="xs"
+          className="transition-none bg-card rounded-2xl rounded-t-none pl-10.5 pr-3 cursor-pointer"
+          asChild
+        >
+          <label>
+            <ItemContent>
+              <span className="text-[13px] text-muted-foreground">
+                {option.label}
+              </span>
+            </ItemContent>
+            <Switch
+              size="sm"
+              className="data-[state=unchecked]:bg-gray-400 dark:data-[state=unchecked]:bg-gray-700"
+              checked={option.checked}
+              onCheckedChange={option.onCheckedChange}
+              disabled={disabled}
+            />
+          </label>
+        </Item>
+      </div>
+      <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
+        {caption}
+      </p>
+    </div>
+  );
+}
 
 /**
  * Getting the library out of Lexicora: a JSON backup the app can read back,
@@ -44,8 +115,8 @@ type BusyAction = "export" | "export-markdown";
 function ExportSettingsPage() {
   const [busy, setBusy] = useState<BusyAction | null>(null);
   const [compactJson, setCompactJson] = useAppStorage(exportCompactJsonStorage);
-  const [skipArchived, setSkipArchived] = useAppStorage(
-    exportMarkdownSkipArchivedStorage,
+  const [includeArchived, setIncludeArchived] = useAppStorage(
+    exportMarkdownIncludeArchivedStorage,
   );
 
   const topicsCollection = useRxCollection("topics");
@@ -68,7 +139,7 @@ function ExportSettingsPage() {
           entries: entriesCollection,
           blocks: blocksCollection,
         },
-        { compact: compactJson ?? false },
+        { compact: compactJson ?? true },
       );
 
     toast.promise(runExclusive("export", p), {
@@ -98,7 +169,7 @@ function ExportSettingsPage() {
             toast.loading(`Exporting topic ${done} of ${total}...`, {
               id: toastId,
             }),
-          { skipArchived: skipArchived ?? false },
+          { skipArchived: !(includeArchived ?? true) },
         );
 
         if (topicCount === 0) {
@@ -153,100 +224,33 @@ function ExportSettingsPage() {
           <Label className="text-sm ml-2 mb-0.5">
             <DatabaseIcon className="size-3.5 text-gray-400" /> Export as
           </Label>
-          <Item
-            variant="muted"
-            size="sm"
-            className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl rounded-b-none hover:cursor-pointer disabled:opacity-55 disabled:pointer-events-none /*bg-clip-padding*/"
-            asChild
-          >
-            <button onClick={handleExport} disabled={busy !== null}>
-              <ItemMedia variant="icon">
-                <FileBracesCornerIcon className="size-5 text-gray-500" />
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle>JSON file</ItemTitle>
-                {/*<ItemDescription>
-                Download all your topics, entries, and notes as a JSON file.
-              </ItemDescription>*/}
-              </ItemContent>
-            </button>
-          </Item>
-          {/* <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
-              Download all your topics, entries, and notes as a JSON file.
-          </p> */}
-          <SettingsItemSeparator />
-          <Item
-            variant="muted"
-            size="sm"
-            className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl rounded-t-none hover:cursor-pointer disabled:opacity-55 disabled:pointer-events-none"
-            asChild
-          >
-            <button onClick={handleExportMarkdown} disabled={busy !== null}>
-              <ItemMedia variant="icon">
-                <FileTextIcon className="size-5 text-blue-500" />
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle>
-                  {busy === "export-markdown"
-                    ? "Exporting..."
-                    : "Markdown Archive"}
-                </ItemTitle>
-              </ItemContent>
-            </button>
-          </Item>
-          {/* <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
-              Download everything as a zip of Markdown notes — a folder per
-              topic, ready for Obsidian or any editor. A large library takes a
-              moment, and navigation is paused while it runs.
-          </p> */}
-        </section>
-        <section>
-          <Label className="text-sm ml-2 mb-0.5">
-            <SlidersHorizontalIcon className="size-3.5 text-gray-400" />{" "}
-            Options
-          </Label>
-          <div className="rounded-2xl not-dark:shadow-xs">
-            <Item
-              variant="muted"
-              size="sm"
-              className="group transition-none hover:cursor-pointer bg-card rounded-2xl rounded-b-none"
-              onClick={() => void setCompactJson(!compactJson)}
-            >
-              <ItemContent>
-                <ItemTitle>Compact JSON</ItemTitle>
-                <ItemDescription className="text-pretty line-clamp-none">
-                  Without indentation, for a smaller file. Import reads either.
-                </ItemDescription>
-              </ItemContent>
-              <ItemActions>
-                <Switch
-                  className="data-[state=unchecked]:bg-gray-400 dark:data-[state=unchecked]:bg-gray-700"
-                  checked={compactJson ?? false}
-                  aria-label="Compact JSON"
-                />
-              </ItemActions>
-            </Item>
-            <SettingsItemSeparator />
-            <Item
-              variant="muted"
-              size="sm"
-              className="group transition-none hover:cursor-pointer bg-card rounded-2xl rounded-t-none"
-              onClick={() => void setSkipArchived(!skipArchived)}
-            >
-              <ItemContent>
-                <ItemTitle>Leave out archived</ItemTitle>
-                <ItemDescription className="text-pretty line-clamp-none">
-                  Markdown only. The JSON backup always holds everything.
-                </ItemDescription>
-              </ItemContent>
-              <ItemActions>
-                <Switch
-                  className="data-[state=unchecked]:bg-gray-400 dark:data-[state=unchecked]:bg-gray-700"
-                  checked={skipArchived ?? false}
-                  aria-label="Leave archived topics and entries out of the Markdown archive"
-                />
-              </ItemActions>
-            </Item>
+          <div className="flex flex-col gap-4">
+            <ExportFormat
+              icon={<FileBracesCornerIcon className="size-5 text-gray-500" />}
+              title={busy === "export" ? "Exporting..." : "JSON file"}
+              onExport={handleExport}
+              disabled={busy !== null}
+              option={{
+                label: "Compact",
+                checked: compactJson ?? true,
+                onCheckedChange: (checked) => void setCompactJson(checked),
+              }}
+              caption="A backup the Import page can read back. Turn off Compact for a file indented to be read."
+            />
+            <ExportFormat
+              icon={<FileTextIcon className="size-5 text-blue-500" />}
+              title={
+                busy === "export-markdown" ? "Exporting..." : "Markdown Archive"
+              }
+              onExport={handleExportMarkdown}
+              disabled={busy !== null}
+              option={{
+                label: "Include archived",
+                checked: includeArchived ?? true,
+                onCheckedChange: (checked) => void setIncludeArchived(checked),
+              }}
+              caption="A folder per topic, ready for Obsidian or any editor."
+            />
           </div>
         </section>
       </main>
