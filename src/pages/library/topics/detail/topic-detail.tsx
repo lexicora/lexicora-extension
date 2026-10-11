@@ -354,7 +354,7 @@ function TopicDetailPage() {
           )}
           <button
             className="ml-auto flex items-center gap-1 text-xs text-muted-foreground hover:text-lc-muted-foreground-hover hover:underline underline-offset-2 transition-colors cursor-pointer"
-            title={`View all ${formatCountExact(entriesCount)} entries`}
+            title={`View all ${formatCountExact(entriesCount)} ${topic.isArchived ? "archived " : ""}entries`}
             onClick={() =>
               navigate(`/library/topics/${topic.id}/entries`, {
                 viewTransition: true,
@@ -362,7 +362,8 @@ function TopicDetailPage() {
             }
           >
             <span className="font-medium!">
-              Total {formatCount(entriesCount)}
+              {topic.isArchived ? "Total archived" : "Total"}{" "}
+              {formatCount(entriesCount)}
             </span>
             <ChevronRightIcon className="size-3.5 shrink-0 opacity-70" />
           </button>
