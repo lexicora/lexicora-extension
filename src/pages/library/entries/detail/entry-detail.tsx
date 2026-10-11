@@ -4,6 +4,7 @@ import {
   editorBleedProps,
   editorColumnClassName,
   useEditorWideMode,
+  useEditorWideShortcut,
 } from "@/hooks/use-editor-wide-mode";
 import { appBlockNoteConfig } from "@/components/editor/config";
 import { PageContainer } from "@/components/page-container";
@@ -89,6 +90,7 @@ function EntryDetailPage() {
   const { entry, topic, blocks } = useEntryDetail(id);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const editorWide = useEditorWideMode();
+  useEditorWideShortcut(editorWide);
 
   const handleAttributeToggle = async (
     attribute: "isFavorite" | "isPinned" | "isArchived",

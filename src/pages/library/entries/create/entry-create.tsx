@@ -28,6 +28,7 @@ import {
   editorBleedProps,
   editorColumnClassName,
   useEditorWideMode,
+  useEditorWideShortcut,
 } from "@/hooks/use-editor-wide-mode";
 import { FEATURES } from "@/constants/features";
 import { PageContainer } from "@/components/page-container";
@@ -53,6 +54,7 @@ function EntryCreatePage() {
   const [searchParams] = useSearchParams();
   const editor = useCreateBlockNote(appBlockNoteConfig); // Works also like this (if necessary): {...defaultBlockNoteConfig}
   const editorWide = useEditorWideMode();
+  useEditorWideShortcut(editorWide);
   const capturedData = useCaptureData();
   const { isAtBottom } = useScrollPos();
   const [language, setLanguage] = useState(navigator.language || "en");

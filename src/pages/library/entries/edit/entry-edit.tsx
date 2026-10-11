@@ -19,6 +19,7 @@ import {
   editorBleedProps,
   editorColumnClassName,
   useEditorWideMode,
+  useEditorWideShortcut,
 } from "@/hooks/use-editor-wide-mode";
 import { FEATURES } from "@/constants/features";
 import { PageContainer } from "@/components/page-container";
@@ -81,6 +82,7 @@ function EntryEditContent({
   const [formIsDirty, setFormIsDirty] = useState(false);
   const [editorIsDirty, setEditorIsDirty] = useState(false);
   const editorWide = useEditorWideMode();
+  useEditorWideShortcut(editorWide);
   const initialDocJsonRef = useRef(JSON.stringify(editor.document));
   const blocker = useBlocker((formIsDirty || editorIsDirty) && !isSaving);
 

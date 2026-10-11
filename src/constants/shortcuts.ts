@@ -406,3 +406,34 @@ export const LIBRARY_SHORTCUTS: LibraryShortcut[] = [
     pages: ["library", "topicEntries"],
   },
 ];
+
+export type EntryShortcutAction = "toggleWideEditor" | "toggleMetadata";
+
+export interface EntryShortcut extends Shortcut<EntryShortcutAction> {
+  /** Where it works: only the create and edit pages have a metadata section. */
+  pages: Array<"detail" | "create" | "edit">;
+}
+
+/**
+ * Shortcuts on the entry pages, handled by whatever owns the state they
+ * change (see `usePageShortcuts`). Like the library's, they are listened for
+ * alongside the panel-wide set and must never share a key with it.
+ *
+ * Single keys, so they are ignored while typing in the editor or a field, as
+ * every other single key is. The detail page's editor is read-only and does
+ * not count as typing.
+ */
+export const ENTRY_SHORTCUTS: EntryShortcut[] = [
+  {
+    action: "toggleWideEditor",
+    bindings: [{ key: "w" }],
+    description: "Widen or narrow the editor, when the panel is wide enough",
+    pages: ["detail", "create", "edit"],
+  },
+  {
+    action: "toggleMetadata",
+    bindings: [{ key: "m" }],
+    description: "Show or hide the additional fields & metadata",
+    pages: ["create", "edit"],
+  },
+];

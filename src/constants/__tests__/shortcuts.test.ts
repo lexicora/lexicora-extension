@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   BROWSER_COMMANDS,
   COMMAND_ID,
+  ENTRY_SHORTCUTS,
   LIBRARY_SHORTCUTS,
   PANEL_SHORTCUTS,
   bindingApplies,
@@ -143,6 +144,42 @@ describe("library shortcuts", () => {
       ["showEntries", "showTopics"].includes(s.action),
     );
     for (const shortcut of tabs) expect(shortcut.pages).toEqual(["library"]);
+  });
+});
+
+describe("entry shortcuts", () => {
+  const bindingKey = (b: { key: string; mod?: boolean; alt?: boolean; shift?: boolean }) =>
+    `${b.mod ? "mod+" : ""}${b.alt ? "alt+" : ""}${b.shift ? "shift+" : ""}${b.key}`;
+
+  it.each([true, false])(
+    "never share a key with the panel-wide shortcuts (isMac: %s)",
+    (isMac) => {
+      const panelKeys = new Set(
+        PANEL_SHORTCUTS.flatMap((s) =>
+          s.bindings.filter((b) => bindingApplies(b, isMac)).map(bindingKey),
+        ),
+      );
+      const clashes = ENTRY_SHORTCUTS.flatMap((s) =>
+        s.bindings
+          .filter((b) => bindingApplies(b, isMac))
+          .map(bindingKey)
+          .filter((key) => panelKeys.has(key)),
+      );
+
+      expect(clashes).toEqual([]);
+    },
+  );
+
+  it("store keys lower-case, as the resolver compares them", () => {
+    for (const { bindings } of ENTRY_SHORTCUTS) {
+      for (const { key } of bindings) expect(key).toBe(key.toLowerCase());
+    }
+  });
+
+  it("give the metadata toggle to the create and edit pages only", () => {
+    // The detail page has no form, so no metadata section to open.
+    const metadata = ENTRY_SHORTCUTS.find((s) => s.action === "toggleMetadata");
+    expect(metadata?.pages).toEqual(["create", "edit"]);
   });
 });
 

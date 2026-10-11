@@ -24,7 +24,9 @@ import {
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Toggle } from "@/components/ui/toggle";
+import { ENTRY_SHORTCUTS } from "@/constants/shortcuts";
 import type { TopicDocType } from "@/db/schemas/topic";
+import { usePageShortcuts } from "@/hooks/sidepanel/use-page-shortcuts";
 import { useTabSupport } from "@/hooks/use-tab-support";
 import { cn } from "cn";
 import {
@@ -39,6 +41,10 @@ import { Avatar } from "radix-ui";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+
+const METADATA_SHORTCUTS = ENTRY_SHORTCUTS.filter(
+  (shortcut) => shortcut.action === "toggleMetadata",
+);
 
 const formSchema = z.object({
   title: z
@@ -196,12 +202,26 @@ export function EntryForm({
 
   const prevInitialDataId = useRef<string | null>(null);
   const [isMetadataOpen, setIsMetadataOpen] = useState(false);
+  const metadataTriggerRef = useRef<HTMLButtonElement>(null);
   // An object, so saving twice with the same field wrong goes there twice.
   const [invalidTarget, setInvalidTarget] = useState<{
     field: OrderedField;
   } | null>(null);
   const [topicInputValue, setTopicInputValue] = useState("");
   const topicDisplayInitialized = useRef(false);
+
+  // The section sits above the editor, so with a long entry it is usually
+  // off screen when its key is pressed: opening it brings it into view.
+  usePageShortcuts(METADATA_SHORTCUTS, () => {
+    const opening = !isMetadataOpen;
+    setIsMetadataOpen(opening);
+    if (opening) {
+      metadataTriggerRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  });
 
   useEffect(() => {
     onDirtyChange?.(isDirty);
@@ -611,6 +631,7 @@ export function EntryForm({
         >
           <CollapsibleTrigger asChild>
             <Button
+              ref={metadataTriggerRef}
               variant="ghost"
               size="sm"
               className="w-full flex justify-between py-1 px-2 dark:hover:bg-muted"

@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import {
   bindingApplies,
   COMMAND_DESCRIPTIONS,
+  ENTRY_SHORTCUTS,
   formatBinding,
   LIBRARY_SHORTCUTS,
   PANEL_SHORTCUTS,
@@ -91,8 +92,8 @@ async function openBrowserShortcutSettings() {
 }
 
 /**
- * The panel-wide shortcuts by group, then the Library's own — which only work
- * on the library's list pages, and say so in their heading.
+ * The panel-wide shortcuts by group, then the Library's and the entry pages'
+ * own — which only work there, and say so in their heading.
  */
 const SHORTCUT_SECTIONS: Array<{
   group: string;
@@ -110,6 +111,7 @@ const SHORTCUT_SECTIONS: Array<{
     shortcuts: PANEL_SHORTCUTS.filter((s) => s.group === "act"),
   },
   { group: "library", heading: "In the Library", shortcuts: LIBRARY_SHORTCUTS },
+  { group: "entry", heading: "On an entry", shortcuts: ENTRY_SHORTCUTS },
 ];
 
 function KeyboardShortcutsSettingsPage() {
