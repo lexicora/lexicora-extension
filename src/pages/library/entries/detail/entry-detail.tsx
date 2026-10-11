@@ -235,23 +235,26 @@ function EntryDetailPage() {
               </Avatar.Root>
               {(entry.siteName || entry.hostnameUrl) && (
                 <div className="flex items-center mt-px min-w-0 gap-1">
+                  {/* The site keeps its full width and the path gives way: a
+                    long path used to squeeze the name to a few letters. The
+                    name only truncates when it alone is wider than the line. */}
                   {entry.url ? (
                     <a
                       href={entry.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       title={"Visit: " + entry.url}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors truncate min-w-0"
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors truncate shrink-0 max-w-full"
                     >
                       {entry.siteName || entry.hostnameUrl}
                     </a>
                   ) : (
-                    <span className="text-sm text-muted-foreground truncate min-w-0">
+                    <span className="text-sm text-muted-foreground truncate shrink-0 max-w-full">
                       {entry.siteName}
                     </span>
                   )}
                   {entry.pathnameUrl && entry.pathnameUrl !== "/" && (
-                    <span className="text-xs mt-px text-muted-foreground/60 truncate">
+                    <span className="text-xs mt-px text-muted-foreground/60 truncate min-w-0">
                       {entry.pathnameUrl.replace(/\/$/, "")}
                       {entry.searchUrl || ""}
                     </span>
