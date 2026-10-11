@@ -1,8 +1,10 @@
 import { useCallback, useEffect } from "react";
 import { cn } from "cn";
 import { editorWideModeStorage } from "@/lib/storage/settings";
+import { ENTRY_SHORTCUTS, type EntryShortcut } from "@/constants/shortcuts";
 import { useAppStorage } from "@/hooks/use-app-storage";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { usePageShortcuts } from "@/hooks/sidepanel/use-page-shortcuts";
 
 /**
  * Below this viewport width the content column already fills the page, so a
@@ -70,4 +72,22 @@ export function useEditorWideMode() {
   }, [prefersWide, setStored]);
 
   return { isWide, prefersWide, isAvailable, toggle };
+}
+
+const WIDE_EDITOR_SHORTCUTS = ENTRY_SHORTCUTS.filter(
+  (shortcut) => shortcut.action === "toggleWideEditor",
+);
+
+/**
+ * The wide editor's key on an entry page (see `ENTRY_SHORTCUTS`), so it can be
+ * toggled without scrolling back up to the button. Does nothing while the
+ * viewport is too narrow, where the button is hidden too.
+ */
+export function useEditorWideShortcut({
+  isAvailable,
+  toggle,
+}: Pick<ReturnType<typeof useEditorWideMode>, "isAvailable" | "toggle">) {
+  usePageShortcuts<EntryShortcut["action"]>(WIDE_EDITOR_SHORTCUTS, () => {
+    if (isAvailable) toggle();
+  });
 }
