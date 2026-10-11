@@ -24,10 +24,19 @@ export {
   type ImportResult,
 } from "./import";
 
+export interface BackupDownloadOptions {
+  /**
+   * Write the JSON without indentation: a smaller file, for keeping or moving
+   * rather than reading. The Import page reads either.
+   */
+  compact?: boolean;
+  now?: Date;
+}
+
 /** Downloads the whole library as one JSON backup the Import page can read back. */
 export async function downloadBackup(
   { topics, entries, blocks }: ImportCollections,
-  now: Date = new Date(),
+  { compact = false, now = new Date() }: BackupDownloadOptions = {},
 ): Promise<void> {
   const [topicDocs, entryDocs, blockDocs] = await Promise.all([
     topics.find().exec(),
@@ -50,7 +59,9 @@ export async function downloadBackup(
     .replace("T", "_")
     .replace(/:/g, "-");
   downloadBlob(
-    new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" }),
+    new Blob([JSON.stringify(backup, null, compact ? undefined : 2)], {
+      type: "application/json",
+    }),
     `lexicora-backup-${timestamp}.json`,
   );
 }

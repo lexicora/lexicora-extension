@@ -177,6 +177,37 @@ describe("downloadLibrary", () => {
     expect(saved).toHaveLength(0);
   });
 
+  it("keeps archived topics and entries unless asked to leave them out", async () => {
+    await db.collections.topics.bulkInsert([
+      topic("t1", "Research"),
+      { ...topic("t2", "Old"), isArchived: true },
+    ]);
+    await db.collections.entries.bulkInsert([
+      entry("e1", "t1", "Current"),
+      { ...entry("e2", "t1", "Stale"), isArchived: true, archivedExplicitly: true },
+      { ...entry("e3", "t2", "In an archived topic"), isArchived: true },
+    ]);
+    const collections = {
+      topics: db.collections.topics,
+      entries: db.collections.entries,
+      blocks: db.collections.blocks,
+    };
+
+    expect(await downloadLibrary(collections)).toBe(2);
+    expect(Object.keys(await filesInDownload())).toHaveLength(6);
+
+    saved.length = 0;
+    expect(await downloadLibrary(collections, undefined, { skipArchived: true })).toBe(1);
+    const files = await filesInDownload();
+    expect(Object.keys(files).sort()).toEqual([
+      "Lexicora library.md",
+      "Research/Current.md",
+      "Research/Research.md",
+    ]);
+    // The topic note lists only the entries that were exported.
+    expect(files["Research/Research.md"]).not.toContain("Stale");
+  });
+
   it("names the file with a timestamp, like the JSON export", async () => {
     await db.collections.topics.bulkInsert([topic("t1", "Research")]);
 

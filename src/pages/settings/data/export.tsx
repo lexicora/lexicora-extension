@@ -3,16 +3,19 @@ import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import {
   Item,
+  ItemActions,
   ItemTitle,
   ItemContent,
   ItemDescription,
   ItemHeader,
   ItemMedia,
 } from "@/components/ui/item";
+import { Switch } from "@/components/ui/switch";
 import {
   DatabaseIcon,
   FileBracesCornerIcon,
   FileTextIcon,
+  SlidersHorizontalIcon,
   UploadIcon,
 } from "lucide-react";
 import { useRxCollection } from "rxdb/plugins/react";
@@ -22,6 +25,11 @@ import { downloadLibrary } from "@/lib/export";
 import { navLock } from "@/lib/navigation-lock";
 import { Label } from "@/components/ui/label";
 import { SettingsItemSeparator } from "@/components/settings";
+import { useAppStorage } from "@/hooks/use-app-storage";
+import {
+  exportCompactJsonStorage,
+  exportMarkdownSkipArchivedStorage,
+} from "@/lib/storage/settings";
 
 /** Disables the other action while one is running. */
 type BusyAction = "export" | "export-markdown";
@@ -35,6 +43,10 @@ type BusyAction = "export" | "export-markdown";
  */
 function ExportSettingsPage() {
   const [busy, setBusy] = useState<BusyAction | null>(null);
+  const [compactJson, setCompactJson] = useAppStorage(exportCompactJsonStorage);
+  const [skipArchived, setSkipArchived] = useAppStorage(
+    exportMarkdownSkipArchivedStorage,
+  );
 
   const topicsCollection = useRxCollection("topics");
   const entriesCollection = useRxCollection("entries");
@@ -50,11 +62,14 @@ function ExportSettingsPage() {
 
     // The file's shape lives in lib/backup, shared with the Import page.
     const p = () =>
-      downloadBackup({
-        topics: topicsCollection,
-        entries: entriesCollection,
-        blocks: blocksCollection,
-      });
+      downloadBackup(
+        {
+          topics: topicsCollection,
+          entries: entriesCollection,
+          blocks: blocksCollection,
+        },
+        { compact: compactJson ?? false },
+      );
 
     toast.promise(runExclusive("export", p), {
       loading: "Exporting data...",
@@ -83,6 +98,7 @@ function ExportSettingsPage() {
             toast.loading(`Exporting topic ${done} of ${total}...`, {
               id: toastId,
             }),
+          { skipArchived: skipArchived ?? false },
         );
 
         if (topicCount === 0) {
@@ -183,6 +199,55 @@ function ExportSettingsPage() {
               topic, ready for Obsidian or any editor. A large library takes a
               moment, and navigation is paused while it runs.
           </p> */}
+        </section>
+        <section>
+          <Label className="text-sm ml-2 mb-0.5">
+            <SlidersHorizontalIcon className="size-3.5 text-gray-400" />{" "}
+            Options
+          </Label>
+          <div className="rounded-2xl not-dark:shadow-xs">
+            <Item
+              variant="muted"
+              size="sm"
+              className="group transition-none hover:cursor-pointer bg-card rounded-2xl rounded-b-none"
+              onClick={() => void setCompactJson(!compactJson)}
+            >
+              <ItemContent>
+                <ItemTitle>Compact JSON</ItemTitle>
+                <ItemDescription className="text-pretty line-clamp-none">
+                  Without indentation, for a smaller file. Import reads either.
+                </ItemDescription>
+              </ItemContent>
+              <ItemActions>
+                <Switch
+                  className="data-[state=unchecked]:bg-gray-400 dark:data-[state=unchecked]:bg-gray-700"
+                  checked={compactJson ?? false}
+                  aria-label="Compact JSON"
+                />
+              </ItemActions>
+            </Item>
+            <SettingsItemSeparator />
+            <Item
+              variant="muted"
+              size="sm"
+              className="group transition-none hover:cursor-pointer bg-card rounded-2xl rounded-t-none"
+              onClick={() => void setSkipArchived(!skipArchived)}
+            >
+              <ItemContent>
+                <ItemTitle>Leave out archived</ItemTitle>
+                <ItemDescription className="text-pretty line-clamp-none">
+                  Markdown only. The JSON backup always holds everything.
+                </ItemDescription>
+              </ItemContent>
+              <ItemActions>
+                <Switch
+                  className="data-[state=unchecked]:bg-gray-400 dark:data-[state=unchecked]:bg-gray-700"
+                  checked={skipArchived ?? false}
+                  aria-label="Leave archived topics and entries out of the Markdown archive"
+                />
+              </ItemActions>
+            </Item>
+          </div>
         </section>
       </main>
     </PageContainer>
