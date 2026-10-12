@@ -177,6 +177,7 @@ the same files unpacked to `.output/firefox-mv2/`.
 
 ```bash
 bun run compile          # TypeScript type-check only (no emit)
+bun check                # TypeScript type-check only (faster than `bun run compile`; built into Bun 1.4.3+)
 bun run lint             # oxlint, including type-aware rules
 ```
 
