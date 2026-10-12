@@ -176,7 +176,9 @@ export function HeadingMap({
               // smoothly can stop the scroll short.
               event.preventDefault();
               triggerRef.current?.focus({ preventScroll: true });
-              target.scrollIntoView({ block: "start" });
+              requestAnimationFrame(() =>
+                target.scrollIntoView({ block: "start" }),
+              );
             }}
           >
             <DropdownMenuLabel className="text-xs font-medium select-none text-muted-foreground py-1">

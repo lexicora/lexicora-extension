@@ -87,10 +87,18 @@ export function FindBar() {
     setIndex(Math.max(firstInView, 0));
   }, []);
 
+  const openRef = useRef(open);
+  useEffect(() => {
+    openRef.current = open;
+  }, [open]);
+
   useEffect(() => {
     const listener: OpenListener = (selectedText) => {
-      setOpen(true);
-      search(selectedText || queryRef.current);
+      // Pressed again while open: back to the field, keeping the place.
+      if (!openRef.current || selectedText) {
+        setOpen(true);
+        search(selectedText || queryRef.current);
+      }
       // After the bar renders, when it was closed.
       requestAnimationFrame(() => {
         inputRef.current?.focus();
