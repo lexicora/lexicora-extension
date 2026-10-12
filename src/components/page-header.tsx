@@ -16,10 +16,47 @@ interface ActionButtonConfig {
   // MAYBE: Add a loading icon and state here as well
   isLoading?: boolean;
   variant?: "default" | "ghost" | "outline" | "secondary" | "destructive";
-  onClick?: () => void;
+  /** Given the button pressed, the large one or the compact one. */
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   title: string;
   type?: "button" | "submit" | "reset";
   form?: string;
+  /**
+   * For a button that opens a menu: whether it is open. The menu lives
+   * outside the header (see `HeadingMapMenu`), opened from the button.
+   */
+  expanded?: boolean;
+}
+
+/** Marks the header's action button, both the large and the compact one. */
+const HEADER_ACTION_ATTRIBUTE = "data-lc-header-action";
+
+/**
+ * The header's action button as it is on screen: the large one at the top of
+ * the page, the compact one once scrolled, whichever is showing.
+ */
+export function visibleHeaderAction(): HTMLElement | null {
+  const buttons = document.querySelectorAll<HTMLElement>(
+    `[${HEADER_ACTION_ATTRIBUTE}]`,
+  );
+  for (const button of buttons) {
+    const { bottom } = button.getBoundingClientRect();
+    const isShown =
+      bottom > 0 &&
+      (typeof button.checkVisibility !== "function" ||
+        button.checkVisibility({ opacityProperty: true }));
+    if (isShown) return button;
+  }
+  return null;
+}
+
+/** Attributes every rendering of the action button shares. */
+function actionButtonAttributes(button: ActionButtonConfig) {
+  return {
+    [HEADER_ACTION_ATTRIBUTE]: "",
+    "aria-haspopup": button.expanded === undefined ? undefined : ("menu" as const),
+    "aria-expanded": button.expanded,
+  };
 }
 
 interface PageHeaderProps {
@@ -153,6 +190,7 @@ export function PageHeader({
           </h1>
           {rightActionButton && (
             <Button
+              {...actionButtonAttributes(rightActionButton)}
               form={rightActionButton.form}
               type={rightActionButton.type}
               variant={rightActionButton.variant || "default"}
@@ -245,6 +283,7 @@ export function PageHeader({
       </span>
       {rightActionButton && (
         <Button
+          {...actionButtonAttributes(rightActionButton)}
           form={rightActionButton.form}
           type={rightActionButton.type}
           variant={rightActionButton.variant || "default"}
@@ -361,6 +400,7 @@ export function PageHeader({
           </h1>
           {rightActionButton && (
             <Button
+              {...actionButtonAttributes(rightActionButton)}
               form={rightActionButton.form}
               type={rightActionButton.type}
               variant={rightActionButton.variant || "default"}

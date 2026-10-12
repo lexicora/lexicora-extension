@@ -1,15 +1,23 @@
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { EditorWidthToggle } from "@/components/editor/editor-width-toggle";
-import { HeadingMap } from "@/components/editor/heading-map";
+import {
+  HEADING_MAP_TITLE,
+  HeadingMapIcon,
+  HeadingMapMenu,
+  useHeadingMap,
+} from "@/components/editor/heading-map";
 import {
   editorBleedProps,
   editorColumnClassName,
   useEditorWideMode,
   useEditorWideShortcut,
 } from "@/hooks/use-editor-wide-mode";
-import { appBlockNoteConfig } from "@/components/editor/config";
+import {
+  appBlockNoteConfig,
+  type AppBlockNoteEditor,
+} from "@/components/editor/config";
 import { PageContainer } from "@/components/page-container";
-import { PageHeader } from "@/components/page-header";
+import { PageHeader, visibleHeaderAction } from "@/components/page-header";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -54,7 +62,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { Avatar } from "radix-ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useRxCollection } from "rxdb/plugins/react";
 import { deleteEntryCascade } from "@/db/cascade-delete";
@@ -64,10 +72,11 @@ import { useEntryDetail } from "./__hooks__/use-entry-detail";
 
 function EntryContentViewer({
   initialBlocks,
-  isWide,
+  onEditor,
 }: {
   initialBlocks: BlockNoteBlock[];
-  isWide: boolean;
+  /** Hands the editor to the page, for the heading map in its header. */
+  onEditor: (editor: AppBlockNoteEditor | null) => void;
 }) {
   const editor = useCreateBlockNote({
     ...appBlockNoteConfig,
@@ -76,15 +85,17 @@ function EntryContentViewer({
       initialBlocks.length > 0 ? (initialBlocks as any[]) : undefined,
   });
 
+  useEffect(() => {
+    onEditor(editor);
+    return () => onEditor(null);
+  }, [editor, onEditor]);
+
   return (
-    <>
-      <BlockNoteView
-        editor={editor}
-        editable={false}
-        id="lc-blocknote-view-entry-detail"
-      />
-      <HeadingMap editor={editor} isWide={isWide} aboveBottomBar />
-    </>
+    <BlockNoteView
+      editor={editor}
+      editable={false}
+      id="lc-blocknote-view-entry-detail"
+    />
   );
 }
 
@@ -98,6 +109,14 @@ function EntryDetailPage() {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const editorWide = useEditorWideMode();
   useEditorWideShortcut(editorWide);
+  // The content's editor, once the viewer has created it. The heading map
+  // opens from the header here: the bottom right, where it floats on the
+  // create and edit pages, is next to the bottom navigation on this page.
+  const [contentEditor, setContentEditor] =
+    useState<AppBlockNoteEditor | null>(null);
+  const headingMap = useHeadingMap(contentEditor, {
+    findOpener: visibleHeaderAction,
+  });
 
   const handleAttributeToggle = async (
     attribute: "isFavorite" | "isPinned" | "isArchived",
@@ -194,7 +213,21 @@ function EntryDetailPage() {
           classNameHeaderElement="mb-3"
           goBackButton
           heavyTeardown
+          rightActionButton={
+            headingMap.isAvailable
+              ? {
+                  iconSmall: <HeadingMapIcon size="small" />,
+                  iconLarge: <HeadingMapIcon size="large" />,
+                  variant: "default",
+                  title: HEADING_MAP_TITLE,
+                  type: "button",
+                  expanded: headingMap.open,
+                  onClick: (event) => headingMap.toggle(event.currentTarget),
+                }
+              : undefined
+          }
         />
+        <HeadingMapMenu map={headingMap} side="bottom" />
 
         <section className="px-1 mx-auto w-full max-w-(--lc-content-max-width) text-left select-text">
           {/* Title */}
@@ -467,7 +500,7 @@ function EntryDetailPage() {
             {hasContent ? (
               <EntryContentViewer
                 initialBlocks={blocks!}
-                isWide={isEditorWide}
+                onEditor={setContentEditor}
               />
             ) : (
               <p className="italic text-muted-foreground text-sm px-4 py-3">
