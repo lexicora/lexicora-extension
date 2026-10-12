@@ -24,6 +24,7 @@ import {
 import { toast } from "sonner";
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { EditorWidthToggle } from "@/components/editor/editor-width-toggle";
+import { HeadingMap } from "@/components/editor/heading-map";
 import {
   editorBleedProps,
   editorColumnClassName,
@@ -412,6 +413,11 @@ function EntryCreatePage() {
             </div>
           </div>
         </div>
+        <HeadingMap
+          editor={editor}
+          isWide={editorWide.isWide}
+          aboveBottomBar={FEATURES.AI}
+        />
       </main>
       {FEATURES.AI ? (
         <footer

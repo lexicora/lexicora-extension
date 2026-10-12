@@ -407,7 +407,10 @@ export const LIBRARY_SHORTCUTS: LibraryShortcut[] = [
   },
 ];
 
-export type EntryShortcutAction = "toggleWideEditor" | "toggleMetadata";
+export type EntryShortcutAction =
+  | "toggleWideEditor"
+  | "toggleMetadata"
+  | "openHeadingMap";
 
 export interface EntryShortcut extends Shortcut<EntryShortcutAction> {
   /** Where it works: only the create and edit pages have a metadata section. */
@@ -435,5 +438,12 @@ export const ENTRY_SHORTCUTS: EntryShortcut[] = [
     bindings: [{ key: "m" }],
     description: "Show or hide the additional fields & metadata",
     pages: ["create", "edit"],
+  },
+  {
+    action: "openHeadingMap",
+    // O, as in outline. H is already Home.
+    bindings: [{ key: "o" }],
+    description: "Jump to a heading, when the content has a few",
+    pages: ["detail", "create", "edit"],
   },
 ];

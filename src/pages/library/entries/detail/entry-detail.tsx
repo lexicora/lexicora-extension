@@ -1,5 +1,6 @@
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { EditorWidthToggle } from "@/components/editor/editor-width-toggle";
+import { HeadingMap } from "@/components/editor/heading-map";
 import {
   editorBleedProps,
   editorColumnClassName,
@@ -63,8 +64,10 @@ import { useEntryDetail } from "./__hooks__/use-entry-detail";
 
 function EntryContentViewer({
   initialBlocks,
+  isWide,
 }: {
   initialBlocks: BlockNoteBlock[];
+  isWide: boolean;
 }) {
   const editor = useCreateBlockNote({
     ...appBlockNoteConfig,
@@ -74,11 +77,14 @@ function EntryContentViewer({
   });
 
   return (
-    <BlockNoteView
-      editor={editor}
-      editable={false}
-      id="lc-blocknote-view-entry-detail"
-    />
+    <>
+      <BlockNoteView
+        editor={editor}
+        editable={false}
+        id="lc-blocknote-view-entry-detail"
+      />
+      <HeadingMap editor={editor} isWide={isWide} aboveBottomBar />
+    </>
   );
 }
 
@@ -459,7 +465,10 @@ function EntryDetailPage() {
           {/* <Separator className="mx-auto max-w-[calc(100%-8px)] mb-5 opacity-60" /> */}
           <div className={editorColumnClassName(isEditorWide)}>
             {hasContent ? (
-              <EntryContentViewer initialBlocks={blocks!} />
+              <EntryContentViewer
+                initialBlocks={blocks!}
+                isWide={isEditorWide}
+              />
             ) : (
               <p className="italic text-muted-foreground text-sm px-4 py-3">
                 No content.

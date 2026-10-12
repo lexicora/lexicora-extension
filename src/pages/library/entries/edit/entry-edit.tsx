@@ -15,6 +15,7 @@ import {
 import { appBlockNoteConfig } from "@/components/editor/config";
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { EditorWidthToggle } from "@/components/editor/editor-width-toggle";
+import { HeadingMap } from "@/components/editor/heading-map";
 import {
   editorBleedProps,
   editorColumnClassName,
@@ -248,6 +249,11 @@ function EntryEditContent({
             />
           </div>
         </div>
+        <HeadingMap
+          editor={editor}
+          isWide={editorWide.isWide}
+          aboveBottomBar={FEATURES.AI}
+        />
       </main>
       <AlertDialog open={blocker.state === "blocked"}>
         <AlertDialogContent
