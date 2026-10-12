@@ -79,6 +79,8 @@ function supportsHighlights(): boolean {
  */
 export function FindBar() {
   const [open, setOpen] = useState(false);
+  // Still on screen after closing, while it fades out.
+  const [isClosing, setIsClosing] = useState(false);
   const [query, setQuery] = useState("");
   const [matches, setMatches] = useState<Range[]>([]);
   const [index, setIndex] = useState(0);
@@ -118,6 +120,8 @@ export function FindBar() {
       // Pressed again while open: back to the field, keeping the place.
       if (!openRef.current || selectedText) {
         setOpen(true);
+        // Reopened mid-fade: the same element fades back in.
+        setIsClosing(false);
         search(selectedText || queryRef.current);
       }
       // After the bar renders, when it was closed.
@@ -201,12 +205,17 @@ export function FindBar() {
 
   /**
    * Closes the bar and leaves the current match selected, as a browser does,
-   * so it can be copied, or typed over in the editor.
+   * so it can be copied, or typed over in the editor. The highlights go at
+   * once; the bar fades out after them. The matches are kept, so the count
+   * does not change while it fades; the next search replaces them.
    */
   const close = useCallback(() => {
     const current = matches[index];
     setOpen(false);
-    setMatches([]);
+    // Without motion there is no fade, and so no animationend to wait for.
+    setIsClosing(
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    );
     if (!current) {
       inputRef.current?.blur();
       return;
@@ -237,7 +246,7 @@ export function FindBar() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, step]);
 
-  if (!open) return null;
+  if (!open && !isClosing) return null;
 
   const count = matches.length;
   const status =
@@ -251,6 +260,8 @@ export function FindBar() {
     <div
       {...findIgnoreProps}
       role="search"
+      // Fading out: out of reach for the pointer, keyboard and screen readers.
+      inert={!open}
       className="fixed top-3 left-3 right-[calc(var(--lc-scrollbar-offset)+0.125rem)] z-110 flex justify-end pointer-events-none"
     >
       <style>{HIGHLIGHT_STYLES}</style>
@@ -258,10 +269,18 @@ export function FindBar() {
         className={cn(
           "pointer-events-auto flex items-center gap-0.5 w-full max-w-90 h-10 pl-3 pr-1",
           "rounded-lg border bg-popover/95 backdrop-blur-md text-popover-foreground shadow-lg",
-          // Fades and drops in on opening, like the app's menus. Only on
-          // mounting: the bar is not rendered while closed.
-          "animate-in fade-in-0 slide-in-from-top-2 duration-200 ease-out motion-reduce:animate-none",
+          // Fades and drops in on opening, and back up on closing, like the
+          // app's menus. Each plays once: opening mounts the bar, and closing
+          // unmounts it when the fade ends.
+          open
+            ? "animate-in fade-in-0 slide-in-from-top-2 duration-200 ease-out"
+            : "animate-out fade-out-0 slide-out-to-top-2 duration-150 ease-in fill-mode-forwards",
+          "motion-reduce:animate-none",
         )}
+        onAnimationEnd={(event) => {
+          if (event.target === event.currentTarget && !open)
+            setIsClosing(false);
+        }}
       >
         <SearchIcon
           className="size-4 shrink-0 text-muted-foreground"
