@@ -116,7 +116,8 @@ export function PageHeader({
     if (goBackButton) {
       return (
         <header
-          // Left out of ⌘/Ctrl+F: the find bar covers the header (see FindBar).
+          // Left out of ⌘/Ctrl+F: it repeats the page's title, and at the top
+          // of the page the find bar covers it (see FindBar).
           {...findIgnoreProps}
           className={cn(
             "flex items-center mb-4 w-full",
@@ -180,7 +181,7 @@ export function PageHeader({
     // Simple Static
     return (
       <header
-        // Left out of ⌘/Ctrl+F: the find bar covers the header (see FindBar).
+        // Left out of ⌘/Ctrl+F, as above.
         {...findIgnoreProps}
         className={cn(
           "mb-4 mt-1", // (had:  flex items-center justify-between) Assuming you might want flex here if you pass children, but relying on your own classes
@@ -291,7 +292,7 @@ export function PageHeader({
 
   return (
     <header
-      // Left out of ⌘/Ctrl+F: the find bar covers the header (see FindBar).
+      // Left out of ⌘/Ctrl+F, as above.
       {...findIgnoreProps}
       className={cn(
         "flex flex-col w-full mb-4",

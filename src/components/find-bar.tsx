@@ -16,12 +16,17 @@ import {
   revealRange,
 } from "@/lib/find-in-page";
 import { cn } from "cn";
+import { useScrollPos } from "@/providers/scroll-observer";
 
 /**
- * Room kept clear when scrolling a match into view: the bar and the compact
- * header at the top, the bottom navigation at the bottom.
+ * Room kept clear when scrolling a match into view, and when picking the
+ * first match in view: the bar at the top, the bottom navigation at the
+ * bottom. The bar sits lower once the page is scrolled (see its placement
+ * below), so the top margin follows it: its bottom edge plus 12px.
  */
-const REVEAL_MARGIN = { top: 64, bottom: 72 };
+function revealMargin(isAtTop: boolean) {
+  return { top: isAtTop ? 64 : 90, bottom: 72 };
+}
 
 const HIGHLIGHT_ALL = "lc-find";
 const HIGHLIGHT_CURRENT = "lc-find-current";
@@ -94,6 +99,13 @@ export function FindBar() {
   // attached once.
   const queryRef = useRef(query);
 
+  const { isAtTop } = useScrollPos();
+  // For the callbacks below, which are not recreated on scrolling.
+  const isAtTopRef = useRef(isAtTop);
+  useEffect(() => {
+    isAtTopRef.current = isAtTop;
+  }, [isAtTop]);
+
   /**
    * Searches for a new query, or on opening: from the part of the page in
    * view, as a browser does, rather than from the top.
@@ -103,7 +115,9 @@ export function FindBar() {
     setQuery(next);
     const found = findMatches(searchRoot(), next, { isIgnored });
     const firstInView = found.findIndex(
-      (range) => range.getBoundingClientRect().bottom >= REVEAL_MARGIN.top,
+      (range) =>
+        range.getBoundingClientRect().bottom >=
+        revealMargin(isAtTopRef.current).top,
     );
     shouldReveal.current = true;
     setMatches(found);
@@ -189,7 +203,7 @@ export function FindBar() {
     const current = matches[index];
     if (!open || !current || !shouldReveal.current) return;
     shouldReveal.current = false;
-    revealRange(current, REVEAL_MARGIN);
+    revealRange(current, revealMargin(isAtTopRef.current));
   }, [open, matches, index]);
 
   const step = useCallback(
@@ -262,7 +276,14 @@ export function FindBar() {
       role="search"
       // Fading out: out of reach for the pointer, keyboard and screen readers.
       inert={!open}
-      className="fixed top-3 left-3 right-[calc(var(--lc-scrollbar-offset)+0.125rem)] z-110 flex justify-end pointer-events-none"
+      className={cn(
+        "fixed left-3 right-[calc(var(--lc-scrollbar-offset)+0.125rem)] z-110 flex justify-end pointer-events-none",
+        // At the top of the page the bar covers the large header. Once
+        // scrolled it moves below the compact header, so that header's back
+        // and save buttons stay in reach while finding.
+        "transition-[top]",
+        isAtTop ? "top-3" : "top-9.5",
+      )}
     >
       <style>{HIGHLIGHT_STYLES}</style>
       <div
