@@ -119,7 +119,11 @@ export function useHeadingMap(
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [anchor, setAnchor] = useState<Anchor | null>(null);
   const openerRef = useRef<HTMLElement | null>(null);
-  const targetRef = useRef<HTMLElement | null>(null);
+  // What had focus before the menu opened, to return to on closing without a
+  // choice — the editor while editing. Not the opening button.
+  const restoreRef = useRef<HTMLElement | null>(null);
+  // The heading chosen, to go to once the menu has closed.
+  const chosenIdRef = useRef<string | null>(null);
 
   const isAvailable = editor !== null && headings.length >= MIN_HEADINGS;
 
@@ -137,7 +141,14 @@ export function useHeadingMap(
     setShown(visible);
     setCurrentId(current);
     openerRef.current = opener;
-    targetRef.current = null;
+    const focused = document.activeElement;
+    restoreRef.current =
+      focused instanceof HTMLElement &&
+      focused !== document.body &&
+      focused !== opener
+        ? focused
+        : null;
+    chosenIdRef.current = null;
     // With no button on screen: at the right, below the compact header.
     setAnchor(
       opener
@@ -162,9 +173,38 @@ export function useHeadingMap(
     if (!next) setOpen(false);
   }, []);
 
-  /** Remembers the heading to scroll to once the menu has closed. */
+  /** Remembers the heading to go to once the menu has closed. */
   const choose = (id: string) => {
-    targetRef.current = editor ? blockElement(editor, id) : null;
+    chosenIdRef.current = id;
+  };
+
+  /**
+   * Where focus goes once the menu has closed — never back to the button
+   * that opened it, which only gets in the way of carrying on.
+   *
+   * With a heading chosen, the page scrolls to it; while editing, the caret
+   * moves to its end as well, ready to type there. Closed without a choice
+   * (Esc, a click outside), focus returns to where it was before, such as the
+   * editor with its caret where it was, or else to nothing.
+   */
+  const afterClose = () => {
+    const id = chosenIdRef.current;
+    chosenIdRef.current = null;
+    if (!editor || !id) {
+      restoreRef.current?.focus({ preventScroll: true });
+      return;
+    }
+    const target = blockElement(editor, id);
+    if (editor.isEditable) {
+      editor.setTextCursorPosition(id, "end");
+      // ProseMirror focuses without scrolling, so the scroll below decides
+      // where the page ends up.
+      editor.focus();
+    }
+    // A frame later: a focus change while scrolling smoothly can stop the
+    // scroll short.
+    if (target)
+      requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
   };
 
   return {
@@ -176,8 +216,8 @@ export function useHeadingMap(
     currentId,
     anchor,
     openerRef,
-    targetRef,
     choose,
+    afterClose,
   };
 }
 
@@ -228,17 +268,10 @@ export function HeadingMapMenu({
             event.preventDefault();
         }}
         onCloseAutoFocus={(event) => {
-          // Focus goes back to the button that opened the menu rather than
-          // the invisible trigger, and without moving the page. Only then
-          // does the page scroll: a focus change while scrolling smoothly can
-          // stop the scroll short.
+          // Not back to the trigger, as a menu would by default; see
+          // `afterClose`.
           event.preventDefault();
-          map.openerRef.current?.focus({ preventScroll: true });
-          const target = map.targetRef.current;
-          if (target)
-            requestAnimationFrame(() =>
-              target.scrollIntoView({ block: "start" }),
-            );
+          map.afterClose();
         }}
       >
         <DropdownMenuLabel className="text-xs font-medium select-none text-muted-foreground py-1">
@@ -347,6 +380,9 @@ export function HeadingMap({
           aria-expanded={map.open}
           draggable={false}
           className="pointer-events-auto button-create"
+          // A click leaves focus where it was, in the editor, so closing the
+          // menu without a choice puts the caret back where it was.
+          onMouseDown={(event) => event.preventDefault()}
           onClick={(event) => map.toggle(event.currentTarget)}
         >
           <HeadingMapIcon size="small" />
