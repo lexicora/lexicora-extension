@@ -259,8 +259,10 @@ export function FindBar() {
         <SearchIcon
           className="size-4 shrink-0 text-muted-foreground"
           aria-hidden
+          onClick={() => inputRef.current?.focus()}
         />
         <input
+          id="lc-global-find-input"
           ref={inputRef}
           type="text"
           value={query}
