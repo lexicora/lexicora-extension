@@ -24,6 +24,7 @@ import RxDBProvider from "@/providers/rxdb-provider";
 import { FEATURES } from "@/constants/features";
 import { TopBar } from "@/components/top-bar";
 import { BottomNavigation } from "@/components/bottom-navigation";
+import { FindBar } from "@/components/find-bar";
 import { Toaster } from "@/components/ui/sonner";
 
 // Pages
@@ -101,6 +102,7 @@ function RootLayout() {
         {FEATURES.SIDE_PANEL_TOP_BAR && <TopBar />}
         <Outlet />
         <BottomNavigation />
+        <FindBar />
       </ScrollObserverProvider>
     </AppMessagingProvider>
   );

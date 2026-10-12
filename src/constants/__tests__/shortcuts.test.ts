@@ -102,9 +102,11 @@ describe("panel shortcuts", () => {
     }
   });
 
-  it("lets only save fire while typing", () => {
+  it("lets only find and save fire while typing", () => {
+    // Both are wanted from inside the editor, and typing never needs ⌘/Ctrl+F
+    // or ⌘/Ctrl+S.
     const whileTyping = PANEL_SHORTCUTS.filter((s) => s.whileTyping);
-    expect(whileTyping.map((s) => s.action)).toEqual(["save"]);
+    expect(whileTyping.map((s) => s.action)).toEqual(["find", "save"]);
   });
 });
 

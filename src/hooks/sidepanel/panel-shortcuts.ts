@@ -12,7 +12,7 @@ import {
  *
  * Shortcuts are skipped while the user is typing, and inside dialogs and
  * menus, which use keys themselves (a menu's type-ahead, for one) — except
- * those marked `whileTyping`, which is the point of ⌘/Ctrl+S.
+ * those marked `whileTyping`, which is the point of ⌘/Ctrl+S and ⌘/Ctrl+F.
  */
 
 export const IS_MAC =

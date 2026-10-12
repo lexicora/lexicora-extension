@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 
 import { captureFailureMessage } from "./capture-failure-listener";
+import { openFindBar } from "@/components/find-bar";
 
 import {
   BOTTOM_NAV_ACTIONS,
@@ -84,6 +85,10 @@ export function usePanelShortcuts() {
               state: { focusSearch: true },
             });
           }
+          return;
+        }
+        case "find": {
+          openFindBar();
           return;
         }
         case "newEntry": {

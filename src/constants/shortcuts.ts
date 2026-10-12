@@ -155,6 +155,7 @@ export type PanelShortcutAction =
   | "forward"
   | "scrollToTop"
   | "search"
+  | "find"
   | "newEntry"
   | "newTopic"
   | "edit"
@@ -192,7 +193,7 @@ export interface Shortcut<A extends string = string> {
   /** Alternatives; any one triggers the action. All that apply are shown in Settings. */
   bindings: KeyBinding[];
   description: string;
-  /** Also fires while typing in a field or the editor. Only ⌘/Ctrl+S needs this. */
+  /** Also fires while typing in a field or the editor. Only ⌘/Ctrl+S and ⌘/Ctrl+F need this. */
   whileTyping?: boolean;
 }
 
@@ -279,6 +280,14 @@ export const PANEL_SHORTCUTS: PanelShortcut[] = [
     bindings: [{ key: "/" }, { key: "k", mod: true }],
     description: "Search the library",
     group: "act",
+  },
+  {
+    action: "find",
+    // The browser's own find searches the web page, never the panel.
+    bindings: [{ key: "f", mod: true }],
+    description: "Find on the page, as in a browser tab",
+    group: "act",
+    whileTyping: true,
   },
   {
     action: "newEntry",

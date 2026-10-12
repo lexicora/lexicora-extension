@@ -1,0 +1,21 @@
+/* Find in the side panel (find-bar.tsx): every match, and the current one,
+   in the colours browsers use for their own find. Painted with the CSS Custom
+   Highlight API, so the page's DOM is never touched. */
+
+::highlight(lc-find) {
+  background-color: rgb(250 204 21 / 0.5);
+}
+
+::highlight(lc-find-current) {
+  background-color: rgb(249 115 22 / 0.85);
+  color: black;
+}
+
+.dark ::highlight(lc-find) {
+  background-color: rgb(250 204 21 / 0.35);
+}
+
+.dark ::highlight(lc-find-current) {
+  background-color: rgb(249 115 22 / 0.9);
+  color: black;
+}
