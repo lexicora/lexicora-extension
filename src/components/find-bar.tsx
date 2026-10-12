@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ChevronDownIcon, ChevronUpIcon, SearchIcon, XIcon } from "lucide-react";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  SearchIcon,
+  XIcon,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { IS_MAC } from "@/hooks/sidepanel/panel-shortcuts";
@@ -171,8 +176,8 @@ export function FindBar() {
     (direction: 1 | -1) => {
       if (matches.length === 0) return;
       shouldReveal.current = true;
-      setIndex((current) =>
-        (current + direction + matches.length) % matches.length,
+      setIndex(
+        (current) => (current + direction + matches.length) % matches.length,
       );
     },
     [matches.length],
@@ -230,15 +235,18 @@ export function FindBar() {
     <div
       {...{ [IGNORE_ATTRIBUTE]: "" }}
       role="search"
-      className="fixed top-2 left-3 right-[calc(var(--lc-scrollbar-offset)+0.75rem)] z-110 flex justify-end pointer-events-none"
+      className="fixed top-3 left-3 right-[calc(var(--lc-scrollbar-offset)+0.125rem)] z-110 flex justify-end pointer-events-none"
     >
       <div
         className={cn(
-          "pointer-events-auto flex items-center gap-0.5 w-full max-w-80 h-10 pl-3 pr-1",
+          "pointer-events-auto flex items-center gap-0.5 w-full max-w-90 h-10 pl-3 pr-1",
           "rounded-lg border bg-popover/95 backdrop-blur-md text-popover-foreground shadow-lg",
         )}
       >
-        <SearchIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+        <SearchIcon
+          className="size-4 shrink-0 text-muted-foreground"
+          aria-hidden
+        />
         <input
           ref={inputRef}
           type="text"
