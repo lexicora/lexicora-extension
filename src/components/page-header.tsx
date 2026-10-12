@@ -199,9 +199,9 @@ export function PageHeader({
               className={cn(
                 "hover:ring-1 ring-inset ring-gray-300 dark:ring-gray-700",
                 rightActionButton.variant === "default" &&
-                  "bg-primary/80 hover:bg-primary hover:text-primary-foreground/95",
+                  "bg-primary/80 hover:bg-primary hover:text-primary-foreground/95 aria-expanded:bg-primary aria-expanded:text-primary-foreground/95",
                 rightActionButton.variant === "secondary" &&
-                  "bg-secondary/80 hover:bg-secondary hover:text-secondary-foreground/95",
+                  "bg-secondary/80 hover:bg-secondary hover:text-secondary-foreground/95 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground/95",
                 // MAYBE: Other variants
                 "shrink-0 size-10 rounded-lg",
               )}
@@ -292,9 +292,9 @@ export function PageHeader({
           className={cn(
             "backdrop-blur-xs",
             rightActionButton.variant === "default" &&
-              "bg-primary/80 hover:bg-primary hover:text-primary-foreground/95",
+              "bg-primary/80 hover:bg-primary hover:text-primary-foreground/95 aria-expanded:bg-primary aria-expanded:text-primary-foreground/95",
             rightActionButton.variant === "secondary" &&
-              "bg-secondary/80 hover:bg-secondary hover:text-secondary-foreground/95 hover:ring-1 ring-inset ring-gray-300 dark:ring-gray-700",
+              "bg-secondary/80 hover:bg-secondary hover:text-secondary-foreground/95 hover:ring-1 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground/95 aria-expanded:ring-1 ring-inset ring-gray-300 dark:ring-gray-700",
             // MAYBE: Other variants
             "mr-0.75 shrink-0 size-7.5 transition-all duration-150 active-view-transition:transition-none",
             isAtTop ? hoverAnimClasses.hidden : hoverAnimClasses.visible,
@@ -408,7 +408,7 @@ export function PageHeader({
               title={rightActionButton.title}
               className={cn(
                 rightActionButton.variant === "default" &&
-                  "bg-primary/80 hover:bg-primary hover:text-primary-foreground/95",
+                  "bg-primary/80 hover:bg-primary hover:text-primary-foreground/95 aria-expanded:bg-primary aria-expanded:text-primary-foreground/95",
                 // MAYBE: Other variants
                 "shrink-0 size-10 rounded-lg",
               )}

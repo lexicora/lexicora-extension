@@ -218,6 +218,15 @@ export function HeadingMapMenu({
         align="end"
         sideOffset={8}
         className="w-72 max-w-[calc(100vw-1.5rem)] max-h-[min(60vh,28rem)] overflow-y-auto"
+        onPointerDownOutside={(event) => {
+          // A press on the button that opened the menu is left to its click,
+          // which closes the menu. Closing here as well would let that click
+          // open it straight back up.
+          const opener = map.openerRef.current;
+          const target = event.target;
+          if (opener && target instanceof Node && opener.contains(target))
+            event.preventDefault();
+        }}
         onCloseAutoFocus={(event) => {
           // Focus goes back to the button that opened the menu rather than
           // the invisible trigger, and without moving the page. Only then
