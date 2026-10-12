@@ -11,8 +11,6 @@ import { IS_MAC } from "@/hooks/sidepanel/panel-shortcuts";
 import { findMatches, MAX_MATCHES, revealRange } from "@/lib/find-in-page";
 import { cn } from "cn";
 
-import "./find-bar.css";
-
 /** Marks what find leaves out: the bar itself. */
 const IGNORE_ATTRIBUTE = "data-lc-find-ignore";
 
@@ -24,6 +22,20 @@ const REVEAL_MARGIN = { top: 64, bottom: 72 };
 
 const HIGHLIGHT_ALL = "lc-find";
 const HIGHLIGHT_CURRENT = "lc-find-current";
+
+/**
+ * Every match, and the current one, in the colours browsers use for their own
+ * find. Rendered with the bar rather than kept in a stylesheet: the build's
+ * CSS minifier, lightningcss, does not know `::highlight()` yet and warns on
+ * every build (parcel-bundler/lightningcss#1300). The rules only matter while
+ * the bar is open, which is exactly when this is on the page.
+ */
+const HIGHLIGHT_STYLES = `
+::highlight(${HIGHLIGHT_ALL}) { background-color: rgb(250 204 21 / 0.5); }
+::highlight(${HIGHLIGHT_CURRENT}) { background-color: rgb(249 115 22 / 0.85); color: black; }
+.dark ::highlight(${HIGHLIGHT_ALL}) { background-color: rgb(250 204 21 / 0.35); }
+.dark ::highlight(${HIGHLIGHT_CURRENT}) { background-color: rgb(249 115 22 / 0.9); }
+`;
 
 type OpenListener = (selectedText: string) => void;
 const openListeners = new Set<OpenListener>();
@@ -237,6 +249,7 @@ export function FindBar() {
       role="search"
       className="fixed top-3 left-3 right-[calc(var(--lc-scrollbar-offset)+0.125rem)] z-110 flex justify-end pointer-events-none"
     >
+      <style>{HIGHLIGHT_STYLES}</style>
       <div
         className={cn(
           "pointer-events-auto flex items-center gap-0.5 w-full max-w-90 h-10 pl-3 pr-1",

@@ -28,6 +28,16 @@ export default defineConfig({
   },
   vite: () => ({
     plugins: [tailwindcss()],
+    build: {
+      // Vite's 500 kB warning is about download time on the web. An extension
+      // loads its files from disk, and the chunks over it are not ones a split
+      // would make smaller to load: the side panel's own code (React,
+      // BlockNote and ProseMirror, RxDB), which every route needs at startup
+      // and the popup and onboarding page do not load, and Shiki's C++
+      // grammar, fetched only when a C++ code block is shown. Set above those
+      // (about 1.9 MB and 1 MB today) so a real jump still warns.
+      chunkSizeWarningLimit: 2500,
+    },
     resolve: { alias: { "tailwind-merge": "cn", clsx: "cn" } }, //* cn is faster, but if this causes issues, then remove.
   }),
   // vite: () => ({
