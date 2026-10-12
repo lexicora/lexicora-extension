@@ -212,6 +212,7 @@ function EntryDetailPage() {
           title="Entry"
           classNameHeaderElement="mb-3"
           goBackButton
+          goBackButtonVariant="tinted"
           heavyTeardown
           rightActionButton={
             headingMap.isAvailable
