@@ -8,6 +8,7 @@ import { useAppHost } from "@/providers/app-host";
 import { useSidebar } from "@/components/ui/sidebar";
 import { cn } from "cn";
 import { navLock } from "@/lib/navigation-lock";
+import { findIgnoreProps } from "@/lib/find-in-page";
 
 interface ActionButtonConfig {
   iconSmall: React.ReactNode;
@@ -115,6 +116,8 @@ export function PageHeader({
     if (goBackButton) {
       return (
         <header
+          // Left out of ⌘/Ctrl+F: the find bar covers the header (see FindBar).
+          {...findIgnoreProps}
           className={cn(
             "flex items-center mb-4 w-full",
             headerWidthClasses,
@@ -177,6 +180,8 @@ export function PageHeader({
     // Simple Static
     return (
       <header
+        // Left out of ⌘/Ctrl+F: the find bar covers the header (see FindBar).
+        {...findIgnoreProps}
         className={cn(
           "mb-4 mt-1", // (had:  flex items-center justify-between) Assuming you might want flex here if you pass children, but relying on your own classes
           headerWidthClasses,
@@ -286,6 +291,8 @@ export function PageHeader({
 
   return (
     <header
+      // Left out of ⌘/Ctrl+F: the find bar covers the header (see FindBar).
+      {...findIgnoreProps}
       className={cn(
         "flex flex-col w-full mb-4",
         headerWidthClasses,

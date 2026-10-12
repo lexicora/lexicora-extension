@@ -8,11 +8,14 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { IS_MAC } from "@/hooks/sidepanel/panel-shortcuts";
-import { findMatches, MAX_MATCHES, revealRange } from "@/lib/find-in-page";
+import {
+  FIND_IGNORE_ATTRIBUTE,
+  findIgnoreProps,
+  findMatches,
+  MAX_MATCHES,
+  revealRange,
+} from "@/lib/find-in-page";
 import { cn } from "cn";
-
-/** Marks what find leaves out: the bar itself. */
-const IGNORE_ATTRIBUTE = "data-lc-find-ignore";
 
 /**
  * Room kept clear when scrolling a match into view: the bar and the compact
@@ -57,7 +60,8 @@ function searchRoot(): Element {
   return document.querySelector(".lc-page-container") ?? document.body;
 }
 
-const isIgnored = (element: Element) => element.hasAttribute(IGNORE_ATTRIBUTE);
+const isIgnored = (element: Element) =>
+  element.hasAttribute(FIND_IGNORE_ATTRIBUTE);
 
 function supportsHighlights(): boolean {
   return typeof CSS !== "undefined" && "highlights" in CSS;
@@ -139,7 +143,7 @@ export function FindBar() {
           record.target instanceof Element
             ? record.target
             : record.target.parentElement;
-        return !target?.closest(`[${IGNORE_ATTRIBUTE}]`);
+        return !target?.closest(`[${FIND_IGNORE_ATTRIBUTE}]`);
       });
       if (!fromPage) return;
       clearTimeout(timer);
@@ -245,7 +249,7 @@ export function FindBar() {
 
   return (
     <div
-      {...{ [IGNORE_ATTRIBUTE]: "" }}
+      {...findIgnoreProps}
       role="search"
       className="fixed top-3 left-3 right-[calc(var(--lc-scrollbar-offset)+0.125rem)] z-110 flex justify-end pointer-events-none"
     >
@@ -254,6 +258,9 @@ export function FindBar() {
         className={cn(
           "pointer-events-auto flex items-center gap-0.5 w-full max-w-90 h-10 pl-3 pr-1",
           "rounded-lg border bg-popover/95 backdrop-blur-md text-popover-foreground shadow-lg",
+          // Fades and drops in on opening, like the app's menus. Only on
+          // mounting: the bar is not rendered while closed.
+          "animate-in fade-in-0 slide-in-from-top-2 duration-200 ease-out motion-reduce:animate-none",
         )}
       >
         <SearchIcon

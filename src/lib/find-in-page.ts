@@ -9,6 +9,15 @@
  * node and would undo or trip over anything inserted.
  */
 
+/**
+ * Leaves an element and everything inside it out of find: the find bar
+ * itself, and the page header, which the bar covers.
+ */
+export const FIND_IGNORE_ATTRIBUTE = "data-lc-find-ignore";
+
+/** Find's mark, ready to spread onto an element: `{...findIgnoreProps}`. */
+export const findIgnoreProps = { [FIND_IGNORE_ATTRIBUTE]: "" };
+
 /** Elements whose text is never searched, along with everything inside them. */
 const SKIPPED_TAGS = new Set([
   "SCRIPT",
