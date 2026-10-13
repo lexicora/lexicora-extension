@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import styles from "./topic-form.module.css";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -217,12 +218,22 @@ export function TopicForm({
           )}
         </Field>
 
-        <Field>
+        <Field className="sticky bottom-3.75 z-20">
           <Button type="submit" className="w-full" disabled={isLoading}>
             Save Topic
           </Button>
         </Field>
       </FieldGroup>
+      {/* Fills the gap between the sticky button and the panel's bottom edge,
+          like the home page's capture bar. Fixed rather than inside the
+          sticky field so it spans the full panel width, past the gutter. */}
+      <div
+        aria-hidden
+        className={cn(
+          "fixed bottom-0 left-(--lc-host-inset-left,0px) right-0 h-16 z-10 pointer-events-none lc-bottom-bar-styled-bg",
+          styles.bottomBackdrop,
+        )}
+      />
     </form>
   );
 }
