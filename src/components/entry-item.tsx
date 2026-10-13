@@ -45,12 +45,20 @@ const failedFavicons = new Set<string>();
  * when there is none, so the row keeps its room for tags. The site name next
  * to it already says where the entry comes from.
  */
-function EntryItemFavicon({ url }: { url: string }) {
+function EntryItemFavicon({
+  url,
+  className,
+}: {
+  url: string;
+  className?: string;
+}) {
   const [failed, setFailed] = useState(() => failedFavicons.has(url));
   if (failed) return null;
 
   return (
-    <Avatar.Root className="size-4.25 rounded-xs opacity-90 shrink-0 ml-0.5">
+    <Avatar.Root
+      className={cn("size-4.25 rounded-xs opacity-90 shrink-0", className)}
+    >
       <Avatar.Image
         className="rounded-xs"
         src={url}
@@ -337,13 +345,17 @@ export function EntryItem({
         {((entry.tags && entry.tags.length > 0) ||
           entry.hostnameUrl ||
           entry.siteName) && (
-          <div className="flex flex-wrap items-center gap-1.5 w-full mt-0 h-5.5 overflow-hidden content-start">
+          <div className="flex flex-wrap items-center gap-1.5 -ml-px w-[calc(100%+3px)] mt-0 h-5 overflow-hidden content-start">
             {(entry.hostnameUrl || entry.siteName) && (
-              <div className="flex items-center gap-1.5 text-[12px] font-medium text-muted-foreground/90 shrink-0 max-w-32">
+              <div className="flex items-center gap-1.5 ml-px text-[12px] font-medium text-muted-foreground/90 shrink-0 max-w-32">
                 {entry.faviconUrl && (
                   <EntryItemFavicon
                     key={entry.faviconUrl}
                     url={entry.faviconUrl}
+                    // Centred on the row it lines up with the tags' text, but
+                    // alone beside the site name it sits above the name's
+                    // lowercase letters, so it looks too high.
+                    className={entry.tags?.length ? undefined : "translate-y-px"}
                   />
                 )}
                 <span className="truncate">
