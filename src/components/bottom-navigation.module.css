@@ -1,19 +1,32 @@
-/*#lc-bottom-navigation-item {
-}*/
-.styledBackground {
-    /* box-shadow: inset 0 -60px 12px -14px
-        color-mix(in srgb, var(--background), transparent 35%); */
+/*
+ * The two shadows, on a layer reaching 16px above the bar: an inset shadow is
+ * cut off at its box, so on the bar itself the main one had to finish within
+ * it, over a 12px blur that ended in a visible edge. With the room, it fades
+ * out over a wider blur, still at full strength behind the icons. Below the
+ * blur (z-index -2), which softens it further, as before. It never takes a
+ * click: it lies over the page.
+ *
+ * No transition on coming and going: "at the bottom" flips while navigating,
+ * as a new page starts short and then grows, and a fade made the bar dim and
+ * light up again each time. The box-shadow before switched at once too.
+ * was: inset 0 -60px 12px -14px main, inset 0 -38px 26px -24px secondary,
+ * on the bar.
+ */
+.styledBackground::after {
     --shadow-main: color-mix(in srgb, var(--background), transparent 35%);
     --shadow-secondary: color-mix(in srgb, var(--background), transparent 35%);
-    box-shadow: 
-      inset 0 -60px 12px -14px var(--shadow-main),
-      inset 0 -38px 26px -24px var(--shadow-secondary) !important;
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% + 16px);
+    z-index: -2;
+    pointer-events: none;
+    box-shadow:
+      inset 0 -67px 20px -20px var(--shadow-main),
+      inset 0 -44px 30px -30px var(--shadow-secondary);
 }
-/* 
-:global(.dark) .styledBackground {
-    box-shadow: inset 0 -60px 12px -14px
-        color-mix(in srgb, var(--background), transparent 30%);
-} */
 
 .styledBackground::before {
     content: "";
