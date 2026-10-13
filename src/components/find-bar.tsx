@@ -16,7 +16,7 @@ import {
   revealRange,
 } from "@/lib/find-in-page";
 import { cn } from "cn";
-import { useScrollPos } from "@/providers/scroll-observer";
+import { useIsAtTop } from "@/providers/scroll-observer";
 
 /**
  * Room kept clear when scrolling a match into view, and when picking the
@@ -99,7 +99,7 @@ export function FindBar() {
   // attached once.
   const queryRef = useRef(query);
 
-  const { isAtTop } = useScrollPos();
+  const isAtTop = useIsAtTop();
   // For the callbacks below, which are not recreated on scrolling.
   const isAtTopRef = useRef(isAtTop);
   useEffect(() => {

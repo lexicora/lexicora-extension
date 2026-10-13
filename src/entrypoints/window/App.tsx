@@ -14,7 +14,7 @@ import { AppHostProvider } from "@/providers/app-host";
 import { AppMessagingProvider } from "@/providers/app-messaging";
 import {
   ScrollObserverProvider,
-  useScrollPos,
+  useIsAtTop,
 } from "@/providers/scroll-observer";
 import { ThemeProvider } from "@/providers/theme-provider";
 import RxDBProvider from "@/providers/rxdb-provider";
@@ -86,7 +86,7 @@ function SidebarTransitionGuard() {
 }
 
 function WindowHeader() {
-  const { isAtTop } = useScrollPos();
+  const isAtTop = useIsAtTop();
 
   return (
     <header className="mb-12.25">

@@ -1,7 +1,7 @@
 import styles from "./entry-edit.module.css";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { AiPromptTextarea } from "@/components/ai-prompt-textarea";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,7 +42,6 @@ import {
   convertDbBlocksToBlockNote,
   type BlockNoteBlock,
 } from "@/lib/utils/block-converter";
-import { useScrollPos } from "@/providers/scroll-observer";
 import { ArrowUpIcon, SaveIcon } from "lucide-react";
 import { useCaptureData } from "@/hooks/sidepanel/use-capture-data";
 import { useCreateBlockNote } from "@blocknote/react";
@@ -300,7 +299,6 @@ function EntryEditPage() {
 
   // undefined = loading, null = not found
   const { isWindowed } = useAppHost();
-  const { isAtBottom } = useScrollPos();
   const [entry, setEntry] = useState<EntryDocType | null | undefined>(
     undefined,
   );
@@ -529,7 +527,7 @@ function EntryEditPage() {
                 isPromptActive ? "max-w-150" : "max-w-130",
               )}
             >
-              <Textarea
+              <AiPromptTextarea
                 id="ai-prompt-textarea-edit"
                 ref={aiPromptTextareaRef}
                 rows={1}
@@ -542,9 +540,6 @@ function EntryEditPage() {
                   isPromptActive
                     ? "pb-11 backdrop-blur-lg"
                     : "backdrop-blur-md",
-                  isAtBottom
-                    ? "shadow-none"
-                    : "shadow-[0_-6px_6px_1px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_1px_#000010]/25",
                   import.meta.env.FIREFOX && "resize-y h-10.5", //* NOTE (feature parity discrepancy): No support for field-sizing-content in Firefox
                 )}
                 onFocus={() => setIsPromptFocused(true)}

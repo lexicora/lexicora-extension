@@ -6,14 +6,14 @@ import { NavLink, useLocation } from "react-router";
 
 import { isEditingPath } from "@/lib/routes";
 
-import { useScrollPos } from "@/providers/scroll-observer";
+import { useIsAtBottom } from "@/providers/scroll-observer";
 import { FEATURES } from "@/constants/features";
 import { useNavLock } from "@/hooks/use-nav-lock";
 
 export function BottomNavigation() {
   const isNavLocked = useNavLock();
   const { pathname, search } = useLocation();
-  const { isAtBottom } = useScrollPos();
+  const isAtBottom = useIsAtBottom();
 
   // The create and edit pages, where the page itself offers saving or leaving.
   // The same helper turns off the navigation shortcuts there, so the keys match

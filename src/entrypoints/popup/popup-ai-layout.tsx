@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowUpRightIcon, PanelRightIcon } from "lucide-react";
 
 import { cn } from "cn";
-import { useScrollPos } from "@/providers/scroll-observer";
+import { useIsAtTop } from "@/providers/scroll-observer";
 
 interface PopupAiLayoutProps {
   isSupported: boolean;
@@ -33,7 +33,7 @@ export function PopupAiLayout({
   onOpenSidePanel,
   onCapturePage,
 }: PopupAiLayoutProps) {
-  const { isAtTop } = useScrollPos();
+  const isAtTop = useIsAtTop();
 
   return (
     <div className="w-85 overflow-auto h-full pt-20 pb-15 px-3 select-none">

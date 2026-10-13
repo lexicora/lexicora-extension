@@ -1,7 +1,7 @@
 import styles from "./entry-create.module.css";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { AiPromptTextarea } from "@/components/ai-prompt-textarea";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,7 +35,6 @@ import { FEATURES } from "@/constants/features";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { cn } from "cn";
-import { useScrollPos } from "@/providers/scroll-observer";
 import { useAppHost } from "@/providers/app-host";
 import { useCreateBlockNote } from "@blocknote/react";
 
@@ -57,7 +56,6 @@ function EntryCreatePage() {
   const editorWide = useEditorWideMode();
   useEditorWideShortcut(editorWide);
   const capturedData = useCaptureData();
-  const { isAtBottom } = useScrollPos();
   const [language, setLanguage] = useState(navigator.language || "en");
   const [promptText, setPromptText] = useState("");
   const [isPromptFocused, setIsPromptFocused] = useState(false);
@@ -443,7 +441,7 @@ function EntryCreatePage() {
                 isPromptActive ? "max-w-150" : "max-w-130",
               )}
             >
-              <Textarea
+              <AiPromptTextarea
                 id="ai-prompt-textarea"
                 ref={aiPromptTextareaRef}
                 //rows={4}
@@ -457,9 +455,6 @@ function EntryCreatePage() {
                   isPromptActive
                     ? "pb-11 backdrop-blur-lg"
                     : "backdrop-blur-md",
-                  isAtBottom
-                    ? "shadow-none"
-                    : "shadow-[0_-6px_6px_1px_var(--color-gray-300)]/25 dark:shadow-[0_-6px_6px_1px_#000010]/25",
                   import.meta.env.FIREFOX && "resize-y h-10.5", //* NOTE (feature parity discrepancy): No support fo field sizing content in Firefox and also different behavior compared to Chrome
                 )}
                 onFocus={() => setIsPromptFocused(true)}

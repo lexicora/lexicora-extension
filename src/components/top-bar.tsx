@@ -6,10 +6,10 @@ import { SquareArrowOutUpRightIcon } from "lucide-react";
 import { LexicoraLogo } from "@/components/lexicora-logo";
 
 import { FEATURES } from "@/constants/features";
-import { useScrollPos } from "@/providers/scroll-observer";
+import { useIsAtTop } from "@/providers/scroll-observer";
 
 export function TopBar() {
-  const { isAtTop } = useScrollPos();
+  const isAtTop = useIsAtTop();
 
   const openExtensionWindow = () => {
     // TODO (FEATURES.WINDOWED_APP): Make sure only one windowed instance is open at a time.

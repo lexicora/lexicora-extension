@@ -7,25 +7,19 @@ import React, {
   type ReactNode,
 } from "react";
 
-interface ScrollState {
-  isAtTop: boolean;
-  isAtBottom: boolean;
-}
-
-const ScrollContext = createContext<ScrollState>({
-  isAtTop: true,
-  isAtBottom: false,
-});
+// One context per flag: a component re-renders only when the one it reads
+// changes. Leaving the top re-rendered every reader of the bottom as well, and
+// with it whole pages, such as the editor's, right as scrolling began.
+const AtTopContext = createContext(true);
+const AtBottomContext = createContext(false);
 
 interface ScrollProviderProps {
   children: ReactNode;
 }
 
 export function ScrollObserverProvider({ children }: ScrollProviderProps) {
-  const [scrollState, setScrollState] = useState<ScrollState>({
-    isAtTop: true, //typeof window !== "undefined" ? window.scrollY < 10 : true //maybe change to false
-    isAtBottom: false,
-  });
+  const [isAtTop, setIsAtTop] = useState(true); //typeof window !== "undefined" ? window.scrollY < 10 : true //maybe change to false
+  const [isAtBottom, setIsAtBottom] = useState(false);
 
   // Explicitly type the Refs as HTMLDivElements
   const topRef = useRef<HTMLDivElement>(null);
@@ -35,12 +29,11 @@ export function ScrollObserverProvider({ children }: ScrollProviderProps) {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const isTopTarget = entry.target === topRef.current;
-
-          setScrollState((prev) => ({
-            ...prev,
-            [isTopTarget ? "isAtTop" : "isAtBottom"]: entry.isIntersecting,
-          }));
+          if (entry.target === topRef.current) {
+            setIsAtTop(entry.isIntersecting);
+          } else {
+            setIsAtBottom(entry.isIntersecting);
+          }
         });
       },
       { threshold: 0.1 },
@@ -60,24 +53,30 @@ export function ScrollObserverProvider({ children }: ScrollProviderProps) {
   }, []);
 
   return (
-    <ScrollContext.Provider value={scrollState}>
-      {/* Sentinel Top */}
-      <div
-        ref={topRef}
-        className="h-px w-full pointer-events-none"
-        aria-hidden="true"
-      />
+    <AtTopContext.Provider value={isAtTop}>
+      <AtBottomContext.Provider value={isAtBottom}>
+        {/* Sentinel Top */}
+        <div
+          ref={topRef}
+          className="h-px w-full pointer-events-none"
+          aria-hidden="true"
+        />
 
-      {children}
+        {children}
 
-      {/* Sentinel Bottom */}
-      <div
-        ref={bottomRef}
-        className="h-px w-full pointer-events-none"
-        aria-hidden="true"
-      />
-    </ScrollContext.Provider>
+        {/* Sentinel Bottom */}
+        <div
+          ref={bottomRef}
+          className="h-px w-full pointer-events-none"
+          aria-hidden="true"
+        />
+      </AtBottomContext.Provider>
+    </AtTopContext.Provider>
   );
 }
 
-export const useScrollPos = () => useContext(ScrollContext);
+/** Whether the page is scrolled to its top. */
+export const useIsAtTop = () => useContext(AtTopContext);
+
+/** Whether the page is scrolled to its bottom. */
+export const useIsAtBottom = () => useContext(AtBottomContext);

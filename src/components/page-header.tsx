@@ -3,7 +3,7 @@ import styles from "./page-header.module.css";
 import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
-import { useScrollPos } from "@/providers/scroll-observer";
+import { useIsAtTop } from "@/providers/scroll-observer";
 import { useAppHost } from "@/providers/app-host";
 import { useSidebar } from "@/components/ui/sidebar";
 import { cn } from "cn";
@@ -121,7 +121,7 @@ export function PageHeader({
   compactStripBrandColor = false,
   heavyTeardown = false,
 }: PageHeaderProps) {
-  const { isAtTop } = useScrollPos();
+  const isAtTop = useIsAtTop();
   const { isWindowed } = useAppHost();
   const navigate = useNavigate();
 
