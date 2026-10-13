@@ -272,6 +272,7 @@ function ImportSettingsPage() {
             </button>
           </Item>
           <input
+            id="import-backup-file"
             ref={fileInputRef}
             type="file"
             accept="application/json,.json"

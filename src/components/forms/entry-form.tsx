@@ -502,6 +502,10 @@ export function EntryForm({
 
               return (
                 <Combobox
+                  // Also names the hidden input the combobox renders for form
+                  // use, which Chrome flags without an id or name; the visible
+                  // input keeps its own id below.
+                  id="topicId"
                   items={comboboxItems}
                   itemToStringValue={(topic) => topic.name}
                   itemToStringLabel={(topic) =>
