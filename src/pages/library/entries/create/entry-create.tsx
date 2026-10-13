@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import { BlockNoteView } from "@/components/editor/BlockNoteView";
 import { EditorWidthToggle } from "@/components/editor/editor-width-toggle";
 import { HeadingMap } from "@/components/editor/heading-map";
+import { BottomEdgeFade } from "@/components/bottom-edge-fade";
 import {
   editorBleedProps,
   editorColumnClassName,
@@ -416,6 +417,8 @@ function EntryCreatePage() {
           isWide={editorWide.isWide}
           aboveBottomBar={FEATURES.AI}
         />
+        {/* The AI prompt's bar has its own shadow at the bottom. */}
+        {!FEATURES.AI && <BottomEdgeFade />}
       </main>
       {FEATURES.AI ? (
         <footer
