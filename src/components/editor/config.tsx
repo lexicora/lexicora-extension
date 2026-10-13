@@ -1,6 +1,7 @@
 import {
   BlockNoteSchema,
   createCodeBlockSpec,
+  type CodeBlockOptions,
 } from "@blocknote/core";
 import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
 import { codeBlockOptions } from "@blocknote/code-block";
@@ -15,19 +16,36 @@ import { TriangleAlert } from "lucide-react";
 import { createAlertBlockSpec } from "./blocks/alert/alert-block";
 import { WebContentDropExtension } from "./extensions/web-content-drop";
 
-codeBlockOptions.defaultLanguage = "text";
 // MAYBE: Order languages, by letters.
-// const codeBlockConfig = {
-//   ...codeBlockOptions,
-//   // MAYBE: Make default language configurable from outside
-//   indentLineWithTab: true,
-// };
 // MAYBE: Add more languages
+const codeBlockConfig = {
+  ...codeBlockOptions,
+  // MAYBE: Make default language configurable from outside
+  defaultLanguage: "text",
+  // indentLineWithTab: true,
+  // BlockNote 0.52 colours code with the highlighter's first theme only,
+  // github-dark, whatever the editor's colour scheme. Asking Shiki for both
+  // themes gives every token its two colours as `--shiki-light` and
+  // `--shiki-dark`, and styles.css picks one per scheme. BlockNote 0.55 does
+  // this on its own once a light and a dark theme are loaded, so the wrapper
+  // can go with that upgrade.
+  createHighlighter: async () => {
+    const highlighter = await codeBlockOptions.createHighlighter();
+    const codeToTokens = highlighter.codeToTokens;
+    highlighter.codeToTokens = (code, options) =>
+      codeToTokens(code, {
+        lang: options.lang,
+        themes: { light: "github-light", dark: "github-dark" },
+        defaultColor: false,
+      });
+    return highlighter;
+  },
+} satisfies CodeBlockOptions;
 
 export const appBlockNoteConfig = {
   schema: BlockNoteSchema.create().extend({
     blockSpecs: {
-      codeBlock: createCodeBlockSpec(codeBlockOptions),
+      codeBlock: createCodeBlockSpec(codeBlockConfig),
       alert: createAlertBlockSpec(),
     },
   }),

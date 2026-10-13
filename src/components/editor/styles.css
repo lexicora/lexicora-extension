@@ -638,14 +638,56 @@ html:has(
 .bn-root[data-color-scheme="dark"]
   .bn-block-content[data-content-type="codeBlock"] {
   /*border: 1px solid var(--color-border);*/
-  background-color: #0e0e12; /*was: #101015*/
+  background-color: #070912; /*Just above the app background (#030712), with less blue. was: #0e0e12, then #101015*/
+  box-shadow: inset 0 0 0 1px var(--color-border);
   scrollbar-color: #ffffff66 transparent;
 }
 
 .bn-root[data-color-scheme="light"]
   .bn-block-content[data-content-type="codeBlock"] {
-  background-color: #202020;
-  scrollbar-color: #ffffff76 transparent;
+  background-color: #f6f8fa; /*was: #202020, GitHub's light code background*/
+  box-shadow: inset 0 0 0 1px var(--color-border); /*Outline without a layout shift*/
+  color: #24292e; /*github-light's text, for plain text; BlockNote sets white*/
+  scrollbar-color: #5252526a transparent;
+}
+
+.bn-root[data-color-scheme="light"]
+  .bn-block-content[data-content-type="codeBlock"]
+  > div
+  > select {
+  color: inherit; /*BlockNote sets white*/
+}
+
+.bn-root[data-color-scheme="light"]
+  .bn-lc-adjustments
+  .bn-block-content[data-content-type="codeBlock"]
+  select
+  option {
+  background-color: var(--color-popover);
+  color: var(--color-popover-foreground);
+}
+
+/*
+ * Syntax colours: config.tsx has Shiki give every token both themes as CSS
+ * variables, and each scheme picks its own. An unset variable leaves the
+ * property inherited (or `none` for text-decoration), as without a theme.
+ */
+.bn-root[data-color-scheme="light"]
+  .bn-block-content[data-content-type="codeBlock"]
+  .shiki {
+  color: var(--shiki-light);
+  font-style: var(--shiki-light-font-style);
+  font-weight: var(--shiki-light-font-weight);
+  text-decoration: var(--shiki-light-text-decoration);
+}
+
+.bn-root[data-color-scheme="dark"]
+  .bn-block-content[data-content-type="codeBlock"]
+  .shiki {
+  color: var(--shiki-dark);
+  font-style: var(--shiki-dark-font-style);
+  font-weight: var(--shiki-dark-font-weight);
+  text-decoration: var(--shiki-dark-text-decoration);
 }
 
 /*.bn-root[data-color-scheme]
