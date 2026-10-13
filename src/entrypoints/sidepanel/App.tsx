@@ -13,6 +13,7 @@ import { PanelNoticeListener } from "@/hooks/sidepanel/panel-notice-listener";
 import { UpdateNoticeListener } from "@/hooks/sidepanel/update-notice-listener";
 import { RouterListener } from "@/hooks/sidepanel/router-listener";
 import { usePanelShortcuts } from "@/hooks/sidepanel/use-panel-shortcuts";
+import { useLibraryScrollReset } from "@/hooks/sidepanel/use-library-scroll-reset";
 import { SidePanelToggleListener } from "@/hooks/sidepanel/side-panel-toggle-listener";
 //import { MessageListener } from "@/hooks/sidepanel/message-listener";
 import { useMouseNavigation } from "@/hooks/use-mouse-navigation";
@@ -89,6 +90,8 @@ function RootLayout() {
   //   /^\/library\/topics\/[^/]+\/entries$/.test(location.pathname); //* NOTE: Doesn't seem to work.
 
   const disableScrollRestoration = location.pathname.startsWith("/library");
+  // The library pages other than the lists scroll to the top themselves.
+  useLibraryScrollReset();
 
   return (
     <AppMessagingProvider>
