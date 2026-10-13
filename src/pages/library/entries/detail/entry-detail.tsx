@@ -112,8 +112,9 @@ function EntryDetailPage() {
   // The content's editor, once the viewer has created it. The heading map
   // opens from the header here: the bottom right, where it floats on the
   // create and edit pages, is next to the bottom navigation on this page.
-  const [contentEditor, setContentEditor] =
-    useState<AppBlockNoteEditor | null>(null);
+  const [contentEditor, setContentEditor] = useState<AppBlockNoteEditor | null>(
+    null,
+  );
   const headingMap = useHeadingMap(contentEditor, {
     findOpener: visibleHeaderAction,
   });
@@ -212,7 +213,7 @@ function EntryDetailPage() {
           title="Entry"
           classNameHeaderElement="mb-3"
           goBackButton
-          goBackButtonVariant="tinted"
+          goBackButtonVariant={headingMap.isAvailable ? "tinted" : "ghost"}
           heavyTeardown
           rightActionButton={
             headingMap.isAvailable
