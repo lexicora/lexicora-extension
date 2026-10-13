@@ -13,8 +13,10 @@
  * on the bar.
  */
 .styledBackground::after {
-    --shadow-main: color-mix(in srgb, var(--background), transparent 35%);
-    --shadow-secondary: color-mix(in srgb, var(--background), transparent 35%);
+    /* Lighter in light mode, where washing dark text out towards white shows
+       more; was 35% in both modes. */
+    --shadow-main: color-mix(in srgb, var(--background), transparent 40%);
+    --shadow-secondary: color-mix(in srgb, var(--background), transparent 40%);
     content: "";
     position: absolute;
     bottom: 0;
@@ -26,6 +28,11 @@
     box-shadow:
       inset 0 -67px 20px -20px var(--shadow-main),
       inset 0 -44px 30px -30px var(--shadow-secondary);
+}
+
+:global(.dark) .styledBackground::after {
+    --shadow-main: color-mix(in srgb, var(--background), transparent 35%);
+    --shadow-secondary: color-mix(in srgb, var(--background), transparent 35%);
 }
 
 .styledBackground::before {

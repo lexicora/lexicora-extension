@@ -33,6 +33,17 @@
       inset 0 32px 26px -26px var(--shadow-secondary);
 }
 
+/*
+ * Stronger in dark mode: dimming light text towards a near-black background
+ * shows less than washing dark text out towards white, so at the same
+ * strength the edge barely read. Still a step below the bottom navigation's
+ * 65%, as the strip is shorter and so looks deeper at the same strength.
+ * was: 50% here too.
+ */
+:global(.dark) .styledBackground::after {
+    --shadow-main: color-mix(in srgb, var(--background), transparent 45%);
+}
+
 .styledBackground::before {
     content: "";
     position: absolute;
