@@ -5,7 +5,7 @@
   /*scroll-padding-top: 102px;*/ /*MAYBE: Increase slightly*/
   /*scroll-padding-bottom: 74px;*/ /*MAYBE: Increase slightly*/
   scroll-padding-top: 56px;
-  scroll-padding-bottom: 12px;
+  scroll-padding-bottom: 36px; /* Was 12px */
 }
 
 .bottomFooter :global(.lc-bottom-bar-styled-bg) {
