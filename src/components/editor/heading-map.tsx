@@ -368,7 +368,7 @@ export function HeadingMap({
         className={cn(
           "flex justify-end mx-auto",
           isWide
-            ? "max-w-[calc(62.5rem+2.5rem)]"
+            ? "/*max-w-[calc(62.5rem+2.5rem)]*/ max-w-260"
             : "max-w-[calc(var(--lc-content-max-width)+0.25rem)]",
         )}
       >
