@@ -261,7 +261,7 @@ output name filled in:
 > 1. bun install --frozen-lockfile
 > 2. bun run zip:firefox
 >
-> Output: .output/lexicora-extension-1.0.2-firefox.zip, and the same files unpacked in .output/firefox-mv2/.
+> Output: .output/lexicora-extension-1.1.0-firefox.zip, and the same files unpacked in .output/firefox-mv2/.
 >
 > Notes:
 > - No remote code. Nothing is fetched or evaluated from a server.

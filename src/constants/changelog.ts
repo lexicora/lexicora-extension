@@ -25,6 +25,40 @@ export const CHANGE_KINDS: readonly ChangeKind[] = ["new", "improved", "fixed"];
 
 export const RELEASES: readonly Release[] = [
   {
+    version: "1.1.0",
+    date: "2026-10-14",
+    summary:
+      "Find text in the side panel, a map of an entry's headings, and polish throughout.",
+    changes: {
+      new: [
+        "Find text on the side panel's page, the editor included, with ⌘/Ctrl+F. Enter and Shift+Enter step through the matches.",
+        "A heading map lists an entry's headings and jumps to the one you choose. It appears once an entry has two headings; open it with O, or from the page header on an entry's page.",
+        "After an update, the side panel says so once and links to what changed.",
+        "Two shortcuts on an entry: W widens or narrows the editor, M opens or closes the additional fields and metadata.",
+        "Settings → Storage shows roughly how much space Lexicora uses.",
+        "Settings → About links to the store you installed Lexicora from, to leave a review.",
+        "The Markdown export can leave out archived entries and topics.",
+      ],
+      improved: [
+        "Settings → Export gives each format its own card, with its option right below. JSON backups are compact by default.",
+        "Large counts in lists are shortened, as in 1.2k+.",
+        "A topic's page always shows how many entries it has, and an archived topic counts its archived entries.",
+        "Softer shadows on the side panel's top and bottom bars, and the create and edit pages fade out at the bottom edge.",
+        "The topic form's save button stays in view at the bottom of the panel.",
+        "The tags and site row of library items is tighter and lines up with the title.",
+        "On install, the getting-started page no longer points at the toolbar while the browser's Extensions menu is open. On Edge, its pin steps match Chrome's.",
+      ],
+      fixed: [
+        "Code blocks in light mode are light, with matching syntax colours, instead of dark.",
+        "Entry, topic, create and edit pages open at the top, instead of at the list's scroll position.",
+        "Archiving a topic no longer changes its entry total.",
+        "On an entry's page, a long link no longer squeezes the site name.",
+        "A site icon that fails to load is left out of entry items, as a missing one is.",
+        "The right-click menu no longer shows a stray separator on pages Lexicora cannot capture from.",
+      ],
+    },
+  },
+  {
     version: "1.0.2",
     date: "2026-10-08",
     summary:
