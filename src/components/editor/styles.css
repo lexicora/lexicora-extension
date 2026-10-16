@@ -742,6 +742,17 @@ html:has(
   margin-right: 5px;
 }
 
+/* BlockNote pads the wrapper's right side (22px) for the add-column widget.
+   Read-only has no widgets, so that room and the margin above are just an
+   empty strip beside the table. */
+.bn-root[data-color-scheme]
+  .bn-editor[contenteditable="false"]
+  .bn-block-content[data-content-type="table"]
+  .tableWrapper {
+  margin-right: 0;
+  padding-right: var(--bn-table-handle-size);
+}
+
 /*.bn-root[data-color-scheme]
     .bn-lc-adjustments
     .bn-block-content[data-content-type="table"]
