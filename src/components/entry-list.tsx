@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { EntryItem } from "@/components/entry-item";
 import type { EntryDocType } from "@/db/schemas/entry";
 import type { TopicDocType } from "@/db/schemas/topic";
-import { findTopicNameConflict } from "@/lib/utils/topic-name";
+import { topicsMatchingName } from "@/lib/utils/topic-name";
 import { formatCount, formatCountExact } from "@/lib/utils/count-formatter";
 import { FilesIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -89,8 +89,8 @@ export function EntryList({
     if (!collection) return;
 
     // "site:react.dev" narrows to one host through the hostnameUrl index and
-    // "topic:react" to one topic through topicId; whatever else is typed is
-    // still matched as text. See lib/search-query.
+    // "topic:react" to the topics with that in their name through topicId;
+    // whatever else is typed is still matched as text. See lib/search-query.
     const { site, topic, text } = parseSearchQuery(search);
 
     // A topic's own page already lists only its entries, so there the token
@@ -101,11 +101,11 @@ export function EntryList({
     let cancelled = false;
     let sub: { unsubscribe(): void } | undefined;
 
-    const run = (filterTopicId: string | undefined) => {
+    const run = (topicIds: string[] | undefined) => {
       const selector: MangoQuerySelector<EntryDocType> = {};
 
-      if (filterTopicId) {
-        selector.topicId = filterTopicId;
+      if (topicIds) {
+        selector.topicId = { $in: topicIds };
       }
 
       selector.isArchived = onlyArchived;
@@ -143,21 +143,21 @@ export function EntryList({
     };
 
     if (!topicName) {
-      run(topicId);
+      run(topicId ? [topicId] : undefined);
     } else {
-      // Names are unique, so one topic at most. A name that matches none shows
-      // nothing, rather than ignoring the token and listing everything.
+      // A name that matches no topic shows nothing, rather than ignoring the
+      // token and listing everything.
       topicsCollection!
         .find()
         .exec()
         .then((docs) => {
           if (cancelled) return;
-          const match = findTopicNameConflict(
+          const matches = topicsMatchingName(
             topicName,
             docs.map((doc) => doc.toJSON() as TopicDocType),
           );
-          if (match) {
-            run(match.id);
+          if (matches.length > 0) {
+            run(matches.map((topic) => topic.id));
           } else {
             setEntries([]);
             setIsDataLoaded(true);

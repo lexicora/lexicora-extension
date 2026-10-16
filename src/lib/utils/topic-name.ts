@@ -26,3 +26,17 @@ export function findTopicNameConflict<T extends { id: string; name: string }>(
     (topic) => topic.id !== excludeId && isSameTopicName(topic.name, name),
   );
 }
+
+/**
+ * The topics whose name contains `query`, ignoring case and surrounding
+ * whitespace — what a `topic:` search matches, so a few letters find every
+ * topic they appear in. An empty query matches nothing.
+ */
+export function topicsMatchingName<T extends { name: string }>(
+  query: string,
+  topics: readonly T[],
+): T[] {
+  const needle = query.trim().toLowerCase();
+  if (!needle) return [];
+  return topics.filter((topic) => topic.name.toLowerCase().includes(needle));
+}

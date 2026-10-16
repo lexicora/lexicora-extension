@@ -1,13 +1,14 @@
 /**
  * Two search filters, borrowed from web search. `site:react.dev` narrows to
  * entries captured from that host, and `topic:react` (or `topic:"my project"`
- * for a name with spaces) to the entries in that topic. Anything else in the
+ * for a name with spaces) to the entries in the topics whose name contains
+ * that, so a few letters find every topic they appear in. Anything else in the
  * box is still matched as text — `site:react.dev hooks` does both.
  *
  * Deliberately two filters, not a syntax. `site:` exists so "Show all from …"
  * on the home page can be exact rather than a text match that happens to
  * contain the hostname, and uses the `hostnameUrl` index instead of scanning.
- * `topic:` is the same idea for a topic, through the `topicId` index.
+ * `topic:` is the same idea for topics, through the `topicId` index.
  */
 
 const SITE_TOKEN = /^site:(\S+)$/i;
@@ -17,7 +18,7 @@ const TOPIC_TOKEN = /(^|\s)topic:(?:"([^"]*)"|(\S+))/i;
 export interface ParsedSearch {
   /** The host to match, without a `www.` prefix, or null. */
   site: string | null;
-  /** The name of the topic to match, or null. Not yet checked to exist. */
+  /** Part of the name of the topics to match, or null. */
   topic: string | null;
   /** What is left for the text search. */
   text: string;
