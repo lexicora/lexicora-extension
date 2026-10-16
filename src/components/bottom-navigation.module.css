@@ -75,6 +75,17 @@
     /*filter: blur(0); keep disabled for now*/
 }
 
+/* Coming back to the home page from a page without the bar. Home's bar is a
+   bordered strip on the page rather than a floating one, so it fading in reads
+   better than it sliding up from below: the transform is not transitioned, so
+   it is already in place while still invisible. */
+.bottomNavFadeIn {
+    transition:
+        opacity 200ms ease-out,
+        box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1),
+        visibility 0s linear;
+}
+
 .bottomNavHidden {
     pointer-events: none;
     transition:

@@ -38,6 +38,8 @@ export function BottomNavigation() {
           : isAtBottom
             ? ""
             : style.styledBackground,
+        // The home page's bar fades in rather than sliding up; see the CSS.
+        !isHidden && isNoShadowPath && style.bottomNavFadeIn,
         isHidden
           ? style.bottomNavHidden
           : isNoShadowPath || FEATURES.SIDE_PANEL_NEW_BOTTOM_NAV_STYLE
