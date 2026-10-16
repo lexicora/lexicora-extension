@@ -23,14 +23,17 @@ export interface CurrentPageLocation {
   hash: string;
 }
 
-/** The fragment of an entry's stored URL, or "" when it has none. */
+/**
+ * The fragment of a URL, with its "#", or "" when it has none.
+ *
+ * Sliced from the string rather than parsed: it only runs for entries whose
+ * path and query already match, and a fragment can be large (an app keeping
+ * base64 data in it), which a full `new URL()` would parse for nothing.
+ */
 function hashOf(url: string | undefined): string {
-  if (!url) return "";
-  try {
-    return new URL(url).hash;
-  } catch {
-    return "";
-  }
+  const start = url?.indexOf("#") ?? -1;
+  if (!url || start === -1 || start === url.length - 1) return "";
+  return url.slice(start);
 }
 
 /** The page a tab is on, or null when it has no usable URL. */
@@ -40,10 +43,11 @@ export function locationOf(url: string | undefined): CurrentPageLocation | null 
     const parsed = new URL(url);
     // The fragment counts: it can select different content (single-page apps,
     // hash-routed sites), so a page at another anchor is another capture.
+    // Read the same way as an entry's, so the two compare like for like.
     return {
       pathname: parsed.pathname,
       search: parsed.search,
-      hash: parsed.hash,
+      hash: hashOf(parsed.href),
     };
   } catch {
     return null;
