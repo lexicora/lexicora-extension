@@ -61,8 +61,8 @@ Most interactions happen inside the **browser side panel**, keeping context and 
 - **Keyboard-driven** — minimal mouse usage
 - **Browser-native** — works where knowledge is consumed
 - **AI-optional** — useful without AI, powerful with it
-- **Local-first** — the library lives on your device; v1.0 works fully offline
-  and sends nothing anywhere (see the [privacy policy](PRIVACY.md))
+- **Local-first** — the library lives on your device; the extension works fully
+  offline and sends nothing anywhere (see the [privacy policy](PRIVACY.md))
 
 ## Key Features
 
@@ -71,7 +71,7 @@ Most interactions happen inside the **browser side panel**, keeping context and 
 - Web content cleaned by its own parser, into the blocks the editor uses — including what web components render in shadow DOM, and code from embedded editors
 - Block-based structured storage with the BlockNote editor
 - Capture from the panel, the toolbar popup, the right-click menu or a keyboard shortcut
-- Fast search over titles, tags, descriptions, sites and dates, with a `site:` filter
+- Fast search over titles, tags, descriptions, sites and dates, with `site:` and `topic:` filters
 - A capture suggestion after a while on a page, with an adjustable delay, that opens the side panel (Chrome and Edge)
 - Export as Markdown (one note, a topic, or the whole library as a zip) and a JSON backup that can be imported again
 - Offline-first local database (RxDB)
@@ -79,14 +79,17 @@ Most interactions happen inside the **browser side panel**, keeping context and 
 - A getting-started page on install
 - Keyboard-driven navigation, browser-wide and in the panel
 
-### v1.0 scope
+### Scope
 
-v1.0 is **offline-only**: everything stays on the device and the extension
-makes no network requests of its own. AI, accounts and the standalone window
-are built but hidden behind feature flags (`src/constants/features.ts`). See
+The extension is **offline-only**: everything stays on the device and it makes no
+network requests of its own. AI, accounts and the standalone window are built
+but hidden behind feature flags (`src/constants/features.ts`). See
 [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
-### Planned / Beyond v1.0
+### Not planned for now
+
+These were part of the original plan and are not being worked on. Some of the
+code exists, hidden behind the flags above; none of it is ruled out for good.
 
 - AI-assisted summarization and refinement
 - Sync across devices, and a web app for expanded views and management
@@ -233,9 +236,10 @@ Use the `useAppStorage` hook for reactive access in React components.
 
 ## Status
 
-v1.0, the offline-only extension described above, is out in the stores.
-Work continues on v1.x refinements; the backend, web app and AI features come
-after, as the core experience settles.
+Lexicora is feature-complete and in maintenance: it is out in the stores, no new
+features are planned for now, and it stays maintained — bug fixes, keeping it
+working as browsers and dependencies change, and small improvements. That
+describes today; a feature can still come later.
 
 The core vision remains intentionally narrow: **turning ephemeral web knowledge into permanent, accessible understanding**.
 
