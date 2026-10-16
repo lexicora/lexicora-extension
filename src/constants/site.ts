@@ -9,11 +9,12 @@ export const WEBSITE_URL = "https://lexicora.github.io/";
 export const REPOSITORY_URL = "https://github.com/lexicora/lexicora-extension";
 
 /**
- * Marks a link as coming from the extension, so the website's and the stores'
- * analytics can tell where a visit started. `medium` names the place it was
- * clicked: "side-panel", "popup", "context-menu", "about", "support".
+ * Marks a link as coming from the extension, so a store's analytics can tell
+ * where a visit started. `medium` names the place it was clicked, e.g. "about".
  *
- * Only on links the user follows; nothing is sent until they click.
+ * For store listings only: the website collects no analytics, so its links
+ * stay plain. Added to a link the user follows; nothing is sent until they
+ * click.
  */
 export function withUtm(url: string, medium: string): string {
   const tagged = new URL(url);

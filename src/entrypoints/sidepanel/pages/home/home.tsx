@@ -71,7 +71,7 @@ function HomePage() {
                 Lexicora
               </h1>
             </span>
-            <WebsiteLink className="mt-1" medium="side-panel" />
+            <WebsiteLink className="mt-1" />
           </>
         }
       />

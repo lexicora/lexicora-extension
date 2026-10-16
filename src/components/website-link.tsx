@@ -1,15 +1,13 @@
 import { ArrowUpRightIcon } from "lucide-react";
 
 import { FEATURES } from "@/constants/features";
-import { WEBSITE_URL, withUtm } from "@/constants/site";
+import { WEBSITE_URL } from "@/constants/site";
 import { cn } from "cn";
 
 interface WebsiteLinkProps {
   /** Applied to the wrapper, which is what carries the surrounding spacing. */
   className?: string;
   size?: "sm" | "xs";
-  /** Where the link sits, for the website's analytics; see `withUtm`. */
-  medium: string;
 }
 
 /**
@@ -19,17 +17,13 @@ interface WebsiteLinkProps {
  * renders nothing at all — wrapper included, so no call site is left with a
  * gap where the link used to be.
  */
-export function WebsiteLink({
-  className,
-  size = "sm",
-  medium,
-}: WebsiteLinkProps) {
+export function WebsiteLink({ className, size = "sm" }: WebsiteLinkProps) {
   if (!FEATURES.WEBSITE) return null;
 
   return (
     <div className={cn("flex justify-center", className)}>
       <a
-        href={withUtm(WEBSITE_URL, medium)}
+        href={WEBSITE_URL}
         target="_blank"
         className={cn(
           "text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 hover:text-lc-muted-foreground-hover",

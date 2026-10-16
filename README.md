@@ -12,7 +12,7 @@ It is intentionally opinionated: not a general-purpose note-taking app, not a wo
 - [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/lexicora/cedcfjhhgnnhicanijilpadchcfkbjgl?utm_source=github&utm_medium=readme)
 - [Firefox Add-ons](https://addons.mozilla.org/addon/lexicora/?utm_source=github&utm_medium=readme)
 
-More about Lexicora on [the website](https://lexicora.github.io/?utm_source=github&utm_medium=readme).
+More about Lexicora on [the website](https://lexicora.github.io/).
 
 ## Screenshots
 

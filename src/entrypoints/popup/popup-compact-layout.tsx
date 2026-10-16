@@ -66,7 +66,7 @@ export function PopupCompactLayout({
           onBookmarkPage={onBookmarkPage}
           extraRounding={extraRounding}
         />
-        <WebsiteLink className="mt-2.5" size="xs" medium="popup" />
+        <WebsiteLink className="mt-2.5" size="xs" />
       </footer>
     </div>
   );

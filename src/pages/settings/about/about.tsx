@@ -170,7 +170,7 @@ function AboutPage() {
               asChild
             >
               <a
-                href={withUtm(WEBSITE_URL, "about")}
+                href={WEBSITE_URL}
                 target="_blank"
                 rel="noreferrer"
                 draggable={false}

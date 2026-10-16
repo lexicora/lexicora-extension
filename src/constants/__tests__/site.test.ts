@@ -1,10 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  currentStoreListing,
-  STORE_LISTINGS,
-  WEBSITE_URL,
-  withUtm,
-} from "../site";
+import { currentStoreListing, STORE_LISTINGS, withUtm } from "../site";
 
 const CHROME_UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36";
@@ -54,9 +49,10 @@ describe("currentStoreListing", () => {
 
 describe("withUtm", () => {
   it("tags a link with where in the extension it was clicked", () => {
-    const tagged = new URL(withUtm(WEBSITE_URL, "about"));
+    const { url } = STORE_LISTINGS.chrome;
+    const tagged = new URL(withUtm(url, "about"));
 
-    expect(tagged.origin).toBe(new URL(WEBSITE_URL).origin);
+    expect(tagged.origin).toBe(new URL(url).origin);
     expect(tagged.search).toBe(
       "?utm_source=lexicora-extension&utm_medium=about",
     );

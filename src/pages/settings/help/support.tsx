@@ -9,12 +9,7 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import {
-  CONTACT_EMAIL,
-  REPOSITORY_URL,
-  WEBSITE_URL,
-  withUtm,
-} from "@/constants/site";
+import { CONTACT_EMAIL, REPOSITORY_URL, WEBSITE_URL } from "@/constants/site";
 import {
   ArrowUpRightIcon,
   BugIcon,
@@ -48,7 +43,7 @@ const LINKS = [
     description: `${CONTACT_EMAIL} — for anything that is not a bug report, or if you have no GitHub account.`,
   },
   {
-    href: withUtm(WEBSITE_URL, "support"),
+    href: WEBSITE_URL,
     Icon: GlobeIcon,
     iconColor: "text-emerald-500",
     title: "The website",
