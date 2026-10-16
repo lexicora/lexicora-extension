@@ -312,7 +312,6 @@ function SettingsPage() {
               itemTitle="About"
               roundingClass="rounded-b-none"
             />
-            <SettingsItemSeparator />
             <Item
               variant="muted"
               size="sm"
