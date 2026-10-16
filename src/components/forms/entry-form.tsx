@@ -40,6 +40,7 @@ import { ChevronDownIcon, RefreshCw, StarIcon } from "lucide-react";
 import { Avatar } from "radix-ui";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { preventEnterSubmit } from "@/lib/utils/prevent-enter-submit";
 import { z } from "zod";
 
 const METADATA_SHORTCUTS = ENTRY_SHORTCUTS.filter(
@@ -427,6 +428,7 @@ export function EntryForm({
     <form
       id={id}
       onSubmit={handleSubmit(onValidSubmit, onInvalidSubmit)}
+      onKeyDown={preventEnterSubmit}
       className="py-3.5 space-y-4"
     >
       <FieldGroup className="">

@@ -23,6 +23,7 @@ import { findTopicNameConflict } from "@/lib/utils/topic-name";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StarIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
+import { preventEnterSubmit } from "@/lib/utils/prevent-enter-submit";
 import { z } from "zod";
 
 const createFormSchema = (currentTopicId?: string) =>
@@ -116,6 +117,7 @@ export function TopicForm({
     <form
       id={id}
       onSubmit={handleSubmit(onValidSubmit)}
+      onKeyDown={preventEnterSubmit}
       className="pt-3.5 pb-0.5"
     >
       <FieldGroup>
