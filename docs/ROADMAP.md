@@ -19,6 +19,9 @@ promises an unbuilt feature is visible to users.
 
 ### Remaining work for v1.0
 
+All of it is done and released; later versions (1.1.0, 1.2.0) are polish and small
+features on top, listed in the changelog (`src/constants/changelog.ts`).
+
 | Item | Notes |
 |---|---|
 | **Bookmark-only capture** ✅ | Capture a page from its metadata alone — title, URL, favicon, site name, description — with no page content and no editor blocks. A secondary "Bookmark" button beside "Capture page" on the side-panel home and the popup (`components/capture/capture-actions.tsx`). The content script answers `GET_PAGE_METADATA` by reading meta tags from the live page, without cloning or parsing it; the description comes only from the page's meta tags, never its text. The entry still goes through the create page so a topic can be picked. Open: the AI layouts have no Bookmark button yet, and a bookmark sent from the popup while the side panel is on an entry's *edit* page is ignored, since there is no content to merge. |
@@ -28,12 +31,14 @@ promises an unbuilt feature is visible to users.
 | **JSON backup and import** ✅ | Settings → Import reads a file Export wrote (`src/lib/backup/`), shows what it holds before anything changes and offers three merge modes — keep mine, take the file's, add only what is missing — comparing records by `updatedAt`, never by RxDB's `_rev`. Nothing already stored is deleted. Tags from a file are brought within the schema's limits rather than trusted. Markdown is export-only. |
 | **Editor** ✅ | Beyond the blocks themselves: a wide layout toggle for entry content, an alert block that exports as a GitHub-style callout and is parsed back from pages that use them, content dropped from a page cleaned like a captured selection, a right click on the drag handle selecting the block, and a parser that keeps images in text, visible control text and code beside links. The formatting toolbar is defined once rather than per render, which used to remount it and close any open dropdown. |
 | **Cleanup pass** ✅ | Tags are split, de-duplicated and limited with errors the user sees rather than silent truncation (`lib/utils/tags.ts`). A capture that produces nothing now says why — unsupported page, nothing selected, page did not answer — instead of leaving the panel on a loading skeleton. The capture prompt no longer appears next to a side panel opened while its countdown ran, and its font is loaded from the extension's own files rather than a stylesheet a page's `font-src` policy can refuse, which also stopped 251 KB of CSS being injected into every page. The TODO comments were triaged: what is blocked on a hidden feature now says so, preferences became MAYBE. The legacy shadcn editor components went, with eight `@radix-ui` packages, `turndown` and `next-themes`. |
-| **Help and settings pages** ✅ | The FAQ no longer describes features that do not exist, and covers bookmarks, images by URL, importing, shortcuts and the storage cleanup. Tips gained alerts, the keys worth knowing and the home page's site group. Settings → General is down to a **privacy policy** page, written from what the code actually does — including that the browser syncs the four settings but never the library, and that it still loads site icons and linked images from their hosts. Settings → Help → Support points at the repository. The licences list was rebuilt from each package's own field: `uuidv7` is Apache-2.0, not MIT, and DOMPurify is dual-licensed. |
+| **Help and settings pages** ✅ | The FAQ no longer describes features that do not exist, and covers bookmarks, images by URL, importing, shortcuts and the storage cleanup. Tips gained alerts, the keys worth knowing and the home page's site group. Settings → General is down to a **privacy policy** page, written from what the code actually does — including that the browser syncs the four settings but never the library, and that it still loads site icons and linked images from their hosts. Settings → Help → Support points at the repository, where problems are reported. The licences list was rebuilt from each package's own field: `uuidv7` is Apache-2.0, not MIT, and DOMPurify is dual-licensed. |
 | **Getting started page** ([#44](https://github.com/lexicora/lexicora-extension/issues/44)) ✅ | One tab, opened on a fresh install only (`lib/onboarding.ts`, never on updates or reloads), and again from Settings → Help → Getting started. Not a multi-step flow: there is nothing to set up without accounts, so it says where Lexicora lives — pinning the toolbar button, the three ways to open the panel, what Capture and Bookmark keep, that the library stays on the device — with the bound keys read live from the browser. Its "Open the side panel" button opens the panel and closes the tab; the window id is read on load so the click opens it before any `await`. No browser lets an extension pin itself, only ask whether it is pinned; the page shows that, with the steps to pin it otherwise. Firefox's `default_area` could place the button on the toolbar at install, and was left out deliberately: the user decides what goes there. When accounts arrive this is where sign-in or "stay local" belongs, rather than a new wizard. Polished since: the logo's entrance, zoom disabled on the page, and an arrow to the toolbar's Extensions area until Lexicora is pinned ([#205](https://github.com/lexicora/lexicora-extension/issues/205), [#207](https://github.com/lexicora/lexicora-extension/issues/207), [#208](https://github.com/lexicora/lexicora-extension/issues/208)). |
 | **Empty and sparse UI states** ✅ | The popup, side-panel home and top bar no longer leave gaps where the gated AI surfaces were. |
 | **Firefox pass** ✅ | Checked in a real Firefox on Windows, including the rich clipboard, export and import (which needed a fix for a block-type mismatch). Capture has its own key there on Windows and Linux; see Keyboard shortcuts. The capture prompt and the port-based panel state are Chromium-only by design. |
 | **Linting** ✅ | ESLint was replaced by [oxlint](https://oxc.rs): `typescript-eslint` only supports TypeScript below 6.1 and TS 7 has no JavaScript API for its parser, while oxlint's type-aware rules (`oxlint-tsgolint`) are built on TS 7. `bun run lint` runs it with type information in about a second; the config is `.oxlintrc.json`. Existing `eslint-disable` comments still apply. CSS files are no longer linted. The first run's findings (55 errors, 128 warnings) are resolved as far as they matter; what remains are minor warnings, mostly unawaited promises and redundant type assertions. |
-| **Release prep** | Done: the version is 1.0.0, set once in `package.json`, from which the manifest and the zip names take it, with a What's Changed page (Settings → About) whose newest entry a test holds to that version; the content script matches only http, https and local files; the licence check ([#183](https://github.com/lexicora/lexicora-extension/issues/183)); the listing copy, permission justifications and screenshots in [`store-listing.md`](store-listing.md); and the privacy policy, in the extension and as [`PRIVACY.md`](../PRIVACY.md), the URL the stores get. **Left:** store developer accounts for AMO and Microsoft Partner Center (the Chrome Web Store one is registered); Chrome's 440×280 small promo tile; `bun run zip` and `bun run zip:firefox` from a clean `main`, installed and clicked through once, with the sources zip for AMO; v1.0.0's date in `src/constants/changelog.ts` on release day, and a `v1.0.0` tag. Submit to Chrome first, then AMO, then Edge. |
+| **Search filters** ✅ | Two filters in the library's search box (`lib/search-query.ts`), each alone or with words after it. `site:react.dev` narrows to a host through the `hostnameUrl` index. `topic:react`, or `topic:"my project"` for a name with spaces (an unclosed quote reads to the end of the box), lists the entries of every topic whose name contains the text, ignoring case, through `topicId` with `$in`. Topics are read only when the search holds a `topic:` token, once per change of the text, so an ordinary search costs nothing; a name that matches no topic lists nothing rather than being ignored. On a topic's own entries page the token is only taken out of the text, and the Topics tab matches no topics for either filter. Only the first of each counts. An inverse `entry:` filter for the Topics tab was considered and dropped: an entry's page already shows its topic. |
+| **Website and links** ✅ | The website (https://lexicora.github.io/ for now) is set once as `WEBSITE_URL` in `src/constants/site.ts`, so a custom domain is a change there only. It is linked from a Settings row below About, which is not behind `FEATURES.WEBSITE`, and from the README. `FEATURES.WEBSITE` stays off: it gates the "Visit the Lexicora website" line on the home page and popup, and swaps the context menu's top item for "Open Lexicora", which would take "Toggle side panel" out of the menu. Store links (About's review row, the README's) carry `utm_source` and `utm_medium` through `withUtm`; the website's own links stay plain, as it collects no analytics. |
+| **Release prep** ✅ | Released through 1.1.0, with 1.2.0 prepared. The version is set once in `package.json`, from which the manifest and the zip names take it. Settings → About → What's Changed lists the releases from `src/constants/changelog.ts`, whose newest entry a test holds to that version; its summary and link are also what the one-time update toast shows. Each release: bump the version, add the changelog entry with its date, update the Firefox output name in [`store-listing.md`](store-listing.md), run `bun run zip` and `bun run zip:firefox` from a clean `main` (with the sources zip for AMO), tag `vX.Y.Z`, and submit to Chrome first, then AMO, then Edge. The content script matches only http, https and local files; the licence check ([#183](https://github.com/lexicora/lexicora-extension/issues/183)); the listing copy, permission justifications and screenshots are in `store-listing.md`; the privacy policy is in the extension and as [`PRIVACY.md`](../PRIVACY.md), the URL the stores get. |
 
 ### Vacuum notes
 
@@ -87,7 +92,7 @@ the purge's reach.)
 ### Explicitly out of scope for v1.0
 
 Supabase sync and the web app (#68, #69), all AI features (#52, #190),
-the editor backlog (#8, #56, #60, #61, #62), the filter popover (#144), heading map (#164), windowed polish (#179, #180, #182, #184), and the
+the editor backlog (#8, #56, #60, #61, #62), windowed polish (#179, #180, #182, #184), and the
 parking lot at the bottom of this file.
 
 On file upload: images, video, audio and files are added by web address only.
@@ -107,9 +112,26 @@ caret on a 0.x version does not cross minors. If it is ever revisited, the
 checking against whatever versions the new BlockNote expects — they exist to
 keep a single copy of each, without which Enter stops creating blocks.
 
-On the filter popover (#144): the library's search takes one `site:` filter,
-which covers the case that needed it — "Show all from this site" on the home
-page. A stopgap rather than a syntax; real filtering would replace it.
+On the filter popover (#144): closed, not planned. The search box takes `site:`
+and `topic:` filters (see Search filters above), which cover what needed one:
+"Show all from this site" on the home page, and narrowing to related topics. A
+popover would add UI for little over them.
+
+Closed as not planned after weighing the cost:
+
+- **Links between entries and topics (#229).** The side panel has no URLs to link
+  to, so it needs a custom inline element, plus decisions on deleted targets, ids
+  across a backup import and what the Markdown export writes. Topics already group
+  entries, and there is no limit on them.
+- **Loading the capture-suggestion code only when enabled (#248).** What it costs
+  today is one storage read and a few idle listeners per page. Skipping them means
+  either a web-accessible chunk that any page can detect, or runtime script
+  registration with startup races.
+- **Leaving the window entrypoint out of builds (#272).** About 44 KB of a 7.2 MB
+  build, since it shares nearly everything with the side panel, and nothing links
+  to the page.
+- **A capture safeguard when the page differs from the entry being edited (#237).**
+  A new setting and a prompt for a rare case.
 
 ---
 
@@ -178,9 +200,9 @@ tidy routing and messaging patterns that became awkward with a second host.
 
 | Issue(s) | Description |
 |---|---|
-| [#144](https://github.com/lexicora/lexicora-extension/issues/144) | Filter dropdown / popover UI for more complex list filtering |
+| [#144](https://github.com/lexicora/lexicora-extension/issues/144) | Filter dropdown / popover UI for more complex list filtering — closed, not planned; `site:` and `topic:` filters instead |
 | [#145](https://github.com/lexicora/lexicora-extension/issues/145) | Hot-key support |
-| [#164](https://github.com/lexicora/lexicora-extension/issues/164) | Heading map / outline in entry detail and edit view |
+| [#164](https://github.com/lexicora/lexicora-extension/issues/164) | Heading map / outline in entry detail and edit view — shipped in 1.1.0 |
 | [#166](https://github.com/lexicora/lexicora-extension/issues/166) | Copy confirmation feedback when using copy button / dropdown in detail pages |
 | [#173](https://github.com/lexicora/lexicora-extension/issues/173) | Improved loading skeleton for entry create and edit pages |
 | [#156](https://github.com/lexicora/lexicora-extension/issues/156) | Download entries / topics as Markdown (alongside copy button; destination set in settings) |
@@ -238,7 +260,6 @@ Issues that need more thought before scheduling:
 
 - [#175](https://github.com/lexicora/lexicora-extension/issues/175) — Future: replace port-based side-panel detection with direct `@webext-core/messaging` ping
 - [#174](https://github.com/lexicora/lexicora-extension/issues/174) — Potentially make bottom-navigation icon animations subtler
-- [#172](https://github.com/lexicora/lexicora-extension/issues/172) — Potentially disable form submit on Enter when editing form fields
 - [#170](https://github.com/lexicora/lexicora-extension/issues/170) — Potentially add pin as dropdown in forms or remove favorite toggle
 - [#165](https://github.com/lexicora/lexicora-extension/issues/165) — Potentially add subtle border / refracting effect on list items
 - [#161](https://github.com/lexicora/lexicora-extension/issues/161) — Potentially add full-screen / full-width toggle for editable editors
