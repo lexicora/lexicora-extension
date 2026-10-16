@@ -119,6 +119,6 @@ Entry content is edited with **BlockNote** (`@blocknote/react`). The editor comp
 
 See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the phased implementation plan and open issue backlog.
 
-**Current goal**: the v1.0 milestone — a polished, offline-only release. AI, accounts, the website link and the windowed app are hidden behind `FEATURES` (`src/constants/features.ts`), not removed. What is left is listed under "Remaining work for v1.0" in the roadmap.
+**Current state**: feature-complete and in maintenance. The offline-only v1.0 scope shipped and 1.1.0 and 1.2.0 followed with polish and small features. No new features are planned for now — that is today's state, not a rule against ever adding one — but the extension stays maintained: fix bugs, keep it working as browsers and dependencies change, and take small improvements as they come. Prefer the smallest change that does the job over new surface, and weigh any new feature against the code it adds. AI, accounts, the website promotion surfaces and the windowed app stay hidden behind `FEATURES` (`src/constants/features.ts`), not removed. What shipped, and what was considered and closed, is in the roadmap and `src/constants/changelog.ts`.
 
 The windowed app (`src/entrypoints/window/`) is built but parked; its status and open work are in [`docs/windowed_extension/README.md`](docs/windowed_extension/README.md).

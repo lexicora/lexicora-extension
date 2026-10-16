@@ -1,5 +1,11 @@
 # Lexicora Extension — Roadmap
 
+**Status: feature-complete, in maintenance.** No new features are planned for now.
+That describes today, not a promise: a feature can still come later, and the
+extension stays maintained either way — bug fixes, keeping it working as browsers
+and dependencies change, and small improvements. The history below explains how
+it got here and why some things were left out.
+
 ## v1.0 Milestone — offline release
 
 **v1.0 ships as a polished, offline, single-device knowledge capture extension.**
