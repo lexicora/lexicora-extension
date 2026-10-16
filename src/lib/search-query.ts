@@ -12,8 +12,9 @@
  */
 
 const SITE_TOKEN = /^site:(\S+)$/i;
-// A quoted name may hold spaces; otherwise it runs to the next space.
-const TOPIC_TOKEN = /(^|\s)topic:(?:"([^"]*)"|(\S+))/i;
+// A quoted name may hold spaces; otherwise it runs to the next space. A quote
+// not yet closed runs to the end, so the list narrows while the name is typed.
+const TOPIC_TOKEN = /(^|\s)topic:(?:"([^"]*)(?:"|$)|(\S+))/i;
 
 export interface ParsedSearch {
   /** The host to match, without a `www.` prefix, or null. */

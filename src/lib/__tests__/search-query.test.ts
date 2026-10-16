@@ -87,6 +87,14 @@ describe("parseSearchQuery topic filter", () => {
     });
   });
 
+  it("reads a quote not yet closed to the end of the box", () => {
+    expect(parseSearchQuery('hooks topic:"my pro')).toEqual({
+      site: null,
+      topic: "my pro",
+      text: "hooks",
+    });
+  });
+
   it("finds the filter wherever it sits and keeps the case of the name", () => {
     expect(parseSearchQuery("hooks TOPIC:React guide")).toEqual({
       site: null,
@@ -106,7 +114,9 @@ describe("parseSearchQuery topic filter", () => {
   it("treats an empty topic as text", () => {
     expect(parseSearchQuery("topic:").topic).toBeNull();
     expect(parseSearchQuery('topic:""').topic).toBeNull();
+    expect(parseSearchQuery('topic:"').topic).toBeNull();
     expect(parseSearchQuery("topic:").text).toBe("topic:");
+    expect(parseSearchQuery('topic:"').text).toBe('topic:"');
   });
 
   it("does not read a topic out of the middle of a word", () => {
