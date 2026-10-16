@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { findTopicNameConflict, isSameTopicName } from "../topic-name";
+import {
+  findTopicNameConflict,
+  isSameTopicName,
+  topicsMatchingName,
+} from "../topic-name";
 
 /**
  * Covers topic name uniqueness. The cases with regex syntax are the ones the
@@ -45,5 +49,46 @@ describe("findTopicNameConflict", () => {
     expect(findTopicNameConflict("research", topics, "t2")).toMatchObject({
       id: "t1",
     });
+  });
+});
+
+describe("topicsMatchingName", () => {
+  const topics = [
+    { id: "1", name: "React hooks" },
+    { id: "2", name: "React Router" },
+    { id: "3", name: "Databases" },
+  ];
+
+  it("finds every topic whose name contains the text", () => {
+    expect(topicsMatchingName("react", topics).map((t) => t.id)).toEqual([
+      "1",
+      "2",
+    ]);
+    expect(topicsMatchingName("ba", topics).map((t) => t.id)).toEqual(["3"]);
+  });
+
+  it("ignores case and surrounding whitespace", () => {
+    expect(topicsMatchingName("  ROUTER ", topics).map((t) => t.id)).toEqual([
+      "2",
+    ]);
+  });
+
+  it("matches across a space in the name", () => {
+    expect(topicsMatchingName("act h", topics).map((t) => t.id)).toEqual(["1"]);
+  });
+
+  it("matches the text literally, not as a pattern", () => {
+    const withSymbols = [{ id: "1", name: "C++ notes" }, { id: "2", name: "C" }];
+
+    expect(topicsMatchingName("c++", withSymbols).map((t) => t.id)).toEqual([
+      "1",
+    ]);
+    expect(topicsMatchingName(".", topics)).toEqual([]);
+  });
+
+  it("matches nothing for an empty query or an unknown name", () => {
+    expect(topicsMatchingName("", topics)).toEqual([]);
+    expect(topicsMatchingName("   ", topics)).toEqual([]);
+    expect(topicsMatchingName("zzz", topics)).toEqual([]);
   });
 });

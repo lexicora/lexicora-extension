@@ -199,6 +199,13 @@ export const TIP_CATEGORIES: readonly TipCategory[] = [
           "Create topics for projects, research areas, or themes. Assign entries to topics when capturing so related content stays together.",
       },
       {
+        icon: FolderOpenIcon,
+        iconColor: "text-sky-500",
+        title: "Make topics as specific as you like",
+        description:
+          "There is no limit on topics, so resist putting everything into one. Several related topics, like React hooks and React testing, are easier to browse than a single React topic. An entry belongs to one topic, and you can move it to another whenever you change your mind.",
+      },
+      {
         icon: TagIcon,
         iconColor: "text-violet-500",
         title: "Tag across topics",
@@ -224,7 +231,7 @@ export const TIP_CATEGORIES: readonly TipCategory[] = [
         iconColor: "text-cyan-500",
         title: "Search is powerful",
         description:
-          "The search bar scans titles, tags, descriptions, site names and dates. For one website exactly, type site:react.dev — alone, or with words after it to search within that site.",
+          "The search bar scans titles, tags, descriptions, site names and dates. For one website exactly, type site:react.dev; for the topics with a word in their name, topic:react, or topic:\"my project\" when it has spaces. Either works alone, together, or with words after it to search within.",
       },
       {
         icon: GlobeIcon,

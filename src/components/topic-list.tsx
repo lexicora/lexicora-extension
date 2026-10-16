@@ -36,10 +36,12 @@ export function TopicList({
   const onlyFavorites = filter?.onlyFavorites ?? false;
   const onlyArchived = filter?.onlyArchived ?? false;
 
-  // A site filter is about where an entry was captured from, and a topic
-  // has no site — so it matches no topics, rather than being ignored and
-  // quietly listing every one of them.
-  const matchesNoTopics = parseSearchQuery(search).site !== null;
+  // A site filter is about where an entry was captured from, and a topic has
+  // no site; a topic filter picks the entries in a topic, not a topic. Either
+  // matches no topics, rather than being ignored and quietly listing every
+  // one of them.
+  const { site, topic } = parseSearchQuery(search);
+  const matchesNoTopics = site !== null || topic !== null;
 
   // On POP, restore the scroll position (plain number, no JSON overhead)
   const savedScrollTop = useMemo(() => {

@@ -3,6 +3,8 @@ import { Separator } from "@/components/ui/separator";
 
 import { EntryItem } from "@/components/entry-item";
 import type { EntryDocType } from "@/db/schemas/entry";
+import type { TopicDocType } from "@/db/schemas/topic";
+import { topicsMatchingName } from "@/lib/utils/topic-name";
 import { formatCount, formatCountExact } from "@/lib/utils/count-formatter";
 import { FilesIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -50,6 +52,7 @@ export function EntryList({
   const [entries, setEntries] = useState<EntryDocType[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const collection = useRxCollection("entries");
+  const topicsCollection = useRxCollection("topics");
   const navigationType = useNavigationType();
   const navigate = useNavigate();
   const isFirstRender = useRef(true);
@@ -85,55 +88,94 @@ export function EntryList({
   useEffect(() => {
     if (!collection) return;
 
-    const selector: MangoQuerySelector<EntryDocType> = {};
-
-    if (topicId) {
-      selector.topicId = topicId;
-    }
-
-    if (onlyArchived) {
-      selector.isArchived = true;
-    } else {
-      selector.isArchived = false;
-    }
-
-    if (onlyFavorites) {
-      selector.isFavorite = true;
-    }
-
-    // "site:react.dev" narrows to one host through the hostnameUrl index;
+    // "site:react.dev" narrows to one host through the hostnameUrl index and
+    // "topic:react" to the topics with that in their name through topicId;
     // whatever else is typed is still matched as text. See lib/search-query.
-    const { site, text } = parseSearchQuery(search);
+    const { site, topic, text } = parseSearchQuery(search);
 
-    if (site) {
-      selector.hostnameUrl = { $in: siteHostnames(site) };
-    }
+    // A topic's own page already lists only its entries, so there the token
+    // is just taken out of the text.
+    const topicName = topicId ? null : topic;
+    if (topicName && !topicsCollection) return;
 
-    // Matched against the pre-lowercased searchBlob (title + tags + description snippet + siteName)
-    const pattern = searchTextPattern(text);
-    if (pattern) selector.searchBlob = { $regex: pattern };
+    let cancelled = false;
+    let sub: { unsubscribe(): void } | undefined;
 
-    const sub = collection
-      .find({
-        selector,
-        sort: onlyArchived
-          ? [{ updatedAt: "desc" }]
-          : [{ isPinned: "desc" }, { updatedAt: "desc" }],
-      })
-      .$.subscribe({
-        next: (results) => {
-          setEntries(results as EntryDocType[]);
-          setIsDataLoaded(true);
-        },
-        error: (err) => {
-          console.error("Error executing entries query:", err);
+    const run = (topicIds: string[] | undefined) => {
+      const selector: MangoQuerySelector<EntryDocType> = {};
+
+      if (topicIds) {
+        selector.topicId = { $in: topicIds };
+      }
+
+      selector.isArchived = onlyArchived;
+
+      if (onlyFavorites) {
+        selector.isFavorite = true;
+      }
+
+      if (site) {
+        selector.hostnameUrl = { $in: siteHostnames(site) };
+      }
+
+      // Matched against the pre-lowercased searchBlob (title + tags + description snippet + siteName)
+      const pattern = searchTextPattern(text);
+      if (pattern) selector.searchBlob = { $regex: pattern };
+
+      sub = collection
+        .find({
+          selector,
+          sort: onlyArchived
+            ? [{ updatedAt: "desc" }]
+            : [{ isPinned: "desc" }, { updatedAt: "desc" }],
+        })
+        .$.subscribe({
+          next: (results) => {
+            setEntries(results as EntryDocType[]);
+            setIsDataLoaded(true);
+          },
+          error: (err) => {
+            console.error("Error executing entries query:", err);
+            setEntries([]);
+            setIsDataLoaded(true);
+          },
+        });
+    };
+
+    if (!topicName) {
+      run(topicId ? [topicId] : undefined);
+    } else {
+      // A name that matches no topic shows nothing, rather than ignoring the
+      // token and listing everything.
+      topicsCollection!
+        .find()
+        .exec()
+        .then((docs) => {
+          if (cancelled) return;
+          const matches = topicsMatchingName(
+            topicName,
+            docs.map((doc) => doc.toJSON() as TopicDocType),
+          );
+          if (matches.length > 0) {
+            run(matches.map((topic) => topic.id));
+          } else {
+            setEntries([]);
+            setIsDataLoaded(true);
+          }
+        })
+        .catch((err) => {
+          console.error("Error looking up the topic:", err);
+          if (cancelled) return;
           setEntries([]);
           setIsDataLoaded(true);
-        },
-      });
+        });
+    }
 
-    return () => sub.unsubscribe();
-  }, [collection, search, onlyFavorites, onlyArchived, topicId]);
+    return () => {
+      cancelled = true;
+      sub?.unsubscribe();
+    };
+  }, [collection, topicsCollection, search, onlyFavorites, onlyArchived, topicId]);
 
   // MAYBE (FEATURES.WINDOWED_APP): For wider screens, a two column layout.
   return (
