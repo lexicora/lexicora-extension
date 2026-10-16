@@ -74,7 +74,7 @@ export function PopupAiLayout({
         </nav>
         <section className="mt-1">
           <span className="flex justify-center gap-3 items-baseline mb-3">
-            {/*Maybe add link to lexicora.com */}
+            {/*Maybe add link to the website */}
             <LexicoraLogo className="h-6.5 rounded-xs" />
             {/*#00143d is the Lexicora color */}
             <h1 className="text-4xl font-bold mb-2 text-[#00143d] dark:text-foreground leading-0">
@@ -88,7 +88,7 @@ export function PopupAiLayout({
               className="text-sm text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 hover:text-lc-muted-foreground-hover"
               title={WEBSITE_URL}
             >
-              Visit Lexicora.com{" "}
+              Visit the Lexicora website{" "}
               <ArrowUpRightIcon className="inline" size={16} />
             </a>
           </div>

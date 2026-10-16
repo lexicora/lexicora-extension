@@ -49,7 +49,7 @@ function AboutPage() {
             className="bg-card rounded-2xl not-dark:shadow-xs flex-col items-center pt-6 pb-5 gap-1 text-center"
           >
             <span className="flex justify-center gap-1.5 items-baseline mb-3">
-              {/*Maybe add link to lexicora.com */}
+              {/*Maybe add link to the website */}
               <LexicoraLogo className="h-[1.06rem] rounded-xs" />
               {/*#00143d is the Lexicora color */}
               <h2 className="text-2xl font-bold text-[#00143d] dark:text-foreground leading-0">

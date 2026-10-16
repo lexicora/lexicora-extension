@@ -54,8 +54,11 @@ describe("currentStoreListing", () => {
 
 describe("withUtm", () => {
   it("tags a link with where in the extension it was clicked", () => {
-    expect(withUtm(WEBSITE_URL, "about")).toBe(
-      "https://lexicora.com/?utm_source=lexicora-extension&utm_medium=about",
+    const tagged = new URL(withUtm(WEBSITE_URL, "about"));
+
+    expect(tagged.origin).toBe(new URL(WEBSITE_URL).origin);
+    expect(tagged.search).toBe(
+      "?utm_source=lexicora-extension&utm_medium=about",
     );
   });
 

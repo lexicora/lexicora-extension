@@ -52,7 +52,7 @@ const LINKS = [
     Icon: GlobeIcon,
     iconColor: "text-emerald-500",
     title: "The website",
-    description: "Lexicora's home on the web, at lexicora.com.",
+    description: "Lexicora's home on the web: what it does and how to get it.",
   },
   {
     href: REPOSITORY_URL,

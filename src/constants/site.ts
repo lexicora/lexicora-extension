@@ -1,5 +1,9 @@
-/** The public website. Shown only where `FEATURES.WEBSITE` allows — see `features.ts`. */
-export const WEBSITE_URL = "https://lexicora.com";
+/**
+ * The public website, on GitHub Pages for now. Every link to it goes through
+ * this constant, so a custom domain later is a change here only. Shown only
+ * where `FEATURES.WEBSITE` allows — see `features.ts`.
+ */
+export const WEBSITE_URL = "https://lexicora.github.io/";
 
 /** The public source repository, where problems are reported. */
 export const REPOSITORY_URL = "https://github.com/lexicora/lexicora-extension";

@@ -13,7 +13,7 @@ interface WebsiteLinkProps {
 }
 
 /**
- * "Visit Lexicora.com", where the website is linked.
+ * "Visit the Lexicora website", where the website is linked.
  *
  * Decides for itself, like `AccountMenu`: with `FEATURES.WEBSITE` off it
  * renders nothing at all — wrapper included, so no call site is left with a
@@ -37,7 +37,7 @@ export function WebsiteLink({
         )}
         title={WEBSITE_URL}
       >
-        Visit Lexicora.com{" "}
+        Visit the Lexicora website{" "}
         <ArrowUpRightIcon className="inline" size={size === "sm" ? 16 : 13} />
       </a>
     </div>
