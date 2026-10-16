@@ -749,8 +749,8 @@ html:has(
   .bn-editor[contenteditable="false"]
   .bn-block-content[data-content-type="table"]
   .tableWrapper {
-  margin-right: 2px;
-  padding-left: 2px;
+  margin-right: 3px;
+  padding-left: 3px;
   padding-right: 0;
 }
 
