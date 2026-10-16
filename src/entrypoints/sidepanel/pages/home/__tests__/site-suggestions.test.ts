@@ -16,11 +16,17 @@ function entry(
   id: string,
   pathnameUrl: string,
   searchUrl = "",
+  hash = "",
 ): EntryDocType {
-  return { id, pathnameUrl, searchUrl, title: id } as EntryDocType;
+  const url = `https://example.com${pathnameUrl}${searchUrl}${hash}`;
+  return { id, url, pathnameUrl, searchUrl, title: id } as EntryDocType;
 }
 
-const at = (pathname: string, search = "") => ({ pathname, search });
+const at = (pathname: string, search = "", hash = "") => ({
+  pathname,
+  search,
+  hash,
+});
 
 describe("normalizePath", () => {
   it("treats a trailing slash as the same page", () => {
@@ -34,8 +40,10 @@ describe("normalizePath", () => {
 });
 
 describe("locationOf", () => {
-  it("ignores the fragment, which is a place within a page", () => {
-    expect(locationOf("https://rxdb.info/docs#install")).toEqual(at("/docs"));
+  it("keeps the fragment, which can select different content", () => {
+    expect(locationOf("https://rxdb.info/docs#install")).toEqual(
+      at("/docs", "", "#install"),
+    );
   });
 
   it("keeps the query, which usually selects the content", () => {
@@ -90,6 +98,18 @@ describe("splitSiteEntries", () => {
     expect(
       splitSiteEntries(videos, at("/watch", "?v=111")).capturedPage?.id,
     ).toBe("first");
+  });
+
+  it("separates pages that differ only by their fragment", () => {
+    const pages = [entry("install", "/docs", "", "#install")];
+
+    expect(splitSiteEntries(pages, at("/docs")).capturedPage).toBeNull();
+    expect(
+      splitSiteEntries(pages, at("/docs", "", "#usage")).capturedPage,
+    ).toBeNull();
+    expect(
+      splitSiteEntries(pages, at("/docs", "", "#install")).capturedPage?.id,
+    ).toBe("install");
   });
 
   it("keeps every entry when the tab has no usable URL", () => {
