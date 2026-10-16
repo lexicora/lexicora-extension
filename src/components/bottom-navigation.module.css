@@ -75,6 +75,14 @@
     /*filter: blur(0); keep disabled for now*/
 }
 
+/* Coming back to the home page from a page without the bar. Home's bar is a
+   bordered strip on the page rather than a floating one, so it simply is there:
+   no slide, and no fade either, which left its background and blur lagging
+   behind the icons while the whole bar was still partly transparent. */
+.bottomNavInstant {
+    transition: none;
+}
+
 .bottomNavHidden {
     pointer-events: none;
     transition:
@@ -96,6 +104,10 @@
         /* Override sliding. Just use a gentle fade. */
         transition: opacity 200ms ease-in-out !important;
         transform: none !important; /* Force bar to stay in place */
+    }
+
+    .bottomNavInstant {
+        transition: none !important;
     }
 
     .bottomNavHidden {
