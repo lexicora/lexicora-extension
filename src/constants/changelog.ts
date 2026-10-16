@@ -39,6 +39,7 @@ export const RELEASES: readonly Release[] = [
         "Coming back to the home page from a create or edit page shows the bottom bar at once instead of sliding it up.",
         "Enter in a text field of the entry and topic forms no longer saves. Save with ⌘/Ctrl+S or the Save button.",
         "Tips & Tricks explains which pages capture well and why to keep topics specific.",
+        "The libraries Lexicora is built on (React, Radix UI, DOMPurify, Zod and others) are updated to their latest versions.",
       ],
       fixed: [
         "A page at a different # section of the same address now counts as a different page on the home page, instead of showing as already captured.",
