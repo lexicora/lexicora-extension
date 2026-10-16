@@ -9,12 +9,11 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import { CONTACT_EMAIL, REPOSITORY_URL, WEBSITE_URL } from "@/constants/site";
+import { CONTACT_EMAIL, REPOSITORY_URL } from "@/constants/site";
 import {
   ArrowUpRightIcon,
   BugIcon,
   CodeXmlIcon,
-  GlobeIcon,
   HeartPlusIcon,
   MailIcon,
 } from "lucide-react";
@@ -41,13 +40,6 @@ const LINKS = [
     iconColor: "text-sky-500",
     title: "Write an email",
     description: `${CONTACT_EMAIL} — for anything that is not a bug report, or if you have no GitHub account.`,
-  },
-  {
-    href: WEBSITE_URL,
-    Icon: GlobeIcon,
-    iconColor: "text-emerald-500",
-    title: "The website",
-    description: "Lexicora's home on the web: what it does and how to get it.",
   },
   {
     href: REPOSITORY_URL,

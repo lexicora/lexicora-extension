@@ -12,7 +12,6 @@ import { SettingsItemSeparator } from "@/components/settings";
 import {
   currentStoreListing,
   REPOSITORY_URL,
-  WEBSITE_URL,
   withUtm,
 } from "@/constants/site";
 import {
@@ -20,7 +19,6 @@ import {
   ChevronRightIcon,
   CodeXmlIcon,
   FileTextIcon,
-  GlobeIcon,
   ScrollTextIcon,
   StarIcon,
   TagIcon,
@@ -140,7 +138,7 @@ function AboutPage() {
             <Item
               variant="muted"
               size="sm"
-              className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-none"
+              className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl rounded-t-none"
               asChild
             >
               {/* The source, where an issue can be raised and the licence read
@@ -159,28 +157,6 @@ function AboutPage() {
                 </ItemContent>
                 {/* An arrow away, not a chevron: this row leaves the extension,
                   unlike the two above it. */}
-                <ArrowUpRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
-              </a>
-            </Item>
-            <SettingsItemSeparator />
-            <Item
-              variant="muted"
-              size="sm"
-              className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl rounded-t-none"
-              asChild
-            >
-              <a
-                href={WEBSITE_URL}
-                target="_blank"
-                rel="noreferrer"
-                draggable={false}
-              >
-                <ItemMedia variant="icon">
-                  <GlobeIcon className="size-5 text-emerald-500" />
-                </ItemMedia>
-                <ItemContent>
-                  <ItemTitle>Website</ItemTitle>
-                </ItemContent>
                 <ArrowUpRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
               </a>
             </Item>
