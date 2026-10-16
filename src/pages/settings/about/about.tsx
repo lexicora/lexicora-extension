@@ -9,12 +9,18 @@ import {
   ItemDescription,
 } from "@/components/ui/item";
 import { SettingsItemSeparator } from "@/components/settings";
-import { currentStoreListing, REPOSITORY_URL } from "@/constants/site";
+import {
+  currentStoreListing,
+  REPOSITORY_URL,
+  WEBSITE_URL,
+  withUtm,
+} from "@/constants/site";
 import {
   ArrowUpRightIcon,
   ChevronRightIcon,
   CodeXmlIcon,
   FileTextIcon,
+  GlobeIcon,
   ScrollTextIcon,
   StarIcon,
   TagIcon,
@@ -134,7 +140,7 @@ function AboutPage() {
             <Item
               variant="muted"
               size="sm"
-              className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl rounded-t-none"
+              className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-none"
               asChild
             >
               {/* The source, where an issue can be raised and the licence read
@@ -156,6 +162,28 @@ function AboutPage() {
                 <ArrowUpRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
               </a>
             </Item>
+            <SettingsItemSeparator />
+            <Item
+              variant="muted"
+              size="sm"
+              className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-2xl rounded-t-none"
+              asChild
+            >
+              <a
+                href={withUtm(WEBSITE_URL, "about")}
+                target="_blank"
+                rel="noreferrer"
+                draggable={false}
+              >
+                <ItemMedia variant="icon">
+                  <GlobeIcon className="size-5 text-emerald-500" />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>Website</ItemTitle>
+                </ItemContent>
+                <ArrowUpRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
+              </a>
+            </Item>
           </article>
           <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
             Lexicora's own terms, the libraries and tools that make it possible,
@@ -170,7 +198,7 @@ function AboutPage() {
             className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl"
             asChild
           >
-            <a href={store.url} target="_blank" rel="noreferrer" draggable={false}>
+            <a href={withUtm(store.url, "about")} target="_blank" rel="noreferrer" draggable={false}>
               <ItemMedia variant="icon">
                 <StarIcon className="size-5 text-yellow-500" />
               </ItemMedia>

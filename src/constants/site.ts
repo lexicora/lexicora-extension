@@ -5,6 +5,20 @@ export const WEBSITE_URL = "https://lexicora.com";
 export const REPOSITORY_URL = "https://github.com/lexicora/lexicora-extension";
 
 /**
+ * Marks a link as coming from the extension, so the website's and the stores'
+ * analytics can tell where a visit started. `medium` names the place it was
+ * clicked: "side-panel", "popup", "context-menu", "about", "support".
+ *
+ * Only on links the user follows; nothing is sent until they click.
+ */
+export function withUtm(url: string, medium: string): string {
+  const tagged = new URL(url);
+  tagged.searchParams.set("utm_source", "lexicora-extension");
+  tagged.searchParams.set("utm_medium", medium);
+  return tagged.href;
+}
+
+/**
  * The developer's contact address, the same one the store listings show. For
  * people without a GitHub account, and for questions that are not bugs.
  */

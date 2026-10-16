@@ -9,7 +9,7 @@ import {
   toggleSidePanel,
 } from "./capture-flow";
 import { UNSUPPORTED_URL_REGEX } from "@/constants/support-capture-sites";
-import { WEBSITE_URL } from "@/constants/site";
+import { WEBSITE_URL, withUtm } from "@/constants/site";
 
 // TODO: Add messages for users (if exceptions occur, e.g., no selection made)
 
@@ -27,7 +27,7 @@ export function setupContextMenuActions() {
         break;
       }
       case CMI_ID.OPEN_LEXICORA: {
-        browser.tabs.create({ url: WEBSITE_URL });
+        browser.tabs.create({ url: withUtm(WEBSITE_URL, "context-menu") });
         break;
       }
       case CMI_ID.CAPTURE_SELECTION_AI_ASSISTED: {

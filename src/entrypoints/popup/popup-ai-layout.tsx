@@ -7,6 +7,7 @@ import { ArrowUpRightIcon, PanelRightIcon } from "lucide-react";
 
 import { cn } from "cn";
 import { useIsAtTop } from "@/providers/scroll-observer";
+import { WEBSITE_URL, withUtm } from "@/constants/site";
 
 interface PopupAiLayoutProps {
   isSupported: boolean;
@@ -82,10 +83,10 @@ export function PopupAiLayout({
           </span>
           <div className="flex justify-center mt-1">
             <a
-              href="https://lexicora.com"
+              href={withUtm(WEBSITE_URL, "popup")}
               target="_blank"
               className="text-sm text-muted-foreground transition-all duration-100 hover:underline hover:underline-offset-2 hover:text-lc-muted-foreground-hover"
-              title="https://lexicora.com"
+              title={WEBSITE_URL}
             >
               Visit Lexicora.com{" "}
               <ArrowUpRightIcon className="inline" size={16} />

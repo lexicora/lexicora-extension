@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { currentStoreListing, STORE_LISTINGS } from "../site";
+import {
+  currentStoreListing,
+  STORE_LISTINGS,
+  WEBSITE_URL,
+  withUtm,
+} from "../site";
 
 const CHROME_UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36";
@@ -44,5 +49,37 @@ describe("currentStoreListing", () => {
     expect(
       currentStoreListing({ ...base, isFirefox: true, extensionId: "lexicora@x" }),
     ).toBe(STORE_LISTINGS.firefox);
+  });
+});
+
+describe("withUtm", () => {
+  it("tags a link with where in the extension it was clicked", () => {
+    expect(withUtm(WEBSITE_URL, "about")).toBe(
+      "https://lexicora.com/?utm_source=lexicora-extension&utm_medium=about",
+    );
+  });
+
+  it("keeps a link's own path and parameters", () => {
+    const tagged = new URL(withUtm("https://example.com/a/b?x=1", "popup"));
+
+    expect(tagged.pathname).toBe("/a/b");
+    expect(tagged.searchParams.get("x")).toBe("1");
+    expect(tagged.searchParams.get("utm_medium")).toBe("popup");
+  });
+
+  it("replaces tags the link already has, rather than doubling them", () => {
+    const tagged = new URL(
+      withUtm("https://example.com/?utm_medium=old", "support"),
+    );
+
+    expect(tagged.searchParams.getAll("utm_medium")).toEqual(["support"]);
+  });
+
+  it("tags every store listing", () => {
+    for (const { url } of Object.values(STORE_LISTINGS)) {
+      expect(new URL(withUtm(url, "about")).searchParams.get("utm_source")).toBe(
+        "lexicora-extension",
+      );
+    }
   });
 });
