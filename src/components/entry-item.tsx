@@ -27,51 +27,10 @@ import {
   StarIcon,
   Trash2Icon,
 } from "lucide-react";
-import { Avatar } from "radix-ui";
-import { useState } from "react";
+import { Favicon } from "@/components/favicon";
 import { useNavigate } from "react-router";
 import { useRxCollection } from "rxdb/plugins/react";
 import { deleteEntryCascade } from "@/db/cascade-delete";
-
-/**
- * Favicons that failed to load this session. Lists remount on every visit, and
- * a known-broken icon should not hold its space for a moment and then vanish
- * each time.
- */
-const failedFavicons = new Set<string>();
-
-/**
- * An entry's favicon, or nothing: when it fails to load it is left out, as
- * when there is none, so the row keeps its room for tags. The site name next
- * to it already says where the entry comes from.
- */
-function EntryItemFavicon({
-  url,
-  className,
-}: {
-  url: string;
-  className?: string;
-}) {
-  const [failed, setFailed] = useState(() => failedFavicons.has(url));
-  if (failed) return null;
-
-  return (
-    <Avatar.Root
-      className={cn("size-4.25 rounded-xs opacity-90 shrink-0", className)}
-    >
-      <Avatar.Image
-        className="rounded-xs"
-        src={url}
-        alt="Favicon"
-        onLoadingStatusChange={(status) => {
-          if (status !== "error") return;
-          failedFavicons.add(url);
-          setFailed(true);
-        }}
-      />
-    </Avatar.Root>
-  );
-}
 
 export interface EntryItemProps {
   entry: EntryDocType;
@@ -349,13 +308,17 @@ export function EntryItem({
             {(entry.hostnameUrl || entry.siteName) && (
               <div className="flex items-center gap-1.5 ml-px text-[12px] font-medium text-muted-foreground/90 shrink-0 max-w-32">
                 {entry.faviconUrl && (
-                  <EntryItemFavicon
-                    key={entry.faviconUrl}
+                  // A failed icon is left out, so the row keeps its room for
+                  // tags; the site name already says where the entry is from.
+                  <Favicon
                     url={entry.faviconUrl}
                     // Centred on the row it lines up with the tags' text, but
                     // alone beside the site name it sits above the name's
                     // lowercase letters, so it looks too high.
-                    className={entry.tags?.length ? undefined : "translate-y-px"}
+                    className={cn(
+                      "size-4.25 opacity-90",
+                      !entry.tags?.length && "translate-y-px",
+                    )}
                   />
                 )}
                 <span className="truncate">

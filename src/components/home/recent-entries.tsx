@@ -1,5 +1,5 @@
 import { ChevronRightIcon, GlobeIcon } from "lucide-react";
-import { Avatar } from "radix-ui";
+import { Favicon } from "@/components/favicon";
 import { useNavigate } from "react-router";
 
 import { Button } from "@/components/ui/button";
@@ -39,6 +39,14 @@ export function RecentEntries({
 
   if (entries.length === 0 && !leadingRow) return null;
 
+  // Stands in when there is no favicon or it fails to load.
+  const globe = (
+    <GlobeIcon
+      className="size-3.5 shrink-0 text-muted-foreground"
+      aria-hidden
+    />
+  );
+
   return (
     <section className="mt-4 shrink-0">
       <Separator className="mx-auto max-w-[calc(100%-8px)] shrink-0" />
@@ -72,20 +80,15 @@ export function RecentEntries({
               })
             }
           >
-            {/* The globe stands in when there is no favicon or it fails to load. */}
-            <Avatar.Root className="flex size-3.5 shrink-0" aria-hidden>
-              {entry.faviconUrl && (
-                <Avatar.Image
-                  src={entry.faviconUrl}
-                  alt=""
-                  draggable="false"
-                  className="size-3.5 rounded-xs"
-                />
-              )}
-              <Avatar.Fallback delayMs={entry.faviconUrl ? 50 : 0}>
-                <GlobeIcon className="size-3.5 text-muted-foreground" />
-              </Avatar.Fallback>
-            </Avatar.Root>
+            {entry.faviconUrl ? (
+              <Favicon
+                url={entry.faviconUrl}
+                className="size-3.5"
+                fallback={globe}
+              />
+            ) : (
+              globe
+            )}
             <span className="text-sm truncate flex-1">{entry.title}</span>
             <ChevronRightIcon className="transition-opacity size-3.5 text-muted-foreground shrink-0 opacity-70 group-hover:opacity-100" />
           </Button>

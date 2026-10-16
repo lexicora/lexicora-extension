@@ -1,5 +1,5 @@
 import { GlobeIcon } from "lucide-react";
-import { Avatar } from "radix-ui";
+import { Favicon } from "@/components/favicon";
 import { cn } from "cn";
 
 interface CurrentPageCardProps {
@@ -52,21 +52,15 @@ export function CurrentPageCard({
       )}
     >
       {/* The globe stands in when there is no favicon or it fails to load. */}
-      <Avatar.Root className="flex size-4 shrink-0" aria-hidden>
-        {isSupported && activeTab?.favIconUrl && (
-          <Avatar.Image
-            src={activeTab.favIconUrl}
-            alt=""
-            draggable="false"
-            className="size-4 rounded-xs"
-          />
-        )}
-        <Avatar.Fallback
-          delayMs={isSupported && activeTab?.favIconUrl ? 50 : 0}
-        >
-          <GlobeIcon className="size-4 text-muted-foreground" />
-        </Avatar.Fallback>
-      </Avatar.Root>
+      {isSupported && activeTab?.favIconUrl ? (
+        <Favicon
+          url={activeTab.favIconUrl}
+          className="size-4"
+          fallback={<GlobeIcon className="size-4 shrink-0 text-muted-foreground" />}
+        />
+      ) : (
+        <GlobeIcon className="size-4 shrink-0 text-muted-foreground" />
+      )}
       {compact ? (
         // The hostname trails the title rather than sitting under it, and is
         // the first thing to be cut when the title is long.

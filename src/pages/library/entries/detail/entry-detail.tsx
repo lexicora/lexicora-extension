@@ -61,7 +61,7 @@ import {
   StarIcon,
   Trash2Icon,
 } from "lucide-react";
-import { Avatar } from "radix-ui";
+import { Favicon } from "@/components/favicon";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useRxCollection } from "rxdb/plugins/react";
@@ -262,18 +262,22 @@ function EntryDetailPage() {
             <div className="flex items-center gap-1.5 mt-3 min-w-0">
               {/* The globe stands in when there is no favicon or it fails to
                 load, as on the home page and in the popup. */}
-              <Avatar.Root className="flex items-center justify-center size-4.5 rounded-xs opacity-90 shrink-0">
-                {entry.faviconUrl && (
-                  <Avatar.Image
-                    className="rounded-xs ml-0.5"
-                    src={entry.faviconUrl}
-                    alt="Favicon"
-                  />
-                )}
-                <Avatar.Fallback delayMs={entry.faviconUrl ? 50 : 0}>
-                  <GlobeIcon className="size-4 text-muted-foreground" />
-                </Avatar.Fallback>
-              </Avatar.Root>
+              <div className="flex items-center justify-center size-4.5 shrink-0">
+                {(() => {
+                  const globe = (
+                    <GlobeIcon className="size-4 text-muted-foreground" />
+                  );
+                  return entry.faviconUrl ? (
+                    <Favicon
+                      url={entry.faviconUrl}
+                      className="ml-0.5 opacity-90"
+                      fallback={globe}
+                    />
+                  ) : (
+                    globe
+                  );
+                })()}
+              </div>
               {(entry.siteName || entry.hostnameUrl) && (
                 <div className="flex items-center mt-px min-w-0 gap-1">
                   {/* The site keeps its full width and the path gives way: a
