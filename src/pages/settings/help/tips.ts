@@ -231,7 +231,7 @@ export const TIP_CATEGORIES: readonly TipCategory[] = [
         iconColor: "text-cyan-500",
         title: "Search is powerful",
         description:
-          "The search bar scans titles, tags, descriptions, site names and dates. For one website exactly, type site:react.dev — alone, or with words after it to search within that site.",
+          "The search bar scans titles, tags, descriptions, site names and dates. For one website exactly, type site:react.dev; for one topic, topic:react, or topic:\"my project\" when its name has spaces. Either works alone, together, or with words after it to search within.",
       },
       {
         icon: GlobeIcon,

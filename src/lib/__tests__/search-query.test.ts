@@ -15,6 +15,7 @@ describe("parseSearchQuery", () => {
   it("reads a site filter on its own", () => {
     expect(parseSearchQuery("site:react.dev")).toEqual({
       site: "react.dev",
+      topic: null,
       text: "",
     });
   });
@@ -22,6 +23,7 @@ describe("parseSearchQuery", () => {
   it("keeps the rest as text", () => {
     expect(parseSearchQuery("site:react.dev hooks guide")).toEqual({
       site: "react.dev",
+      topic: null,
       text: "hooks guide",
     });
   });
@@ -29,6 +31,7 @@ describe("parseSearchQuery", () => {
   it("finds the filter wherever it sits", () => {
     expect(parseSearchQuery("hooks site:react.dev")).toEqual({
       site: "react.dev",
+      topic: null,
       text: "hooks",
     });
   });
@@ -40,6 +43,7 @@ describe("parseSearchQuery", () => {
   it("leaves an ordinary search alone", () => {
     expect(parseSearchQuery("react hooks")).toEqual({
       site: null,
+      topic: null,
       text: "react hooks",
     });
   });
@@ -48,6 +52,7 @@ describe("parseSearchQuery", () => {
     // Someone searching for a title like "Chapter 3: Hooks".
     expect(parseSearchQuery("chapter 3: hooks")).toEqual({
       site: null,
+      topic: null,
       text: "chapter 3: hooks",
     });
   });
@@ -55,12 +60,69 @@ describe("parseSearchQuery", () => {
   it("treats a second site token as text rather than narrowing invisibly", () => {
     expect(parseSearchQuery("site:react.dev site:vuejs.org")).toEqual({
       site: "react.dev",
+      topic: null,
       text: "site:vuejs.org",
     });
   });
 
   it("returns nothing for an empty box", () => {
-    expect(parseSearchQuery("   ")).toEqual({ site: null, text: "" });
+    expect(parseSearchQuery("   ")).toEqual({ site: null, topic: null, text: "" });
+  });
+});
+
+describe("parseSearchQuery topic filter", () => {
+  it("reads a topic on its own", () => {
+    expect(parseSearchQuery("topic:react")).toEqual({
+      site: null,
+      topic: "react",
+      text: "",
+    });
+  });
+
+  it("reads a quoted name with spaces", () => {
+    expect(parseSearchQuery('topic:"my project" hooks')).toEqual({
+      site: null,
+      topic: "my project",
+      text: "hooks",
+    });
+  });
+
+  it("finds the filter wherever it sits and keeps the case of the name", () => {
+    expect(parseSearchQuery("hooks TOPIC:React guide")).toEqual({
+      site: null,
+      topic: "React",
+      text: "hooks guide",
+    });
+  });
+
+  it("combines with a site filter", () => {
+    expect(parseSearchQuery("site:react.dev topic:react")).toEqual({
+      site: "react.dev",
+      topic: "react",
+      text: "",
+    });
+  });
+
+  it("treats an empty topic as text", () => {
+    expect(parseSearchQuery("topic:").topic).toBeNull();
+    expect(parseSearchQuery('topic:""').topic).toBeNull();
+    expect(parseSearchQuery("topic:").text).toBe("topic:");
+  });
+
+  it("does not read a topic out of the middle of a word", () => {
+    expect(parseSearchQuery("subtopic:x")).toEqual({
+      site: null,
+      topic: null,
+      text: "subtopic:x",
+    });
+  });
+
+  it("treats a second topic token as text rather than narrowing invisibly", () => {
+    expect(parseSearchQuery("topic:a topic:b")).toEqual({
+      site: null,
+      topic: "a",
+      text: "topic:b",
+    });
   });
 });
 
