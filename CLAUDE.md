@@ -24,6 +24,8 @@ bun run test:coverage    # Run tests with V8 coverage report
 
 Type-check with `bun run compile` and lint with `bun run lint` (oxlint, configured in `.oxlintrc.json`; ESLint is not used because `typescript-eslint` does not support TypeScript 7). Tests use Vitest with WXT's `WxtVitest()` plugin and `fakeBrowser` for in-memory extension API stubs — no real browser needed. Test files live in `__tests__/` directories alongside the code they test.
 
+Updating dependencies, or rolling back an update that broke something: follow [`docs/DEPENDENCY_UPDATES.md`](docs/DEPENDENCY_UPDATES.md).
+
 ## Worktree Isolation Rules
 
 - Worktree directory preference: `../lexicora-extension-worktrees/<branch-name>`
