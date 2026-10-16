@@ -9,7 +9,11 @@ import {
   ItemDescription,
 } from "@/components/ui/item";
 import { SettingsItemSeparator } from "@/components/settings";
-import { currentStoreListing, REPOSITORY_URL } from "@/constants/site";
+import {
+  currentStoreListing,
+  REPOSITORY_URL,
+  withUtm,
+} from "@/constants/site";
 import {
   ArrowUpRightIcon,
   ChevronRightIcon,
@@ -43,7 +47,7 @@ function AboutPage() {
             className="bg-card rounded-2xl not-dark:shadow-xs flex-col items-center pt-6 pb-5 gap-1 text-center"
           >
             <span className="flex justify-center gap-1.5 items-baseline mb-3">
-              {/*Maybe add link to lexicora.com */}
+              {/*Maybe add link to the website */}
               <LexicoraLogo className="h-[1.06rem] rounded-xs" />
               {/*#00143d is the Lexicora color */}
               <h2 className="text-2xl font-bold text-[#00143d] dark:text-foreground leading-0">
@@ -170,7 +174,7 @@ function AboutPage() {
             className="group transition-colors duration-150 bg-card hover:bg-card-hover! not-dark:shadow-xs rounded-2xl"
             asChild
           >
-            <a href={store.url} target="_blank" rel="noreferrer" draggable={false}>
+            <a href={withUtm(store.url, "about")} target="_blank" rel="noreferrer" draggable={false}>
               <ItemMedia variant="icon">
                 <StarIcon className="size-5 text-yellow-500" />
               </ItemMedia>

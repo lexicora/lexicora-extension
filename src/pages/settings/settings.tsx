@@ -18,6 +18,7 @@ import {
   ChevronRightIcon,
   DatabaseIcon,
   DownloadIcon,
+  GlobeIcon,
   HardDriveIcon,
   //EllipsisIcon, // used by the commented-out General items below
   //FileTextIcon,
@@ -44,6 +45,7 @@ import { Link } from "react-router";
 
 import { FEATURES } from "@/constants/features";
 import { SettingsItem, SettingsItemSeparator } from "@/components/settings";
+import { WEBSITE_URL } from "@/constants/site";
 import { onboardingUrl } from "@/lib/onboarding";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -310,6 +312,32 @@ function SettingsPage() {
               itemTitle="About"
               roundingClass="rounded-b-none"
             />
+            <Item
+              variant="muted"
+              size="sm"
+              className="group transition-colors duration-150 bg-card hover:bg-card-hover! rounded-none"
+              asChild
+            >
+              {/* Not behind FEATURES.WEBSITE: that flag is for the surfaces
+                that promote the site, while Settings only holds a way to it. */}
+              <a
+                href={WEBSITE_URL}
+                target="_blank"
+                rel="noreferrer"
+                draggable={false}
+              >
+                <ItemMedia variant="icon">
+                  <GlobeIcon className="size-5 text-emerald-500" />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>Website</ItemTitle>
+                </ItemContent>
+                <ItemActions>
+                  <ArrowUpRightIcon className="size-4 transition-colors duration-150 text-muted-foreground group-hover:text-lc-muted-foreground-hover" />
+                </ItemActions>
+              </a>
+            </Item>
+            <SettingsItemSeparator />
             <SettingsItem
               to="/settings/about/whats-changed"
               size="sm"

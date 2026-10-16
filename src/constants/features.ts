@@ -65,7 +65,7 @@ export const FEATURES = {
   ACCOUNTS: false,
 
   /**
-   * Links to lexicora.com: the "Visit Lexicora.com" line on the side-panel
+   * Links to the website: the "Visit the Lexicora website" line on the side-panel
    * home and in the popup, and the "Open Lexicora Website" context menu item.
    * Off until the website is actually live, so v1.0 never points at a page
    * that may not exist.

@@ -1,8 +1,27 @@
-/** The public website. Shown only where `FEATURES.WEBSITE` allows — see `features.ts`. */
-export const WEBSITE_URL = "https://lexicora.com";
+/**
+ * The public website, on GitHub Pages for now. Every link to it goes through
+ * this constant, so a custom domain later is a change here only. Shown only
+ * where `FEATURES.WEBSITE` allows — see `features.ts`.
+ */
+export const WEBSITE_URL = "https://lexicora.github.io/";
 
 /** The public source repository, where problems are reported. */
 export const REPOSITORY_URL = "https://github.com/lexicora/lexicora-extension";
+
+/**
+ * Marks a link as coming from the extension, so a store's analytics can tell
+ * where a visit started. `medium` names the place it was clicked, e.g. "about".
+ *
+ * For store listings only: the website collects no analytics, so its links
+ * stay plain. Added to a link the user follows; nothing is sent until they
+ * click.
+ */
+export function withUtm(url: string, medium: string): string {
+  const tagged = new URL(url);
+  tagged.searchParams.set("utm_source", "lexicora-extension");
+  tagged.searchParams.set("utm_medium", medium);
+  return tagged.href;
+}
 
 /**
  * The developer's contact address, the same one the store listings show. For

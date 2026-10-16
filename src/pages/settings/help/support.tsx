@@ -22,7 +22,7 @@ import {
  * Where to report a problem: the repository, and an email address for anyone
  * without a GitHub account or with something that is not a bug. It is its own
  * page rather than a link straight out of the settings list, so more can join
- * it later (the website, once there is one).
+ * it later.
  */
 
 const LINKS = [

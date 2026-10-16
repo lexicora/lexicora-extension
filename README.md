@@ -8,9 +8,11 @@ It is intentionally opinionated: not a general-purpose note-taking app, not a wo
 
 ## Install
 
-- [Chrome Web Store](https://chromewebstore.google.com/detail/ainigcpoeibgglaldkjippcccaicnjjd)
-- [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/lexicora/cedcfjhhgnnhicanijilpadchcfkbjgl)
-- [Firefox Add-ons](https://addons.mozilla.org/addon/lexicora/)
+- [Chrome Web Store](https://chromewebstore.google.com/detail/ainigcpoeibgglaldkjippcccaicnjjd?utm_source=github&utm_medium=readme)
+- [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/lexicora/cedcfjhhgnnhicanijilpadchcfkbjgl?utm_source=github&utm_medium=readme)
+- [Firefox Add-ons](https://addons.mozilla.org/addon/lexicora/?utm_source=github&utm_medium=readme)
+
+More about Lexicora on [the website](https://lexicora.github.io/).
 
 ## Screenshots
 
