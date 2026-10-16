@@ -96,6 +96,13 @@ export const TIP_CATEGORIES: readonly TipCategory[] = [
     iconColor: "text-red-500",
     tips: [
       {
+        icon: GlobeIcon,
+        iconColor: "text-green-500",
+        title: "Which pages capture well",
+        description:
+          "Articles, documentation, blog posts, wikis and READMEs capture best: one main body of text with a clear structure. Pages that are mostly menus, feeds, search results, dashboards, video pages or web apps have little of that. For those, Bookmark the page to keep the link, or select the part you want and use Capture Selection.",
+      },
+      {
         icon: TextSelectIcon,
         iconColor: "text-teal-500",
         title: "When a capture comes back empty",
