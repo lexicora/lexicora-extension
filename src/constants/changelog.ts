@@ -25,6 +25,29 @@ export const CHANGE_KINDS: readonly ChangeKind[] = ["new", "improved", "fixed"];
 
 export const RELEASES: readonly Release[] = [
   {
+    version: "1.2.0",
+    date: "2026-10-16",
+    summary:
+      "Search the library by topic, steadier site icons, and a handful of fixes.",
+    changes: {
+      new: [
+        "Search the library by topic: topic:react lists the entries of every topic with react in its name. Put a name with spaces in quotes, as in topic:\"my project\", and combine it with site: or words.",
+        "Settings has a Website row that opens the Lexicora website.",
+      ],
+      improved: [
+        "Site icons no longer pop in again each time you scroll through a list or come back to it.",
+        "Coming back to the home page from a create or edit page shows the bottom bar at once instead of sliding it up.",
+        "Enter in a text field of the entry and topic forms no longer saves. Save with ⌘/Ctrl+S or the Save button.",
+        "Tips & Tricks explains which pages capture well and why to keep topics specific.",
+        "The libraries Lexicora is built on (React, Radix UI, DOMPurify, Zod and others) are updated to their latest versions.",
+      ],
+      fixed: [
+        "A page at a different # section of the same address now counts as a different page on the home page, instead of showing as already captured.",
+        "Tables in read-only entries no longer leave an empty strip on their right.",
+      ],
+    },
+  },
+  {
     version: "1.1.0",
     date: "2026-10-14",
     summary:
