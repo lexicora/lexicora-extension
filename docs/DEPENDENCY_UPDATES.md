@@ -2,6 +2,8 @@
 
 Dependencies are updated regularly, and an update that breaks something is rolled back package by package rather than holding everything back. The editor is the fragile part: BlockNote stays on 0.52.x (why: the BlockNote upgrade note in [`ROADMAP.md`](ROADMAP.md)), while the Tiptap and ProseMirror packages under it keep moving within their ranges, and BlockNote reaches into Tiptap's internals.
 
+React Router stays on 8.x. Its `viewTransition` props and options are deprecated in favour of React's `<ViewTransition>`, but they still work throughout 8.x and the app relies on them for its page cross-fade. React's component was tried and is not a drop-in replacement here: it snapshots the page elements rather than the viewport, so a navigation from a scrolled list animates the scroll offset, and the page paints over the bottom navigation during the fade. Fixing that means moving the panel from document scrolling to its own scroll container, which touches the virtualized lists, scroll restoration and the sticky headers. `^8.5.0` keeps installs on 8.x; don't take a new major with `--latest`.
+
 The **editor packages** are `@blocknote/*`, `@tiptap/*` and `prosemirror-*`.
 
 ## Steps

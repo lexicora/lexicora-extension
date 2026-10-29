@@ -236,10 +236,11 @@ Use the `useAppStorage` hook for reactive access in React components.
 
 ## Status
 
-Lexicora is feature-complete and in maintenance: it is out in the stores, no new
-features are planned for now, and it stays maintained — bug fixes, keeping it
-working as browsers and dependencies change, and small improvements. That
-describes today; a feature can still come later.
+Lexicora is complete. It is out in the stores and development has ended: no
+new features are planned. For now it is maintained only — bug fixes and
+keeping it working as browsers change. Some dependencies are deliberately held
+on their current versions rather than upgraded (the BlockNote editor on 0.52,
+React Router on 8; see [`docs/DEPENDENCY_UPDATES.md`](docs/DEPENDENCY_UPDATES.md)).
 
 The core vision remains intentionally narrow: **turning ephemeral web knowledge into permanent, accessible understanding**.
 
