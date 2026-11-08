@@ -25,6 +25,18 @@ export const CHANGE_KINDS: readonly ChangeKind[] = ["new", "improved", "fixed"];
 
 export const RELEASES: readonly Release[] = [
   {
+    version: "1.3.0",
+    summary: "See when you last exported your library.",
+    changes: {
+      new: [
+        "Settings → Export shows when you last exported each format, so you can tell how old your latest backup is.",
+      ],
+      improved: [
+        "The libraries Lexicora is built on are updated to their latest versions.",
+      ],
+    },
+  },
+  {
     version: "1.2.0",
     date: "2026-10-16",
     summary:
