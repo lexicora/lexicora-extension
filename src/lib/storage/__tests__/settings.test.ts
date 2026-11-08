@@ -6,6 +6,8 @@ import {
   captureSuggestionDelayMultiplierStorage,
   sidePanelStateStorage,
   editorWideModeStorage,
+  exportLastJsonAtStorage,
+  exportLastMarkdownAtStorage,
 } from "../settings";
 
 describe("settings storage", () => {
@@ -71,6 +73,19 @@ describe("settings storage", () => {
     it("persists wide mode", async () => {
       await editorWideModeStorage.setValue(true);
       expect(await editorWideModeStorage.getValue()).toBe(true);
+    });
+  });
+
+  describe("last export timestamps", () => {
+    it("default to null (never exported)", async () => {
+      expect(await exportLastJsonAtStorage.getValue()).toBeNull();
+      expect(await exportLastMarkdownAtStorage.getValue()).toBeNull();
+    });
+
+    it("are kept per format", async () => {
+      await exportLastJsonAtStorage.setValue(1_700_000_000_000);
+      expect(await exportLastJsonAtStorage.getValue()).toBe(1_700_000_000_000);
+      expect(await exportLastMarkdownAtStorage.getValue()).toBeNull();
     });
   });
 });

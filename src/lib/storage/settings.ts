@@ -66,3 +66,19 @@ export const exportMarkdownIncludeArchivedStorage = storage.defineItem<boolean>(
   "local:settings-export-markdown-include-archived",
   { fallback: true },
 );
+
+/**
+ * Settings → Export: when each format last finished exporting, as epoch
+ * milliseconds, or null when it never has. Shown on the Export page so the
+ * user can tell how old their latest backup is. Local, like the export
+ * options: each machine exports on its own.
+ */
+export const exportLastJsonAtStorage = storage.defineItem<number | null>(
+  "local:export-last-json-at",
+  { fallback: null },
+);
+
+export const exportLastMarkdownAtStorage = storage.defineItem<number | null>(
+  "local:export-last-markdown-at",
+  { fallback: null },
+);

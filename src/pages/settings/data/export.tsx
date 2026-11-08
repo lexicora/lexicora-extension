@@ -28,11 +28,23 @@ import { SettingsItemSeparator } from "@/components/settings";
 import { useAppStorage } from "@/hooks/use-app-storage";
 import {
   exportCompactJsonStorage,
+  exportLastJsonAtStorage,
+  exportLastMarkdownAtStorage,
   exportMarkdownIncludeArchivedStorage,
 } from "@/lib/storage/settings";
 
 /** Disables the other action while one is running. */
 type BusyAction = "export" | "export-markdown";
+
+/** "Last exported Nov 8, 2026, 2:05 PM", or "Never exported". */
+function lastExportLabel(at: number | null | undefined): string {
+  if (at == null) return "Never exported";
+  const when = new Date(at).toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+  return `Last exported ${when}`;
+}
 
 /**
  * One export: the button, and below it in the same card the one option that
@@ -45,6 +57,7 @@ function ExportFormat({
   disabled,
   option,
   caption,
+  lastExportedAt,
 }: {
   icon: ReactNode;
   title: string;
@@ -56,6 +69,8 @@ function ExportFormat({
     onCheckedChange: (checked: boolean) => void;
   };
   caption: string;
+  /** Undefined while storage loads, so nothing flashes "Never exported". */
+  lastExportedAt: number | null | undefined;
 }) {
   return (
     <div>
@@ -101,6 +116,11 @@ function ExportFormat({
       <p className="text-pretty text-xs text-muted-foreground mx-2.5 mt-2">
         {caption}
       </p>
+      {lastExportedAt !== undefined && (
+        <p className="text-xs text-muted-foreground/80 mx-2.5 mt-1">
+          {lastExportLabel(lastExportedAt)}
+        </p>
+      )}
     </div>
   );
 }
@@ -117,6 +137,10 @@ function ExportSettingsPage() {
   const [compactJson, setCompactJson] = useAppStorage(exportCompactJsonStorage);
   const [includeArchived, setIncludeArchived] = useAppStorage(
     exportMarkdownIncludeArchivedStorage,
+  );
+  const [lastJsonAt, setLastJsonAt] = useAppStorage(exportLastJsonAtStorage);
+  const [lastMarkdownAt, setLastMarkdownAt] = useAppStorage(
+    exportLastMarkdownAtStorage,
   );
 
   const topicsCollection = useRxCollection("topics");
@@ -140,7 +164,7 @@ function ExportSettingsPage() {
           blocks: blocksCollection,
         },
         { compact: compactJson ?? true },
-      );
+      ).then(() => setLastJsonAt(Date.now()));
 
     toast.promise(runExclusive("export", p), {
       loading: "Exporting data...",
@@ -175,6 +199,7 @@ function ExportSettingsPage() {
         if (topicCount === 0) {
           toast.info("Nothing to export yet", { id: toastId });
         } else {
+          void setLastMarkdownAt(Date.now());
           toast.success(
             `Exported ${topicCount} ${topicCount === 1 ? "topic" : "topics"}`,
             { id: toastId },
@@ -236,6 +261,7 @@ function ExportSettingsPage() {
                 onCheckedChange: (checked) => void setCompactJson(checked),
               }}
               caption="A backup the Import page can read back. Turn off Compact for a file indented to be read."
+              lastExportedAt={lastJsonAt}
             />
             <ExportFormat
               icon={<FileTextIcon className="size-5 text-blue-500" />}
@@ -250,6 +276,7 @@ function ExportSettingsPage() {
                 onCheckedChange: (checked) => void setIncludeArchived(checked),
               }}
               caption="A folder per topic, ready for Obsidian or any editor."
+              lastExportedAt={lastMarkdownAt}
             />
           </div>
         </section>
