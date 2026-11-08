@@ -26,6 +26,7 @@ export const CHANGE_KINDS: readonly ChangeKind[] = ["new", "improved", "fixed"];
 export const RELEASES: readonly Release[] = [
   {
     version: "1.3.0",
+    date: "2026-11-08",
     summary: "See when you last exported your library.",
     changes: {
       new: [
