@@ -1,10 +1,10 @@
 # Lexicora Extension — Roadmap
 
-**Status: feature-complete, in maintenance.** No new features are planned for now.
-That describes today, not a promise: a feature can still come later, and the
-extension stays maintained either way — bug fixes, keeping it working as browsers
-and dependencies change, and small improvements. The history below explains how
-it got here and why some things were left out.
+**Status: complete, maintained only.** Development has ended and no new features
+are planned. Maintenance means bug fixes and keeping it working as browsers
+change; dependencies that would need rework to upgrade are held on their current
+versions instead (see [`DEPENDENCY_UPDATES.md`](DEPENDENCY_UPDATES.md)). The
+history below explains how it got here and why some things were left out.
 
 ## v1.0 Milestone — offline release
 
