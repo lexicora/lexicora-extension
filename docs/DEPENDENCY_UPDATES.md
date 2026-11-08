@@ -4,6 +4,8 @@ Dependencies are updated regularly, and an update that breaks something is rolle
 
 React Router stays on 8.x. Its `viewTransition` props and options are deprecated in favour of React's `<ViewTransition>`, but they still work throughout 8.x and the app relies on them for its page cross-fade. React's component was tried and is not a drop-in replacement here: it snapshots the page elements rather than the viewport, so a navigation from a scrolled list animates the scroll offset, and the page paints over the bottom navigation during the fade. Fixing that means moving the panel from document scrolling to its own scroll container, which touches the virtualized lists, scroll restoration and the sticky headers. `^8.5.0` keeps installs on 8.x; don't take a new major with `--latest`.
 
+Vitest and `@vitest/coverage-v8` stay on 4.x. Under Vitest 5.1.0, 12 tests in `src/entrypoints/background/__tests__/` (`commands.test.ts`, `context-menu.test.ts`) fail because the stubbed `browser.sidePanel` is undefined (`Cannot read properties of undefined (reading 'open')`), so the background test setup would need rework. `^4.1.12` keeps installs on 4.x; retry 5.x on a later update, together with `@vitest/coverage-v8`.
+
 The **editor packages** are `@blocknote/*`, `@tiptap/*` and `prosemirror-*`.
 
 ## Steps
